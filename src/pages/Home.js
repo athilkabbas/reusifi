@@ -3,25 +3,19 @@ import { Col, Row } from "antd";
 import { Input } from "antd";
 import { Select } from "antd";
 import { states, districts, districtMap } from "../helpers/locations";
-import {
-  UploadOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-} from "@ant-design/icons";
+import { HomeFilled, UploadOutlined } from "@ant-design/icons";
 import { Layout, Menu, theme } from "antd";
+import { useNavigate } from "react-router-dom";
 const { Header, Content, Footer, Sider } = Layout;
 const { TextArea } = Input;
-const items = [
-  UserOutlined,
-  VideoCameraOutlined,
-  UploadOutlined,
-  UserOutlined,
-].map((icon, index) => ({
+const IconText = ["Home", "Upload"];
+const items = [HomeFilled, UploadOutlined].map((icon, index) => ({
   key: String(index + 1),
   icon: React.createElement(icon),
-  label: `nav ${index + 1}`,
+  label: IconText[index],
 }));
 const Home = () => {
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     dressType: "",
     description: "",
@@ -38,6 +32,17 @@ const Home = () => {
       return { ...prevValue, [type]: value };
     });
   };
+
+  const handleNavigation = (event) => {
+    switch (event.key) {
+      case "1":
+        navigate("/");
+        break;
+      case "2":
+        navigate("/addDress");
+        break;
+    }
+  };
   return (
     <Layout style={{ height: "100vh" }}>
       <Sider
@@ -52,9 +57,10 @@ const Home = () => {
       >
         <div className="demo-logo-vertical" />
         <Menu
+          onClick={(event) => handleNavigation(event)}
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={["4"]}
+          defaultSelectedKeys={["1"]}
           items={items}
         />
       </Sider>
@@ -79,70 +85,7 @@ const Home = () => {
               height: "100%",
             }}
           >
-            <Row style={{ padding: 20 }}>
-              <Col span={10}>
-                <Input
-                  onChange={(value) => handleChange(value, "dressType")}
-                  placeholder="Dress Type"
-                />
-              </Col>
-            </Row>
-            <Row style={{ padding: 20 }}>
-              <Col span={20}>
-                <TextArea
-                  onChange={(value) => handleChange(value, "description")}
-                  rows={4}
-                  placeholder="Description"
-                  maxLength={6}
-                />
-              </Col>
-            </Row>
-            <Row style={{ padding: 20 }}>
-              <Col span={20}>
-                <Select
-                  onChange={(value) => {
-                    handleChange(value, "state");
-                    let districts = districtMap();
-                    setDistricts(districts[value]);
-                  }}
-                  showSearch
-                  style={{
-                    width: 200,
-                  }}
-                  placeholder="Select State"
-                  optionFilterProp="label"
-                  filterSort={(optionA, optionB) =>
-                    (optionA?.label ?? "")
-                      .toLowerCase()
-                      .localeCompare((optionB?.label ?? "").toLowerCase())
-                  }
-                  options={states}
-                />
-              </Col>
-            </Row>
-            {districts && (
-              <Row style={{ padding: 20 }}>
-                <Col span={20}>
-                  <Select
-                    onChange={(value) => {
-                      handleChange(value, "district");
-                    }}
-                    showSearch
-                    style={{
-                      width: 200,
-                    }}
-                    placeholder="Select District"
-                    optionFilterProp="label"
-                    filterSort={(optionA, optionB) =>
-                      (optionA?.label ?? "")
-                        .toLowerCase()
-                        .localeCompare((optionB?.label ?? "").toLowerCase())
-                    }
-                    options={districts}
-                  />
-                </Col>
-              </Row>
-            )}
+            content
           </div>
         </Content>
         <Footer
