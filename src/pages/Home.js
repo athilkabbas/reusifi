@@ -1,38 +1,16 @@
-import React, { useState } from "react";
-import { Col, Row } from "antd";
-import { Input } from "antd";
-import { Select } from "antd";
-import { states, districts, districtMap } from "../helpers/locations";
-import { HomeFilled, UploadOutlined } from "@ant-design/icons";
-import { Layout, Menu, theme } from "antd";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-const { Header, Content, Footer, Sider } = Layout;
-const { TextArea } = Input;
+import { Breadcrumb, Layout, Menu, theme } from "antd";
+import { HomeFilled, UploadOutlined } from "@ant-design/icons";
 const IconText = ["Home", "Upload"];
 const items = [HomeFilled, UploadOutlined].map((icon, index) => ({
   key: String(index + 1),
   icon: React.createElement(icon),
   label: IconText[index],
 }));
-const Home = () => {
+const { Header, Content, Footer } = Layout;
+const App = () => {
   const navigate = useNavigate();
-  const [form, setForm] = useState({
-    dressType: "",
-    description: "",
-    state: "",
-    district: "",
-    images: [],
-  });
-  const [districts, setDistricts] = useState([]);
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
-  const handleChange = (value, type) => {
-    setForm((prevValue) => {
-      return { ...prevValue, [type]: value };
-    });
-  };
-
   const handleNavigation = (event) => {
     switch (event.key) {
       case "1":
@@ -43,60 +21,60 @@ const Home = () => {
         break;
     }
   };
+  const {
+    token: { colorBgContainer, borderRadiusLG },
+  } = theme.useToken();
   return (
     <Layout style={{ height: "100vh" }}>
-      <Sider
-        breakpoint="lg"
-        collapsedWidth="0"
-        onBreakpoint={(broken) => {
-          console.log(broken);
-        }}
-        onCollapse={(collapsed, type) => {
-          console.log(collapsed, type);
+      <Header
+        style={{
+          position: "sticky",
+          top: 0,
+          zIndex: 1,
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
         }}
       >
-        <div className="demo-logo-vertical" />
+        <div className="demo-logo" />
         <Menu
           onClick={(event) => handleNavigation(event)}
           theme="dark"
-          mode="inline"
+          mode="horizontal"
           defaultSelectedKeys={["1"]}
           items={items}
-        />
-      </Sider>
-      <Layout>
-        <Header
           style={{
-            padding: 0,
+            flex: 1,
+            minWidth: 0,
+          }}
+        />
+      </Header>
+      <Content
+        style={{
+          padding: "0 48px",
+        }}
+      >
+        <div
+          style={{
+            padding: 24,
+            minHeight: 380,
             background: colorBgContainer,
-          }}
-        />
-        <Content
-          style={{
-            margin: "24px 16px 0",
+            borderRadius: borderRadiusLG,
+            height: "100%",
+            marginTop: "30px",
           }}
         >
-          <div
-            style={{
-              padding: 24,
-              minHeight: 360,
-              background: colorBgContainer,
-              borderRadius: borderRadiusLG,
-              height: "100%",
-            }}
-          >
-            content
-          </div>
-        </Content>
-        <Footer
-          style={{
-            textAlign: "center",
-          }}
-        >
-          {/* Ant Design ©{new Date().getFullYear()} Created by Ant UED */}
-        </Footer>
-      </Layout>
+          Content
+        </div>
+      </Content>
+      <Footer
+        style={{
+          textAlign: "center",
+        }}
+      >
+        Reusifi
+      </Footer>
     </Layout>
   );
 };
-export default Home;
+export default App;
