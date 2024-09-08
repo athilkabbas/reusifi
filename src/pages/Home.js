@@ -3,8 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
 import { HomeFilled, UploadOutlined } from "@ant-design/icons";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { Avatar, Divider, List, Skeleton } from "antd";
+import { Card } from "antd";
 import axios from "axios";
 const IconText = ["Home", "Upload"];
+const { Meta } = Card;
 const items = [HomeFilled, UploadOutlined].map((icon, index) => ({
   key: String(index + 1),
   icon: React.createElement(icon),
@@ -12,16 +15,35 @@ const items = [HomeFilled, UploadOutlined].map((icon, index) => ({
 }));
 const { Header, Content, Footer } = Layout;
 const App = () => {
+  const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
+  const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(1);
+  const pageSize = 6;
+  const loadMoreData = async () => {
+    if (loading) {
+      return;
+    }
+    setLoading(true);
+    const results = await axios.get(
+      `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?page=${page}&pageSize=${pageSize}`,
+      { headers: { Authorization: "xxx" } }
+    );
+    if (results.data.length < 6) {
+      setHasMore(false);
+    }
+    console.log("athil");
+    setPage((page) => {
+      if (page === 2) {
+        return page;
+      }
+      return page + 1;
+    });
+    setData([...data, ...results.data]);
+    setLoading(false);
+  };
   useEffect(() => {
-    const getItems = async () => {
-      const results = await axios.get(
-        "https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress",
-        { headers: { Authorization: "xxx" } }
-      );
-      console.log(results, "athil");
-    };
-    getItems();
+    loadMoreData();
   }, []);
   const navigate = useNavigate();
   const handleNavigation = (event) => {
@@ -38,7 +60,7 @@ const App = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   return (
-    <Layout style={{ height: "100vh" }}>
+    <Layout>
       <Header
         style={{
           position: "sticky",
@@ -64,41 +86,67 @@ const App = () => {
       </Header>
       <Content
         style={{
-          padding: "0 48px",
+          padding: "0 20px",
         }}
       >
         <div
+          id="scrollableDiv"
           style={{
             padding: 24,
-            minHeight: 380,
+            height: "100vh",
             background: colorBgContainer,
             borderRadius: borderRadiusLG,
-            height: "100%",
             marginTop: "30px",
+            overflowY: "scroll",
+            overflowX: "hidden",
           }}
         >
           <InfiniteScroll
-            dataLength={items.length} //This is important field to render the next data
-            next={() => {}}
-            hasMore={false}
-            loader={<h4>Loading...</h4>}
-            endMessage={
-              <p style={{ textAlign: "center" }}>
-                <b>Yay! You have seen it all</b>
-              </p>
+            dataLength={data.length}
+            next={loadMoreData}
+            hasMore={hasMore}
+            loader={
+              <Skeleton
+                avatar
+                paragraph={{
+                  rows: 1,
+                }}
+                active
+              />
             }
+            endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
+            scrollableTarget="scrollableDiv"
           >
-            {data}
+            <List
+              grid={{ xs: 2, gutter: 10 }}
+              dataSource={data}
+              renderItem={(item) => (
+                <List.Item key={item["item"]["_id"]}>
+                  <Card
+                    style={{
+                      xs: {
+                        width: 130,
+                      },
+                      sm: {
+                        width: 300,
+                      },
+                    }}
+                    cover={<img alt="example" src={item["image"]} />}
+                  >
+                    {/* <Meta
+                        avatar={
+                          <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=8" />
+                        }
+                        title="Card title"
+                        description="This is the description"
+                      /> */}
+                  </Card>
+                </List.Item>
+              )}
+            />
           </InfiniteScroll>
         </div>
       </Content>
-      <Footer
-        style={{
-          textAlign: "center",
-        }}
-      >
-        Reusifi
-      </Footer>
     </Layout>
   );
 };
