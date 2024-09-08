@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
 import { HomeFilled, UploadOutlined } from "@ant-design/icons";
+import InfiniteScroll from "react-infinite-scroll-component";
+import axios from "axios";
 const IconText = ["Home", "Upload"];
 const items = [HomeFilled, UploadOutlined].map((icon, index) => ({
   key: String(index + 1),
@@ -10,6 +12,17 @@ const items = [HomeFilled, UploadOutlined].map((icon, index) => ({
 }));
 const { Header, Content, Footer } = Layout;
 const App = () => {
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    const getItems = async () => {
+      const results = await axios.get(
+        "https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress",
+        { headers: { Authorization: "xxx" } }
+      );
+      console.log(results, "athil");
+    };
+    getItems();
+  }, []);
   const navigate = useNavigate();
   const handleNavigation = (event) => {
     switch (event.key) {
@@ -64,7 +77,19 @@ const App = () => {
             marginTop: "30px",
           }}
         >
-          Content
+          <InfiniteScroll
+            dataLength={items.length} //This is important field to render the next data
+            next={() => {}}
+            hasMore={false}
+            loader={<h4>Loading...</h4>}
+            endMessage={
+              <p style={{ textAlign: "center" }}>
+                <b>Yay! You have seen it all</b>
+              </p>
+            }
+          >
+            {data}
+          </InfiniteScroll>
         </div>
       </Content>
       <Footer
