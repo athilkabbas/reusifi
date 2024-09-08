@@ -34,6 +34,7 @@ const App = () => {
     district: "",
     email: "a@gmail.com",
     images: [],
+    price: 0,
   });
   const [districts, setDistricts] = useState([]);
   const handleChange = (value, type) => {
@@ -87,6 +88,7 @@ const App = () => {
     formData.append("state", form.state);
     formData.append("district", form.district);
     formData.append("email", form.email);
+    formData.append("price", form.price);
     await axios.post(
       "https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/addDress",
       formData,
@@ -146,7 +148,7 @@ const App = () => {
       </Header>
       <Content
         style={{
-          padding: "0 20px",
+          padding: "0 15px",
         }}
       >
         <div
@@ -233,6 +235,14 @@ const App = () => {
               </Col>
             </Row>
           )}
+          <Row style={{ padding: 20 }}>
+            <Col xs={24} sm={5}>
+              <Input
+                onChange={(value) => handleChange(value, "price")}
+                placeholder="Price"
+              />
+            </Col>
+          </Row>
           <Row style={{ padding: 20 }}>
             <Col xs={24} sm={10}>
               <Upload
