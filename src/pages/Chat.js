@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Col, Row } from "antd";
+import { Col, message, Row } from "antd";
 import { Input } from "antd";
 import { useNavigate } from "react-router-dom";
 import { Select } from "antd";
@@ -10,6 +10,7 @@ import { Image, Upload } from "antd";
 import { Button } from "antd";
 import axios from "axios";
 import { getCurrentUser, signOut } from "@aws-amplify/auth";
+import { Divider, List, Typography } from "antd";
 import {
   HomeFilled,
   UploadOutlined,
@@ -28,23 +29,30 @@ const items = [HomeFilled, UploadOutlined, MessageFilled, LogoutOutlined].map(
 );
 const { Header, Content, Footer } = Layout;
 const Chat = () => {
+  const [data, setData] = useState([]);
   const location = useLocation();
   const { recipient } = location.state || "";
   const [value, setValue] = useState("");
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [ws, setWs] = useState("");
+  const [refetch, setRefetch] = useState(false);
+  const [reconnect, setReconnect] = useState(false);
 
   const sendMessage = (message, recipientUserId, senderUserId) => {
-    if (ws) {
-      ws.send(
-        JSON.stringify({
-          action: "sendMessage",
-          recipientUserId: recipientUserId,
-          senderUserId: senderUserId,
-          message: message,
-        })
-      );
+    try {
+      if (ws) {
+        ws.send(
+          JSON.stringify({
+            action: "sendMessage",
+            recipientUserId: recipientUserId,
+            senderUserId: senderUserId,
+            message: message,
+          })
+        );
+      }
+    } catch (err) {
+      setReconnect((reconnect) => !reconnect);
     }
   };
 
@@ -62,7 +70,8 @@ const Chat = () => {
         };
 
         socket.onmessage = (event) => {
-          console.log("Message from server:", event);
+          console.log("Message from server:", event.data);
+          setRefetch((refetch) => !refetch);
         };
         // To close the connection
         socket.onclose = () => {
@@ -77,7 +86,20 @@ const Chat = () => {
     };
 
     fetchUser();
-  }, []);
+  }, [reconnect]);
+
+  useEffect(() => {
+    const getChats = async () => {
+      const result = await axios.get(
+        `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${user.userId}&userId2=${recipient["item"]["_id"]}`,
+        { headers: { Authorization: "xxx" } }
+      );
+      setData(result.data);
+    };
+    if (user && user.userId && recipient && recipient["item"]["_id"]) {
+      getChats();
+    }
+  }, [user, recipient, refetch]);
 
   const handleNavigation = (event) => {
     switch (event.key) {
@@ -102,10 +124,10 @@ const Chat = () => {
     setValue(value.target.defaultValue);
   };
   const handleSubmit = () => {
-    sendMessage(value, recipient["item"]["_id"], user.userId);
+    sendMessage("heyman", recipient["item"]["_id"], user.userId);
   };
   return (
-    <Layout>
+    <Layout style={{ height: "100vh" }}>
       <Header
         style={{
           position: "sticky",
@@ -132,29 +154,63 @@ const Chat = () => {
       <Content
         style={{
           padding: "0 15px",
+          maxHeight: "85vh",
+          overflow: "scroll",
         }}
       >
         <div
           style={{
             padding: 0,
-            minHeight: 380,
             background: colorBgContainer,
             borderRadius: borderRadiusLG,
             marginTop: "30px",
-            overflow: "scroll",
-            height: "100%",
             paddingBottom: "20px",
           }}
         >
-          <Row style={{ padding: 20 }}>
-            <Col xs={24} sm={5}>
-              <Input
-                onChange={(value) => handleChange(value, "category")}
-                placeholder="Category"
-              />
-            </Col>
-          </Row>
-          <Button onClick={() => handleSubmit()}>send</Button>
+          <List
+            footer={
+              <Row style={{ padding: 10, position: "fixed", bottom: "0px" }}>
+                <Col xs={20} sm={5}>
+                  <Input
+                    onChange={(value) => handleChange(value, "price")}
+                    placeholder="Enter message"
+                  />
+                </Col>
+                <Col offset={2} xs={2} sm={5}>
+                  <Button type="primary" onClick={() => handleSubmit()}>
+                    send
+                  </Button>
+                </Col>
+              </Row>
+            }
+            size="large"
+            bordered
+            dataSource={data}
+            renderItem={(item) => {
+              if (
+                item.recipientId === user.userId ||
+                item.senderId === user.userId
+              ) {
+                return (
+                  <Row>
+                    <Col xs={12} offset={12}>
+                      <List.Item style={{ wordBreak: "break-all" }}>
+                        {item.message}
+                      </List.Item>
+                    </Col>
+                  </Row>
+                );
+              } else {
+                <Row>
+                  <Col xs={12}>
+                    <List.Item style={{ wordBreak: "break-all" }}>
+                      {item.message}
+                    </List.Item>
+                  </Col>
+                </Row>;
+              }
+            }}
+          />
         </div>
       </Content>
     </Layout>

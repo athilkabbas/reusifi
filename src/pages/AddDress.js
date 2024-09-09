@@ -152,7 +152,7 @@ const AddDress = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   return (
-    <Layout>
+    <Layout style={{ height: "100vh" }}>
       <Header
         style={{
           position: "sticky",
