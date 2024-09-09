@@ -45,7 +45,6 @@ const App = () => {
       } else {
         setHasMore(true);
       }
-      console.log("athil");
       setPage((page) => {
         if (page === 2) {
           return page;
@@ -137,6 +136,9 @@ const App = () => {
               renderItem={(item) => (
                 <List.Item key={item["item"]["_id"]}>
                   <Card
+                    onClick={() => {
+                      navigate("/details", { state: { item } });
+                    }}
                     style={{
                       xs: {
                         width: 130,

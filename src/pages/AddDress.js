@@ -4,19 +4,26 @@ import { Input } from "antd";
 import { useNavigate } from "react-router-dom";
 import { Select } from "antd";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
-import { HomeFilled, UploadOutlined } from "@ant-design/icons";
 import { states, districts, districtMap } from "../helpers/locations";
 import { PlusOutlined } from "@ant-design/icons";
 import { Image, Upload } from "antd";
 import { Button } from "antd";
 import axios from "axios";
-const IconText = ["Home", "Upload"];
+import {
+  HomeFilled,
+  UploadOutlined,
+  MessageFilled,
+  LogoutOutlined,
+} from "@ant-design/icons";
 const { TextArea } = Input;
-const items = [HomeFilled, UploadOutlined].map((icon, index) => ({
-  key: String(index + 1),
-  icon: React.createElement(icon),
-  label: IconText[index],
-}));
+const IconText = ["Home", "Upload", "Chats", "SignOut"];
+const items = [HomeFilled, UploadOutlined, MessageFilled, LogoutOutlined].map(
+  (icon, index) => ({
+    key: String(index + 1),
+    icon: React.createElement(icon),
+    label: IconText[index],
+  })
+);
 const { Header, Content, Footer } = Layout;
 const getBase64 = (file) =>
   new Promise((resolve, reject) => {
@@ -25,7 +32,7 @@ const getBase64 = (file) =>
     reader.onload = () => resolve(reader.result);
     reader.onerror = (error) => reject(error);
   });
-const App = () => {
+const AddDress = () => {
   const [form, setForm] = useState({
     category: "",
     title: "",
@@ -281,4 +288,4 @@ const App = () => {
     </Layout>
   );
 };
-export default App;
+export default AddDress;
