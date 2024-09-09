@@ -9,6 +9,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import { Image, Upload } from "antd";
 import { Button } from "antd";
 import axios from "axios";
+import { getCurrentUser, signOut } from "@aws-amplify/auth";
 import {
   HomeFilled,
   UploadOutlined,
@@ -32,21 +33,37 @@ const getBase64 = (file) =>
     reader.onload = () => resolve(reader.result);
     reader.onerror = (error) => reject(error);
   });
+
 const AddDress = () => {
+  const [user, setUser] = useState("");
   const [form, setForm] = useState({
     category: "",
     title: "",
     description: "",
     state: "",
     district: "",
-    email: "a@gmail.com",
+    email: "",
     images: [],
     price: 0,
   });
+  useEffect(() => {
+    const fetchUser = async () => {
+      let currentUser = await getCurrentUser();
+      setForm((prevValue) => {
+        return { ...prevValue, email: currentUser.userId };
+      });
+    };
+    fetchUser();
+  }, []);
   const [districts, setDistricts] = useState([]);
   const handleChange = (value, type) => {
     setForm((prevValue) => {
-      if (type === "category" || type === "title" || type === "description") {
+      if (
+        type === "category" ||
+        type === "title" ||
+        type === "description" ||
+        type === "price"
+      ) {
         return { ...prevValue, [type]: value.target.defaultValue };
       }
       return { ...prevValue, [type]: value };
@@ -60,6 +77,12 @@ const AddDress = () => {
         break;
       case "2":
         navigate("/addDress");
+        break;
+      case "3":
+        // navigate("/chat");
+        break;
+      case "4":
+        signOut();
         break;
     }
   };

@@ -11,6 +11,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { Avatar, Divider, List, Skeleton } from "antd";
 import { Card } from "antd";
 import axios from "axios";
+import { getCurrentUser, signOut } from "@aws-amplify/auth";
 const IconText = ["Home", "Upload", "Chats", "SignOut"];
 const { Meta } = Card;
 const items = [HomeFilled, UploadOutlined, MessageFilled, LogoutOutlined].map(
@@ -68,6 +69,12 @@ const App = () => {
         break;
       case "2":
         navigate("/addDress");
+        break;
+      case "3":
+        // navigate("/chat");
+        break;
+      case "4":
+        signOut();
         break;
     }
   };

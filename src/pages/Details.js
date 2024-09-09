@@ -17,6 +17,7 @@ import {
   MessageFilled,
   LogoutOutlined,
 } from "@ant-design/icons";
+import { getCurrentUser, signOut } from "@aws-amplify/auth";
 const IconText = ["Home", "Upload", "Chats", "SignOut"];
 const items = [HomeFilled, UploadOutlined, MessageFilled, LogoutOutlined].map(
   (icon, index) => ({
@@ -39,6 +40,12 @@ const Details = () => {
         break;
       case "2":
         navigate("/addDress");
+        break;
+      case "3":
+        // navigate("/chat");
+        break;
+      case "4":
+        signOut();
         break;
     }
   };
@@ -104,8 +111,8 @@ const Details = () => {
             <Row style={{ padding: 20 }}>
               <Col offset={4} xs={24} sm={5}>
                 <Carousel>
-                  {images.map((image) => {
-                    return <Image width={200} src={image} />;
+                  {images.map((image, index) => {
+                    return <Image key={index} width={200} src={image} />;
                   })}
                 </Carousel>
               </Col>
@@ -143,7 +150,12 @@ const Details = () => {
           </Row>
           <Row style={{ padding: 20 }}>
             <Col xs={24} sm={10}>
-              <Button onClick={() => {}} type="primary">
+              <Button
+                onClick={() => {
+                  navigate("/chat", { state: { recipient: item } });
+                }}
+                type="primary"
+              >
                 Chat
               </Button>
             </Col>
