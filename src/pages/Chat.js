@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Col, message, Row } from "antd";
 import { Input } from "antd";
 import { useNavigate } from "react-router-dom";
@@ -11,6 +11,8 @@ import { Button } from "antd";
 import axios from "axios";
 import { getCurrentUser, signOut } from "@aws-amplify/auth";
 import { Divider, List, Typography } from "antd";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { Skeleton } from "antd";
 import {
   HomeFilled,
   UploadOutlined,
@@ -36,8 +38,10 @@ const Chat = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [ws, setWs] = useState("");
-  const [refetch, setRefetch] = useState(false);
   const [reconnect, setReconnect] = useState(false);
+  const [lastEvaluatedKey, setLastEvaluatedKey] = useState(null);
+  const bottomRef = useRef(null); // To reference the bottom of the chat container
+  const [hasMore, setHasMore] = useState(true);
 
   const sendMessage = (message, recipientUserId, senderUserId) => {
     try {
@@ -71,7 +75,7 @@ const Chat = () => {
 
         socket.onmessage = (event) => {
           console.log("Message from server:", event.data);
-          setRefetch((refetch) => !refetch);
+          setData((prevValue) => [{ message: event.data }, ...prevValue]);
         };
         // To close the connection
         socket.onclose = () => {
@@ -88,18 +92,26 @@ const Chat = () => {
     fetchUser();
   }, [reconnect]);
 
+  console.log(data);
+
+  const getChats = async () => {
+    const result = await axios.get(
+      `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${user.userId}&userId2=${recipient["item"]["_id"]}&lastEvaluatedKey=${lastEvaluatedKey}`,
+      { headers: { Authorization: "xxx" } }
+    );
+    setData((prevValue) => [...result.data.items, ...prevValue]);
+    setLastEvaluatedKey(result.data.lastEvaluatedKey);
+    // If no more data to load, set hasMore to false
+    if (!result.data.lastEvaluatedKey) {
+      setHasMore(false);
+    }
+  };
+
   useEffect(() => {
-    const getChats = async () => {
-      const result = await axios.get(
-        `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${user.userId}&userId2=${recipient["item"]["_id"]}`,
-        { headers: { Authorization: "xxx" } }
-      );
-      setData(result.data);
-    };
     if (user && user.userId && recipient && recipient["item"]["_id"]) {
       getChats();
     }
-  }, [user, recipient, refetch]);
+  }, [user, recipient]);
 
   const handleNavigation = (event) => {
     switch (event.key) {
@@ -117,15 +129,31 @@ const Chat = () => {
         break;
     }
   };
+  useEffect(() => {
+    scrollToBottom();
+  }, []);
+
+  const scrollToBottom = () => {
+    if (bottomRef.current) {
+      bottomRef.current.scrollIntoView({ behavior: "smooth" }); // Smooth scrolling to the bottom
+    }
+  };
+
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   const handleChange = (value) => {
-    setValue(value.target.defaultValue);
+    setValue(value.target.value);
   };
   const handleSubmit = () => {
-    sendMessage("heyman", recipient["item"]["_id"], user.userId);
+    if (value) {
+      sendMessage(value, recipient["item"]["_id"], user.userId);
+    }
+    setValue("");
   };
+
+  console.log(value, "athil");
+
   return (
     <Layout style={{ height: "100vh" }}>
       <Header
@@ -154,63 +182,101 @@ const Chat = () => {
       <Content
         style={{
           padding: "0 15px",
-          maxHeight: "85vh",
-          overflow: "scroll",
         }}
       >
         <div
+          id="scrollableDiv"
           style={{
-            padding: 0,
             background: colorBgContainer,
             borderRadius: borderRadiusLG,
-            marginTop: "30px",
-            paddingBottom: "20px",
+            overflow: "scroll",
+            display: "flex",
+            flexDirection: "column-reverse",
+            height: "calc(100vh - 120px)",
           }}
         >
-          <List
-            footer={
-              <Row style={{ padding: 10, position: "fixed", bottom: "0px" }}>
-                <Col xs={20} sm={5}>
-                  <Input
-                    onChange={(value) => handleChange(value, "price")}
-                    placeholder="Enter message"
-                  />
-                </Col>
-                <Col offset={2} xs={2} sm={5}>
-                  <Button type="primary" onClick={() => handleSubmit()}>
-                    send
-                  </Button>
-                </Col>
-              </Row>
+          <InfiniteScroll
+            style={{
+              overflowX: "hidden",
+              display: "flex",
+              flexDirection: "column-reverse",
+              height: "100vh",
+            }}
+            dataLength={data.length}
+            next={getChats}
+            hasMore={hasMore}
+            inverse={true}
+            loader={
+              <Skeleton
+                avatar
+                paragraph={{
+                  rows: 1,
+                }}
+                active
+              />
             }
-            size="large"
-            bordered
-            dataSource={data}
-            renderItem={(item) => {
+            endMessage={<Divider plain>It is all, nothing more</Divider>}
+            scrollableTarget="scrollableDiv"
+          >
+            <div ref={bottomRef} />
+            {data.map((item, index) => {
               if (
                 item.recipientId === user.userId ||
                 item.senderId === user.userId
               ) {
                 return (
-                  <Row>
+                  <Row key={index}>
                     <Col xs={12} offset={12}>
-                      <List.Item style={{ wordBreak: "break-all" }}>
+                      <div
+                        style={{
+                          display: "flex",
+                          wordBreak: "break-word",
+                          justifyContent: "end",
+                        }}
+                      >
                         {item.message}
-                      </List.Item>
+                      </div>
                     </Col>
                   </Row>
                 );
               } else {
-                <Row>
+                <Row key={index}>
                   <Col xs={12}>
-                    <List.Item style={{ wordBreak: "break-all" }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        wordBreak: "break-all",
+                        justifyContent: "start",
+                      }}
+                    >
                       {item.message}
-                    </List.Item>
+                    </div>
                   </Col>
                 </Row>;
               }
+            })}
+          </InfiniteScroll>
+          <Row
+            style={{
+              padding: 10,
+              position: "fixed",
+              bottom: "0px",
+              height: "60px",
             }}
-          />
+          >
+            <Col xs={20} sm={5}>
+              <Input
+                onChange={(value) => handleChange(value)}
+                placeholder="Enter message"
+                value={value}
+              />
+            </Col>
+            <Col offset={2} xs={2} sm={5}>
+              <Button type="primary" onClick={() => handleSubmit()}>
+                send
+              </Button>
+            </Col>
+          </Row>
         </div>
       </Content>
     </Layout>

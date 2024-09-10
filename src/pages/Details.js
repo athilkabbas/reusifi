@@ -60,7 +60,7 @@ const Details = () => {
     if (item) {
       getData();
     }
-  });
+  }, []);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
