@@ -10,6 +10,7 @@ import { withAuthenticator } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
 import Details from "./pages/Details";
 import Chat from "./pages/Chat";
+import ChatPage from "./pages/ChatPage";
 
 // Configure Amplify
 Amplify.configure(awsconfig);
@@ -22,6 +23,7 @@ function App() {
           <Route path="addDress" element={<AddDress />} />
           <Route path="details" element={<Details />} />
           <Route path="chat" element={<Chat />} />
+          <Route path="chatPage" element={<ChatPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

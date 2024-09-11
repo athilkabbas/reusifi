@@ -42,6 +42,7 @@ const Chat = () => {
   const [lastEvaluatedKey, setLastEvaluatedKey] = useState(null);
   const bottomRef = useRef(null); // To reference the bottom of the chat container
   const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const sendMessage = (message, recipientUserId, senderUserId) => {
     try {
@@ -102,10 +103,12 @@ const Chat = () => {
   }, [reconnect]);
 
   const getChats = async () => {
+    setLoading(true);
     const result = await axios.get(
       `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${user.userId}&userId2=${recipient["item"]["_id"]}&lastEvaluatedKey=${lastEvaluatedKey}`,
       { headers: { Authorization: "xxx" } }
     );
+    setLoading(false);
     setData((prevValue) => [...result.data.items, ...prevValue]);
     setLastEvaluatedKey(result.data.lastEvaluatedKey);
     // If no more data to load, set hasMore to false
@@ -129,7 +132,7 @@ const Chat = () => {
         navigate("/addDress");
         break;
       case "3":
-        // navigate("/chat");
+        navigate("/chatPage");
         break;
       case "4":
         signOut();
@@ -223,45 +226,50 @@ const Chat = () => {
             endMessage={<Divider plain>It is all, nothing more</Divider>}
             scrollableTarget="scrollableDiv"
           >
-            <div ref={bottomRef} />
-            {data.map((item) => {
-              if (
-                item.recipientId === user.userId ||
-                item.senderId === user.userId
-              ) {
-                return (
-                  <Row key={item.timestamp}>
-                    <Col xs={12} offset={12}>
-                      <div
-                        style={{
-                          display: "flex",
-                          wordBreak: "break-word",
-                          justifyContent: "end",
-                        }}
-                      >
-                        {item.message}
-                      </div>
-                    </Col>
-                  </Row>
-                );
-              } else {
-                return (
-                  <Row key={item.timestamp}>
-                    <Col xs={12}>
-                      <div
-                        style={{
-                          display: "flex",
-                          wordBreak: "break-all",
-                          justifyContent: "start",
-                        }}
-                      >
-                        {item.message}
-                      </div>
-                    </Col>
-                  </Row>
-                );
-              }
-            })}
+            {!loading && (
+              <>
+                <div ref={bottomRef} />
+                {data.map((item) => {
+                  if (
+                    item.recipientId === user.userId ||
+                    item.senderId === user.userId
+                  ) {
+                    return (
+                      <Row key={item.timestamp}>
+                        <Col xs={12} offset={12}>
+                          <div
+                            style={{
+                              display: "flex",
+                              wordBreak: "break-word",
+                              justifyContent: "end",
+                            }}
+                          >
+                            {item.message}
+                          </div>
+                        </Col>
+                      </Row>
+                    );
+                  } else {
+                    return (
+                      <Row key={item.timestamp}>
+                        <Col xs={12}>
+                          <div
+                            style={{
+                              display: "flex",
+                              wordBreak: "break-all",
+                              justifyContent: "start",
+                            }}
+                          >
+                            {item.message}
+                          </div>
+                        </Col>
+                      </Row>
+                    );
+                  }
+                })}
+              </>
+            )}
+            {loading && <Skeleton />}
           </InfiniteScroll>
           <Row
             style={{

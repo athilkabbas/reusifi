@@ -30,12 +30,12 @@ const App = () => {
   const [data, setData] = useState([]);
   const [hasMore, setHasMore] = useState(false);
   const [page, setPage] = useState(1);
+  const [user, setUser] = useState(null);
   const pageSize = 6;
   const loadMoreData = async () => {
+    const currentUser = await getCurrentUser();
+    setUser(currentUser);
     try {
-      if (loading) {
-        return;
-      }
       setLoading(true);
       const results = await axios.get(
         `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?page=${page}&pageSize=${pageSize}`,
@@ -71,7 +71,7 @@ const App = () => {
         navigate("/addDress");
         break;
       case "3":
-        // navigate("/chat");
+        navigate("/chatPage");
         break;
       case "4":
         signOut();
@@ -137,38 +137,53 @@ const App = () => {
             endMessage={<Divider plain>It is all, nothing more</Divider>}
             scrollableTarget="scrollableDiv"
           >
-            <List
-              grid={{ xs: 2, gutter: 10 }}
-              dataSource={data}
-              renderItem={(item) => (
-                <List.Item key={item["item"]["_id"]}>
-                  <Card
-                    onClick={() => {
-                      navigate("/details", { state: { item } });
-                    }}
-                    style={{
-                      xs: {
-                        width: 130,
-                      },
-                      sm: {
-                        width: 300,
-                      },
-                    }}
-                    cover={<img alt="example" src={item["image"]} />}
-                  >
-                    <div>
-                      <b>{capitalize(item["item"]["_source"]["category"])}</b>
-                    </div>
-                    <div>
-                      <b>{capitalize(item["item"]["_source"]["title"])}</b>
-                    </div>
-                    <div>
-                      <b>{item["item"]["_source"]["price"]}</b>
-                    </div>
-                  </Card>
-                </List.Item>
-              )}
-            />
+            {user && !loading && (
+              <List
+                grid={{ xs: 2, gutter: 10 }}
+                dataSource={data}
+                renderItem={(item) => {
+                  if (user.userId !== item["item"]["_id"]) {
+                    return (
+                      <>
+                        <List.Item key={item["item"]["_id"]}>
+                          <Card
+                            onClick={() => {
+                              navigate("/details", { state: { item } });
+                            }}
+                            style={{
+                              xs: {
+                                width: 130,
+                              },
+                              sm: {
+                                width: 300,
+                              },
+                            }}
+                            cover={<img alt="example" src={item["image"]} />}
+                          >
+                            <div>
+                              <b>
+                                {capitalize(
+                                  item["item"]["_source"]["category"]
+                                )}
+                              </b>
+                            </div>
+                            <div>
+                              <b>
+                                {capitalize(item["item"]["_source"]["title"])}
+                              </b>
+                            </div>
+                            <div>
+                              <b>{item["item"]["_source"]["price"]}</b>
+                            </div>
+                          </Card>
+                        </List.Item>
+                      </>
+                    );
+                  }
+                }}
+              />
+            )}
+            {loading && <Skeleton />}
           </InfiniteScroll>
         </div>
       </Content>

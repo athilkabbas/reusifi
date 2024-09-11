@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Col, Row } from "antd";
+import { Col, Row, Skeleton } from "antd";
 import { Input } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
@@ -30,6 +30,7 @@ const { TextArea } = Input;
 const { Header, Content, Footer } = Layout;
 const Details = () => {
   const location = useLocation();
+  const [loading, setLoading] = useState(false);
   const { item } = location.state || "";
   const [images, setImages] = useState([]);
   const navigate = useNavigate();
@@ -51,10 +52,12 @@ const Details = () => {
   };
   useEffect(() => {
     const getData = async () => {
+      setLoading(true);
       const result = await axios.get(
         `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?id=${item["item"]["_id"]}`,
         { headers: { Authorization: "xxx" } }
       );
+      setLoading(false);
       setImages(result.data.images);
     };
     if (item) {
@@ -107,59 +110,64 @@ const Details = () => {
             overflowX: "hidden",
           }}
         >
-          {images.length > 0 && (
-            <Row style={{ padding: 20 }}>
-              <Col offset={4} xs={24} sm={5}>
-                <Carousel>
-                  {images.map((image, index) => {
-                    return <Image key={index} width={200} src={image} />;
-                  })}
-                </Carousel>
-              </Col>
-            </Row>
+          {!loading && (
+            <>
+              {images.length > 0 && (
+                <Row style={{ padding: 20 }}>
+                  <Col offset={4} xs={24} sm={5}>
+                    <Carousel>
+                      {images.map((image, index) => {
+                        return <Image key={index} width={200} src={image} />;
+                      })}
+                    </Carousel>
+                  </Col>
+                </Row>
+              )}
+              <Row style={{ padding: 20 }}>
+                <Col xs={24} sm={5}>
+                  <Input value={item["item"]["_source"]["category"]} />
+                </Col>
+              </Row>
+              <Row style={{ padding: 20 }}>
+                <Col xs={24} sm={5}>
+                  <Input value={item["item"]["_source"]["title"]} />
+                </Col>
+              </Row>
+              <Row style={{ padding: 20 }}>
+                <Col xs={24} sm={10}>
+                  <TextArea value={item["item"]["_source"]["description"]} />
+                </Col>
+              </Row>
+              <Row style={{ padding: 20 }}>
+                <Col xs={24} sm={5}>
+                  <Input value={item["item"]["_source"]["state"]} />
+                </Col>
+              </Row>
+              <Row style={{ padding: 20 }}>
+                <Col xs={24} sm={5}>
+                  <Input value={item["item"]["_source"]["district"]} />
+                </Col>
+              </Row>
+              <Row style={{ padding: 20 }}>
+                <Col xs={24} sm={5}>
+                  <Input value={item["item"]["_source"]["price"]} />
+                </Col>
+              </Row>
+              <Row style={{ padding: 20 }}>
+                <Col xs={24} sm={10}>
+                  <Button
+                    onClick={() => {
+                      navigate("/chat", { state: { recipient: item } });
+                    }}
+                    type="primary"
+                  >
+                    Chat
+                  </Button>
+                </Col>
+              </Row>
+            </>
           )}
-          <Row style={{ padding: 20 }}>
-            <Col xs={24} sm={5}>
-              <Input value={item["item"]["_source"]["category"]} />
-            </Col>
-          </Row>
-          <Row style={{ padding: 20 }}>
-            <Col xs={24} sm={5}>
-              <Input value={item["item"]["_source"]["title"]} />
-            </Col>
-          </Row>
-          <Row style={{ padding: 20 }}>
-            <Col xs={24} sm={10}>
-              <TextArea value={item["item"]["_source"]["description"]} />
-            </Col>
-          </Row>
-          <Row style={{ padding: 20 }}>
-            <Col xs={24} sm={5}>
-              <Input value={item["item"]["_source"]["state"]} />
-            </Col>
-          </Row>
-          <Row style={{ padding: 20 }}>
-            <Col xs={24} sm={5}>
-              <Input value={item["item"]["_source"]["district"]} />
-            </Col>
-          </Row>
-          <Row style={{ padding: 20 }}>
-            <Col xs={24} sm={5}>
-              <Input value={item["item"]["_source"]["price"]} />
-            </Col>
-          </Row>
-          <Row style={{ padding: 20 }}>
-            <Col xs={24} sm={10}>
-              <Button
-                onClick={() => {
-                  navigate("/chat", { state: { recipient: item } });
-                }}
-                type="primary"
-              >
-                Chat
-              </Button>
-            </Col>
-          </Row>
+          {loading && <Skeleton />}
         </div>
       </Content>
     </Layout>

@@ -79,7 +79,7 @@ const AddDress = () => {
         navigate("/addDress");
         break;
       case "3":
-        // navigate("/chat");
+        navigate("/chatPage");
         break;
       case "4":
         signOut();
