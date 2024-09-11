@@ -74,8 +74,17 @@ const Chat = () => {
         };
 
         socket.onmessage = (event) => {
-          console.log("Message from server:", event.data);
-          setData((prevValue) => [{ message: event.data }, ...prevValue]);
+          console.log("Message from server:", event);
+          const data = JSON.parse(event.data);
+          setData((prevValue) => [
+            {
+              message: data.message,
+              timestamp: data.timestamp,
+              recipientId: data.recipientUserId,
+              senderId: data.senderUserId,
+            },
+            ...prevValue,
+          ]);
         };
         // To close the connection
         socket.onclose = () => {
@@ -91,8 +100,6 @@ const Chat = () => {
 
     fetchUser();
   }, [reconnect]);
-
-  console.log(data);
 
   const getChats = async () => {
     const result = await axios.get(
@@ -151,8 +158,6 @@ const Chat = () => {
     }
     setValue("");
   };
-
-  console.log(value, "athil");
 
   return (
     <Layout style={{ height: "100vh" }}>
@@ -219,13 +224,13 @@ const Chat = () => {
             scrollableTarget="scrollableDiv"
           >
             <div ref={bottomRef} />
-            {data.map((item, index) => {
+            {data.map((item) => {
               if (
                 item.recipientId === user.userId ||
                 item.senderId === user.userId
               ) {
                 return (
-                  <Row key={index}>
+                  <Row key={item.timestamp}>
                     <Col xs={12} offset={12}>
                       <div
                         style={{
@@ -240,19 +245,21 @@ const Chat = () => {
                   </Row>
                 );
               } else {
-                <Row key={index}>
-                  <Col xs={12}>
-                    <div
-                      style={{
-                        display: "flex",
-                        wordBreak: "break-all",
-                        justifyContent: "start",
-                      }}
-                    >
-                      {item.message}
-                    </div>
-                  </Col>
-                </Row>;
+                return (
+                  <Row key={item.timestamp}>
+                    <Col xs={12}>
+                      <div
+                        style={{
+                          display: "flex",
+                          wordBreak: "break-all",
+                          justifyContent: "start",
+                        }}
+                      >
+                        {item.message}
+                      </div>
+                    </Col>
+                  </Row>
+                );
               }
             })}
           </InfiniteScroll>
