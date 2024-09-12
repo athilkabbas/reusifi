@@ -12,7 +12,9 @@ import axios from "axios";
 import { getCurrentUser, signOut } from "@aws-amplify/auth";
 import { Divider, List, Typography } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { Skeleton } from "antd";
+import { hashString } from "react-hash-string";
+import { Card, Skeleton } from "antd";
+
 import {
   HomeFilled,
   UploadOutlined,
@@ -36,6 +38,7 @@ const ChatPage = () => {
   const [hasMore, setHasMore] = useState(true);
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(false);
   const handleNavigation = (event) => {
     switch (event.key) {
       case "1":
@@ -56,6 +59,7 @@ const ChatPage = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   const getChats = async () => {
+    setLoading(true);
     const result = await axios.get(
       `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${user.userId}&lastEvaluatedKey=${lastEvaluatedKey}`,
       { headers: { Authorization: "xxx" } }
@@ -63,6 +67,7 @@ const ChatPage = () => {
     setData((prevValue) => [...result.data.items, ...prevValue]);
     setLastEvaluatedKey(result.data.lastEvaluatedKey);
     // If no more data to load, set hasMore to false
+    setLoading(false);
     if (!result.data.lastEvaluatedKey) {
       setHasMore(false);
     }
@@ -110,80 +115,62 @@ const ChatPage = () => {
           padding: "0 15px",
         }}
       >
-        <div
-          id="scrollableDiv"
-          style={{
-            background: colorBgContainer,
-            borderRadius: borderRadiusLG,
-            overflow: "scroll",
-            display: "flex",
-            flexDirection: "column-reverse",
-            height: "calc(100vh - 120px)",
-          }}
-        >
-          <InfiniteScroll
+        {!loading && (
+          <div
+            id="scrollableDiv"
             style={{
-              overflowX: "hidden",
-              display: "flex",
-              flexDirection: "column-reverse",
+              background: colorBgContainer,
+              borderRadius: borderRadiusLG,
+              overflow: "scroll",
               height: "100vh",
             }}
-            dataLength={data.length}
-            next={getChats}
-            hasMore={hasMore}
-            inverse={true}
-            loader={
-              <Skeleton
-                avatar
-                paragraph={{
-                  rows: 1,
-                }}
-                active
-              />
-            }
-            endMessage={<Divider plain>It is all, nothing more</Divider>}
-            scrollableTarget="scrollableDiv"
           >
-            {/* {data.map((item) => {
-              if (
-                item.recipientId === user.userId ||
-                item.senderId === user.userId
-              ) {
-                return (
-                  <Row key={item.timestamp}>
-                    <Col xs={12} offset={12}>
-                      <div
-                        style={{
-                          display: "flex",
-                          wordBreak: "break-word",
-                          justifyContent: "end",
-                        }}
-                      >
-                        {item.message}
-                      </div>
-                    </Col>
-                  </Row>
-                );
-              } else {
-                return (
-                  <Row key={item.timestamp}>
-                    <Col xs={12}>
-                      <div
-                        style={{
-                          display: "flex",
-                          wordBreak: "break-all",
-                          justifyContent: "start",
-                        }}
-                      >
-                        {item.message}
-                      </div>
-                    </Col>
-                  </Row>
-                );
+            <InfiniteScroll
+              style={{
+                overflowX: "hidden",
+              }}
+              dataLength={data.length}
+              next={getChats}
+              hasMore={hasMore}
+              inverse={true}
+              loader={
+                <Skeleton
+                  avatar
+                  paragraph={{
+                    rows: 1,
+                  }}
+                  active
+                />
               }
-            })} */}
-          </InfiniteScroll>
-        </div>
+              endMessage={<Divider plain>It is all, nothing more</Divider>}
+              scrollableTarget="scrollableDiv"
+            >
+              {data.map((item) => {
+                return (
+                  <Row style={{ padding: "10px" }}>
+                    <Col span={24}>
+                      <Card
+                        onClick={() => {
+                          navigate("/chat", {
+                            state: { conversationId: item.conversationId },
+                          });
+                        }}
+                        key={hashString(item.conversationId)}
+                        title={hashString(item.conversationId)
+                          .toString()
+                          .slice(1)}
+                        bordered={true}
+                      >
+                        <p>{item.message}</p>
+                      </Card>
+                    </Col>
+                  </Row>
+                );
+              })}
+            </InfiniteScroll>
+          </div>
+        )}
+        {loading && <Skeleton />}
       </Content>
     </Layout>
   );

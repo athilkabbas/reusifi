@@ -179,6 +179,8 @@ const App = () => {
                         </List.Item>
                       </>
                     );
+                  } else {
+                    return <></>;
                   }
                 }}
               />

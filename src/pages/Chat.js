@@ -34,6 +34,7 @@ const Chat = () => {
   const [data, setData] = useState([]);
   const location = useLocation();
   const { recipient } = location.state || "";
+  const { conversationId } = location.state;
   const [value, setValue] = useState("");
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
@@ -104,10 +105,18 @@ const Chat = () => {
 
   const getChats = async () => {
     setLoading(true);
-    const result = await axios.get(
-      `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${user.userId}&userId2=${recipient["item"]["_id"]}&lastEvaluatedKey=${lastEvaluatedKey}`,
-      { headers: { Authorization: "xxx" } }
-    );
+    let result;
+    if (recipient && recipient["item"]["_id"]) {
+      result = await axios.get(
+        `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${user.userId}&userId2=${recipient["item"]["_id"]}&lastEvaluatedKey=${lastEvaluatedKey}`,
+        { headers: { Authorization: "xxx" } }
+      );
+    } else if (conversationId) {
+      result = await axios.get(
+        `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?conversationId=${conversationId}&lastEvaluatedKey=${lastEvaluatedKey}`,
+        { headers: { Authorization: "xxx" } }
+      );
+    }
     setLoading(false);
     setData((prevValue) => [...result.data.items, ...prevValue]);
     setLastEvaluatedKey(result.data.lastEvaluatedKey);
@@ -118,10 +127,14 @@ const Chat = () => {
   };
 
   useEffect(() => {
-    if (user && user.userId && recipient && recipient["item"]["_id"]) {
+    if (
+      user &&
+      user.userId &&
+      ((recipient && recipient["item"]["_id"]) || conversationId)
+    ) {
       getChats();
     }
-  }, [user, recipient]);
+  }, [user, recipient, conversationId]);
 
   const handleNavigation = (event) => {
     switch (event.key) {
@@ -158,6 +171,10 @@ const Chat = () => {
   const handleSubmit = () => {
     if (value) {
       sendMessage(value, recipient["item"]["_id"], user.userId);
+      setData((prevValue) => [
+        { message: value, timestamp: Date.now(), senderId: user.userId },
+        ...prevValue,
+      ]);
     }
     setValue("");
   };

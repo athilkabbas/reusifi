@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Col, Row } from "antd";
+import { Col, Row, Skeleton } from "antd";
 import { Input } from "antd";
 import { useNavigate } from "react-router-dom";
 import { Select } from "antd";
@@ -64,7 +64,7 @@ const AddDress = () => {
         type === "description" ||
         type === "price"
       ) {
-        return { ...prevValue, [type]: value.target.defaultValue };
+        return { ...prevValue, [type]: value.target.value };
       }
       return { ...prevValue, [type]: value };
     });
@@ -89,6 +89,7 @@ const AddDress = () => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [fileList, setFileList] = useState([]);
+  const [loading, setLoading] = useState(false);
   const handlePreview = async (file) => {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
@@ -108,6 +109,7 @@ const AddDress = () => {
     });
   }, [fileList]);
   const handleSubmit = async () => {
+    setLoading(true);
     const formData = new FormData();
     for (let i = 0; i < form.images.length; i++) {
       formData.append(`image${i}`, form.images[i]);
@@ -129,6 +131,8 @@ const AddDress = () => {
         },
       }
     );
+    setLoading(false);
+    navigate("/");
   };
   const uploadButton = (
     <button
@@ -181,132 +185,141 @@ const AddDress = () => {
           padding: "0 15px",
         }}
       >
-        <div
-          style={{
-            padding: 0,
-            minHeight: 380,
-            background: colorBgContainer,
-            borderRadius: borderRadiusLG,
-            marginTop: "30px",
-            overflow: "scroll",
-            height: "100%",
-            paddingBottom: "20px",
-          }}
-        >
-          <Row style={{ padding: 20 }}>
-            <Col xs={24} sm={5}>
-              <Input
-                onChange={(value) => handleChange(value, "category")}
-                placeholder="Category"
-              />
-            </Col>
-          </Row>
-          <Row style={{ padding: 20 }}>
-            <Col xs={24} sm={5}>
-              <Input
-                onChange={(value) => handleChange(value, "title")}
-                placeholder="Title"
-              />
-            </Col>
-          </Row>
-          <Row style={{ padding: 20 }}>
-            <Col xs={24} sm={10}>
-              <TextArea
-                onChange={(value) => handleChange(value, "description")}
-                rows={4}
-                placeholder="Description"
-                maxLength={100}
-              />
-            </Col>
-          </Row>
-          <Row style={{ padding: 20 }}>
-            <Col xs={24} sm={10}>
-              <Select
-                onChange={(value) => {
-                  handleChange(value, "state");
-                  let districts = districtMap();
-                  setDistricts(districts[value]);
-                }}
-                showSearch
-                style={{
-                  width: 190,
-                }}
-                placeholder="Select State"
-                optionFilterProp="label"
-                filterSort={(optionA, optionB) =>
-                  (optionA?.label ?? "")
-                    .toLowerCase()
-                    .localeCompare((optionB?.label ?? "").toLowerCase())
-                }
-                options={states}
-              />
-            </Col>
-          </Row>
-          {districts.length > 0 && (
+        {!loading && (
+          <div
+            style={{
+              padding: 0,
+              minHeight: 380,
+              background: colorBgContainer,
+              borderRadius: borderRadiusLG,
+              marginTop: "30px",
+              overflow: "scroll",
+              height: "100%",
+              paddingBottom: "20px",
+            }}
+          >
+            <Row style={{ padding: 20 }}>
+              <Col xs={24} sm={5}>
+                <Input
+                  onChange={(value) => handleChange(value, "category")}
+                  placeholder="Category"
+                  value={form.category}
+                />
+              </Col>
+            </Row>
+            <Row style={{ padding: 20 }}>
+              <Col xs={24} sm={5}>
+                <Input
+                  onChange={(value) => handleChange(value, "title")}
+                  placeholder="Title"
+                  value={form.title}
+                />
+              </Col>
+            </Row>
+            <Row style={{ padding: 20 }}>
+              <Col xs={24} sm={10}>
+                <TextArea
+                  onChange={(value) => handleChange(value, "description")}
+                  rows={4}
+                  placeholder="Description"
+                  maxLength={100}
+                  value={form.description}
+                />
+              </Col>
+            </Row>
             <Row style={{ padding: 20 }}>
               <Col xs={24} sm={10}>
                 <Select
                   onChange={(value) => {
-                    handleChange(value, "district");
+                    handleChange(value, "state");
+                    let districts = districtMap();
+                    setDistricts(districts[value]);
                   }}
                   showSearch
                   style={{
                     width: 190,
                   }}
-                  placeholder="Select District"
+                  value={form.state}
+                  placeholder="Select State"
                   optionFilterProp="label"
                   filterSort={(optionA, optionB) =>
                     (optionA?.label ?? "")
                       .toLowerCase()
                       .localeCompare((optionB?.label ?? "").toLowerCase())
                   }
-                  options={districts}
+                  options={states}
                 />
               </Col>
             </Row>
-          )}
-          <Row style={{ padding: 20 }}>
-            <Col xs={24} sm={5}>
-              <Input
-                onChange={(value) => handleChange(value, "price")}
-                placeholder="Price"
-              />
-            </Col>
-          </Row>
-          <Row style={{ padding: 20 }}>
-            <Col xs={24} sm={10}>
-              <Upload
-                listType="picture-card"
-                fileList={fileList}
-                onPreview={handlePreview}
-                onChange={handleChangeImage}
-              >
-                {fileList.length >= 4 ? null : uploadButton}
-              </Upload>
-              {previewImage && (
-                <Image
-                  wrapperStyle={{
-                    display: "none",
-                  }}
-                  preview={{
-                    visible: previewOpen,
-                    onVisibleChange: (visible) => setPreviewOpen(visible),
-                    afterOpenChange: (visible) =>
-                      !visible && setPreviewImage(""),
-                  }}
-                  src={previewImage}
+            {districts.length > 0 && (
+              <Row style={{ padding: 20 }}>
+                <Col xs={24} sm={10}>
+                  <Select
+                    onChange={(value) => {
+                      handleChange(value, "district");
+                    }}
+                    showSearch
+                    style={{
+                      width: 190,
+                    }}
+                    value={form.district}
+                    placeholder="Select District"
+                    optionFilterProp="label"
+                    filterSort={(optionA, optionB) =>
+                      (optionA?.label ?? "")
+                        .toLowerCase()
+                        .localeCompare((optionB?.label ?? "").toLowerCase())
+                    }
+                    options={districts}
+                  />
+                </Col>
+              </Row>
+            )}
+            <Row style={{ padding: 20 }}>
+              <Col xs={24} sm={5}>
+                <Input
+                  onChange={(value) => handleChange(value, "price")}
+                  placeholder="Price"
+                  value={form.price}
                 />
-              )}
-            </Col>
-          </Row>
-          <Row style={{ padding: 20 }}>
-            <Col xs={24} sm={10}>
-              <Button onClick={handleSubmit} type="primary">
-                Submit
-              </Button>
-            </Col>
-          </Row>
-        </div>
+              </Col>
+            </Row>
+            <Row style={{ padding: 20 }}>
+              <Col xs={24} sm={10}>
+                <Upload
+                  listType="picture-card"
+                  fileList={fileList}
+                  onPreview={handlePreview}
+                  onChange={handleChangeImage}
+                >
+                  {fileList.length >= 4 ? null : uploadButton}
+                </Upload>
+                {previewImage && (
+                  <Image
+                    wrapperStyle={{
+                      display: "none",
+                    }}
+                    preview={{
+                      visible: previewOpen,
+                      onVisibleChange: (visible) => setPreviewOpen(visible),
+                      afterOpenChange: (visible) =>
+                        !visible && setPreviewImage(""),
+                    }}
+                    src={previewImage}
+                  />
+                )}
+              </Col>
+            </Row>
+            <Row style={{ padding: 20 }}>
+              <Col xs={24} sm={10}>
+                <Button onClick={handleSubmit} type="primary">
+                  Submit
+                </Button>
+              </Col>
+            </Row>
+          </div>
+        )}
+        {loading && <Skeleton />}
       </Content>
     </Layout>
   );
