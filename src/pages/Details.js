@@ -117,7 +117,14 @@ const Details = () => {
                   <Col offset={4} xs={24} sm={5}>
                     <Carousel>
                       {images.map((image, index) => {
-                        return <Image key={index} width={200} src={image} />;
+                        return (
+                          <Image
+                            height={120}
+                            key={index}
+                            width={200}
+                            src={image}
+                          />
+                        );
                       })}
                     </Carousel>
                   </Col>

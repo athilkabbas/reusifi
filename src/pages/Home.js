@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
 import {
@@ -52,7 +52,10 @@ const App = () => {
         }
         return page + 1;
       });
-      setData([...data, ...results.data]);
+      let newData = results.data.filter(
+        (item) => currentUser.userId !== item["item"]["_id"]
+      );
+      setData([...data, ...newData]);
       setLoading(false);
     } catch (err) {
       console.log(err);
@@ -142,46 +145,47 @@ const App = () => {
                 grid={{ xs: 2, gutter: 10 }}
                 dataSource={data}
                 renderItem={(item) => {
-                  if (user.userId !== item["item"]["_id"]) {
-                    return (
-                      <>
-                        <List.Item key={item["item"]["_id"]}>
-                          <Card
-                            onClick={() => {
-                              navigate("/details", { state: { item } });
-                            }}
-                            style={{
-                              xs: {
-                                width: 130,
-                              },
-                              sm: {
-                                width: 300,
-                              },
-                            }}
-                            cover={<img alt="example" src={item["image"]} />}
-                          >
-                            <div>
-                              <b>
-                                {capitalize(
-                                  item["item"]["_source"]["category"]
-                                )}
-                              </b>
-                            </div>
-                            <div>
-                              <b>
-                                {capitalize(item["item"]["_source"]["title"])}
-                              </b>
-                            </div>
-                            <div>
-                              <b>{item["item"]["_source"]["price"]}</b>
-                            </div>
-                          </Card>
-                        </List.Item>
-                      </>
-                    );
-                  } else {
-                    return <></>;
-                  }
+                  return (
+                    <>
+                      <List.Item key={item["item"]["_id"]}>
+                        <Card
+                          onClick={() => {
+                            navigate("/details", { state: { item } });
+                          }}
+                          style={{
+                            xs: {
+                              width: 130,
+                            },
+                            sm: {
+                              width: 300,
+                            },
+                          }}
+                          cover={
+                            <img
+                              height={120}
+                              width={200}
+                              alt="example"
+                              src={item["image"]}
+                            />
+                          }
+                        >
+                          <div>
+                            <b>
+                              {capitalize(item["item"]["_source"]["category"])}
+                            </b>
+                          </div>
+                          <div>
+                            <b>
+                              {capitalize(item["item"]["_source"]["title"])}
+                            </b>
+                          </div>
+                          <div>
+                            <b>{item["item"]["_source"]["price"]}</b>
+                          </div>
+                        </Card>
+                      </List.Item>
+                    </>
+                  );
                 }}
               />
             )}
