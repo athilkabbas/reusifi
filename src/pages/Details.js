@@ -114,17 +114,10 @@ const Details = () => {
             <>
               {images.length > 0 && (
                 <Row style={{ padding: 20 }}>
-                  <Col offset={4} xs={24} sm={5}>
+                  <Col>
                     <Carousel>
                       {images.map((image, index) => {
-                        return (
-                          <Image
-                            height={120}
-                            key={index}
-                            width={200}
-                            src={image}
-                          />
-                        );
+                        return <Image key={index} src={image} />;
                       })}
                     </Carousel>
                   </Col>

@@ -53,11 +53,12 @@ const App = () => {
         return page + 1;
       });
       let newData = results.data.filter(
-        (item) => currentUser.userId !== item["item"]["_id"]
+        (item) => currentUser.userId !== item["item"]["_source"]["email"]
       );
       setData([...data, ...newData]);
       setLoading(false);
     } catch (err) {
+      setLoading(false);
       console.log(err);
     }
   };
@@ -149,25 +150,11 @@ const App = () => {
                     <>
                       <List.Item key={item["item"]["_id"]}>
                         <Card
+                          style={{ height: 250 }}
                           onClick={() => {
                             navigate("/details", { state: { item } });
                           }}
-                          style={{
-                            xs: {
-                              width: 130,
-                            },
-                            sm: {
-                              width: 300,
-                            },
-                          }}
-                          cover={
-                            <img
-                              height={120}
-                              width={200}
-                              alt="example"
-                              src={item["image"]}
-                            />
-                          }
+                          cover={<img alt="example" src={item["image"]} />}
                         >
                           <div>
                             <b>
