@@ -46,6 +46,7 @@ const Chat = () => {
   const [loading, setLoading] = useState(false);
 
   const sendMessage = (message, recipientUserId, senderUserId) => {
+    console.log(recipientUserId, "athil");
     try {
       if (ws) {
         ws.send(
@@ -104,25 +105,38 @@ const Chat = () => {
   }, [reconnect]);
 
   const getChats = async () => {
-    setLoading(true);
-    let result;
-    if (recipient && recipient["item"]["_id"]) {
-      result = await axios.get(
-        `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${user.userId}&userId2=${recipient["item"]["_id"]}&lastEvaluatedKey=${lastEvaluatedKey}`,
-        { headers: { Authorization: "xxx" } }
-      );
-    } else if (conversationId) {
-      result = await axios.get(
-        `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?conversationId=${conversationId}&lastEvaluatedKey=${lastEvaluatedKey}`,
-        { headers: { Authorization: "xxx" } }
-      );
-    }
-    setLoading(false);
-    setData((prevValue) => [...result.data.items, ...prevValue]);
-    setLastEvaluatedKey(result.data.lastEvaluatedKey);
-    // If no more data to load, set hasMore to false
-    if (!result.data.lastEvaluatedKey) {
-      setHasMore(false);
+    try {
+      setLoading(true);
+      let result;
+      if (recipient && recipient["item"]["_source"]["email"]) {
+        result = await axios.get(
+          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${user.userId}&userId2=${recipient["item"]["_source"]["email"]}&lastEvaluatedKey=${lastEvaluatedKey}`,
+          { headers: { Authorization: "xxx" } }
+        );
+      } else if (conversationId) {
+        let userIds = conversationId.split("#");
+        let userId2;
+        for (let userId of userIds) {
+          if (user.userId !== userId) {
+            userId2 = userId;
+            break;
+          }
+        }
+        result = await axios.get(
+          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${user.userId}&userId2=${userId2}&lastEvaluatedKey=${lastEvaluatedKey}`,
+          { headers: { Authorization: "xxx" } }
+        );
+      }
+      setLoading(false);
+      setData((prevValue) => [...result.data.items, ...prevValue]);
+      setLastEvaluatedKey(result.data.lastEvaluatedKey);
+      // If no more data to load, set hasMore to false
+      if (!result.data.lastEvaluatedKey) {
+        setHasMore(false);
+      }
+    } catch (err) {
+      setLoading(false);
+      console.log(err);
     }
   };
 
@@ -130,7 +144,7 @@ const Chat = () => {
     if (
       user &&
       user.userId &&
-      ((recipient && recipient["item"]["_id"]) || conversationId)
+      ((recipient && recipient["item"]["_source"]["email"]) || conversationId)
     ) {
       getChats();
     }
@@ -170,7 +184,19 @@ const Chat = () => {
   };
   const handleSubmit = () => {
     if (value) {
-      sendMessage(value, recipient["item"]["_id"], user.userId);
+      if (recipient && recipient["item"]["_source"]["email"]) {
+        sendMessage(value, recipient["item"]["_source"]["email"], user.userId);
+      } else if (conversationId) {
+        let userIds = conversationId.split("#");
+        let userId2;
+        for (let userId of userIds) {
+          if (user.userId !== userId) {
+            userId2 = userId;
+            break;
+          }
+        }
+        sendMessage(value, userId2, user.userId);
+      }
       setData((prevValue) => [
         { message: value, timestamp: Date.now(), senderId: user.userId },
         ...prevValue,

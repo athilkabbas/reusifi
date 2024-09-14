@@ -52,13 +52,18 @@ const Details = () => {
   };
   useEffect(() => {
     const getData = async () => {
-      setLoading(true);
-      const result = await axios.get(
-        `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?id=${item["item"]["_id"]}`,
-        { headers: { Authorization: "xxx" } }
-      );
-      setLoading(false);
-      setImages(result.data.images);
+      try {
+        setLoading(true);
+        const result = await axios.get(
+          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?id=${item["item"]["_id"]}`,
+          { headers: { Authorization: "xxx" } }
+        );
+        setLoading(false);
+        setImages(result.data.images);
+      } catch (err) {
+        setLoading(false);
+        console.log(err);
+      }
     };
     if (item) {
       getData();

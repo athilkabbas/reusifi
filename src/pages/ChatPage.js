@@ -59,17 +59,22 @@ const ChatPage = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   const getChats = async () => {
-    setLoading(true);
-    const result = await axios.get(
-      `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${user.userId}&lastEvaluatedKey=${lastEvaluatedKey}`,
-      { headers: { Authorization: "xxx" } }
-    );
-    setData((prevValue) => [...result.data.items, ...prevValue]);
-    setLastEvaluatedKey(result.data.lastEvaluatedKey);
-    // If no more data to load, set hasMore to false
-    setLoading(false);
-    if (!result.data.lastEvaluatedKey) {
-      setHasMore(false);
+    try {
+      setLoading(true);
+      const result = await axios.get(
+        `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${user.userId}&lastEvaluatedKey=${lastEvaluatedKey}`,
+        { headers: { Authorization: "xxx" } }
+      );
+      setData((prevValue) => [...result.data.items, ...prevValue]);
+      setLastEvaluatedKey(result.data.lastEvaluatedKey);
+      // If no more data to load, set hasMore to false
+      setLoading(false);
+      if (!result.data.lastEvaluatedKey) {
+        setHasMore(false);
+      }
+    } catch (err) {
+      setLoading(false);
+      console.log(err);
     }
   };
   useEffect(() => {
@@ -115,37 +120,37 @@ const ChatPage = () => {
           padding: "0 15px",
         }}
       >
-        {!loading && (
-          <div
-            id="scrollableDiv"
+        <div
+          id="scrollableDiv"
+          style={{
+            background: colorBgContainer,
+            borderRadius: borderRadiusLG,
+            overflow: "scroll",
+            height: "100vh",
+          }}
+        >
+          <InfiniteScroll
             style={{
-              background: colorBgContainer,
-              borderRadius: borderRadiusLG,
-              overflow: "scroll",
-              height: "100vh",
+              overflowX: "hidden",
             }}
+            dataLength={data.length}
+            next={getChats}
+            hasMore={hasMore}
+            inverse={true}
+            loader={
+              <Skeleton
+                avatar
+                paragraph={{
+                  rows: 1,
+                }}
+                active
+              />
+            }
+            endMessage={<Divider plain>It is all, nothing more</Divider>}
+            scrollableTarget="scrollableDiv"
           >
-            <InfiniteScroll
-              style={{
-                overflowX: "hidden",
-              }}
-              dataLength={data.length}
-              next={getChats}
-              hasMore={hasMore}
-              inverse={true}
-              loader={
-                <Skeleton
-                  avatar
-                  paragraph={{
-                    rows: 1,
-                  }}
-                  active
-                />
-              }
-              endMessage={<Divider plain>It is all, nothing more</Divider>}
-              scrollableTarget="scrollableDiv"
-            >
-              {data.map((item) => {
+            {!loading &&
+              data.map((item) => {
                 return (
                   <Row style={{ padding: "10px" }}>
                     <Col span={24}>
@@ -167,10 +172,9 @@ const ChatPage = () => {
                   </Row>
                 );
               })}
-            </InfiniteScroll>
-          </div>
-        )}
-        {loading && <Skeleton />}
+            {loading && <Skeleton />}
+          </InfiniteScroll>
+        </div>
       </Content>
     </Layout>
   );
