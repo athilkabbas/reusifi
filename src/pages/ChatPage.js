@@ -86,7 +86,7 @@ const ChatPage = () => {
     }
   }, [user]);
   return (
-    <Layout style={{ height: "100vh" }}>
+    <Layout>
       <Header
         style={{
           position: "sticky",

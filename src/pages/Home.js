@@ -86,7 +86,7 @@ const App = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   return (
-    <Layout style={{ height: "100vh" }}>
+    <Layout>
       <Header
         style={{
           position: "sticky",
@@ -150,23 +150,47 @@ const App = () => {
                     <>
                       <List.Item key={item["item"]["_id"]}>
                         <Card
-                          style={{ height: 250 }}
+                          style={{ height: 260 }}
                           onClick={() => {
                             navigate("/details", { state: { item } });
                           }}
-                          cover={<img alt="example" src={item["image"]} />}
+                          cover={
+                            <img
+                              alt="example"
+                              src={item["image"]}
+                              style={{
+                                height: "150px",
+                                objectFit: "contain",
+                              }}
+                            />
+                          }
                         >
-                          <div>
+                          <div
+                            style={{
+                              textOverflow: "ellipsis",
+                              overflow: "hidden",
+                            }}
+                          >
                             <b>
                               {capitalize(item["item"]["_source"]["category"])}
                             </b>
                           </div>
-                          <div>
+                          <div
+                            style={{
+                              textOverflow: "ellipsis",
+                              overflow: "hidden",
+                            }}
+                          >
                             <b>
                               {capitalize(item["item"]["_source"]["title"])}
                             </b>
                           </div>
-                          <div>
+                          <div
+                            style={{
+                              textOverflow: "ellipsis",
+                              overflow: "hidden",
+                            }}
+                          >
                             <b>{item["item"]["_source"]["price"]}</b>
                           </div>
                         </Card>

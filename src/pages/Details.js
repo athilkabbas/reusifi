@@ -68,7 +68,7 @@ const Details = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   return (
-    <Layout style={{ height: "100vh" }}>
+    <Layout>
       <Header
         style={{
           position: "sticky",
