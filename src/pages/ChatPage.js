@@ -94,62 +94,78 @@ const ChatPage = () => {
   };
 
   const handleMenuClick = async (e, index) => {
-    e.domEvent.preventDefault();
-    e.domEvent.stopPropagation();
-    // This will give you the key of the clicked item
-    const clickedItemKey = e.key;
-    let userIds = data[index].conversationId.split("#");
-    let userId2;
-    for (let userId of userIds) {
-      if (user.userId !== userId) {
-        userId2 = userId;
-        break;
+    try {
+      e.domEvent.preventDefault();
+      e.domEvent.stopPropagation();
+      // This will give you the key of the clicked item
+      setLoading(true);
+      const clickedItemKey = e.key;
+      let userIds = data[index].conversationId.split("#");
+      let userId2;
+      for (let userId of userIds) {
+        if (user.userId !== userId) {
+          userId2 = userId;
+          break;
+        }
       }
-    }
-    if (clickedItemKey === "1") {
-      const result = await axios.get(
-        `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/blockUser?block=${true}&userId1=${
-          user.userId
-        }&userId2=${userId2}`,
-        { headers: { Authorization: "xxx" } }
-      );
-    } else {
-      const result = await axios.get(
-        `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/blockUser?deleteChat=${true}&userId1=${
-          user.userId
-        }&userId2=${userId2}`,
-        { headers: { Authorization: "xxx" } }
-      );
+      if (clickedItemKey === "1") {
+        const result = await axios.get(
+          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/blockUser?block=${true}&userId1=${
+            user.userId
+          }&userId2=${userId2}`,
+          { headers: { Authorization: "xxx" } }
+        );
+      } else {
+        const result = await axios.get(
+          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/blockUser?deleteChat=${true}&userId1=${
+            user.userId
+          }&userId2=${userId2}`,
+          { headers: { Authorization: "xxx" } }
+        );
+      }
+      setLoading(false);
+      window.location.reload();
+    } catch (err) {
+      setLoading(false);
+      console.log(err);
     }
   };
 
   const handleMenuClickUnblock = async (e, index) => {
-    e.domEvent.preventDefault();
-    e.domEvent.stopPropagation();
-    // This will give you the key of the clicked item
-    const clickedItemKey = e.key;
-    let userIds = data[index].conversationId.split("#");
-    let userId2;
-    for (let userId of userIds) {
-      if (user.userId !== userId) {
-        userId2 = userId;
-        break;
+    try {
+      setLoading(true);
+      e.domEvent.preventDefault();
+      e.domEvent.stopPropagation();
+      // This will give you the key of the clicked item
+      const clickedItemKey = e.key;
+      let userIds = data[index].conversationId.split("#");
+      let userId2;
+      for (let userId of userIds) {
+        if (user.userId !== userId) {
+          userId2 = userId;
+          break;
+        }
       }
-    }
-    if (clickedItemKey === "1") {
-      const result = await axios.get(
-        `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/blockUser?unBlock=${true}&userId1=${
-          user.userId
-        }&userId2=${userId2}`,
-        { headers: { Authorization: "xxx" } }
-      );
-    } else {
-      const result = await axios.get(
-        `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/blockUser?deleteChat=${true}&userId1=${
-          user.userId
-        }&userId2=${userId2}`,
-        { headers: { Authorization: "xxx" } }
-      );
+      if (clickedItemKey === "1") {
+        const result = await axios.get(
+          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/blockUser?unBlock=${true}&userId1=${
+            user.userId
+          }&userId2=${userId2}`,
+          { headers: { Authorization: "xxx" } }
+        );
+      } else {
+        const result = await axios.get(
+          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/blockUser?deleteChat=${true}&userId1=${
+            user.userId
+          }&userId2=${userId2}`,
+          { headers: { Authorization: "xxx" } }
+        );
+      }
+      setLoading(false);
+      window.location.reload();
+    } catch (err) {
+      setLoading(false);
+      console.log(err);
     }
   };
   // Create a Menu component from menuItems
