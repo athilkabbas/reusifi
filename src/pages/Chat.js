@@ -46,7 +46,6 @@ const Chat = () => {
   const [loading, setLoading] = useState(false);
 
   const sendMessage = (message, recipientUserId, senderUserId) => {
-    console.log(recipientUserId, "athil");
     try {
       if (ws) {
         ws.send(
@@ -222,7 +221,7 @@ const Chat = () => {
           onClick={(event) => handleNavigation(event)}
           theme="dark"
           mode="horizontal"
-          defaultSelectedKeys={["2"]}
+          defaultSelectedKeys={["0"]}
           items={items}
           style={{
             flex: 1,
