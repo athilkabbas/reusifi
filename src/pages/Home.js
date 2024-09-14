@@ -167,6 +167,7 @@ const App = () => {
                         >
                           <div
                             style={{
+                              whiteSpace: "nowrap",
                               textOverflow: "ellipsis",
                               overflow: "hidden",
                             }}
@@ -177,6 +178,7 @@ const App = () => {
                           </div>
                           <div
                             style={{
+                              whiteSpace: "nowrap",
                               textOverflow: "ellipsis",
                               overflow: "hidden",
                             }}
@@ -187,6 +189,7 @@ const App = () => {
                           </div>
                           <div
                             style={{
+                              whiteSpace: "nowrap",
                               textOverflow: "ellipsis",
                               overflow: "hidden",
                             }}

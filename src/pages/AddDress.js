@@ -52,6 +52,7 @@ const AddDress = () => {
       setForm((prevValue) => {
         return { ...prevValue, email: currentUser.userId };
       });
+      setUser(currentUser);
     };
     fetchUser();
   }, []);
@@ -185,7 +186,7 @@ const AddDress = () => {
           padding: "0 15px",
         }}
       >
-        {!loading && (
+        {!loading && user && (
           <div
             style={{
               padding: 0,

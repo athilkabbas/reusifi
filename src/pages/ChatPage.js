@@ -14,12 +14,15 @@ import { Divider, List, Typography } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { hashString } from "react-hash-string";
 import { Card, Skeleton } from "antd";
+import { Dropdown, Space } from "antd";
+import { DownOutlined, SmileOutlined } from "@ant-design/icons";
 
 import {
   HomeFilled,
   UploadOutlined,
   MessageFilled,
   LogoutOutlined,
+  MenuOutlined,
 } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
 const { TextArea } = Input;
@@ -31,6 +34,32 @@ const items = [HomeFilled, UploadOutlined, MessageFilled, LogoutOutlined].map(
     label: IconText[index],
   })
 );
+
+const menuItems = [
+  {
+    key: "1",
+    danger: true,
+    label: "Block",
+  },
+  {
+    key: "2",
+    danger: true,
+    label: "Delete",
+  },
+];
+
+const menuItemsBlocked = [
+  {
+    key: "1",
+    danger: false,
+    label: "Unblock",
+  },
+  {
+    key: "2",
+    danger: true,
+    label: "Delete",
+  },
+];
 const { Header, Content, Footer } = Layout;
 const ChatPage = () => {
   const [data, setData] = useState([]);
@@ -39,6 +68,7 @@ const ChatPage = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [messageApi, contextHolder] = message.useMessage();
   const handleNavigation = (event) => {
     switch (event.key) {
       case "1":
@@ -58,6 +88,102 @@ const ChatPage = () => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+
+  const info = () => {
+    messageApi.info("You have blocked this user");
+  };
+
+  const handleMenuClick = async (e, index) => {
+    e.domEvent.preventDefault();
+    e.domEvent.stopPropagation();
+    // This will give you the key of the clicked item
+    const clickedItemKey = e.key;
+    let userIds = data[index].conversationId.split("#");
+    let userId2;
+    for (let userId of userIds) {
+      if (user.userId !== userId) {
+        userId2 = userId;
+        break;
+      }
+    }
+    if (clickedItemKey === "1") {
+      const result = await axios.get(
+        `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/blockUser?block=${true}&userId1=${
+          user.userId
+        }&userId2=${userId2}`,
+        { headers: { Authorization: "xxx" } }
+      );
+    } else {
+      const result = await axios.get(
+        `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/blockUser?deleteChat=${true}&userId1=${
+          user.userId
+        }&userId2=${userId2}`,
+        { headers: { Authorization: "xxx" } }
+      );
+    }
+  };
+
+  const handleMenuClickUnblock = async (e, index) => {
+    e.domEvent.preventDefault();
+    e.domEvent.stopPropagation();
+    // This will give you the key of the clicked item
+    const clickedItemKey = e.key;
+    let userIds = data[index].conversationId.split("#");
+    let userId2;
+    for (let userId of userIds) {
+      if (user.userId !== userId) {
+        userId2 = userId;
+        break;
+      }
+    }
+    if (clickedItemKey === "1") {
+      const result = await axios.get(
+        `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/blockUser?unBlock=${true}&userId1=${
+          user.userId
+        }&userId2=${userId2}`,
+        { headers: { Authorization: "xxx" } }
+      );
+    } else {
+      const result = await axios.get(
+        `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/blockUser?deleteChat=${true}&userId1=${
+          user.userId
+        }&userId2=${userId2}`,
+        { headers: { Authorization: "xxx" } }
+      );
+    }
+  };
+  // Create a Menu component from menuItems
+  const menu = (index) => {
+    return (
+      <Menu
+        onClick={(event) => {
+          handleMenuClick(event, index);
+        }}
+      >
+        {menuItems.map((item) => (
+          <Menu.Item key={item.key} danger={item.danger}>
+            {item.label}
+          </Menu.Item>
+        ))}
+      </Menu>
+    );
+  };
+
+  const menuBlocked = (index) => {
+    return (
+      <Menu
+        onClick={(event) => {
+          handleMenuClickUnblock(event, index);
+        }}
+      >
+        {menuItemsBlocked.map((item) => (
+          <Menu.Item key={item.key} danger={item.danger}>
+            {item.label}
+          </Menu.Item>
+        ))}
+      </Menu>
+    );
+  };
   const getChats = async () => {
     try {
       setLoading(true);
@@ -107,7 +233,7 @@ const ChatPage = () => {
           onClick={(event) => handleNavigation(event)}
           theme="dark"
           mode="horizontal"
-          defaultSelectedKeys={["2"]}
+          defaultSelectedKeys={["3"]}
           items={items}
           style={{
             flex: 1,
@@ -120,6 +246,7 @@ const ChatPage = () => {
           padding: "0 15px",
         }}
       >
+        {contextHolder}
         <div
           id="scrollableDiv"
           style={{
@@ -150,23 +277,73 @@ const ChatPage = () => {
             scrollableTarget="scrollableDiv"
           >
             {!loading &&
-              data.map((item) => {
+              user &&
+              data.map((item, index) => {
                 return (
                   <Row style={{ padding: "10px" }}>
                     <Col span={24}>
                       <Card
+                        style={{ height: "120px" }}
                         onClick={() => {
-                          navigate("/chat", {
-                            state: { conversationId: item.conversationId },
-                          });
+                          if (item.blocked) {
+                            info();
+                          } else {
+                            navigate("/chat", {
+                              state: { conversationId: item.conversationId },
+                            });
+                          }
                         }}
                         key={hashString(item.conversationId)}
-                        title={hashString(item.conversationId)
-                          .toString()
-                          .slice(1)}
+                        title={
+                          <Row>
+                            <Col span={22}>
+                              {hashString(item.conversationId)
+                                .toString()
+                                .slice(1)}
+                            </Col>
+                            <Col>
+                              {!item.blocked && (
+                                <Dropdown overlay={menu(index)}>
+                                  <a
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                    }}
+                                  >
+                                    <Space>
+                                      <MenuOutlined />
+                                    </Space>
+                                  </a>
+                                </Dropdown>
+                              )}
+                              {item.blocked && (
+                                <Dropdown overlay={menuBlocked(index)}>
+                                  <a
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                    }}
+                                  >
+                                    <Space>
+                                      <MenuOutlined />
+                                    </Space>
+                                  </a>
+                                </Dropdown>
+                              )}
+                            </Col>
+                          </Row>
+                        }
                         bordered={true}
                       >
-                        <p>{item.message}</p>
+                        <div
+                          style={{
+                            whiteSpace: "nowrap",
+                            textOverflow: "ellipsis",
+                            overflow: "hidden",
+                          }}
+                        >
+                          {item.message}
+                        </div>
                       </Card>
                     </Col>
                   </Row>

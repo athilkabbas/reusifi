@@ -269,14 +269,11 @@ const Chat = () => {
             endMessage={<Divider plain>It is all, nothing more</Divider>}
             scrollableTarget="scrollableDiv"
           >
-            {!loading && (
+            {!loading && user && (
               <>
                 <div ref={bottomRef} />
                 {data.map((item) => {
-                  if (
-                    item.recipientId === user.userId ||
-                    item.senderId === user.userId
-                  ) {
+                  if (item.senderId === user.userId) {
                     return (
                       <Row key={item.timestamp}>
                         <Col xs={12} offset={12}>
@@ -299,7 +296,7 @@ const Chat = () => {
                           <div
                             style={{
                               display: "flex",
-                              wordBreak: "break-all",
+                              wordBreak: "break-wrod",
                               justifyContent: "start",
                             }}
                           >
