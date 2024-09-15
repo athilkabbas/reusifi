@@ -220,7 +220,7 @@ const Chat = () => {
             display: "flex",
             flexDirection: "column-reverse",
             height: "calc(100vh - 120px)",
-            position: "relative",
+            position: "sticky",
             top: "0px",
           }}
         >
@@ -289,30 +289,30 @@ const Chat = () => {
             )}
             {loading && <Skeleton />}
           </InfiniteScroll>
-          <Row
-            style={{
-              padding: 10,
-              position: "fixed",
-              bottom: "50px",
-              height: "60px",
-              width: "100%",
-            }}
-          >
-            <Col xs={16} sm={5}>
-              <Input
-                onChange={(value) => handleChange(value)}
-                placeholder="Enter message"
-                value={value}
-              />
-            </Col>
-            <Col offset={2} xs={6} sm={5}>
-              <Button type="primary" onClick={() => handleSubmit()}>
-                send
-              </Button>
-            </Col>
-          </Row>
         </div>
       </Content>
+      <Row
+        style={{
+          padding: 10,
+          position: "sticky",
+          bottom: "50px",
+          height: "60px",
+          width: "100%",
+        }}
+      >
+        <Col xs={19} sm={5}>
+          <Input
+            onChange={(value) => handleChange(value)}
+            placeholder="Enter message"
+            value={value}
+          />
+        </Col>
+        <Col offset={1} xs={4} sm={5}>
+          <Button type="primary" onClick={() => handleSubmit()}>
+            send
+          </Button>
+        </Col>
+      </Row>
       <Footer
         style={{
           position: "sticky",
