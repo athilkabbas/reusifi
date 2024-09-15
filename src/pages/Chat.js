@@ -183,7 +183,7 @@ const Chat = () => {
   };
   const handleSubmit = () => {
     if (value) {
-      if (recipient && recipient["item"]["_source"]["email"]) {
+      if (recipient && recipient["item"]["email"]) {
         sendMessage(value, recipient["item"]["email"], user.userId);
       } else if (conversationId) {
         let userIds = conversationId.split("#");
