@@ -39,11 +39,13 @@ const App = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
   const [hasMore, setHasMore] = useState(false);
-  const limit = 6;
+  const limit = 20;
   const [user, setUser] = useState(null);
   const [search, setSearch] = useState(null);
   const timer = useRef(null);
   const [districts, setDistricts] = useState([]);
+  const scrollableDivRef = useRef(null);
+  const [scrollPosition, setScrollPosition] = useState(0);
   const [location, setLocation] = useState({
     state: null,
     district: null,
@@ -74,6 +76,7 @@ const App = () => {
   const loadMoreData = async () => {
     const currentUser = await getCurrentUser();
     setUser(currentUser);
+    const scrollPosition = scrollableDivRef.current.scrollTop;
     try {
       setLoading(true);
       let results;
@@ -84,6 +87,7 @@ const App = () => {
           )}&search=${search}&location=${JSON.stringify(location)}`,
           { headers: { Authorization: "xxx" } }
         );
+        setLastEvaluatedKeys(results.data.lastEvaluatedKeys);
       } else {
         results = await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?limit=${limit}&lastEvaluatedKey=${JSON.stringify(
@@ -91,6 +95,7 @@ const App = () => {
           )}&location=${JSON.stringify(location)}`,
           { headers: { Authorization: "xxx" } }
         );
+        setLastEvaluatedKey(results.data.lastEvaluatedKey);
       }
       if (results.data.finalResult.length < 6) {
         setHasMore(false);
@@ -102,6 +107,7 @@ const App = () => {
       );
       setData([...data, ...newData]);
       setLoading(false);
+      setScrollPosition(scrollPosition);
     } catch (err) {
       setLoading(false);
       console.log(err);
@@ -126,7 +132,6 @@ const App = () => {
     };
   }, [search, location]);
 
-  console.log(data);
   const navigate = useNavigate();
   const handleNavigation = (event) => {
     switch (event.key) {
@@ -144,6 +149,9 @@ const App = () => {
         break;
     }
   };
+  useEffect(() => {
+    scrollableDivRef.current.scrollTo(0, scrollPosition);
+  }, [scrollPosition]);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -228,6 +236,7 @@ const App = () => {
       >
         <div
           id="scrollableDiv"
+          ref={scrollableDivRef}
           style={{
             padding: 5,
             height: "100vh",

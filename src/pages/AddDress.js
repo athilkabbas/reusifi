@@ -163,141 +163,143 @@ const AddDress = () => {
           padding: "0 15px",
         }}
       >
-        {!loading && user && (
-          <div
-            style={{
-              padding: 0,
-              minHeight: 380,
-              background: colorBgContainer,
-              borderRadius: borderRadiusLG,
-              marginTop: "30px",
-              overflow: "scroll",
-              height: "100vh",
-              paddingBottom: "20px",
-            }}
-          >
-            <Row style={{ padding: 20 }}>
-              <Col xs={24} sm={5}>
-                <Input
-                  onChange={(value) => handleChange(value, "category")}
-                  placeholder="Category"
-                  value={form.category}
-                />
-              </Col>
-            </Row>
-            <Row style={{ padding: 20 }}>
-              <Col xs={24} sm={5}>
-                <Input
-                  onChange={(value) => handleChange(value, "title")}
-                  placeholder="Title"
-                  value={form.title}
-                />
-              </Col>
-            </Row>
-            <Row style={{ padding: 20 }}>
-              <Col xs={24} sm={10}>
-                <TextArea
-                  onChange={(value) => handleChange(value, "description")}
-                  rows={4}
-                  placeholder="Description"
-                  maxLength={100}
-                  value={form.description}
-                />
-              </Col>
-            </Row>
-            <Row style={{ padding: 20 }}>
-              <Col xs={24} sm={10}>
-                <Select
-                  onChange={(value) => {
-                    handleChange(value, "state");
-                    let districts = districtMap();
-                    setDistricts(districts[value]);
-                  }}
-                  showSearch
-                  style={{
-                    width: 190,
-                  }}
-                  value={form.state}
-                  placeholder="Select State"
-                  optionFilterProp="label"
-                  filterSort={(optionA, optionB) =>
-                    (optionA?.label ?? "")
-                      .toLowerCase()
-                      .localeCompare((optionB?.label ?? "").toLowerCase())
-                  }
-                  options={states}
-                />
-              </Col>
-            </Row>
-            {districts.length > 0 && (
+        <div
+          style={{
+            padding: 0,
+            minHeight: 380,
+            background: colorBgContainer,
+            borderRadius: borderRadiusLG,
+            marginTop: "30px",
+            overflow: "scroll",
+            height: "100vh",
+            paddingBottom: "20px",
+          }}
+        >
+          {!loading && user && (
+            <>
+              <Row style={{ padding: 20 }}>
+                <Col xs={24} sm={5}>
+                  <Input
+                    onChange={(value) => handleChange(value, "category")}
+                    placeholder="Category"
+                    value={form.category}
+                  />
+                </Col>
+              </Row>
+              <Row style={{ padding: 20 }}>
+                <Col xs={24} sm={5}>
+                  <Input
+                    onChange={(value) => handleChange(value, "title")}
+                    placeholder="Title"
+                    value={form.title}
+                  />
+                </Col>
+              </Row>
+              <Row style={{ padding: 20 }}>
+                <Col xs={24} sm={10}>
+                  <TextArea
+                    onChange={(value) => handleChange(value, "description")}
+                    rows={4}
+                    placeholder="Description"
+                    maxLength={100}
+                    value={form.description}
+                  />
+                </Col>
+              </Row>
               <Row style={{ padding: 20 }}>
                 <Col xs={24} sm={10}>
                   <Select
                     onChange={(value) => {
-                      handleChange(value, "district");
+                      handleChange(value, "state");
+                      let districts = districtMap();
+                      setDistricts(districts[value]);
                     }}
                     showSearch
                     style={{
                       width: 190,
                     }}
-                    value={form.district}
-                    placeholder="Select District"
+                    value={form.state}
+                    placeholder="Select State"
                     optionFilterProp="label"
                     filterSort={(optionA, optionB) =>
                       (optionA?.label ?? "")
                         .toLowerCase()
                         .localeCompare((optionB?.label ?? "").toLowerCase())
                     }
-                    options={districts}
+                    options={states}
                   />
                 </Col>
               </Row>
-            )}
-            <Row style={{ padding: 20 }}>
-              <Col xs={24} sm={5}>
-                <Input
-                  onChange={(value) => handleChange(value, "price")}
-                  placeholder="Price"
-                  value={form.price}
-                />
-              </Col>
-            </Row>
-            <Row style={{ padding: 20 }}>
-              <Col xs={24} sm={10}>
-                <Upload
-                  listType="picture-card"
-                  fileList={fileList}
-                  onPreview={handlePreview}
-                  onChange={handleChangeImage}
-                >
-                  {fileList.length >= 4 ? null : uploadButton}
-                </Upload>
-                {previewImage && (
-                  <Image
-                    wrapperStyle={{
-                      display: "none",
-                    }}
-                    preview={{
-                      visible: previewOpen,
-                      onVisibleChange: (visible) => setPreviewOpen(visible),
-                      afterOpenChange: (visible) =>
-                        !visible && setPreviewImage(""),
-                    }}
-                    src={previewImage}
+              {districts.length > 0 && (
+                <Row style={{ padding: 20 }}>
+                  <Col xs={24} sm={10}>
+                    <Select
+                      onChange={(value) => {
+                        handleChange(value, "district");
+                      }}
+                      showSearch
+                      style={{
+                        width: 190,
+                      }}
+                      value={form.district}
+                      placeholder="Select District"
+                      optionFilterProp="label"
+                      filterSort={(optionA, optionB) =>
+                        (optionA?.label ?? "")
+                          .toLowerCase()
+                          .localeCompare((optionB?.label ?? "").toLowerCase())
+                      }
+                      options={districts}
+                    />
+                  </Col>
+                </Row>
+              )}
+              <Row style={{ padding: 20 }}>
+                <Col xs={24} sm={5}>
+                  <Input
+                    onChange={(value) => handleChange(value, "price")}
+                    placeholder="Price"
+                    value={form.price}
                   />
-                )}
-              </Col>
-            </Row>
-            <Row style={{ padding: 20 }}>
-              <Col xs={24} sm={10}>
-                <Button onClick={handleSubmit} type="primary">
-                  Submit
-                </Button>
-              </Col>
-            </Row>
-          </div>
-        )}
-        {loading && <Skeleton />}
+                </Col>
+              </Row>
+              <Row style={{ padding: 20 }}>
+                <Col xs={24} sm={10}>
+                  <Upload
+                    listType="picture-card"
+                    fileList={fileList}
+                    onPreview={handlePreview}
+                    onChange={handleChangeImage}
+                  >
+                    {fileList.length >= 4 ? null : uploadButton}
+                  </Upload>
+                  {previewImage && (
+                    <Image
+                      wrapperStyle={{
+                        display: "none",
+                      }}
+                      preview={{
+                        visible: previewOpen,
+                        onVisibleChange: (visible) => setPreviewOpen(visible),
+                        afterOpenChange: (visible) =>
+                          !visible && setPreviewImage(""),
+                      }}
+                      src={previewImage}
+                    />
+                  )}
+                </Col>
+              </Row>
+              <Row style={{ padding: 20 }}>
+                <Col xs={24} sm={10}>
+                  <Button onClick={handleSubmit} type="primary">
+                    Submit
+                  </Button>
+                </Col>
+              </Row>
+            </>
+          )}
+          {loading && <Skeleton />}
+        </div>
       </Content>
       <Footer
         style={{

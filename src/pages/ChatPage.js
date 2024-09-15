@@ -69,6 +69,8 @@ const ChatPage = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
+  const scrollableDivRef = useRef(null);
+  const [scrollPosition, setScrollPosition] = useState(0);
   const handleNavigation = (event) => {
     switch (event.key) {
       case "1":
@@ -202,6 +204,7 @@ const ChatPage = () => {
   };
   const getChats = async () => {
     try {
+      const scrollPosition = scrollableDivRef.current.scrollTop;
       setLoading(true);
       const result = await axios.get(
         `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${user.userId}&lastEvaluatedKey=${lastEvaluatedKey}`,
@@ -214,6 +217,7 @@ const ChatPage = () => {
       if (!result.data.lastEvaluatedKey) {
         setHasMore(false);
       }
+      setScrollPosition(scrollPosition);
     } catch (err) {
       setLoading(false);
       console.log(err);
@@ -232,6 +236,10 @@ const ChatPage = () => {
       getChats();
     }
   }, [user]);
+
+  useEffect(() => {
+    scrollableDivRef.current.scrollTo(0, scrollPosition);
+  }, [scrollPosition]);
   return (
     <Layout>
       <Content
@@ -242,6 +250,7 @@ const ChatPage = () => {
         {contextHolder}
         <div
           id="scrollableDiv"
+          ref={scrollableDivRef}
           style={{
             background: colorBgContainer,
             borderRadius: borderRadiusLG,
