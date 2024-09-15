@@ -157,7 +157,7 @@ const AddDress = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   return (
-    <Layout style={{ height: "100vh", overflow: "scroll" }}>
+    <Layout>
       <Content
         style={{
           padding: "0 15px",
@@ -172,7 +172,7 @@ const AddDress = () => {
               borderRadius: borderRadiusLG,
               marginTop: "30px",
               overflow: "scroll",
-              height: "100%",
+              height: "100vh",
               paddingBottom: "20px",
             }}
           >

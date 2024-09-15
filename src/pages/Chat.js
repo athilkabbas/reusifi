@@ -220,6 +220,8 @@ const Chat = () => {
             display: "flex",
             flexDirection: "column-reverse",
             height: "calc(100vh - 120px)",
+            position: "relative",
+            top: "0px",
           }}
         >
           <InfiniteScroll
