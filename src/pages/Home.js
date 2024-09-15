@@ -1,4 +1,10 @@
-import React, { Fragment, useEffect, useState, useCallback } from "react";
+import React, {
+  Fragment,
+  useEffect,
+  useState,
+  useCallback,
+  useRef,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
 import {
@@ -37,6 +43,7 @@ const App = () => {
   const [search, setSearch] = useState(null);
   const [searchPage, setSearchPage] = useState(1);
   const [searchChange, setSearchChange] = useState(false);
+  const timer = useRef(null);
   const [lastEvaluatedKeys, setLastEvaluatedKeys] = useState({
     cLEK: null,
     tLEK: null,
@@ -45,13 +52,6 @@ const App = () => {
     tS3LEK: null,
   });
   const [lastEvaluatedKey, setLastEvaluatedKey] = useState(null);
-  // Debounced version of the search function
-  const debouncedSearch = useCallback(
-    debounce((value) => {
-      setSearch(value); // Replace 'search' with your actual search function
-    }, 100), // 500ms delay for the debounce
-    []
-  );
 
   const loadMoreData = async () => {
     const currentUser = await getCurrentUser();
@@ -97,11 +97,10 @@ const App = () => {
         });
       }
       if (searchChange) {
-        setData([]);
         let newData = results.data.finalResult.filter(
           (item) => currentUser.userId !== item["item"]["email"]
         );
-        setData([...data, ...newData]);
+        setData([...newData]);
         setSearchChange(false);
       } else {
         let newData = results.data.finalResult.filter(
@@ -116,8 +115,25 @@ const App = () => {
     }
   };
   useEffect(() => {
-    loadMoreData();
+    // Clear the previous timeout if search changes
+    if (timer.current) {
+      clearTimeout(timer.current);
+    }
+
+    // Set a new timeout
+    timer.current = setTimeout(() => {
+      loadMoreData();
+    }, 500);
+
+    // Cleanup function to clear the timeout on component unmount or before next effect
+    return () => {
+      if (timer.current) {
+        clearTimeout(timer.current);
+      }
+    };
   }, [search]);
+
+  console.log(data);
   const navigate = useNavigate();
   const handleNavigation = (event) => {
     switch (event.key) {
@@ -148,9 +164,9 @@ const App = () => {
           width: "100%",
           display: "flex",
           alignItems: "center",
+          padding: "0px",
         }}
       >
-        <div className="demo-logo" />
         <Menu
           onClick={(event) => handleNavigation(event)}
           theme="dark"
@@ -166,15 +182,29 @@ const App = () => {
           background: "white",
           position: "sticky",
           top: "60px",
+          zIndex: 1,
         }}
       >
-        <Space.Compact size="large">
+        <Space.Compact block={true} size="large">
           <Input
             addonBefore={<SearchOutlined />}
             value={search}
             onChange={(event) => {
+              if (event.target.value) {
+                setSearchPage(1);
+                setLastEvaluatedKeys({
+                  cLEK: null,
+                  tLEK: null,
+                  tS1LEK: null,
+                  tS2LEK: null,
+                  tS3LEK: null,
+                });
+              } else {
+                setLastEvaluatedKey(null);
+                setPage(1);
+              }
               setSearchChange(true);
-              debouncedSearch(event.target.value);
+              setSearch(event.target.value);
             }}
             placeholder="Search"
           />
