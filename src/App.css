@@ -36,3 +36,12 @@
     transform: rotate(360deg);
   }
 }
+
+:root {
+  --vh: 100%;
+}
+
+#scrollableDivChat {
+  height: calc(var(--vh) * 100);
+  overflow-y: auto;
+}
