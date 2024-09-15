@@ -64,6 +64,6 @@
     },
     "breakCircularDependency": true,
     "dependsOn": [],
-    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"https://reusifi.com/\",\"https://reusifi.com/\"],\"LogoutURLs\":[\"https://reusifi.com/\",\"https://reusifi.com/\",\"https://reusifi.com/\"]}"
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"https://www.reusifi.com/\",\"https://reusifi.com/\",\"http://localhost:3000/\"],\"LogoutURLs\":[\"https://www.reusifi.com/\",\"http://localhost:3000/\",\"https://reusifi.com/\"]}"
   }
 }
