@@ -75,7 +75,7 @@ const ChatPage = () => {
         navigate("/");
         break;
       case "2":
-        navigate("/addDress");
+        navigate("/addProduct");
         break;
       case "3":
         navigate("/chatPage");

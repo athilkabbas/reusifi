@@ -40,7 +40,7 @@ const Details = () => {
         navigate("/");
         break;
       case "2":
-        navigate("/addDress");
+        navigate("/addProduct");
         break;
       case "3":
         navigate("/chatPage");
@@ -55,7 +55,7 @@ const Details = () => {
       try {
         setLoading(true);
         const result = await axios.get(
-          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?id=${item["item"]["_id"]}`,
+          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?id=${item["item"]["uuid"]}`,
           { headers: { Authorization: "xxx" } }
         );
         setLoading(false);
@@ -130,32 +130,32 @@ const Details = () => {
               )}
               <Row style={{ padding: 20 }}>
                 <Col xs={24} sm={5}>
-                  <Input value={item["item"]["_source"]["category"]} />
+                  <Input value={item["item"]["category"]} />
                 </Col>
               </Row>
               <Row style={{ padding: 20 }}>
                 <Col xs={24} sm={5}>
-                  <Input value={item["item"]["_source"]["title"]} />
+                  <Input value={item["item"]["title"]} />
                 </Col>
               </Row>
               <Row style={{ padding: 20 }}>
                 <Col xs={24} sm={10}>
-                  <TextArea value={item["item"]["_source"]["description"]} />
+                  <TextArea value={item["item"]["description"]} />
                 </Col>
               </Row>
               <Row style={{ padding: 20 }}>
                 <Col xs={24} sm={5}>
-                  <Input value={item["item"]["_source"]["state"]} />
+                  <Input value={item["item"]["state"]} />
                 </Col>
               </Row>
               <Row style={{ padding: 20 }}>
                 <Col xs={24} sm={5}>
-                  <Input value={item["item"]["_source"]["district"]} />
+                  <Input value={item["item"]["district"]} />
                 </Col>
               </Row>
               <Row style={{ padding: 20 }}>
                 <Col xs={24} sm={5}>
-                  <Input value={item["item"]["_source"]["price"]} />
+                  <Input value={item["item"]["price"]} />
                 </Col>
               </Row>
               <Row style={{ padding: 20 }}>

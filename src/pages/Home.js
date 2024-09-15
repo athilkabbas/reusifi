@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
 import {
@@ -6,12 +6,15 @@ import {
   UploadOutlined,
   MessageFilled,
   LogoutOutlined,
+  SearchOutlined,
 } from "@ant-design/icons";
+import { Button, Input, Select, Space } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Avatar, Divider, List, Skeleton } from "antd";
 import { Card } from "antd";
 import axios from "axios";
 import { getCurrentUser, signOut } from "@aws-amplify/auth";
+import debounce from "lodash/debounce";
 const IconText = ["Home", "Upload", "Chats", "SignOut"];
 const { Meta } = Card;
 const items = [HomeFilled, UploadOutlined, MessageFilled, LogoutOutlined].map(
@@ -31,31 +34,81 @@ const App = () => {
   const [hasMore, setHasMore] = useState(false);
   const [page, setPage] = useState(1);
   const [user, setUser] = useState(null);
-  const pageSize = 6;
+  const [search, setSearch] = useState(null);
+  const [searchPage, setSearchPage] = useState(1);
+  const [searchChange, setSearchChange] = useState(false);
+  const [lastEvaluatedKeys, setLastEvaluatedKeys] = useState({
+    cLEK: null,
+    tLEK: null,
+    tS1LEK: null,
+    tS2LEK: null,
+    tS3LEK: null,
+  });
+  const [lastEvaluatedKey, setLastEvaluatedKey] = useState(null);
+  // Debounced version of the search function
+  const debouncedSearch = useCallback(
+    debounce((value) => {
+      setSearch(value); // Replace 'search' with your actual search function
+    }, 100), // 500ms delay for the debounce
+    []
+  );
+
   const loadMoreData = async () => {
     const currentUser = await getCurrentUser();
     setUser(currentUser);
     try {
       setLoading(true);
-      const results = await axios.get(
-        `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?page=${page}&pageSize=${pageSize}`,
-        { headers: { Authorization: "xxx" } }
-      );
-      if (results.data.length < 6) {
+      let results;
+      if (search) {
+        results = await axios.get(
+          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?limit=${searchPage}&lastEvaluatedKeys=${JSON.stringify(
+            lastEvaluatedKeys
+          )}&search=${search}`,
+          { headers: { Authorization: "xxx" } }
+        );
+      } else {
+        results = await axios.get(
+          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?limit=${page}&lastEvaluatedKey=${JSON.stringify(
+            lastEvaluatedKey
+          )}`,
+          { headers: { Authorization: "xxx" } }
+        );
+      }
+      if (results.data.finalResult.length < 6) {
         setHasMore(false);
       } else {
         setHasMore(true);
       }
-      setPage((page) => {
-        if (page === 2) {
-          return page;
-        }
-        return page + 1;
-      });
-      let newData = results.data.filter(
-        (item) => currentUser.userId !== item["item"]["_source"]["email"]
-      );
-      setData([...data, ...newData]);
+      if (search) {
+        setLastEvaluatedKeys(results.data.lastEvaluatedKeys);
+        setSearchPage((page) => {
+          if (page === 2) {
+            return page;
+          }
+          return page + 1;
+        });
+      } else {
+        setLastEvaluatedKey(results.data.lastEvaluatedKey);
+        setPage((page) => {
+          if (page === 2) {
+            return page;
+          }
+          return page + 1;
+        });
+      }
+      if (searchChange) {
+        setData([]);
+        let newData = results.data.finalResult.filter(
+          (item) => currentUser.userId !== item["item"]["email"]
+        );
+        setData([...data, ...newData]);
+        setSearchChange(false);
+      } else {
+        let newData = results.data.finalResult.filter(
+          (item) => currentUser.userId !== item["item"]["email"]
+        );
+        setData([...data, ...newData]);
+      }
       setLoading(false);
     } catch (err) {
       setLoading(false);
@@ -64,7 +117,7 @@ const App = () => {
   };
   useEffect(() => {
     loadMoreData();
-  }, []);
+  }, [search]);
   const navigate = useNavigate();
   const handleNavigation = (event) => {
     switch (event.key) {
@@ -72,7 +125,7 @@ const App = () => {
         navigate("/");
         break;
       case "2":
-        navigate("/addDress");
+        navigate("/addProduct");
         break;
       case "3":
         navigate("/chatPage");
@@ -107,6 +160,26 @@ const App = () => {
           style={{ minWidth: 0, flex: "auto" }}
         />
       </Header>
+      <div
+        style={{
+          padding: "10px",
+          background: "white",
+          position: "sticky",
+          top: "60px",
+        }}
+      >
+        <Space.Compact size="large">
+          <Input
+            addonBefore={<SearchOutlined />}
+            value={search}
+            onChange={(event) => {
+              setSearchChange(true);
+              debouncedSearch(event.target.value);
+            }}
+            placeholder="Search"
+          />
+        </Space.Compact>
+      </div>
       <Content
         style={{
           padding: "0 15px",
@@ -119,7 +192,6 @@ const App = () => {
             height: "100vh",
             background: colorBgContainer,
             borderRadius: borderRadiusLG,
-            marginTop: "30px",
             overflowY: "scroll",
             overflowX: "hidden",
           }}
@@ -172,9 +244,7 @@ const App = () => {
                               overflow: "hidden",
                             }}
                           >
-                            <b>
-                              {capitalize(item["item"]["_source"]["category"])}
-                            </b>
+                            <b>{capitalize(item["item"]["category"])}</b>
                           </div>
                           <div
                             style={{
@@ -183,9 +253,7 @@ const App = () => {
                               overflow: "hidden",
                             }}
                           >
-                            <b>
-                              {capitalize(item["item"]["_source"]["title"])}
-                            </b>
+                            <b>{capitalize(item["item"]["title"])}</b>
                           </div>
                           <div
                             style={{
@@ -194,7 +262,7 @@ const App = () => {
                               overflow: "hidden",
                             }}
                           >
-                            <b>{item["item"]["_source"]["price"]}</b>
+                            <b>{item["item"]["price"]}</b>
                           </div>
                         </Card>
                       </List.Item>
