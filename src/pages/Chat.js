@@ -44,7 +44,8 @@ const Chat = () => {
   const bottomRef = useRef(null); // To reference the bottom of the chat container
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
-
+  const scrollableDivRef = useRef(null);
+  const [scrollPosition, setScrollPosition] = useState(0);
   const sendMessage = (message, recipientUserId, senderUserId) => {
     try {
       if (ws) {
@@ -106,6 +107,7 @@ const Chat = () => {
   const getChats = async () => {
     try {
       setLoading(true);
+      const scrollPosition = scrollableDivRef.current.scrollTop;
       let result;
       if (recipient && recipient["item"]["email"]) {
         result = await axios.get(
@@ -127,12 +129,13 @@ const Chat = () => {
         );
       }
       setLoading(false);
-      setData((prevValue) => [...result.data.items, ...prevValue]);
+      setData((prevValue) => [...prevValue, ...result.data.items]);
       setLastEvaluatedKey(result.data.lastEvaluatedKey);
       // If no more data to load, set hasMore to false
       if (!result.data.lastEvaluatedKey) {
         setHasMore(false);
       }
+      setScrollPosition(scrollPosition);
     } catch (err) {
       setLoading(false);
       console.log(err);
@@ -165,6 +168,9 @@ const Chat = () => {
         break;
     }
   };
+  useEffect(() => {
+    scrollableDivRef.current.scrollTo(0, scrollPosition);
+  }, [scrollPosition]);
   useEffect(() => {
     scrollToBottom();
   }, []);
@@ -213,13 +219,14 @@ const Chat = () => {
       >
         <div
           id="scrollableDiv"
+          ref={scrollableDivRef}
           style={{
             background: colorBgContainer,
             borderRadius: borderRadiusLG,
             overflow: "scroll",
             display: "flex",
             flexDirection: "column-reverse",
-            height: "calc(100vh - 107px)",
+            height: "calc(100vh - 105px)",
           }}
         >
           <InfiniteScroll
@@ -227,7 +234,6 @@ const Chat = () => {
               overflowX: "hidden",
               display: "flex",
               flexDirection: "column-reverse",
-              height: "calc(100vh - 106px)",
             }}
             dataLength={data.length}
             next={getChats}
