@@ -61,19 +61,7 @@ const Chat = () => {
       setReconnect((reconnect) => !reconnect);
     }
   };
-  // Update the --vh variable on load and resize
-  useEffect(() => {
-    const updateVh = () => {
-      let vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty("--vh", `${vh}px`);
-    };
-    updateVh(); // Call on component load
-    window.addEventListener("resize", updateVh); // Call on resize
 
-    return () => {
-      window.removeEventListener("resize", updateVh); // Cleanup
-    };
-  }, []);
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -217,14 +205,14 @@ const Chat = () => {
   };
 
   return (
-    <Layout style={{ height: "100vh" }}>
+    <Layout>
       <Content
         style={{
           padding: "0 15px",
         }}
       >
         <div
-          id="scrollableDivChat"
+          id="scrollableDiv"
           style={{
             background: colorBgContainer,
             borderRadius: borderRadiusLG,
@@ -257,7 +245,7 @@ const Chat = () => {
               />
             }
             endMessage={<Divider plain>It is all, nothing more</Divider>}
-            scrollableTarget="scrollableDivChat"
+            scrollableTarget="scrollableDiv"
           >
             {!loading && user && (
               <>
