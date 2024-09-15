@@ -171,7 +171,7 @@ const Chat = () => {
 
   const scrollToBottom = () => {
     if (bottomRef.current) {
-      bottomRef.current.scrollIntoView({ behavior: "smooth" }); // Smooth scrolling to the bottom
+      bottomRef.current.scrollIntoView({ behavior: "auto" }); // Smooth scrolling to the bottom
     }
   };
 
