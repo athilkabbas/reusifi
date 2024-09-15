@@ -88,6 +88,17 @@ const App = () => {
           { headers: { Authorization: "xxx" } }
         );
         setLastEvaluatedKeys(results.data.lastEvaluatedKeys);
+        const lastEvaluatedKey = false;
+        for (let lastEvaluatedKey in lastEvaluatedKeys) {
+          if (lastEvaluatedKey) {
+            lastEvaluatedKey = true;
+          }
+        }
+        if (lastEvaluatedKey) {
+          setHasMore(true);
+        } else {
+          setHasMore(false);
+        }
       } else {
         results = await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?limit=${limit}&lastEvaluatedKey=${JSON.stringify(
@@ -96,11 +107,11 @@ const App = () => {
           { headers: { Authorization: "xxx" } }
         );
         setLastEvaluatedKey(results.data.lastEvaluatedKey);
-      }
-      if (results.data.finalResult.length < 6) {
-        setHasMore(false);
-      } else {
-        setHasMore(true);
+        if (!results.data.lastEvaluatedKey) {
+          setHasMore(false);
+        } else {
+          setHasMore(true);
+        }
       }
       let newData = results.data.finalResult.filter(
         (item) => currentUser.userId !== item["item"]["email"]
