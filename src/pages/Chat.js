@@ -107,9 +107,9 @@ const Chat = () => {
     try {
       setLoading(true);
       let result;
-      if (recipient && recipient["item"]["_source"]["email"]) {
+      if (recipient && recipient["item"]["email"]) {
         result = await axios.get(
-          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${user.userId}&userId2=${recipient["item"]["_source"]["email"]}&lastEvaluatedKey=${lastEvaluatedKey}`,
+          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${user.userId}&userId2=${recipient["item"]["email"]}&lastEvaluatedKey=${lastEvaluatedKey}`,
           { headers: { Authorization: "xxx" } }
         );
       } else if (conversationId) {
@@ -143,7 +143,7 @@ const Chat = () => {
     if (
       user &&
       user.userId &&
-      ((recipient && recipient["item"]["_source"]["email"]) || conversationId)
+      ((recipient && recipient["item"]["email"]) || conversationId)
     ) {
       getChats();
     }
@@ -184,7 +184,7 @@ const Chat = () => {
   const handleSubmit = () => {
     if (value) {
       if (recipient && recipient["item"]["_source"]["email"]) {
-        sendMessage(value, recipient["item"]["_source"]["email"], user.userId);
+        sendMessage(value, recipient["item"]["email"], user.userId);
       } else if (conversationId) {
         let userIds = conversationId.split("#");
         let userId2;
