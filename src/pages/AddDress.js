@@ -158,30 +158,6 @@ const AddDress = () => {
   } = theme.useToken();
   return (
     <Layout style={{ height: "100vh", overflow: "scroll" }}>
-      <Header
-        style={{
-          position: "sticky",
-          top: 0,
-          zIndex: 1,
-          width: "100%",
-          display: "flex",
-          alignItems: "center",
-          padding: "0px",
-        }}
-      >
-        <div className="demo-logo" />
-        <Menu
-          onClick={(event) => handleNavigation(event)}
-          theme="dark"
-          mode="horizontal"
-          defaultSelectedKeys={["2"]}
-          items={items}
-          style={{
-            flex: 1,
-            minWidth: 0,
-          }}
-        />
-      </Header>
       <Content
         style={{
           padding: "0 15px",
@@ -323,6 +299,30 @@ const AddDress = () => {
         )}
         {loading && <Skeleton />}
       </Content>
+      <Footer
+        style={{
+          position: "sticky",
+          bottom: 0,
+          zIndex: 1,
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          padding: "0px",
+        }}
+      >
+        <div className="demo-logo" />
+        <Menu
+          onClick={(event) => handleNavigation(event)}
+          theme="dark"
+          mode="horizontal"
+          defaultSelectedKeys={["2"]}
+          items={items}
+          style={{
+            flex: 1,
+            minWidth: 0,
+          }}
+        />
+      </Footer>
     </Layout>
   );
 };

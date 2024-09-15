@@ -234,30 +234,6 @@ const ChatPage = () => {
   }, [user]);
   return (
     <Layout>
-      <Header
-        style={{
-          position: "sticky",
-          top: 0,
-          zIndex: 1,
-          width: "100%",
-          display: "flex",
-          alignItems: "center",
-          padding: "0px",
-        }}
-      >
-        <div className="demo-logo" />
-        <Menu
-          onClick={(event) => handleNavigation(event)}
-          theme="dark"
-          mode="horizontal"
-          defaultSelectedKeys={["3"]}
-          items={items}
-          style={{
-            flex: 1,
-            minWidth: 0,
-          }}
-        />
-      </Header>
       <Content
         style={{
           padding: "0 15px",
@@ -370,6 +346,30 @@ const ChatPage = () => {
           </InfiniteScroll>
         </div>
       </Content>
+      <Footer
+        style={{
+          position: "sticky",
+          bottom: 0,
+          zIndex: 1,
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          padding: "0px",
+        }}
+      >
+        <div className="demo-logo" />
+        <Menu
+          onClick={(event) => handleNavigation(event)}
+          theme="dark"
+          mode="horizontal"
+          defaultSelectedKeys={["3"]}
+          items={items}
+          style={{
+            flex: 1,
+            minWidth: 0,
+          }}
+        />
+      </Footer>
     </Layout>
   );
 };

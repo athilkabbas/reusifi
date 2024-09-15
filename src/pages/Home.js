@@ -39,10 +39,9 @@ const App = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
   const [hasMore, setHasMore] = useState(false);
-  const [page, setPage] = useState(1);
+  const limit = 6;
   const [user, setUser] = useState(null);
   const [search, setSearch] = useState(null);
-  const [searchPage, setSearchPage] = useState(1);
   const timer = useRef(null);
   const [districts, setDistricts] = useState([]);
   const [location, setLocation] = useState({
@@ -66,8 +65,6 @@ const App = () => {
       tS3LEK: null,
     });
     setLastEvaluatedKey(null);
-    setSearchPage(1);
-    setPage(1);
     setLocation((prevValue) => {
       return { ...prevValue, [type]: value };
     });
@@ -82,14 +79,14 @@ const App = () => {
       let results;
       if (search) {
         results = await axios.get(
-          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?limit=${searchPage}&lastEvaluatedKeys=${JSON.stringify(
+          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?limit=${limit}&lastEvaluatedKeys=${JSON.stringify(
             lastEvaluatedKeys
           )}&search=${search}&location=${JSON.stringify(location)}`,
           { headers: { Authorization: "xxx" } }
         );
       } else {
         results = await axios.get(
-          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?limit=${page}&lastEvaluatedKey=${JSON.stringify(
+          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?limit=${limit}&lastEvaluatedKey=${JSON.stringify(
             lastEvaluatedKey
           )}&location=${JSON.stringify(location)}`,
           { headers: { Authorization: "xxx" } }
@@ -152,32 +149,12 @@ const App = () => {
   } = theme.useToken();
   return (
     <Layout>
-      <Header
-        style={{
-          position: "sticky",
-          top: 0,
-          zIndex: 1,
-          width: "100%",
-          display: "flex",
-          alignItems: "center",
-          padding: "0px",
-        }}
-      >
-        <Menu
-          onClick={(event) => handleNavigation(event)}
-          theme="dark"
-          mode="horizontal"
-          defaultSelectedKeys={["1"]}
-          items={items}
-          style={{ minWidth: 0, flex: "auto" }}
-        />
-      </Header>
       <div
         style={{
           padding: "10px",
           background: "white",
           position: "sticky",
-          top: "60px",
+          top: "0px",
           zIndex: 1,
         }}
       >
@@ -187,7 +164,6 @@ const App = () => {
             value={search}
             onChange={(event) => {
               if (event.target.value) {
-                setSearchPage(1);
                 setLastEvaluatedKeys({
                   cLEK: null,
                   tLEK: null,
@@ -197,7 +173,6 @@ const App = () => {
                 });
               } else {
                 setLastEvaluatedKey(null);
-                setPage(1);
               }
               setData([]);
               setSearch(event.target.value);
@@ -212,7 +187,7 @@ const App = () => {
             }}
             showSearch
             style={{
-              width: 82,
+              width: 120,
             }}
             value={location.state}
             placeholder="State"
@@ -231,7 +206,7 @@ const App = () => {
               }}
               showSearch
               style={{
-                width: 95,
+                width: 120,
               }}
               value={location.district}
               placeholder="District"
@@ -341,6 +316,26 @@ const App = () => {
           </InfiniteScroll>
         </div>
       </Content>
+      <Footer
+        style={{
+          position: "sticky",
+          bottom: 0,
+          zIndex: 1,
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          padding: "0px",
+        }}
+      >
+        <Menu
+          onClick={(event) => handleNavigation(event)}
+          theme="dark"
+          mode="horizontal"
+          defaultSelectedKeys={["1"]}
+          items={items}
+          style={{ minWidth: 0, flex: "auto" }}
+        />
+      </Footer>
     </Layout>
   );
 };

@@ -206,30 +206,6 @@ const Chat = () => {
 
   return (
     <Layout style={{ height: "100vh" }}>
-      <Header
-        style={{
-          position: "sticky",
-          top: 0,
-          zIndex: 1,
-          width: "100%",
-          display: "flex",
-          alignItems: "center",
-          padding: "0px",
-        }}
-      >
-        <div className="demo-logo" />
-        <Menu
-          onClick={(event) => handleNavigation(event)}
-          theme="dark"
-          mode="horizontal"
-          defaultSelectedKeys={["0"]}
-          items={items}
-          style={{
-            flex: 1,
-            minWidth: 0,
-          }}
-        />
-      </Header>
       <Content
         style={{
           padding: "0 15px",
@@ -315,18 +291,19 @@ const Chat = () => {
             style={{
               padding: 10,
               position: "fixed",
-              bottom: "0px",
+              bottom: "50px",
               height: "60px",
+              width: "100%",
             }}
           >
-            <Col xs={20} sm={5}>
+            <Col xs={16} sm={5}>
               <Input
                 onChange={(value) => handleChange(value)}
                 placeholder="Enter message"
                 value={value}
               />
             </Col>
-            <Col offset={2} xs={2} sm={5}>
+            <Col offset={2} xs={6} sm={5}>
               <Button type="primary" onClick={() => handleSubmit()}>
                 send
               </Button>
@@ -334,6 +311,30 @@ const Chat = () => {
           </Row>
         </div>
       </Content>
+      <Footer
+        style={{
+          position: "sticky",
+          bottom: 0,
+          zIndex: 1,
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          padding: "0px",
+        }}
+      >
+        <div className="demo-logo" />
+        <Menu
+          onClick={(event) => handleNavigation(event)}
+          theme="dark"
+          mode="horizontal"
+          defaultSelectedKeys={["0"]}
+          items={items}
+          style={{
+            flex: 1,
+            minWidth: 0,
+          }}
+        />
+      </Footer>
     </Layout>
   );
 };
