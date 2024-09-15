@@ -219,7 +219,7 @@ const Chat = () => {
             overflow: "scroll",
             display: "flex",
             flexDirection: "column-reverse",
-            height: "calc(100vh - 105px)",
+            height: "calc(100vh - 107px)",
           }}
         >
           <InfiniteScroll
@@ -227,6 +227,7 @@ const Chat = () => {
               overflowX: "hidden",
               display: "flex",
               flexDirection: "column-reverse",
+              height: "calc(100vh - 106px)",
             }}
             dataLength={data.length}
             next={getChats}
@@ -291,8 +292,8 @@ const Chat = () => {
       <Row
         style={{
           padding: 10,
-          position: "relative",
-          bottom: "0px",
+          position: "sticky",
+          bottom: "50px",
           height: "60px",
           width: "100%",
         }}
