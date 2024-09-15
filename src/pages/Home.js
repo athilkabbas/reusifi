@@ -21,6 +21,7 @@ import { Card } from "antd";
 import axios from "axios";
 import { getCurrentUser, signOut } from "@aws-amplify/auth";
 import debounce from "lodash/debounce";
+import { states, districts, districtMap } from "../helpers/locations";
 const IconText = ["Home", "Upload", "Chats", "SignOut"];
 const { Meta } = Card;
 const items = [HomeFilled, UploadOutlined, MessageFilled, LogoutOutlined].map(
@@ -42,8 +43,12 @@ const App = () => {
   const [user, setUser] = useState(null);
   const [search, setSearch] = useState(null);
   const [searchPage, setSearchPage] = useState(1);
-  const [searchChange, setSearchChange] = useState(false);
   const timer = useRef(null);
+  const [districts, setDistricts] = useState([]);
+  const [location, setLocation] = useState({
+    state: null,
+    district: null,
+  });
   const [lastEvaluatedKeys, setLastEvaluatedKeys] = useState({
     cLEK: null,
     tLEK: null,
@@ -51,6 +56,22 @@ const App = () => {
     tS2LEK: null,
     tS3LEK: null,
   });
+  const handleChange = (value, type) => {
+    setData([]);
+    setLastEvaluatedKeys({
+      cLEK: null,
+      tLEK: null,
+      tS1LEK: null,
+      tS2LEK: null,
+      tS3LEK: null,
+    });
+    setLastEvaluatedKey(null);
+    setSearchPage(1);
+    setPage(1);
+    setLocation((prevValue) => {
+      return { ...prevValue, [type]: value };
+    });
+  };
   const [lastEvaluatedKey, setLastEvaluatedKey] = useState(null);
 
   const loadMoreData = async () => {
@@ -63,14 +84,14 @@ const App = () => {
         results = await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?limit=${searchPage}&lastEvaluatedKeys=${JSON.stringify(
             lastEvaluatedKeys
-          )}&search=${search}`,
+          )}&search=${search}&location=${JSON.stringify(location)}`,
           { headers: { Authorization: "xxx" } }
         );
       } else {
         results = await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?limit=${page}&lastEvaluatedKey=${JSON.stringify(
             lastEvaluatedKey
-          )}`,
+          )}&location=${JSON.stringify(location)}`,
           { headers: { Authorization: "xxx" } }
         );
       }
@@ -79,35 +100,10 @@ const App = () => {
       } else {
         setHasMore(true);
       }
-      if (search) {
-        setLastEvaluatedKeys(results.data.lastEvaluatedKeys);
-        setSearchPage((page) => {
-          if (page === 2) {
-            return page;
-          }
-          return page + 1;
-        });
-      } else {
-        setLastEvaluatedKey(results.data.lastEvaluatedKey);
-        setPage((page) => {
-          if (page === 2) {
-            return page;
-          }
-          return page + 1;
-        });
-      }
-      if (searchChange) {
-        let newData = results.data.finalResult.filter(
-          (item) => currentUser.userId !== item["item"]["email"]
-        );
-        setData([...newData]);
-        setSearchChange(false);
-      } else {
-        let newData = results.data.finalResult.filter(
-          (item) => currentUser.userId !== item["item"]["email"]
-        );
-        setData([...data, ...newData]);
-      }
+      let newData = results.data.finalResult.filter(
+        (item) => currentUser.userId !== item["item"]["email"]
+      );
+      setData([...data, ...newData]);
       setLoading(false);
     } catch (err) {
       setLoading(false);
@@ -131,7 +127,7 @@ const App = () => {
         clearTimeout(timer.current);
       }
     };
-  }, [search]);
+  }, [search, location]);
 
   console.log(data);
   const navigate = useNavigate();
@@ -203,11 +199,51 @@ const App = () => {
                 setLastEvaluatedKey(null);
                 setPage(1);
               }
-              setSearchChange(true);
+              setData([]);
               setSearch(event.target.value);
             }}
             placeholder="Search"
           />
+          <Select
+            onChange={(value) => {
+              handleChange(value, "state");
+              let districts = districtMap();
+              setDistricts(districts[value]);
+            }}
+            showSearch
+            style={{
+              width: 82,
+            }}
+            value={location.state}
+            placeholder="State"
+            optionFilterProp="label"
+            filterSort={(optionA, optionB) =>
+              (optionA?.label ?? "")
+                .toLowerCase()
+                .localeCompare((optionB?.label ?? "").toLowerCase())
+            }
+            options={states}
+          />
+          {districts.length > 0 && (
+            <Select
+              onChange={(value) => {
+                handleChange(value, "district");
+              }}
+              showSearch
+              style={{
+                width: 95,
+              }}
+              value={location.district}
+              placeholder="District"
+              optionFilterProp="label"
+              filterSort={(optionA, optionB) =>
+                (optionA?.label ?? "")
+                  .toLowerCase()
+                  .localeCompare((optionB?.label ?? "").toLowerCase())
+              }
+              options={districts}
+            />
+          )}
         </Space.Compact>
       </div>
       <Content

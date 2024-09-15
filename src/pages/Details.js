@@ -82,6 +82,7 @@ const Details = () => {
           width: "100%",
           display: "flex",
           alignItems: "center",
+          padding: "0px",
         }}
       >
         <div className="demo-logo" />

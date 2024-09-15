@@ -157,7 +157,7 @@ const AddDress = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   return (
-    <Layout>
+    <Layout style={{ height: "100vh", overflow: "scroll" }}>
       <Header
         style={{
           position: "sticky",
@@ -166,6 +166,7 @@ const AddDress = () => {
           width: "100%",
           display: "flex",
           alignItems: "center",
+          padding: "0px",
         }}
       >
         <div className="demo-logo" />
