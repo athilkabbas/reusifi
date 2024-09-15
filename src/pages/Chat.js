@@ -291,8 +291,8 @@ const Chat = () => {
       <Row
         style={{
           padding: 10,
-          position: "sticky",
-          bottom: "50px",
+          position: "relative",
+          bottom: "0px",
           height: "60px",
           width: "100%",
         }}
