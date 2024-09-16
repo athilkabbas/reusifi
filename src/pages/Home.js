@@ -240,14 +240,13 @@ const App = () => {
           )}
         </Space.Compact>
       </div>
-      <Content>
+      <Content style={{ padding: "0 15px" }}>
         <div
           id="scrollableDiv"
           ref={scrollableDivRef}
           style={{
             padding: 5,
             height: "100vh",
-            width: "100vw",
             background: colorBgContainer,
             borderRadius: borderRadiusLG,
             overflowY: "scroll",

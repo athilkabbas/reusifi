@@ -212,7 +212,7 @@ const Chat = () => {
 
   return (
     <Layout>
-      <Content>
+      <Content style={{ padding: "0 15px" }}>
         <div
           id="scrollableDiv"
           ref={scrollableDivRef}
@@ -223,7 +223,6 @@ const Chat = () => {
             display: "flex",
             flexDirection: "column-reverse",
             height: "calc(100vh - 105px)",
-            width: "100vw",
           }}
         >
           <InfiniteScroll
