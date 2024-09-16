@@ -234,7 +234,7 @@ const Chat = () => {
               overflowX: "hidden",
               display: "flex",
               flexDirection: "column-reverse",
-              marginBottom: "5vh",
+              marginBottom: "10vh",
             }}
             dataLength={data.length}
             next={getChats}
