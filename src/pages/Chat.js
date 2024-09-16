@@ -212,7 +212,7 @@ const Chat = () => {
 
   return (
     <Layout>
-      <Content style={{ padding: "0 15px" }}>
+      <Content style={{ padding: "0 15px", position: "sticky", top: "0px" }}>
         <div
           id="scrollableDiv"
           ref={scrollableDivRef}
@@ -298,7 +298,6 @@ const Chat = () => {
           position: "sticky",
           bottom: "50px",
           height: "60px",
-          width: "100%",
         }}
       >
         <Col xs={19} sm={5}>
@@ -319,7 +318,6 @@ const Chat = () => {
           position: "sticky",
           bottom: 0,
           zIndex: 1,
-          width: "100%",
           display: "flex",
           alignItems: "center",
           padding: "0px",
