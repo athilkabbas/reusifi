@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Col, Row, Skeleton } from "antd";
+import { Col, Row, Skeleton, Space } from "antd";
 import { Input } from "antd";
 import { useNavigate } from "react-router-dom";
 import { Select } from "antd";
@@ -169,125 +169,141 @@ const AddDress = () => {
         >
           {!loading && user && (
             <>
-              <Row style={{ padding: 20 }}>
-                <Col xs={24} sm={5}>
-                  <Input
-                    onChange={(value) => handleChange(value, "category")}
-                    placeholder="Category"
-                    value={form.category}
-                  />
-                </Col>
-              </Row>
-              <Row style={{ padding: 20 }}>
-                <Col xs={24} sm={5}>
-                  <Input
-                    onChange={(value) => handleChange(value, "title")}
-                    placeholder="Title"
-                    value={form.title}
-                  />
-                </Col>
-              </Row>
-              <Row style={{ padding: 20 }}>
-                <Col xs={24} sm={10}>
-                  <TextArea
-                    onChange={(value) => handleChange(value, "description")}
-                    rows={4}
-                    placeholder="Description"
-                    maxLength={100}
-                    value={form.description}
-                  />
-                </Col>
-              </Row>
-              <Row style={{ padding: 20 }}>
-                <Col xs={24} sm={10}>
+              <Space.Compact
+                block={true}
+                size="large"
+                style={{ padding: "10px" }}
+              >
+                <Input
+                  onChange={(value) => handleChange(value, "category")}
+                  placeholder="Category"
+                  value={form.category}
+                />
+              </Space.Compact>
+              <Space.Compact
+                block={true}
+                size="large"
+                style={{ padding: "10px" }}
+              >
+                <Input
+                  onChange={(value) => handleChange(value, "title")}
+                  placeholder="Title"
+                  value={form.title}
+                />
+              </Space.Compact>
+              <Space.Compact
+                block={true}
+                size="large"
+                style={{ padding: "10px" }}
+              >
+                <TextArea
+                  onChange={(value) => handleChange(value, "description")}
+                  rows={4}
+                  placeholder="Description"
+                  maxLength={100}
+                  value={form.description}
+                />
+              </Space.Compact>
+              <Space.Compact
+                block={true}
+                size="large"
+                style={{ padding: "10px" }}
+              >
+                <Select
+                  onChange={(value) => {
+                    handleChange(value, "state");
+                    let districts = districtMap();
+                    setDistricts(districts[value]);
+                  }}
+                  showSearch
+                  style={{
+                    width: 190,
+                  }}
+                  value={form.state}
+                  placeholder="Select State"
+                  optionFilterProp="label"
+                  filterSort={(optionA, optionB) =>
+                    (optionA?.label ?? "")
+                      .toLowerCase()
+                      .localeCompare((optionB?.label ?? "").toLowerCase())
+                  }
+                  options={states}
+                />
+              </Space.Compact>
+              {districts.length > 0 && (
+                <Space.Compact
+                  block={true}
+                  size="large"
+                  style={{ padding: "10px" }}
+                >
                   <Select
                     onChange={(value) => {
-                      handleChange(value, "state");
-                      let districts = districtMap();
-                      setDistricts(districts[value]);
+                      handleChange(value, "district");
                     }}
                     showSearch
                     style={{
                       width: 190,
                     }}
-                    value={form.state}
-                    placeholder="Select State"
+                    value={form.district}
+                    placeholder="Select District"
                     optionFilterProp="label"
                     filterSort={(optionA, optionB) =>
                       (optionA?.label ?? "")
                         .toLowerCase()
                         .localeCompare((optionB?.label ?? "").toLowerCase())
                     }
-                    options={states}
+                    options={districts}
                   />
-                </Col>
-              </Row>
-              {districts.length > 0 && (
-                <Row style={{ padding: 20 }}>
-                  <Col xs={24} sm={10}>
-                    <Select
-                      onChange={(value) => {
-                        handleChange(value, "district");
-                      }}
-                      showSearch
-                      style={{
-                        width: 190,
-                      }}
-                      value={form.district}
-                      placeholder="Select District"
-                      optionFilterProp="label"
-                      filterSort={(optionA, optionB) =>
-                        (optionA?.label ?? "")
-                          .toLowerCase()
-                          .localeCompare((optionB?.label ?? "").toLowerCase())
-                      }
-                      options={districts}
-                    />
-                  </Col>
-                </Row>
+                </Space.Compact>
               )}
-              <Row style={{ padding: 20 }}>
-                <Col xs={24} sm={5}>
-                  <Input
-                    onChange={(value) => handleChange(value, "price")}
-                    placeholder="Price"
-                    value={form.price}
+              <Space.Compact
+                block={true}
+                size="large"
+                style={{ padding: "10px" }}
+              >
+                <Input
+                  onChange={(value) => handleChange(value, "price")}
+                  placeholder="Price"
+                  value={form.price}
+                />
+              </Space.Compact>
+              <Space.Compact
+                block={true}
+                size="large"
+                style={{ padding: "10px" }}
+              >
+                <Upload
+                  listType="picture-card"
+                  fileList={fileList}
+                  onPreview={handlePreview}
+                  onChange={handleChangeImage}
+                >
+                  {fileList.length >= 4 ? null : uploadButton}
+                </Upload>
+                {previewImage && (
+                  <Image
+                    wrapperStyle={{
+                      display: "none",
+                    }}
+                    preview={{
+                      visible: previewOpen,
+                      onVisibleChange: (visible) => setPreviewOpen(visible),
+                      afterOpenChange: (visible) =>
+                        !visible && setPreviewImage(""),
+                    }}
+                    src={previewImage}
                   />
-                </Col>
-              </Row>
-              <Row style={{ padding: 20 }}>
-                <Col xs={24} sm={10}>
-                  <Upload
-                    listType="picture-card"
-                    fileList={fileList}
-                    onPreview={handlePreview}
-                    onChange={handleChangeImage}
-                  >
-                    {fileList.length >= 4 ? null : uploadButton}
-                  </Upload>
-                  {previewImage && (
-                    <Image
-                      wrapperStyle={{
-                        display: "none",
-                      }}
-                      preview={{
-                        visible: previewOpen,
-                        onVisibleChange: (visible) => setPreviewOpen(visible),
-                        afterOpenChange: (visible) =>
-                          !visible && setPreviewImage(""),
-                      }}
-                      src={previewImage}
-                    />
-                  )}
-                </Col>
-              </Row>
-              <Row style={{ padding: 20 }}>
-                <Col xs={24} sm={10}>
-                  <Button onClick={handleSubmit} type="primary">
-                    Submit
-                  </Button>
-                </Col>
-              </Row>
+                )}
+              </Space.Compact>
+              <Space.Compact
+                block={true}
+                size="large"
+                style={{ padding: "10px" }}
+              >
+                <Button onClick={handleSubmit} type="primary">
+                  Submit
+                </Button>
+              </Space.Compact>
             </>
           )}
           {loading && <Skeleton />}
