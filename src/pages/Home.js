@@ -167,7 +167,7 @@ const App = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   return (
-    <Layout>
+    <Layout style={{ height: "100vh", overflow: "hidden" }}>
       <div
         style={{
           padding: "10px",
@@ -246,7 +246,7 @@ const App = () => {
           ref={scrollableDivRef}
           style={{
             padding: 5,
-            height: "100vh",
+            height: "100%",
             background: colorBgContainer,
             borderRadius: borderRadiusLG,
             overflowY: "scroll",

@@ -211,7 +211,7 @@ const Chat = () => {
   };
 
   return (
-    <Layout>
+    <Layout style={{ height: "100vh", overflow: "hidden" }}>
       <Content>
         <div
           id="scrollableDiv"
@@ -222,7 +222,7 @@ const Chat = () => {
             overflow: "scroll",
             display: "flex",
             flexDirection: "column-reverse",
-            height: "100vh",
+            height: "100%",
             position: "fixed",
             bottom: "120px",
             width: "calc(100% - 10px)",

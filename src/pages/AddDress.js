@@ -157,14 +157,14 @@ const AddDress = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   return (
-    <Layout>
+    <Layout style={{ height: "100vh", overflow: "hidden" }}>
       <Content style={{ padding: "0 15px" }}>
         <div
           style={{
             background: colorBgContainer,
             borderRadius: borderRadiusLG,
             overflow: "scroll",
-            height: "100vh",
+            height: "100%",
           }}
         >
           {!loading && user && (

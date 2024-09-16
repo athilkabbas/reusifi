@@ -241,7 +241,7 @@ const ChatPage = () => {
     scrollableDivRef.current.scrollTo(0, scrollPosition);
   }, [scrollPosition]);
   return (
-    <Layout>
+    <Layout style={{ height: "100vh", overflow: "hidden" }}>
       <Content style={{ padding: "0 15px" }}>
         {contextHolder}
         <div
@@ -251,7 +251,7 @@ const ChatPage = () => {
             background: colorBgContainer,
             borderRadius: borderRadiusLG,
             overflow: "scroll",
-            height: "100vh",
+            height: "100%",
           }}
         >
           <InfiniteScroll

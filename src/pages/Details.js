@@ -73,14 +73,14 @@ const Details = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   return (
-    <Layout>
+    <Layout style={{ height: "100vh", overflow: "hidden" }}>
       <Content style={{ padding: "0 15px" }}>
         <div
           style={{
             background: colorBgContainer,
             borderRadius: borderRadiusLG,
             overflowY: "scroll",
-            height: "100vh",
+            height: "100%",
             overflowX: "hidden",
           }}
         >
