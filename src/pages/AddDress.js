@@ -262,6 +262,7 @@ const AddDress = () => {
                 style={{ padding: "10px" }}
               >
                 <Input
+                  prefix="₹"
                   onChange={(value) => handleChange(value, "price")}
                   placeholder="Price"
                   value={form.price}
