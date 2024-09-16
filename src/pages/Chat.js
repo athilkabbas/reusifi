@@ -12,7 +12,7 @@ import axios from "axios";
 import { getCurrentUser, signOut } from "@aws-amplify/auth";
 import { Divider, List, Typography } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { Skeleton } from "antd";
+import { Skeleton, Space } from "antd";
 import {
   HomeFilled,
   UploadOutlined,
@@ -35,7 +35,7 @@ const Chat = () => {
   const location = useLocation();
   const { recipient } = location.state || "";
   const { conversationId } = location.state;
-  const [value, setValue] = useState("");
+  const [messageValue, setMessageValue] = useState("");
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [ws, setWs] = useState("");
@@ -185,12 +185,12 @@ const Chat = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   const handleChange = (value) => {
-    setValue(value.target.value);
+    setMessageValue(value.target.value);
   };
   const handleSubmit = () => {
-    if (value) {
+    if (messageValue) {
       if (recipient && recipient["item"]["email"]) {
-        sendMessage(value, recipient["item"]["email"], user.userId);
+        sendMessage(messageValue, recipient["item"]["email"], user.userId);
       } else if (conversationId) {
         let userIds = conversationId.split("#");
         let userId2;
@@ -200,14 +200,14 @@ const Chat = () => {
             break;
           }
         }
-        sendMessage(value, userId2, user.userId);
+        sendMessage(messageValue, userId2, user.userId);
       }
       setData((prevValue) => [
-        { message: value, timestamp: Date.now(), senderId: user.userId },
+        { message: messageValue, timestamp: Date.now(), senderId: user.userId },
         ...prevValue,
       ]);
     }
-    setValue("");
+    setMessageValue("");
   };
 
   return (
@@ -226,8 +226,7 @@ const Chat = () => {
             position: "fixed",
             bottom: "120px",
             width: "calc(100% - 10px)",
-            boxSizing: "border-box",
-            overflowX: "hidden",
+            paddingTop: "120px",
           }}
         >
           <InfiniteScroll
@@ -297,29 +296,26 @@ const Chat = () => {
           </InfiniteScroll>
         </div>
       </Content>
-      <Row
+      <Space.Compact
+        block={true}
+        size="large"
         style={{
           padding: 10,
           position: "fixed",
           bottom: "50px",
           height: "60px",
           width: "calc(100% - 10px)",
-          boxSizing: "border-box",
         }}
       >
-        <Col xs={19} sm={5}>
-          <Input
-            onChange={(value) => handleChange(value)}
-            placeholder="Enter message"
-            value={value}
-          />
-        </Col>
-        <Col offset={1} xs={4} sm={5}>
-          <Button type="primary" onClick={() => handleSubmit()}>
-            send
-          </Button>
-        </Col>
-      </Row>
+        <Input
+          onChange={(value) => handleChange(value)}
+          placeholder="Enter message"
+          value={messageValue}
+        />
+        <Button type="primary" onClick={() => handleSubmit()}>
+          send
+        </Button>
+      </Space.Compact>
       <Footer
         style={{
           position: "fixed",
