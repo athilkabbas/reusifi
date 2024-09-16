@@ -82,6 +82,7 @@ const Details = () => {
             overflowY: "scroll",
             height: "100%",
             overflowX: "hidden",
+            paddingBottom: "60px",
           }}
         >
           {!loading && (

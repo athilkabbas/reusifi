@@ -252,6 +252,7 @@ const ChatPage = () => {
             borderRadius: borderRadiusLG,
             overflow: "scroll",
             height: "100%",
+            paddingBottom: "60px",
           }}
         >
           <InfiniteScroll

@@ -165,6 +165,7 @@ const AddDress = () => {
             borderRadius: borderRadiusLG,
             overflow: "scroll",
             height: "100%",
+            paddingBottom: "60px",
           }}
         >
           {!loading && user && (

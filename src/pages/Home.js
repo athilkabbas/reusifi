@@ -251,6 +251,7 @@ const App = () => {
             borderRadius: borderRadiusLG,
             overflowY: "scroll",
             overflowX: "hidden",
+            paddingBottom: "60px",
           }}
         >
           <InfiniteScroll
