@@ -242,11 +242,7 @@ const ChatPage = () => {
   }, [scrollPosition]);
   return (
     <Layout>
-      <Content
-        style={{
-          padding: "0 15px",
-        }}
-      >
+      <Content>
         {contextHolder}
         <div
           id="scrollableDiv"
@@ -256,6 +252,7 @@ const ChatPage = () => {
             borderRadius: borderRadiusLG,
             overflow: "scroll",
             height: "100vh",
+            width: "100vw",
           }}
         >
           <InfiniteScroll

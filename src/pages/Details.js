@@ -74,21 +74,14 @@ const Details = () => {
   } = theme.useToken();
   return (
     <Layout>
-      <Content
-        style={{
-          padding: "0 15px",
-        }}
-      >
+      <Content>
         <div
           style={{
-            padding: 0,
-            minHeight: 380,
             background: colorBgContainer,
             borderRadius: borderRadiusLG,
-            marginTop: "30px",
             overflowY: "scroll",
             height: "100vh",
-            paddingBottom: "20px",
+            width: "100vw",
             overflowX: "hidden",
           }}
         >

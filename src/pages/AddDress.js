@@ -158,21 +158,14 @@ const AddDress = () => {
   } = theme.useToken();
   return (
     <Layout>
-      <Content
-        style={{
-          padding: "0 15px",
-        }}
-      >
+      <Content>
         <div
           style={{
-            padding: 0,
-            minHeight: 380,
             background: colorBgContainer,
             borderRadius: borderRadiusLG,
-            marginTop: "30px",
             overflow: "scroll",
             height: "100vh",
-            paddingBottom: "20px",
+            width: "100vw",
           }}
         >
           {!loading && user && (
