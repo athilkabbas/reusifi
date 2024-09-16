@@ -353,7 +353,7 @@ const ChatPage = () => {
       </Content>
       <Footer
         style={{
-          position: "sticky",
+          position: "fixed",
           bottom: 0,
           zIndex: 1,
           width: "100vw",
