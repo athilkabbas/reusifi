@@ -356,7 +356,7 @@ const ChatPage = () => {
           position: "sticky",
           bottom: 0,
           zIndex: 1,
-          width: "100%",
+          width: "100vw",
           display: "flex",
           alignItems: "center",
           padding: "0px",
