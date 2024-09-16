@@ -272,7 +272,7 @@ const App = () => {
           >
             {user && !loading && (
               <List
-                grid={{ xs: 2, gutter: 10 }}
+                grid={{ xs: 2, gutter: 10, sm: 2, md: 2, lg: 2, xl: 2, xxl: 2 }}
                 dataSource={data}
                 renderItem={(item) => {
                   return (
@@ -319,7 +319,7 @@ const App = () => {
                               overflow: "hidden",
                             }}
                           >
-                            <b>{item["item"]["price"]}</b>
+                            <b>₹{item["item"]["price"]}</b>
                           </div>
                         </Card>
                       </List.Item>
