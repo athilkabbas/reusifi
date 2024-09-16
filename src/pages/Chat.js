@@ -225,7 +225,8 @@ const Chat = () => {
             height: "100vh",
             position: "fixed",
             bottom: "120px",
-            width: "calc(100vw - 20px)",
+            width: "calc(100vw - 40px)",
+            paddingTop: "120px",
           }}
         >
           <InfiniteScroll
@@ -279,6 +280,7 @@ const Chat = () => {
                               display: "flex",
                               wordBreak: "break-wrod",
                               justifyContent: "start",
+                              paddingLeft: "40px",
                             }}
                           >
                             {item.message}
@@ -300,7 +302,7 @@ const Chat = () => {
           position: "fixed",
           bottom: "50px",
           height: "60px",
-          width: "calc(100vw - 20px)",
+          width: "calc(100vw - 40px)",
         }}
       >
         <Col xs={19} sm={5}>
