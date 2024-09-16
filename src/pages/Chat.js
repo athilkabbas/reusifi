@@ -225,7 +225,7 @@ const Chat = () => {
             height: "100vh",
             position: "fixed",
             bottom: "120px",
-            width: "100%",
+            width: "calc(100vw - 20px)",
           }}
         >
           <InfiniteScroll
@@ -300,7 +300,7 @@ const Chat = () => {
           position: "fixed",
           bottom: "50px",
           height: "60px",
-          width: "100%",
+          width: "calc(100vw - 20px)",
         }}
       >
         <Col xs={19} sm={5}>
@@ -324,7 +324,7 @@ const Chat = () => {
           display: "flex",
           alignItems: "center",
           padding: "0px",
-          width: "100%",
+          width: "100vw",
         }}
       >
         <div className="demo-logo" />
