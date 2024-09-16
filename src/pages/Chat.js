@@ -212,7 +212,7 @@ const Chat = () => {
 
   return (
     <Layout>
-      <Content style={{ padding: "0 15px", position: "sticky", top: "0px" }}>
+      <Content>
         <div
           id="scrollableDiv"
           ref={scrollableDivRef}
@@ -222,7 +222,10 @@ const Chat = () => {
             overflow: "scroll",
             display: "flex",
             flexDirection: "column-reverse",
-            height: "calc(100vh - 105px)",
+            height: "100vh",
+            position: "fixed",
+            bottom: "120px",
+            width: "100%",
           }}
         >
           <InfiniteScroll
@@ -230,7 +233,6 @@ const Chat = () => {
               overflowX: "hidden",
               display: "flex",
               flexDirection: "column-reverse",
-              marginBottom: "10vh",
             }}
             dataLength={data.length}
             next={getChats}
@@ -295,9 +297,10 @@ const Chat = () => {
       <Row
         style={{
           padding: 10,
-          position: "sticky",
+          position: "fixed",
           bottom: "50px",
           height: "60px",
+          width: "100%",
         }}
       >
         <Col xs={19} sm={5}>
@@ -315,12 +318,13 @@ const Chat = () => {
       </Row>
       <Footer
         style={{
-          position: "sticky",
+          position: "fixed",
           bottom: 0,
           zIndex: 1,
           display: "flex",
           alignItems: "center",
           padding: "0px",
+          width: "100%",
         }}
       >
         <div className="demo-logo" />
