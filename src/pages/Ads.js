@@ -40,7 +40,7 @@ const capitalize = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
 const { Header, Content, Footer } = Layout;
-const App = () => {
+const Ads = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
   const [hasMore, setHasMore] = useState(false);
@@ -85,43 +85,20 @@ const App = () => {
     try {
       setLoading(true);
       let results;
-      if (search) {
-        results = await axios.get(
-          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?limit=${limit}&lastEvaluatedKeys=${JSON.stringify(
-            lastEvaluatedKeys
-          )}&search=${search}&location=${JSON.stringify(location)}`,
-          { headers: { Authorization: "xxx" } }
-        );
-        setLastEvaluatedKeys(results.data.lastEvaluatedKeys);
-        const lastEvaluatedKey = false;
-        for (let lastEvaluatedKey in lastEvaluatedKeys) {
-          if (lastEvaluatedKey) {
-            lastEvaluatedKey = true;
-          }
-        }
-        if (lastEvaluatedKey) {
-          setHasMore(true);
-        } else {
-          setHasMore(false);
-        }
-      } else {
-        results = await axios.get(
-          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?limit=${limit}&lastEvaluatedKey=${JSON.stringify(
-            lastEvaluatedKey
-          )}&location=${JSON.stringify(location)}`,
-          { headers: { Authorization: "xxx" } }
-        );
-        setLastEvaluatedKey(results.data.lastEvaluatedKey);
-        if (!results.data.lastEvaluatedKey) {
-          setHasMore(false);
-        } else {
-          setHasMore(true);
-        }
-      }
-      let newData = results.data.finalResult.filter(
-        (item) => currentUser.userId !== item["item"]["email"]
+      results = await axios.get(
+        `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?limit=${limit}&lastEvaluatedKey=${JSON.stringify(
+          lastEvaluatedKey
+        )}&email=${currentUser.userId}`,
+        { headers: { Authorization: "xxx" } }
       );
-      setData([...data, ...newData]);
+      setLastEvaluatedKey(results.data.lastEvaluatedKey);
+      if (!results.data.lastEvaluatedKey) {
+        setHasMore(false);
+      } else {
+        setHasMore(true);
+      }
+
+      setData([...data, ...results.data.finalResult]);
       setLoading(false);
       setScrollPosition(scrollPosition);
     } catch (err) {
@@ -129,24 +106,10 @@ const App = () => {
       console.log(err);
     }
   };
+
   useEffect(() => {
-    // Clear the previous timeout if search changes
-    if (timer.current) {
-      clearTimeout(timer.current);
-    }
-
-    // Set a new timeout
-    timer.current = setTimeout(() => {
-      loadMoreData();
-    }, 500);
-
-    // Cleanup function to clear the timeout on component unmount or before next effect
-    return () => {
-      if (timer.current) {
-        clearTimeout(timer.current);
-      }
-    };
-  }, [search, location]);
+    loadMoreData();
+  }, []);
 
   const navigate = useNavigate();
   const handleNavigation = (event) => {
@@ -184,70 +147,7 @@ const App = () => {
           top: "0px",
           zIndex: 1,
         }}
-      >
-        <Space.Compact block={true} size="large">
-          <Input
-            addonBefore={<SearchOutlined />}
-            value={search}
-            onChange={(event) => {
-              if (event.target.value) {
-                setLastEvaluatedKeys({
-                  cLEK: null,
-                  tLEK: null,
-                  tS1LEK: null,
-                  tS2LEK: null,
-                  tS3LEK: null,
-                });
-              } else {
-                setLastEvaluatedKey(null);
-              }
-              setData([]);
-              setSearch(event.target.value);
-            }}
-            placeholder="Search"
-          />
-          <Select
-            onChange={(value) => {
-              handleChange(value, "state");
-              let districts = districtMap();
-              setDistricts(districts[value]);
-            }}
-            showSearch
-            style={{
-              width: 120,
-            }}
-            value={location.state}
-            placeholder="State"
-            optionFilterProp="label"
-            filterSort={(optionA, optionB) =>
-              (optionA?.label ?? "")
-                .toLowerCase()
-                .localeCompare((optionB?.label ?? "").toLowerCase())
-            }
-            options={states}
-          />
-          {districts.length > 0 && (
-            <Select
-              onChange={(value) => {
-                handleChange(value, "district");
-              }}
-              showSearch
-              style={{
-                width: 120,
-              }}
-              value={location.district}
-              placeholder="District"
-              optionFilterProp="label"
-              filterSort={(optionA, optionB) =>
-                (optionA?.label ?? "")
-                  .toLowerCase()
-                  .localeCompare((optionB?.label ?? "").toLowerCase())
-              }
-              options={districts}
-            />
-          )}
-        </Space.Compact>
-      </div>
+      ></div>
       <Content style={{ padding: "0 15px" }}>
         <div
           id="scrollableDiv"
@@ -290,7 +190,7 @@ const App = () => {
                         <Card
                           style={{ height: 260 }}
                           onClick={() => {
-                            navigate("/details", { state: { item } });
+                            navigate("/details", { state: { item, ad: true } });
                           }}
                           cover={
                             <img
@@ -356,7 +256,7 @@ const App = () => {
           onClick={(event) => handleNavigation(event)}
           theme="dark"
           mode="horizontal"
-          defaultSelectedKeys={["1"]}
+          defaultSelectedKeys={["4"]}
           items={items}
           style={{ minWidth: 0, flex: "auto" }}
         />
@@ -364,4 +264,4 @@ const App = () => {
     </Layout>
   );
 };
-export default App;
+export default Ads;

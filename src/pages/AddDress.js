@@ -6,7 +6,7 @@ import { Select } from "antd";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
 import { states, districts, districtMap } from "../helpers/locations";
 import { PlusOutlined } from "@ant-design/icons";
-import { Image, Upload } from "antd";
+import { Image, Upload, Typography } from "antd";
 import { Button } from "antd";
 import axios from "axios";
 import { getCurrentUser, signOut } from "@aws-amplify/auth";
@@ -16,6 +16,7 @@ import {
   MessageFilled,
   LogoutOutlined,
 } from "@ant-design/icons";
+const { Text, Link } = Typography;
 const { TextArea } = Input;
 const IconText = ["Home", "Upload", "Chats", "SignOut"];
 const items = [HomeFilled, UploadOutlined, MessageFilled, LogoutOutlined].map(
@@ -40,8 +41,8 @@ const AddDress = () => {
     category: "",
     title: "",
     description: "",
-    state: "",
-    district: "",
+    state: null,
+    district: null,
     email: "",
     images: [],
     price: 0,
@@ -83,6 +84,9 @@ const AddDress = () => {
         navigate("/chatPage");
         break;
       case "4":
+        navigate("/ads");
+        break;
+      case "5":
         signOut();
         break;
     }
@@ -296,6 +300,13 @@ const AddDress = () => {
                     src={previewImage}
                   />
                 )}
+              </Space.Compact>
+              <Space.Compact
+                block={true}
+                size="large"
+                style={{ padding: "10px" }}
+              >
+                <Text>The ad will get deleted automatically after 30 days</Text>
               </Space.Compact>
               <Space.Compact
                 block={true}

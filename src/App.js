@@ -11,6 +11,7 @@ import "@aws-amplify/ui-react/styles.css";
 import Details from "./pages/Details";
 import Chat from "./pages/Chat";
 import ChatPage from "./pages/ChatPage";
+import Ads from "./pages/Ads";
 
 // Configure Amplify
 Amplify.configure(awsconfig);
@@ -24,6 +25,7 @@ function App() {
           <Route path="details" element={<Details />} />
           <Route path="chat" element={<Chat />} />
           <Route path="chatPage" element={<ChatPage />} />
+          <Route path="ads" element={<Ads />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -164,6 +164,9 @@ const Chat = () => {
         navigate("/chatPage");
         break;
       case "4":
+        navigate("/ads");
+        break;
+      case "5":
         signOut();
         break;
     }

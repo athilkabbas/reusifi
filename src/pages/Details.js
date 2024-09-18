@@ -16,22 +16,27 @@ import {
   UploadOutlined,
   MessageFilled,
   LogoutOutlined,
+  ProductFilled,
 } from "@ant-design/icons";
 import { getCurrentUser, signOut } from "@aws-amplify/auth";
-const IconText = ["Home", "Upload", "Chats", "SignOut"];
-const items = [HomeFilled, UploadOutlined, MessageFilled, LogoutOutlined].map(
-  (icon, index) => ({
-    key: String(index + 1),
-    icon: React.createElement(icon),
-    label: IconText[index],
-  })
-);
+const IconText = ["Home", "Upload", "Chats", "Ads", "SignOut"];
+const items = [
+  HomeFilled,
+  UploadOutlined,
+  MessageFilled,
+  ProductFilled,
+  LogoutOutlined,
+].map((icon, index) => ({
+  key: String(index + 1),
+  icon: React.createElement(icon),
+  label: IconText[index],
+}));
 const { TextArea } = Input;
 const { Header, Content, Footer } = Layout;
 const Details = () => {
   const location = useLocation();
   const [loading, setLoading] = useState(false);
-  const { item } = location.state || "";
+  const { item, ad } = location.state || "";
   const [images, setImages] = useState([]);
   const navigate = useNavigate();
   const handleNavigation = (event) => {
@@ -46,6 +51,9 @@ const Details = () => {
         navigate("/chatPage");
         break;
       case "4":
+        navigate("/ads");
+        break;
+      case "5":
         signOut();
         break;
     }
@@ -85,19 +93,17 @@ const Details = () => {
             paddingBottom: "60px",
           }}
         >
-          {!loading && (
+          {!loading && images.length > 0 && (
             <>
-              {images.length > 0 && (
-                <Row style={{ padding: 20 }}>
-                  <Col>
-                    <Carousel>
-                      {images.map((image, index) => {
-                        return <Image key={index} src={image} />;
-                      })}
-                    </Carousel>
-                  </Col>
-                </Row>
-              )}
+              <Row style={{ padding: 20 }}>
+                <Col>
+                  <Carousel>
+                    {images.map((image, index) => {
+                      return <Image key={index} src={image} />;
+                    })}
+                  </Carousel>
+                </Col>
+              </Row>
               <Row style={{ padding: 20 }}>
                 <Col xs={24} sm={5}>
                   <Input value={item["item"]["category"]} />
@@ -128,18 +134,35 @@ const Details = () => {
                   <Input prefix="₹" value={item["item"]["price"]} />
                 </Col>
               </Row>
-              <Row style={{ padding: 20 }}>
-                <Col xs={24} sm={10}>
-                  <Button
-                    onClick={() => {
-                      navigate("/chat", { state: { recipient: item } });
-                    }}
-                    type="primary"
-                  >
-                    Chat
-                  </Button>
-                </Col>
-              </Row>
+              {ad && (
+                <Row style={{ padding: 20 }}>
+                  <Col xs={24} sm={10}>
+                    <Button
+                      danger
+                      onClick={() => {
+                        navigate("/chat", { state: { recipient: item } });
+                      }}
+                      type="primary"
+                    >
+                      Delete
+                    </Button>
+                  </Col>
+                </Row>
+              )}
+              {!ad && (
+                <Row style={{ padding: 20 }}>
+                  <Col xs={24} sm={10}>
+                    <Button
+                      onClick={() => {
+                        navigate("/chat", { state: { recipient: item } });
+                      }}
+                      type="primary"
+                    >
+                      Chat
+                    </Button>
+                  </Col>
+                </Row>
+              )}
             </>
           )}
           {loading && <Skeleton />}
