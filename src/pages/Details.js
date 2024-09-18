@@ -77,6 +77,20 @@ const Details = () => {
       getData();
     }
   }, []);
+  const handleDelete = async () => {
+    try {
+      setLoading(true);
+      let results = await axios.get(
+        `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/deleteAd?id=${
+          item["item"]["uuid"]
+        }&s3Keys=${JSON.stringify(item["item"]["s3Keys"])}`,
+        { headers: { Authorization: "xxx" } }
+      );
+    } catch (err) {
+      setLoading(false);
+      console.log(err);
+    }
+  };
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -139,8 +153,9 @@ const Details = () => {
                   <Col xs={24} sm={10}>
                     <Button
                       danger
-                      onClick={() => {
-                        navigate("/chat", { state: { recipient: item } });
+                      onClick={async () => {
+                        await handleDelete();
+                        navigate(-1);
                       }}
                       type="primary"
                     >

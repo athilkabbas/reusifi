@@ -118,10 +118,7 @@ const App = () => {
           setHasMore(true);
         }
       }
-      let newData = results.data.finalResult.filter(
-        (item) => currentUser.userId !== item["item"]["email"]
-      );
-      setData([...data, ...newData]);
+      setData([...data, ...results.data.finalResult]);
       setLoading(false);
       setScrollPosition(scrollPosition);
     } catch (err) {
@@ -286,11 +283,16 @@ const App = () => {
                 renderItem={(item) => {
                   return (
                     <>
-                      <List.Item key={item["item"]["_id"]}>
+                      <List.Item key={item["item"]["id"]}>
                         <Card
                           style={{ height: 260 }}
                           onClick={() => {
-                            navigate("/details", { state: { item } });
+                            navigate("/details", {
+                              state: {
+                                item,
+                                ad: user.userId === item["item"]["email"],
+                              },
+                            });
                           }}
                           cover={
                             <img
