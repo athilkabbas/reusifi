@@ -59,7 +59,7 @@ const Details = () => {
         break;
     }
   };
-  const { setInitialLoad } = useContext(Context);
+  const { setInitialLoad, setData } = useContext(Context);
   useEffect(() => {
     setInitialLoad(false);
   }, []);
@@ -84,6 +84,8 @@ const Details = () => {
   }, []);
   const handleDelete = async () => {
     try {
+      setData([]);
+      setInitialLoad(true);
       setLoading(true);
       let results = await axios.get(
         `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/deleteAd?id=${
