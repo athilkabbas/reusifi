@@ -45,7 +45,7 @@ const { Header, Content, Footer } = Layout;
 const App = () => {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(false);
-  const limit = 20;
+  const limit = 10;
   const [user, setUser] = useState(null);
   const timer = useRef(null);
   const [districts, setDistricts] = useState([]);
@@ -69,8 +69,11 @@ const App = () => {
   } = useContext(Context);
   useEffect(() => {
     if (scrollableDivRef.current && (!initialLoad || scrollLoadMoreData)) {
-      scrollableDivRef.current.scrollTo(0, scrollPosition);
-      setScrollLoadMoreData(false);
+      console.log(scrollPosition);
+      setTimeout(() => {
+        scrollableDivRef.current.scrollTo(0, scrollPosition);
+        setScrollLoadMoreData(false);
+      }, 0);
     }
   }, [scrollPosition, initialLoad]);
   useEffect(() => {
@@ -94,7 +97,6 @@ const App = () => {
   const loadMoreData = async () => {
     const currentUser = await getCurrentUser();
     setUser(currentUser);
-    console.log(initialLoad, "athil");
     if (!initialLoad) {
       setInitialLoad(true);
       setScrollLoadMoreData(true);
