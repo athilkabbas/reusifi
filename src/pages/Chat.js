@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import { Col, message, Row } from "antd";
 import { Input } from "antd";
 import { useNavigate } from "react-router-dom";
@@ -13,6 +13,8 @@ import { getCurrentUser, signOut } from "@aws-amplify/auth";
 import { Divider, List, Typography } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Skeleton, Space } from "antd";
+import { Context } from "../context/provider";
+import { Empty } from "antd";
 import {
   HomeFilled,
   UploadOutlined,
@@ -62,6 +64,11 @@ const Chat = () => {
       setReconnect((reconnect) => !reconnect);
     }
   };
+
+  const { setInitialLoad } = useContext(Context);
+  useEffect(() => {
+    setInitialLoad(false);
+  }, []);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -251,7 +258,12 @@ const Chat = () => {
                 active
               />
             }
-            endMessage={<Divider plain>It is all, nothing more</Divider>}
+            endMessage={
+              <>
+                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}></Empty>
+                <Divider plain>It is all, nothing more</Divider>
+              </>
+            }
             scrollableTarget="scrollableDiv"
           >
             {!loading && user && (

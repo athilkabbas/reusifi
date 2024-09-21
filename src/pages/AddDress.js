@@ -38,6 +38,7 @@ const getBase64 = (file) =>
 
 const AddDress = () => {
   const [user, setUser] = useState("");
+  const [maxAds, setMaxAds] = useState([]);
   const [form, setForm] = useState({
     category: "",
     title: "",
@@ -55,9 +56,32 @@ const AddDress = () => {
         return { ...prevValue, email: currentUser.userId };
       });
       setUser(currentUser);
+      try {
+        setLoading(true);
+        let results;
+        results = await axios.get(
+          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?limit=${limit}&lastEvaluatedKey=${JSON.stringify(
+            lastEvaluatedKey
+          )}&email=${currentUser.userId}`,
+          { headers: { Authorization: "xxx" } }
+        );
+        setLastEvaluatedKey(results.data.lastEvaluatedKey);
+        if (!results.data.lastEvaluatedKey) {
+          setHasMore(false);
+        } else {
+          setHasMore(true);
+        }
+
+        setMaxAds([...maxAds, ...results.data.finalResult]);
+        setLoading(false);
+      } catch (err) {
+        setLoading(false);
+        console.log(err);
+      }
     };
     fetchUser();
   }, []);
+
   const [districts, setDistricts] = useState([]);
   const handleChange = (value, type) => {
     setForm((prevValue) => {
@@ -97,6 +121,7 @@ const AddDress = () => {
   const [previewImage, setPreviewImage] = useState("");
   const [fileList, setFileList] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(false);
   const handlePreview = async (file) => {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
@@ -164,9 +189,12 @@ const AddDress = () => {
       </div>
     </button>
   );
+
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+  const limit = 10;
+  const [lastEvaluatedKey, setLastEvaluatedKey] = useState(null);
   return (
     <Layout style={{ height: "100vh", overflow: "hidden" }}>
       <Content style={{ padding: "0 15px" }}>
@@ -320,9 +348,23 @@ const AddDress = () => {
                 size="large"
                 style={{ padding: "10px" }}
               >
-                <Button onClick={handleSubmit} type="primary">
-                  Submit
-                </Button>
+                {maxAds && maxAds.length < 10 && (
+                  <Button onClick={handleSubmit} type="primary">
+                    Submit
+                  </Button>
+                )}
+                {maxAds && maxAds.length >= 10 && (
+                  <Button onClick={handleSubmit} type="primary" disabled>
+                    Submit
+                  </Button>
+                )}
+              </Space.Compact>
+              <Space.Compact
+                block={true}
+                size="large"
+                style={{ padding: "10px" }}
+              >
+                {maxAds && maxAds.length >= 10 && <Text>Max 10 ads</Text>}
               </Space.Compact>
             </>
           )}

@@ -4,6 +4,7 @@ import React, {
   useState,
   useCallback,
   useRef,
+  useContext,
 } from "react";
 import { useNavigate } from "react-router-dom";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
@@ -23,6 +24,7 @@ import axios from "axios";
 import { getCurrentUser, signOut } from "@aws-amplify/auth";
 import debounce from "lodash/debounce";
 import { states, districts, districtMap } from "../helpers/locations";
+import { Context } from "../context/provider";
 const IconText = ["Home", "Upload", "Chats", "Ads", "SignOut"];
 const { Meta } = Card;
 const items = [
@@ -44,7 +46,7 @@ const Ads = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
   const [hasMore, setHasMore] = useState(false);
-  const limit = 20;
+  const limit = 10;
   const [user, setUser] = useState(null);
   const [search, setSearch] = useState(null);
   const timer = useRef(null);
@@ -62,6 +64,10 @@ const Ads = () => {
     tS2LEK: null,
     tS3LEK: null,
   });
+  const { setInitialLoad } = useContext(Context);
+  useEffect(() => {
+    setInitialLoad(false);
+  }, []);
   const handleChange = (value, type) => {
     setData([]);
     setLastEvaluatedKeys({

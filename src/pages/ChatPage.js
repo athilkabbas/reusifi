@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import { Col, message, Row } from "antd";
 import { Input } from "antd";
 import { useNavigate } from "react-router-dom";
@@ -16,7 +16,8 @@ import { hashString } from "react-hash-string";
 import { Card, Skeleton } from "antd";
 import { Dropdown, Space } from "antd";
 import { DownOutlined, SmileOutlined } from "@ant-design/icons";
-
+import { Context } from "../context/provider";
+import { Empty } from "antd";
 import {
   HomeFilled,
   UploadOutlined,
@@ -98,6 +99,11 @@ const ChatPage = () => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+
+  const { setInitialLoad } = useContext(Context);
+  useEffect(() => {
+    setInitialLoad(false);
+  }, []);
 
   const info = () => {
     messageApi.info("You have blocked this user");
@@ -280,7 +286,12 @@ const ChatPage = () => {
                 active
               />
             }
-            endMessage={<Divider plain>It is all, nothing more</Divider>}
+            endMessage={
+              <>
+                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}></Empty>
+                <Divider plain>It is all, nothing more</Divider>
+              </>
+            }
             scrollableTarget="scrollableDiv"
           >
             {!loading &&

@@ -44,7 +44,6 @@ const capitalize = (str) => {
 const { Header, Content, Footer } = Layout;
 const App = () => {
   const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(false);
   const limit = 10;
   const [user, setUser] = useState(null);
   const timer = useRef(null);
@@ -66,19 +65,18 @@ const App = () => {
     setLastEvaluatedKey,
     lastEvaluatedKeys,
     setLastEvaluatedKeys,
+    hasMore,
+    setHasMore,
   } = useContext(Context);
   useEffect(() => {
     if (scrollableDivRef.current && (!initialLoad || scrollLoadMoreData)) {
-      console.log(scrollPosition);
       setTimeout(() => {
         scrollableDivRef.current.scrollTo(0, scrollPosition);
         setScrollLoadMoreData(false);
       }, 0);
     }
   }, [scrollPosition, initialLoad]);
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
+
   const handleChange = (value, type) => {
     setData([]);
     setLastEvaluatedKeys({
@@ -89,9 +87,15 @@ const App = () => {
       tS3LEK: null,
     });
     setLastEvaluatedKey(null);
-    setLocation((prevValue) => {
-      return { ...prevValue, [type]: value };
-    });
+    if (type === "state") {
+      setLocation((prevValue) => {
+        return { ...prevValue, [type]: value, district: null };
+      });
+    } else {
+      setLocation((prevValue) => {
+        return { ...prevValue, [type]: value };
+      });
+    }
   };
 
   const loadMoreData = async () => {

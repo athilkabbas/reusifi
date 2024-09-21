@@ -5,6 +5,7 @@ export const Context = createContext();
 const Provider = ({ children }) => {
   const [data, setData] = useState([]);
   const [initialLoad, setInitialLoad] = useState(true);
+  const [hasMore, setHasMore] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
   const [location, setLocation] = useState({ state: null, district: null });
   const [search, setSearch] = useState(null);
@@ -34,6 +35,8 @@ const Provider = ({ children }) => {
         setLastEvaluatedKey,
         lastEvaluatedKeys,
         setLastEvaluatedKeys,
+        hasMore,
+        setHasMore,
       }}
     >
       {children}
