@@ -45,7 +45,7 @@ const { Header, Content, Footer } = Layout;
 const App = () => {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(false);
-  const limit = 6;
+  const limit = 20;
   const [user, setUser] = useState(null);
   const timer = useRef(null);
   const [districts, setDistricts] = useState([]);
