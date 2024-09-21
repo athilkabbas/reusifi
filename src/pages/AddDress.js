@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Col, Row, Skeleton, Space } from "antd";
 import { Input } from "antd";
 import { useNavigate } from "react-router-dom";
@@ -16,6 +16,7 @@ import {
   MessageFilled,
   LogoutOutlined,
 } from "@ant-design/icons";
+import { Context } from "../context/provider";
 const { Text, Link } = Typography;
 const { TextArea } = Input;
 const IconText = ["Home", "Upload", "Chats", "SignOut"];
@@ -71,6 +72,7 @@ const AddDress = () => {
       return { ...prevValue, [type]: value };
     });
   };
+  const { setData, setInitialLoad } = useContext(Context);
   const navigate = useNavigate();
   const handleNavigation = (event) => {
     switch (event.key) {
@@ -106,6 +108,9 @@ const AddDress = () => {
     setFileList(file.fileList);
   };
   useEffect(() => {
+    setInitialLoad(false);
+  }, []);
+  useEffect(() => {
     setForm((prevValue) => {
       return {
         ...prevValue,
@@ -114,6 +119,8 @@ const AddDress = () => {
     });
   }, [fileList]);
   const handleSubmit = async () => {
+    setData([]);
+    setInitialLoad(true);
     setLoading(true);
     const formData = new FormData();
     for (let i = 0; i < form.images.length; i++) {

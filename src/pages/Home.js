@@ -4,6 +4,7 @@ import React, {
   useState,
   useCallback,
   useRef,
+  useContext,
 } from "react";
 import { useNavigate } from "react-router-dom";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
@@ -23,6 +24,7 @@ import axios from "axios";
 import { getCurrentUser, signOut } from "@aws-amplify/auth";
 import debounce from "lodash/debounce";
 import { states, districts, districtMap } from "../helpers/locations";
+import { Context } from "../context/provider";
 const IconText = ["Home", "Upload", "Chats", "Ads", "SignOut"];
 const { Meta } = Card;
 const items = [
@@ -42,26 +44,38 @@ const capitalize = (str) => {
 const { Header, Content, Footer } = Layout;
 const App = () => {
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState([]);
   const [hasMore, setHasMore] = useState(false);
-  const limit = 20;
+  const limit = 6;
   const [user, setUser] = useState(null);
-  const [search, setSearch] = useState(null);
   const timer = useRef(null);
   const [districts, setDistricts] = useState([]);
   const scrollableDivRef = useRef(null);
-  const [scrollPosition, setScrollPosition] = useState(0);
-  const [location, setLocation] = useState({
-    state: null,
-    district: null,
-  });
-  const [lastEvaluatedKeys, setLastEvaluatedKeys] = useState({
-    cLEK: null,
-    tLEK: null,
-    tS1LEK: null,
-    tS2LEK: null,
-    tS3LEK: null,
-  });
+  const [scrollLoadMoreData, setScrollLoadMoreData] = useState(false);
+  const {
+    data,
+    setData,
+    search,
+    setSearch,
+    location,
+    setLocation,
+    scrollPosition,
+    setScrollPosition,
+    initialLoad,
+    setInitialLoad,
+    lastEvaluatedKey,
+    setLastEvaluatedKey,
+    lastEvaluatedKeys,
+    setLastEvaluatedKeys,
+  } = useContext(Context);
+  useEffect(() => {
+    if (scrollableDivRef.current && (!initialLoad || scrollLoadMoreData)) {
+      scrollableDivRef.current.scrollTo(0, scrollPosition);
+      setScrollLoadMoreData(false);
+    }
+  }, [scrollPosition, initialLoad]);
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
   const handleChange = (value, type) => {
     setData([]);
     setLastEvaluatedKeys({
@@ -76,13 +90,18 @@ const App = () => {
       return { ...prevValue, [type]: value };
     });
   };
-  const [lastEvaluatedKey, setLastEvaluatedKey] = useState(null);
 
   const loadMoreData = async () => {
     const currentUser = await getCurrentUser();
     setUser(currentUser);
-    const scrollPosition = scrollableDivRef.current.scrollTop;
+    console.log(initialLoad, "athil");
+    if (!initialLoad) {
+      setInitialLoad(true);
+      setScrollLoadMoreData(true);
+      return;
+    }
     try {
+      const scrollPosition = scrollableDivRef.current.scrollTop;
       setLoading(true);
       let results;
       if (search) {
@@ -165,9 +184,6 @@ const App = () => {
         break;
     }
   };
-  useEffect(() => {
-    scrollableDivRef.current.scrollTo(0, scrollPosition);
-  }, [scrollPosition]);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -262,7 +278,10 @@ const App = () => {
           <InfiniteScroll
             style={{ overflowX: "hidden" }}
             dataLength={data.length}
-            next={loadMoreData}
+            next={() => {
+              setScrollLoadMoreData(true);
+              loadMoreData();
+            }}
             hasMore={hasMore}
             loader={
               <Skeleton
@@ -287,6 +306,9 @@ const App = () => {
                         <Card
                           style={{ height: 260 }}
                           onClick={() => {
+                            setScrollPosition(
+                              scrollableDivRef.current.scrollTop
+                            );
                             navigate("/details", {
                               state: {
                                 item,

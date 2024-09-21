@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Col, Row, Skeleton } from "antd";
 import { Input } from "antd";
 import { useNavigate } from "react-router-dom";
@@ -19,6 +19,7 @@ import {
   ProductFilled,
 } from "@ant-design/icons";
 import { getCurrentUser, signOut } from "@aws-amplify/auth";
+import { Context } from "../context/provider";
 const IconText = ["Home", "Upload", "Chats", "Ads", "SignOut"];
 const items = [
   HomeFilled,
@@ -58,6 +59,10 @@ const Details = () => {
         break;
     }
   };
+  const { setInitialLoad } = useContext(Context);
+  useEffect(() => {
+    setInitialLoad(false);
+  }, []);
   useEffect(() => {
     const getData = async () => {
       try {
