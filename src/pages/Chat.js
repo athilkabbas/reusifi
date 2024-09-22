@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, useContext } from "react";
 import { Col, message, Row } from "antd";
 import { Input } from "antd";
 import { useNavigate } from "react-router-dom";
-import { Select } from "antd";
+import { Select, Badge } from "antd";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
 import { states, districts, districtMap } from "../helpers/locations";
 import { PlusOutlined } from "@ant-design/icons";
@@ -19,18 +19,12 @@ import {
   HomeFilled,
   UploadOutlined,
   MessageFilled,
+  ProductFilled,
   LogoutOutlined,
 } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
 const { TextArea } = Input;
 const IconText = ["Home", "Upload", "Chats", "SignOut"];
-const items = [HomeFilled, UploadOutlined, MessageFilled, LogoutOutlined].map(
-  (icon, index) => ({
-    key: String(index + 1),
-    icon: React.createElement(icon),
-    label: IconText[index],
-  })
-);
 const { Header, Content, Footer } = Layout;
 const Chat = () => {
   const [ichatData, setIChatData] = useState([]);
@@ -64,8 +58,56 @@ const Chat = () => {
       setReconnect((reconnect) => !reconnect);
     }
   };
-
+  const [unreadChatCount, setUnreadChatCount] = useState(0);
   const { setInitialLoad, data } = useContext(Context);
+
+  useEffect(() => {
+    const getChatCount = async () => {
+      try {
+        setLoading(true);
+        const result = await axios.get(
+          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
+            user.userId
+          }&count=${true}`,
+          { headers: { Authorization: "xxx" } }
+        );
+        setUnreadChatCount(result.data.count);
+        // If no more data to load, set hasMore to false
+        setLoading(false);
+        if (!result.data.lastEvaluatedKey) {
+          setHasMore(false);
+        }
+      } catch (err) {
+        setLoading(false);
+        console.log(err);
+      }
+    };
+    if (user) {
+      getChatCount();
+    }
+  }, [user, ichatData]);
+  const items = [
+    HomeFilled,
+    UploadOutlined,
+    MessageFilled,
+    ProductFilled,
+    LogoutOutlined,
+  ].map((icon, index) => {
+    if (index === 2) {
+      return {
+        key: String(index + 1),
+        icon: (
+          <Badge count={unreadChatCount}>{React.createElement(icon)}</Badge>
+        ),
+        label: IconText[index],
+      };
+    }
+    return {
+      key: String(index + 1),
+      icon: React.createElement(icon),
+      label: IconText[index],
+    };
+  });
   useEffect(() => {
     if (data.length > 0) {
       setInitialLoad(false);
@@ -75,11 +117,12 @@ const Chat = () => {
   }, []);
 
   useEffect(() => {
+    let socket;
     const fetchUser = async () => {
       try {
         const currentUser = await getCurrentUser();
         setUser(currentUser);
-        const socket = new WebSocket(
+        socket = new WebSocket(
           `wss://vcj0ne6oh5.execute-api.ap-south-1.amazonaws.com/production?userId=${currentUser.userId}`
         );
         setWs(socket);
@@ -87,7 +130,7 @@ const Chat = () => {
           console.log("Connected to the WebSocket");
         };
 
-        socket.onmessage = (event) => {
+        socket.onmessage = async (event) => {
           console.log("Message from server:", event);
           const data = JSON.parse(event.data);
           setIChatData((prevValue) => [
@@ -99,13 +142,16 @@ const Chat = () => {
             },
             ...prevValue,
           ]);
+          await axios.get(
+            `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
+              data.recipientUserId
+            }&userId2=${data.senderUserId}&read=${true}`,
+            { headers: { Authorization: "xxx" } }
+          );
         };
         // To close the connection
         socket.onclose = () => {
           console.log("Disconnected from WebSocket");
-        };
-        return () => {
-          socket.close();
         };
       } catch (error) {
         console.log("Error fetching user", error);
@@ -113,6 +159,9 @@ const Chat = () => {
     };
 
     fetchUser();
+    return () => {
+      socket.close();
+    };
   }, [reconnect]);
 
   const getChats = async () => {
@@ -123,6 +172,12 @@ const Chat = () => {
       if (recipient && recipient["item"]["email"]) {
         result = await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${user.userId}&userId2=${recipient["item"]["email"]}&lastEvaluatedKey=${lastEvaluatedKey}`,
+          { headers: { Authorization: "xxx" } }
+        );
+        await axios.get(
+          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
+            user.userId
+          }&userId2=${recipient["item"]["email"]}&read=${true}`,
           { headers: { Authorization: "xxx" } }
         );
       } else if (conversationId) {
@@ -136,6 +191,12 @@ const Chat = () => {
         }
         result = await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${user.userId}&userId2=${userId2}&lastEvaluatedKey=${lastEvaluatedKey}`,
+          { headers: { Authorization: "xxx" } }
+        );
+        await axios.get(
+          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
+            user.userId
+          }&userId2=${userId2}&read=${true}`,
           { headers: { Authorization: "xxx" } }
         );
       }

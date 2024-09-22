@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, useContext } from "react";
 import { Col, message, Row } from "antd";
 import { Input } from "antd";
 import { useNavigate } from "react-router-dom";
-import { Select } from "antd";
+import { Select, Badge } from "antd";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
 import { states, districts, districtMap } from "../helpers/locations";
 import { PlusOutlined } from "@ant-design/icons";
@@ -29,17 +29,6 @@ import {
 import { useLocation } from "react-router-dom";
 const { TextArea } = Input;
 const IconText = ["Home", "Upload", "Chats", "Ads", "SignOut"];
-const items = [
-  HomeFilled,
-  UploadOutlined,
-  MessageFilled,
-  ProductFilled,
-  LogoutOutlined,
-].map((icon, index) => ({
-  key: String(index + 1),
-  icon: React.createElement(icon),
-  label: IconText[index],
-}));
 
 const menuItems = [
   {
@@ -99,8 +88,55 @@ const ChatPage = () => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
-
+  const [unreadChatCount, setUnreadChatCount] = useState(0);
   const { setInitialLoad, data } = useContext(Context);
+  useEffect(() => {
+    const getChatCount = async () => {
+      try {
+        setLoading(true);
+        const result = await axios.get(
+          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
+            user.userId
+          }&count=${true}`,
+          { headers: { Authorization: "xxx" } }
+        );
+        setUnreadChatCount(result.data.count);
+        // If no more data to load, set hasMore to false
+        setLoading(false);
+        if (!result.data.lastEvaluatedKey) {
+          setHasMore(false);
+        }
+      } catch (err) {
+        setLoading(false);
+        console.log(err);
+      }
+    };
+    if (user) {
+      getChatCount();
+    }
+  }, [user]);
+  const items = [
+    HomeFilled,
+    UploadOutlined,
+    MessageFilled,
+    ProductFilled,
+    LogoutOutlined,
+  ].map((icon, index) => {
+    if (index === 2) {
+      return {
+        key: String(index + 1),
+        icon: (
+          <Badge count={unreadChatCount}>{React.createElement(icon)}</Badge>
+        ),
+        label: IconText[index],
+      };
+    }
+    return {
+      key: String(index + 1),
+      icon: React.createElement(icon),
+      label: IconText[index],
+    };
+  });
   useEffect(() => {
     if (data.length > 0) {
       setInitialLoad(false);
@@ -304,69 +340,74 @@ const ChatPage = () => {
                 return (
                   <Row style={{ padding: "10px" }}>
                     <Col span={24}>
-                      <Card
-                        style={{ height: "120px" }}
-                        onClick={() => {
-                          if (item.blocked) {
-                            info();
-                          } else {
-                            navigate("/chat", {
-                              state: { conversationId: item.conversationId },
-                            });
-                          }
-                        }}
-                        key={hashString(item.conversationId)}
-                        title={
-                          <Row>
-                            <Col span={22}>
-                              {hashString(item.conversationId)
-                                .toString()
-                                .slice(1)}
-                            </Col>
-                            <Col>
-                              {!item.blocked && (
-                                <Dropdown overlay={menu(index)}>
-                                  <a
-                                    onClick={(e) => {
-                                      e.preventDefault();
-                                      e.stopPropagation();
-                                    }}
-                                  >
-                                    <Space>
-                                      <MenuOutlined />
-                                    </Space>
-                                  </a>
-                                </Dropdown>
-                              )}
-                              {item.blocked && (
-                                <Dropdown overlay={menuBlocked(index)}>
-                                  <a
-                                    onClick={(e) => {
-                                      e.preventDefault();
-                                      e.stopPropagation();
-                                    }}
-                                  >
-                                    <Space>
-                                      <MenuOutlined />
-                                    </Space>
-                                  </a>
-                                </Dropdown>
-                              )}
-                            </Col>
-                          </Row>
-                        }
-                        bordered={true}
-                      >
-                        <div
+                      <Badge dot={item.read === "false" ? true : false}>
+                        <Card
                           style={{
-                            whiteSpace: "nowrap",
-                            textOverflow: "ellipsis",
-                            overflow: "hidden",
+                            height: "120px",
+                            width: "calc(100vw - 50px)",
                           }}
+                          onClick={() => {
+                            if (item.blocked) {
+                              info();
+                            } else {
+                              navigate("/chat", {
+                                state: { conversationId: item.conversationId },
+                              });
+                            }
+                          }}
+                          key={hashString(item.conversationId)}
+                          title={
+                            <Row>
+                              <Col span={22}>
+                                {hashString(item.conversationId)
+                                  .toString()
+                                  .slice(1)}
+                              </Col>
+                              <Col>
+                                {!item.blocked && (
+                                  <Dropdown overlay={menu(index)}>
+                                    <a
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                      }}
+                                    >
+                                      <Space>
+                                        <MenuOutlined />
+                                      </Space>
+                                    </a>
+                                  </Dropdown>
+                                )}
+                                {item.blocked && (
+                                  <Dropdown overlay={menuBlocked(index)}>
+                                    <a
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                      }}
+                                    >
+                                      <Space>
+                                        <MenuOutlined />
+                                      </Space>
+                                    </a>
+                                  </Dropdown>
+                                )}
+                              </Col>
+                            </Row>
+                          }
+                          bordered={true}
                         >
-                          {item.message}
-                        </div>
-                      </Card>
+                          <div
+                            style={{
+                              whiteSpace: "nowrap",
+                              textOverflow: "ellipsis",
+                              overflow: "hidden",
+                            }}
+                          >
+                            {item.message}
+                          </div>
+                        </Card>
+                      </Badge>
                     </Col>
                   </Row>
                 );

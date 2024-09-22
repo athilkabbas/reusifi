@@ -7,7 +7,7 @@ import { Breadcrumb, Layout, Menu, theme } from "antd";
 import { states, districts, districtMap } from "../helpers/locations";
 import { PlusOutlined } from "@ant-design/icons";
 import { Image, Upload, Typography, message } from "antd";
-import { Button } from "antd";
+import { Button, Badge } from "antd";
 import axios from "axios";
 import { getCurrentUser, signOut } from "@aws-amplify/auth";
 import imageCompression from "browser-image-compression";
@@ -22,17 +22,6 @@ import { Context } from "../context/provider";
 const { Text, Link } = Typography;
 const { TextArea } = Input;
 const IconText = ["Home", "Upload", "Chats", "Ads", "SignOut"];
-const items = [
-  HomeFilled,
-  UploadOutlined,
-  MessageFilled,
-  ProductFilled,
-  LogoutOutlined,
-].map((icon, index) => ({
-  key: String(index + 1),
-  icon: React.createElement(icon),
-  label: IconText[index],
-}));
 const { Header, Content, Footer } = Layout;
 const getBase64 = (file) =>
   new Promise((resolve, reject) => {
@@ -96,7 +85,54 @@ const AddDress = () => {
       return { ...prevValue, [type]: value };
     });
   };
+
+  const [unreadChatCount, setUnreadChatCount] = useState(0);
   const { setData, setInitialLoad, data } = useContext(Context);
+
+  useEffect(() => {
+    const getChatCount = async () => {
+      try {
+        setLoading(true);
+        const result = await axios.get(
+          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
+            user.userId
+          }&count=${true}`,
+          { headers: { Authorization: "xxx" } }
+        );
+        setUnreadChatCount(result.data.count);
+        // If no more data to load, set hasMore to false
+        setLoading(false);
+      } catch (err) {
+        setLoading(false);
+        console.log(err);
+      }
+    };
+    if (user) {
+      getChatCount();
+    }
+  }, [user]);
+  const items = [
+    HomeFilled,
+    UploadOutlined,
+    MessageFilled,
+    ProductFilled,
+    LogoutOutlined,
+  ].map((icon, index) => {
+    if (index === 2) {
+      return {
+        key: String(index + 1),
+        icon: (
+          <Badge count={unreadChatCount}>{React.createElement(icon)}</Badge>
+        ),
+        label: IconText[index],
+      };
+    }
+    return {
+      key: String(index + 1),
+      icon: React.createElement(icon),
+      label: IconText[index],
+    };
+  });
   const navigate = useNavigate();
   const handleNavigation = (event) => {
     switch (event.key) {

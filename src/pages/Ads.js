@@ -19,7 +19,7 @@ import {
 import { Button, Input, Select, Space } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Avatar, Divider, List, Skeleton } from "antd";
-import { Card } from "antd";
+import { Card, Badge } from "antd";
 import axios from "axios";
 import { getCurrentUser, signOut } from "@aws-amplify/auth";
 import debounce from "lodash/debounce";
@@ -27,17 +27,6 @@ import { states, districts, districtMap } from "../helpers/locations";
 import { Context } from "../context/provider";
 const IconText = ["Home", "Upload", "Chats", "Ads", "SignOut"];
 const { Meta } = Card;
-const items = [
-  HomeFilled,
-  UploadOutlined,
-  MessageFilled,
-  ProductFilled,
-  LogoutOutlined,
-].map((icon, index) => ({
-  key: String(index + 1),
-  icon: React.createElement(icon),
-  label: IconText[index],
-}));
 const capitalize = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
@@ -64,7 +53,55 @@ const Ads = () => {
     tS2LEK: null,
     tS3LEK: null,
   });
+  const [unreadChatCount, setUnreadChatCount] = useState(0);
   const { setInitialLoad, data } = useContext(Context);
+  useEffect(() => {
+    const getChatCount = async () => {
+      try {
+        setLoading(true);
+        const result = await axios.get(
+          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
+            user.userId
+          }&count=${true}`,
+          { headers: { Authorization: "xxx" } }
+        );
+        setUnreadChatCount(result.data.count);
+        // If no more data to load, set hasMore to false
+        setLoading(false);
+        if (!result.data.lastEvaluatedKey) {
+          setHasMore(false);
+        }
+      } catch (err) {
+        setLoading(false);
+        console.log(err);
+      }
+    };
+    if (user) {
+      getChatCount();
+    }
+  }, [user]);
+  const items = [
+    HomeFilled,
+    UploadOutlined,
+    MessageFilled,
+    ProductFilled,
+    LogoutOutlined,
+  ].map((icon, index) => {
+    if (index === 2) {
+      return {
+        key: String(index + 1),
+        icon: (
+          <Badge count={unreadChatCount}>{React.createElement(icon)}</Badge>
+        ),
+        label: IconText[index],
+      };
+    }
+    return {
+      key: String(index + 1),
+      icon: React.createElement(icon),
+      label: IconText[index],
+    };
+  });
   useEffect(() => {
     if (data.length > 0) {
       setInitialLoad(false);

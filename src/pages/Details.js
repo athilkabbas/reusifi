@@ -3,7 +3,7 @@ import { Col, Row, Skeleton } from "antd";
 import { Input } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import { Select } from "antd";
+import { Select, Badge } from "antd";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
 import { states, districts, districtMap } from "../helpers/locations";
 import { PlusOutlined } from "@ant-design/icons";
@@ -21,23 +21,13 @@ import {
 import { getCurrentUser, signOut } from "@aws-amplify/auth";
 import { Context } from "../context/provider";
 const IconText = ["Home", "Upload", "Chats", "Ads", "SignOut"];
-const items = [
-  HomeFilled,
-  UploadOutlined,
-  MessageFilled,
-  ProductFilled,
-  LogoutOutlined,
-].map((icon, index) => ({
-  key: String(index + 1),
-  icon: React.createElement(icon),
-  label: IconText[index],
-}));
 const { TextArea } = Input;
 const { Header, Content, Footer } = Layout;
 const Details = () => {
   const location = useLocation();
   const [loading, setLoading] = useState(false);
   const { item, ad } = location.state || "";
+  const [user, setUser] = useState(null);
   const [images, setImages] = useState([]);
   const navigate = useNavigate();
   const handleNavigation = (event) => {
@@ -59,7 +49,53 @@ const Details = () => {
         break;
     }
   };
+  const [unreadChatCount, setUnreadChatCount] = useState(0);
   const { setInitialLoad, setData, data } = useContext(Context);
+
+  useEffect(() => {
+    const getChatCount = async () => {
+      try {
+        setLoading(true);
+        const result = await axios.get(
+          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
+            user.userId
+          }&count=${true}`,
+          { headers: { Authorization: "xxx" } }
+        );
+        setUnreadChatCount(result.data.count);
+        // If no more data to load, set hasMore to false
+        setLoading(false);
+      } catch (err) {
+        setLoading(false);
+        console.log(err);
+      }
+    };
+    if (user) {
+      getChatCount();
+    }
+  }, [user]);
+  const items = [
+    HomeFilled,
+    UploadOutlined,
+    MessageFilled,
+    ProductFilled,
+    LogoutOutlined,
+  ].map((icon, index) => {
+    if (index === 2) {
+      return {
+        key: String(index + 1),
+        icon: (
+          <Badge count={unreadChatCount}>{React.createElement(icon)}</Badge>
+        ),
+        label: IconText[index],
+      };
+    }
+    return {
+      key: String(index + 1),
+      icon: React.createElement(icon),
+      label: IconText[index],
+    };
+  });
   useEffect(() => {
     if (data.length > 0) {
       setInitialLoad(false);
@@ -69,6 +105,8 @@ const Details = () => {
   }, []);
   useEffect(() => {
     const getData = async () => {
+      const currentUser = await getCurrentUser();
+      setUser(currentUser);
       try {
         setLoading(true);
         const result = await axios.get(
