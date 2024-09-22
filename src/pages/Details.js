@@ -117,7 +117,7 @@ const Details = () => {
           {!loading && images.length > 0 && (
             <>
               <Row style={{ padding: 20 }}>
-                <Col>
+                <Col xs={24} sm={5}>
                   <Carousel>
                     {images.map((image, index) => {
                       return <Image key={index} src={image} />;
