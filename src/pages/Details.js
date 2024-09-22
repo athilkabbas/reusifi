@@ -59,9 +59,13 @@ const Details = () => {
         break;
     }
   };
-  const { setInitialLoad, setData } = useContext(Context);
+  const { setInitialLoad, setData, data } = useContext(Context);
   useEffect(() => {
-    setInitialLoad(false);
+    if (data.length > 0) {
+      setInitialLoad(false);
+    } else {
+      setInitialLoad(true);
+    }
   }, []);
   useEffect(() => {
     const getData = async () => {

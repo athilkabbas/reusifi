@@ -33,7 +33,7 @@ const items = [HomeFilled, UploadOutlined, MessageFilled, LogoutOutlined].map(
 );
 const { Header, Content, Footer } = Layout;
 const Chat = () => {
-  const [data, setData] = useState([]);
+  const [ichatData, setIChatData] = useState([]);
   const location = useLocation();
   const { recipient } = location.state || "";
   const { conversationId } = location.state;
@@ -65,9 +65,13 @@ const Chat = () => {
     }
   };
 
-  const { setInitialLoad } = useContext(Context);
+  const { setInitialLoad, data } = useContext(Context);
   useEffect(() => {
-    setInitialLoad(false);
+    if (data.length > 0) {
+      setInitialLoad(false);
+    } else {
+      setInitialLoad(true);
+    }
   }, []);
 
   useEffect(() => {
@@ -86,7 +90,7 @@ const Chat = () => {
         socket.onmessage = (event) => {
           console.log("Message from server:", event);
           const data = JSON.parse(event.data);
-          setData((prevValue) => [
+          setIChatData((prevValue) => [
             {
               message: data.message,
               timestamp: data.timestamp,
@@ -136,7 +140,7 @@ const Chat = () => {
         );
       }
       setLoading(false);
-      setData((prevValue) => [...prevValue, ...result.data.items]);
+      setIChatData((prevValue) => [...prevValue, ...result.data.items]);
       setLastEvaluatedKey(result.data.lastEvaluatedKey);
       // If no more data to load, set hasMore to false
       if (!result.data.lastEvaluatedKey) {
@@ -212,7 +216,7 @@ const Chat = () => {
         }
         sendMessage(messageValue, userId2, user.userId);
       }
-      setData((prevValue) => [
+      setIChatData((prevValue) => [
         { message: messageValue, timestamp: Date.now(), senderId: user.userId },
         ...prevValue,
       ]);
@@ -245,7 +249,7 @@ const Chat = () => {
               display: "flex",
               flexDirection: "column-reverse",
             }}
-            dataLength={data.length}
+            dataLength={ichatData.length}
             next={getChats}
             hasMore={hasMore}
             inverse={true}
@@ -269,7 +273,7 @@ const Chat = () => {
             {!loading && user && (
               <>
                 <div ref={bottomRef} />
-                {data.map((item) => {
+                {ichatData.map((item) => {
                   if (item.senderId === user.userId) {
                     return (
                       <Row key={item.timestamp}>

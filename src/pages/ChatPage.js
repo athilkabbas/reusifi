@@ -68,7 +68,7 @@ const menuItemsBlocked = [
 ];
 const { Header, Content, Footer } = Layout;
 const ChatPage = () => {
-  const [data, setData] = useState([]);
+  const [chatData, setChatData] = useState([]);
   const [lastEvaluatedKey, setLastEvaluatedKey] = useState(null);
   const [hasMore, setHasMore] = useState(true);
   const navigate = useNavigate();
@@ -100,9 +100,13 @@ const ChatPage = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
-  const { setInitialLoad } = useContext(Context);
+  const { setInitialLoad, data } = useContext(Context);
   useEffect(() => {
-    setInitialLoad(false);
+    if (data.length > 0) {
+      setInitialLoad(false);
+    } else {
+      setInitialLoad(true);
+    }
   }, []);
 
   const info = () => {
@@ -116,7 +120,7 @@ const ChatPage = () => {
       // This will give you the key of the clicked item
       setLoading(true);
       const clickedItemKey = e.key;
-      let userIds = data[index].conversationId.split("#");
+      let userIds = chatData[index].conversationId.split("#");
       let userId2;
       for (let userId of userIds) {
         if (user.userId !== userId) {
@@ -154,7 +158,7 @@ const ChatPage = () => {
       e.domEvent.stopPropagation();
       // This will give you the key of the clicked item
       const clickedItemKey = e.key;
-      let userIds = data[index].conversationId.split("#");
+      let userIds = chatData[index].conversationId.split("#");
       let userId2;
       for (let userId of userIds) {
         if (user.userId !== userId) {
@@ -224,7 +228,7 @@ const ChatPage = () => {
         `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${user.userId}&lastEvaluatedKey=${lastEvaluatedKey}`,
         { headers: { Authorization: "xxx" } }
       );
-      setData((prevValue) => [...result.data.items, ...prevValue]);
+      setChatData((prevValue) => [...result.data.items, ...prevValue]);
       setLastEvaluatedKey(result.data.lastEvaluatedKey);
       // If no more data to load, set hasMore to false
       setLoading(false);
@@ -273,7 +277,7 @@ const ChatPage = () => {
             style={{
               overflowX: "hidden",
             }}
-            dataLength={data.length}
+            dataLength={chatData.length}
             next={getChats}
             hasMore={hasMore}
             inverse={true}
@@ -296,7 +300,7 @@ const ChatPage = () => {
           >
             {!loading &&
               user &&
-              data.map((item, index) => {
+              chatData.map((item, index) => {
                 return (
                   <Row style={{ padding: "10px" }}>
                     <Col span={24}>

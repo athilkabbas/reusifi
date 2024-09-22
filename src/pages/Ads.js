@@ -44,7 +44,7 @@ const capitalize = (str) => {
 const { Header, Content, Footer } = Layout;
 const Ads = () => {
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState([]);
+  const [adData, setAdData] = useState([]);
   const [hasMore, setHasMore] = useState(false);
   const limit = 10;
   const [user, setUser] = useState(null);
@@ -64,12 +64,16 @@ const Ads = () => {
     tS2LEK: null,
     tS3LEK: null,
   });
-  const { setInitialLoad } = useContext(Context);
+  const { setInitialLoad, data } = useContext(Context);
   useEffect(() => {
-    setInitialLoad(false);
+    if (data.length > 0) {
+      setInitialLoad(false);
+    } else {
+      setInitialLoad(true);
+    }
   }, []);
   const handleChange = (value, type) => {
-    setData([]);
+    setAdData([]);
     setLastEvaluatedKeys({
       cLEK: null,
       tLEK: null,
@@ -104,7 +108,7 @@ const Ads = () => {
         setHasMore(true);
       }
 
-      setData([...data, ...results.data.finalResult]);
+      setAdData([...adData, ...results.data.finalResult]);
       setLoading(false);
       setScrollPosition(scrollPosition);
     } catch (err) {
@@ -170,7 +174,7 @@ const Ads = () => {
         >
           <InfiniteScroll
             style={{ overflowX: "hidden" }}
-            dataLength={data.length}
+            dataLength={adData.length}
             next={loadMoreData}
             hasMore={hasMore}
             loader={
@@ -188,7 +192,7 @@ const Ads = () => {
             {user && !loading && (
               <List
                 grid={{ xs: 2, gutter: 10, sm: 2, md: 2, lg: 2, xl: 2, xxl: 2 }}
-                dataSource={data}
+                dataSource={adData}
                 renderItem={(item) => {
                   return (
                     <>

@@ -98,7 +98,7 @@ const AddDress = () => {
       return { ...prevValue, [type]: value };
     });
   };
-  const { setData, setInitialLoad } = useContext(Context);
+  const { setData, setInitialLoad, data } = useContext(Context);
   const navigate = useNavigate();
   const handleNavigation = (event) => {
     switch (event.key) {
@@ -135,7 +135,11 @@ const AddDress = () => {
     setFileList(file.fileList);
   };
   useEffect(() => {
-    setInitialLoad(false);
+    if (data.length > 0) {
+      setInitialLoad(false);
+    } else {
+      setInitialLoad(true);
+    }
   }, []);
   useEffect(() => {
     setForm((prevValue) => {
