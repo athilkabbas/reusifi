@@ -16,18 +16,23 @@ import {
   UploadOutlined,
   MessageFilled,
   LogoutOutlined,
+  ProductFilled,
 } from "@ant-design/icons";
 import { Context } from "../context/provider";
 const { Text, Link } = Typography;
 const { TextArea } = Input;
-const IconText = ["Home", "Upload", "Chats", "SignOut"];
-const items = [HomeFilled, UploadOutlined, MessageFilled, LogoutOutlined].map(
-  (icon, index) => ({
-    key: String(index + 1),
-    icon: React.createElement(icon),
-    label: IconText[index],
-  })
-);
+const IconText = ["Home", "Upload", "Chats", "Ads", "SignOut"];
+const items = [
+  HomeFilled,
+  UploadOutlined,
+  MessageFilled,
+  ProductFilled,
+  LogoutOutlined,
+].map((icon, index) => ({
+  key: String(index + 1),
+  icon: React.createElement(icon),
+  label: IconText[index],
+}));
 const { Header, Content, Footer } = Layout;
 const getBase64 = (file) =>
   new Promise((resolve, reject) => {
@@ -39,7 +44,6 @@ const getBase64 = (file) =>
 
 const AddDress = () => {
   const [user, setUser] = useState("");
-  const [maxAds, setMaxAds] = useState([]);
   const [messageApi, contextHolder] = message.useMessage();
   const [form, setForm] = useState({
     category: "",
@@ -60,21 +64,14 @@ const AddDress = () => {
       setUser(currentUser);
       try {
         setLoading(true);
-        let results;
-        results = await axios.get(
-          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?limit=${limit}&lastEvaluatedKey=${JSON.stringify(
-            lastEvaluatedKey
-          )}&email=${currentUser.userId}`,
+        let result;
+        result = await axios.get(
+          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?count=${true}&email=${
+            currentUser.userId
+          }`,
           { headers: { Authorization: "xxx" } }
         );
-        setLastEvaluatedKey(results.data.lastEvaluatedKey);
-        if (!results.data.lastEvaluatedKey) {
-          setHasMore(false);
-        } else {
-          setHasMore(true);
-        }
-
-        setMaxAds([...maxAds, ...results.data.finalResult]);
+        setCount(result.data.count);
         setLoading(false);
       } catch (err) {
         setLoading(false);
@@ -85,6 +82,7 @@ const AddDress = () => {
   }, []);
 
   const [districts, setDistricts] = useState([]);
+  const [count, setCount] = useState(0);
   const handleChange = (value, type) => {
     setForm((prevValue) => {
       if (
@@ -123,7 +121,6 @@ const AddDress = () => {
   const [previewImage, setPreviewImage] = useState("");
   const [fileList, setFileList] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(false);
   const handlePreview = async (file) => {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
@@ -213,8 +210,6 @@ const AddDress = () => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
-  const limit = 10;
-  const [lastEvaluatedKey, setLastEvaluatedKey] = useState(null);
   const info = () => {
     messageApi.info("Max size 50MB");
   };
@@ -375,12 +370,12 @@ const AddDress = () => {
                 size="large"
                 style={{ padding: "10px" }}
               >
-                {maxAds && maxAds.length < 10 && (
+                {count < 10 && (
                   <Button onClick={handleSubmit} type="primary">
                     Submit
                   </Button>
                 )}
-                {maxAds && maxAds.length >= 10 && (
+                {count >= 10 && (
                   <Button onClick={handleSubmit} type="primary" disabled>
                     Submit
                   </Button>
@@ -391,7 +386,7 @@ const AddDress = () => {
                 size="large"
                 style={{ padding: "10px" }}
               >
-                {maxAds && maxAds.length >= 10 && <Text>Max 10 ads</Text>}
+                {count >= 10 && <Text>Max 10 ads</Text>}
               </Space.Compact>
             </>
           )}
