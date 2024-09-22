@@ -6,10 +6,11 @@ import { Select } from "antd";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
 import { states, districts, districtMap } from "../helpers/locations";
 import { PlusOutlined } from "@ant-design/icons";
-import { Image, Upload, Typography } from "antd";
+import { Image, Upload, Typography, message } from "antd";
 import { Button } from "antd";
 import axios from "axios";
 import { getCurrentUser, signOut } from "@aws-amplify/auth";
+import imageCompression from "browser-image-compression";
 import {
   HomeFilled,
   UploadOutlined,
@@ -39,6 +40,7 @@ const getBase64 = (file) =>
 const AddDress = () => {
   const [user, setUser] = useState("");
   const [maxAds, setMaxAds] = useState([]);
+  const [messageApi, contextHolder] = message.useMessage();
   const [form, setForm] = useState({
     category: "",
     title: "",
@@ -148,8 +150,22 @@ const AddDress = () => {
     setInitialLoad(true);
     setLoading(true);
     const formData = new FormData();
+    const options = {
+      maxSizeMB: 0.01, // Try to compress the image down to ~10 KB
+      maxWidthOrHeight: 800, // Limit the width/height (e.g., 100px)
+      useWebWorker: true, // Enable web worker for performance
+      initialQuality: 1, // Start with low quality for aggressive compression
+    };
     for (let i = 0; i < form.images.length; i++) {
-      formData.append(`image${i}`, form.images[i]);
+      if (form.images[i].size / 1024 / 1024 > 50) {
+        setLoading(false);
+        info();
+        return;
+      }
+      console.log(form.images[i].size / 1024 / 1024);
+      let compressImage = await imageCompression(form.images[i], options);
+      console.log(compressImage.size / 1024 / 1024);
+      formData.append(`image${i}`, compressImage);
     }
     formData.append("category", form.category);
     formData.append("title", form.title);
@@ -195,6 +211,9 @@ const AddDress = () => {
   } = theme.useToken();
   const limit = 10;
   const [lastEvaluatedKey, setLastEvaluatedKey] = useState(null);
+  const info = () => {
+    messageApi.info("Max size 50MB");
+  };
   return (
     <Layout style={{ height: "100vh", overflow: "hidden" }}>
       <Content style={{ padding: "0 15px" }}>
@@ -207,6 +226,7 @@ const AddDress = () => {
             paddingBottom: "60px",
           }}
         >
+          {contextHolder}
           {!loading && user && (
             <>
               <Space.Compact
@@ -314,10 +334,13 @@ const AddDress = () => {
                 style={{ padding: "10px" }}
               >
                 <Upload
+                  accept="image/png,image/jpeg"
                   listType="picture-card"
                   fileList={fileList}
                   onPreview={handlePreview}
                   onChange={handleChangeImage}
+                  maxCount={4}
+                  multiple
                 >
                   {fileList.length >= 4 ? null : uploadButton}
                 </Upload>
