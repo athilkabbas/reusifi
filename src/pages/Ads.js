@@ -91,7 +91,9 @@ const Ads = () => {
       return {
         key: String(index + 1),
         icon: (
-          <Badge count={unreadChatCount}>{React.createElement(icon)}</Badge>
+          <Badge overflowCount={999} count={unreadChatCount}>
+            {React.createElement(icon)}
+          </Badge>
         ),
         label: IconText[index],
       };
