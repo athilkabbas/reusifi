@@ -20,11 +20,12 @@ import {
   UploadOutlined,
   MessageFilled,
   ProductFilled,
+  MailOutlined,
   LogoutOutlined,
 } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
 const { TextArea } = Input;
-const IconText = ["Home", "Upload", "Chats", "SignOut"];
+const IconText = ["Home", "Upload", "Chats", "Ads", "Contact", "SignOut"];
 const { Header, Content, Footer } = Layout;
 const Chat = () => {
   const [ichatData, setIChatData] = useState([]);
@@ -91,6 +92,7 @@ const Chat = () => {
     UploadOutlined,
     MessageFilled,
     ProductFilled,
+    MailOutlined,
     LogoutOutlined,
   ].map((icon, index) => {
     if (index === 2) {
@@ -241,6 +243,9 @@ const Chat = () => {
         navigate("/ads");
         break;
       case "5":
+        navigate("/contact");
+        break;
+      case "6":
         signOut();
         break;
     }

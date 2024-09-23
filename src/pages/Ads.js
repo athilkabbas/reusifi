@@ -13,7 +13,7 @@ import {
   UploadOutlined,
   MessageFilled,
   LogoutOutlined,
-  SearchOutlined,
+  MailOutlined,
   ProductFilled,
 } from "@ant-design/icons";
 import { Button, Input, Select, Space } from "antd";
@@ -25,7 +25,7 @@ import { getCurrentUser, signOut } from "@aws-amplify/auth";
 import debounce from "lodash/debounce";
 import { states, districts, districtMap } from "../helpers/locations";
 import { Context } from "../context/provider";
-const IconText = ["Home", "Upload", "Chats", "Ads", "SignOut"];
+const IconText = ["Home", "Upload", "Chats", "Ads", "Contact", "SignOut"];
 const { Meta } = Card;
 const capitalize = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -85,6 +85,7 @@ const Ads = () => {
     UploadOutlined,
     MessageFilled,
     ProductFilled,
+    MailOutlined,
     LogoutOutlined,
   ].map((icon, index) => {
     if (index === 2) {
@@ -176,6 +177,9 @@ const Ads = () => {
         navigate("/ads");
         break;
       case "5":
+        navigate("/contact");
+        break;
+      case "6":
         signOut();
         break;
     }

@@ -16,12 +16,13 @@ import {
   UploadOutlined,
   MessageFilled,
   LogoutOutlined,
+  MailOutlined,
   ProductFilled,
 } from "@ant-design/icons";
 import { Context } from "../context/provider";
 const { Text, Link } = Typography;
 const { TextArea } = Input;
-const IconText = ["Home", "Upload", "Chats", "Ads", "SignOut"];
+const IconText = ["Home", "Upload", "Chats", "Ads", "Contact", "SignOut"];
 const { Header, Content, Footer } = Layout;
 const getBase64 = (file) =>
   new Promise((resolve, reject) => {
@@ -116,6 +117,7 @@ const AddDress = () => {
     UploadOutlined,
     MessageFilled,
     ProductFilled,
+    MailOutlined,
     LogoutOutlined,
   ].map((icon, index) => {
     if (index === 2) {
@@ -151,6 +153,9 @@ const AddDress = () => {
         navigate("/ads");
         break;
       case "5":
+        navigate("/contact");
+        break;
+      case "6":
         signOut();
         break;
     }
