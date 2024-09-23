@@ -43,7 +43,7 @@ const AddDress = () => {
     district: null,
     email: "",
     images: [],
-    price: 0,
+    price: null,
   });
   useEffect(() => {
     const fetchUser = async () => {
@@ -74,6 +74,9 @@ const AddDress = () => {
   const [districts, setDistricts] = useState([]);
   const [count, setCount] = useState(0);
   const handleChange = (value, type) => {
+    if (type === "price" && !/^(|[1-9]\d*)$/.test(value.target.value)) {
+      return;
+    }
     setForm((prevValue) => {
       if (
         type === "category" ||
@@ -190,6 +193,18 @@ const AddDress = () => {
     });
   }, [fileList]);
   const handleSubmit = async () => {
+    let invalid = false;
+    for (let key in form) {
+      if (key === "images" && form[key].length === 0) {
+        invalid = true;
+      } else if (form[key] === "" || form[key] === null) {
+        invalid = true;
+      }
+    }
+    if (invalid) {
+      infoAllFieldsMandatory();
+      return;
+    }
     setData([]);
     setInitialLoad(true);
     setLoading(true);
@@ -255,6 +270,9 @@ const AddDress = () => {
   } = theme.useToken();
   const info = () => {
     messageApi.info("Max size 50MB");
+  };
+  const infoAllFieldsMandatory = () => {
+    messageApi.info("All fields are mandatory");
   };
   return (
     <Layout style={{ height: "100vh", overflow: "hidden" }}>
