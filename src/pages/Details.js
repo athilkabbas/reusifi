@@ -4,7 +4,7 @@ import { Input } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { Select, Badge } from "antd";
-import { Breadcrumb, Layout, Menu, theme } from "antd";
+import { Breadcrumb, Layout, Menu, theme, message } from "antd";
 import { states, districts, districtMap } from "../helpers/locations";
 import { PlusOutlined } from "@ant-design/icons";
 import { Image, Upload } from "antd";
@@ -26,6 +26,7 @@ const { TextArea } = Input;
 const { Header, Content, Footer } = Layout;
 const Details = () => {
   const location = useLocation();
+  const [messageApi, contextHolder] = message.useMessage();
   const [loading, setLoading] = useState(false);
   const { item, ad } = location.state || "";
   const [user, setUser] = useState(null);
@@ -55,6 +56,9 @@ const Details = () => {
   };
   const [unreadChatCount, setUnreadChatCount] = useState(0);
   const { setInitialLoad, setData, data } = useContext(Context);
+  const info = () => {
+    messageApi.info("No longer available");
+  };
 
   useEffect(() => {
     const getChatCount = async () => {
@@ -125,6 +129,7 @@ const Details = () => {
       } catch (err) {
         setLoading(false);
         console.log(err);
+        info();
       }
     };
     if (item) {
@@ -163,6 +168,7 @@ const Details = () => {
             paddingBottom: "60px",
           }}
         >
+          {contextHolder}
           {!loading && images.length > 0 && (
             <>
               <Row style={{ padding: 20 }}>
