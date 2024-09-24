@@ -11,10 +11,19 @@ import {
   MessageFilled,
   LogoutOutlined,
   MailOutlined,
+  HeartOutlined,
   ProductFilled,
 } from "@ant-design/icons";
 import { getCurrentUser, signOut } from "@aws-amplify/auth";
-const IconText = ["Home", "Upload", "Chats", "Ads", "Contact", "SignOut"];
+const IconText = [
+  "Home",
+  "Upload",
+  "Chats",
+  "Ads",
+  "Contact",
+  "Favourites",
+  "SignOut",
+];
 const { Content, Footer } = Layout;
 const { Text, Link } = Typography;
 const Contact = () => {
@@ -39,6 +48,9 @@ const Contact = () => {
         navigate("/contact");
         break;
       case "6":
+        navigate("/favourite");
+        break;
+      case "7":
         signOut();
         break;
     }
@@ -72,6 +84,7 @@ const Contact = () => {
     MessageFilled,
     ProductFilled,
     MailOutlined,
+    HeartOutlined,
     LogoutOutlined,
   ].map((icon, index) => {
     if (index === 2) {

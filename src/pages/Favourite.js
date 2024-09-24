@@ -15,6 +15,7 @@ import {
   LogoutOutlined,
   MailOutlined,
   HeartOutlined,
+  HeartFilled,
   ProductFilled,
 } from "@ant-design/icons";
 import { Button, Input, Select, Space } from "antd";
@@ -40,7 +41,7 @@ const capitalize = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
 const { Header, Content, Footer } = Layout;
-const Ads = () => {
+const Favourites = () => {
   const [loading, setLoading] = useState(false);
   const [adData, setAdData] = useState([]);
   const [hasMore, setHasMore] = useState(false);
@@ -51,6 +52,7 @@ const Ads = () => {
   const [districts, setDistricts] = useState([]);
   const scrollableDivRef = useRef(null);
   const [scrollPosition, setScrollPosition] = useState(0);
+  const [filterList, setFilterList] = useState([]);
   const [location, setLocation] = useState({
     state: null,
     district: null,
@@ -63,7 +65,19 @@ const Ads = () => {
     tS3LEK: null,
   });
   const [unreadChatCount, setUnreadChatCount] = useState(0);
-  const { setInitialLoad, data } = useContext(Context);
+  const { setInitialLoad, data, setData } = useContext(Context);
+  useEffect(() => {
+    const getFavList = async () => {
+      const results = await axios.get(
+        `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?favourite=${true}&email=${
+          user.userId
+        }`,
+        { headers: { Authorization: "xxx" } }
+      );
+      setFilterList([...results.data.items]);
+    };
+    getFavList();
+  });
   useEffect(() => {
     const getChatCount = async () => {
       try {
@@ -148,7 +162,7 @@ const Ads = () => {
       results = await axios.get(
         `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?limit=${limit}&lastEvaluatedKey=${JSON.stringify(
           lastEvaluatedKey
-        )}&email=${currentUser.userId}`,
+        )}&email=${currentUser.userId}&favourite=${"true"}`,
         { headers: { Authorization: "xxx" } }
       );
       setLastEvaluatedKey(results.data.lastEvaluatedKey);
@@ -196,6 +210,12 @@ const Ads = () => {
         signOut();
         break;
     }
+  };
+  const handleFav = async (id, favourite) => {
+    const results = await axios.get(
+      `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?id=${id}&favourite=${favourite}`,
+      { headers: { Authorization: "xxx" } }
+    );
   };
   useEffect(() => {
     scrollableDivRef.current.scrollTo(0, scrollPosition);
@@ -296,6 +316,27 @@ const Ads = () => {
                           >
                             <b>₹{item["item"]["price"]}</b>
                           </div>
+                          {item["item"]["email"] !== user.userId && (
+                            <div
+                              onClick={(event) => {
+                                handleFav(
+                                  item["item"]["uuid"],
+                                  !filterList.includes(item["item"]["uuid"]),
+                                  event
+                                );
+                                event.preventDefault();
+                                event.stopPropagation();
+                              }}
+                              style={{ display: "flex", justifyContent: "end" }}
+                            >
+                              {filterList.includes(item["item"]["uuid"]) && (
+                                <HeartFilled></HeartFilled>
+                              )}
+                              {!filterList.includes(item["item"]["uuid"]) && (
+                                <HeartOutlined></HeartOutlined>
+                              )}
+                            </div>
+                          )}
                         </Card>
                       </List.Item>
                     </>
@@ -330,4 +371,4 @@ const Ads = () => {
     </Layout>
   );
 };
-export default Ads;
+export default Favourites;

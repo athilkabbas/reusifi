@@ -17,11 +17,20 @@ import {
   MessageFilled,
   LogoutOutlined,
   MailOutlined,
+  HeartOutlined,
   ProductFilled,
 } from "@ant-design/icons";
 import { getCurrentUser, signOut } from "@aws-amplify/auth";
 import { Context } from "../context/provider";
-const IconText = ["Home", "Upload", "Chats", "Ads", "Contact", "SignOut"];
+const IconText = [
+  "Home",
+  "Upload",
+  "Chats",
+  "Ads",
+  "Contact",
+  "Favourites",
+  "SignOut",
+];
 const { TextArea } = Input;
 const { Header, Content, Footer } = Layout;
 const Details = () => {
@@ -50,6 +59,9 @@ const Details = () => {
         navigate("/contact");
         break;
       case "6":
+        navigate("/favourite");
+        break;
+      case "7":
         signOut();
         break;
     }
@@ -88,6 +100,7 @@ const Details = () => {
     MessageFilled,
     ProductFilled,
     MailOutlined,
+    HeartOutlined,
     LogoutOutlined,
   ].map((icon, index) => {
     if (index === 2) {

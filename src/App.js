@@ -13,6 +13,7 @@ import Chat from "./pages/Chat";
 import ChatPage from "./pages/ChatPage";
 import Ads from "./pages/Ads";
 import Contact from "./pages/Contact";
+import Favourites from "./pages/Favourite";
 
 // Configure Amplify
 Amplify.configure(awsconfig);
@@ -28,6 +29,7 @@ function App() {
           <Route path="chatPage" element={<ChatPage />} />
           <Route path="ads" element={<Ads />} />
           <Route path="contact" element={<Contact />} />
+          <Route path="favourite" element={<Favourites />} />
         </Route>
       </Routes>
     </BrowserRouter>

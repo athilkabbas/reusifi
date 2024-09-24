@@ -9,6 +9,7 @@ const Provider = ({ children }) => {
   const [scrollPosition, setScrollPosition] = useState(0);
   const [location, setLocation] = useState({ state: null, district: null });
   const [search, setSearch] = useState(null);
+  const [filterList, setFilterList] = useState([]);
   const [lastEvaluatedKeys, setLastEvaluatedKeys] = useState({
     cLEK: null,
     tLEK: null,

@@ -16,6 +16,8 @@ import {
   SearchOutlined,
   ProductFilled,
   MailOutlined,
+  HeartOutlined,
+  HeartFilled,
 } from "@ant-design/icons";
 import { Button, Input, Select, Space } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -26,7 +28,15 @@ import { getCurrentUser, signOut } from "@aws-amplify/auth";
 import debounce from "lodash/debounce";
 import { states, districts, districtMap } from "../helpers/locations";
 import { Context } from "../context/provider";
-const IconText = ["Home", "Upload", "Chats", "Ads", "Contact", "SignOut"];
+const IconText = [
+  "Home",
+  "Upload",
+  "Chats",
+  "Ads",
+  "Contact",
+  "Favourites",
+  "SignOut",
+];
 const { Meta } = Card;
 const capitalize = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -57,6 +67,8 @@ const App = () => {
     setLastEvaluatedKeys,
     hasMore,
     setHasMore,
+    filterList,
+    setFilterList,
   } = useContext(Context);
   const [unreadChatCount, setUnreadChatCount] = useState(0);
   const items = [
@@ -65,6 +77,7 @@ const App = () => {
     MessageFilled,
     ProductFilled,
     MailOutlined,
+    HeartOutlined,
     LogoutOutlined,
   ].map((icon, index) => {
     if (index === 2) {
@@ -137,6 +150,36 @@ const App = () => {
       setLocation((prevValue) => {
         return { ...prevValue, [type]: value };
       });
+    }
+  };
+
+  useEffect(() => {
+    const getFavList = async () => {
+      const results = await axios.get(
+        `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?favourite=${true}&email=${
+          user.userId
+        }`,
+        { headers: { Authorization: "xxx" } }
+      );
+      setFilterList([...results.data.items]);
+    };
+    getFavList();
+  });
+
+  const handleFav = async (id, favourite) => {
+    const favouriteInverse = favourite === "true" ? "false" : "true";
+    const results = await axios.get(
+      `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?id=${id}&favourite=${favouriteInverse}&email=${user.userId}`,
+      { headers: { Authorization: "xxx" } }
+    );
+    if (!favouriteInverse) {
+      setFilterList((prevValue) => {
+        return prevValue.filter((item) => {
+          return item !== id;
+        });
+      });
+    } else {
+      setFilterList([...filterList, id]);
     }
   };
 
@@ -231,6 +274,9 @@ const App = () => {
         navigate("/contact");
         break;
       case "6":
+        navigate("/favourite");
+        break;
+      case "7":
         signOut();
         break;
     }
@@ -355,7 +401,7 @@ const App = () => {
                     <>
                       <List.Item key={item["item"]["id"]}>
                         <Card
-                          style={{ height: 260 }}
+                          style={{ height: 265 }}
                           onClick={() => {
                             setScrollPosition(
                               scrollableDivRef.current.scrollTop
@@ -405,6 +451,27 @@ const App = () => {
                           >
                             <b>₹{item["item"]["price"]}</b>
                           </div>
+                          {item["item"]["email"] !== user.userId && (
+                            <div
+                              onClick={(event) => {
+                                handleFav(
+                                  item["item"]["uuid"],
+                                  item["item"]["favourite"],
+                                  event
+                                );
+                                event.preventDefault();
+                                event.stopPropagation();
+                              }}
+                              style={{ display: "flex", justifyContent: "end" }}
+                            >
+                              {filterList.includes(item["item"]["uuid"]) && (
+                                <HeartFilled></HeartFilled>
+                              )}
+                              {!filterList.includes(item["item"]["uuid"]) && (
+                                <HeartOutlined></HeartOutlined>
+                              )}
+                            </div>
+                          )}
                         </Card>
                       </List.Item>
                     </>
