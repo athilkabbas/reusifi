@@ -42,7 +42,7 @@ const capitalize = (str) => {
 const { Header, Content, Footer } = Layout;
 const Ads = () => {
   const [loading, setLoading] = useState(false);
-  const [adData, setAdData] = useState([]);
+  const [scrollLoadMoreData, setScrollLoadMoreData] = useState(false);
   const [hasMore, setHasMore] = useState(false);
   const limit = 10;
   const [user, setUser] = useState(null);
@@ -63,7 +63,24 @@ const Ads = () => {
     tS3LEK: null,
   });
   const [unreadChatCount, setUnreadChatCount] = useState(0);
-  const { setInitialLoad, data } = useContext(Context);
+  const {
+    setInitialLoad,
+    data,
+    setAdScrollPosition,
+    adScrollPosition,
+    adInitialLoad,
+    setAdInitialLoad,
+    adData,
+    setAdData,
+    setHomeInitialLoad,
+    setFavData,
+    setFavInitialLoad,
+    setChatData,
+    setChatInitialLoad,
+    adPageInitialLoad,
+    setChatPageInitialLoad,
+    setFavPageInitialLoad,
+  } = useContext(Context);
   useEffect(() => {
     const getChatCount = async () => {
       try {
@@ -85,7 +102,7 @@ const Ads = () => {
         console.log(err);
       }
     };
-    if (user) {
+    if (user && adPageInitialLoad) {
       getChatCount();
     }
   }, [user]);
@@ -116,12 +133,26 @@ const Ads = () => {
     };
   });
   useEffect(() => {
+    if (scrollableDivRef.current && (!adInitialLoad || scrollLoadMoreData)) {
+      setTimeout(() => {
+        scrollableDivRef.current.scrollTo(0, adScrollPosition);
+        setScrollLoadMoreData(false);
+      }, 0);
+    }
+  }, [adScrollPosition, adInitialLoad]);
+
+  useEffect(() => {
     if (data.length > 0) {
       setInitialLoad(false);
     } else {
       setInitialLoad(true);
     }
   }, []);
+
+  useEffect(() => {
+    setHomeInitialLoad(false);
+  }, []);
+
   const handleChange = (value, type) => {
     setAdData([]);
     setLastEvaluatedKeys({
@@ -141,6 +172,11 @@ const Ads = () => {
   const loadMoreData = async () => {
     const currentUser = await getCurrentUser();
     setUser(currentUser);
+    if (!adInitialLoad) {
+      setAdInitialLoad(true);
+      setScrollLoadMoreData(true);
+      return;
+    }
     const scrollPosition = scrollableDivRef.current.scrollTop;
     try {
       setLoading(true);
@@ -160,7 +196,7 @@ const Ads = () => {
 
       setAdData([...adData, ...results.data.finalResult]);
       setLoading(false);
-      setScrollPosition(scrollPosition);
+      setAdScrollPosition(scrollPosition);
     } catch (err) {
       setLoading(false);
       console.log(err);
@@ -169,6 +205,15 @@ const Ads = () => {
 
   useEffect(() => {
     loadMoreData();
+  }, []);
+
+  useEffect(() => {
+    setFavData([]);
+    setFavInitialLoad(true);
+    setChatData([]);
+    setChatInitialLoad(true);
+    setFavPageInitialLoad(true);
+    setChatPageInitialLoad(true);
   }, []);
 
   const navigate = useNavigate();
@@ -231,7 +276,10 @@ const Ads = () => {
           <InfiniteScroll
             style={{ overflowX: "hidden" }}
             dataLength={adData.length}
-            next={loadMoreData}
+            next={() => {
+              setScrollLoadMoreData(true);
+              loadMoreData();
+            }}
             hasMore={hasMore}
             loader={
               <Skeleton
@@ -256,6 +304,9 @@ const Ads = () => {
                         <Card
                           style={{ height: 260 }}
                           onClick={() => {
+                            setAdScrollPosition(
+                              scrollableDivRef.current.scrollTop
+                            );
                             navigate("/details", { state: { item, ad: true } });
                           }}
                           cover={

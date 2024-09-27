@@ -67,15 +67,14 @@ const menuItemsBlocked = [
 ];
 const { Header, Content, Footer } = Layout;
 const ChatPage = () => {
-  const [chatData, setChatData] = useState([]);
   const [lastEvaluatedKey, setLastEvaluatedKey] = useState(null);
+  const [scrollLoadMoreData, setScrollLoadMoreData] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
   const scrollableDivRef = useRef(null);
-  const [scrollPosition, setScrollPosition] = useState(0);
   const handleNavigation = (event) => {
     switch (event.key) {
       case "1":
@@ -105,7 +104,38 @@ const ChatPage = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   const [unreadChatCount, setUnreadChatCount] = useState(0);
-  const { setInitialLoad, data } = useContext(Context);
+  const {
+    setInitialLoad,
+    data,
+    chatScrollPosition,
+    setChatScrollPosition,
+    chatInitialLoad,
+    setChatInitialLoad,
+    chatData,
+    setChatData,
+    setHomeInitialLoad,
+    setAdInitialLoad,
+    adData,
+    setFavData,
+    setAdData,
+    setFavInitialLoad,
+    setAdPageInitialLoad,
+    setFavPageInitialLoad,
+    chatPageInitialLoad,
+  } = useContext(Context);
+  useEffect(() => {
+    if (scrollableDivRef.current && (!chatInitialLoad || scrollLoadMoreData)) {
+      setTimeout(() => {
+        scrollableDivRef.current.scrollTo(0, chatScrollPosition);
+        setScrollLoadMoreData(false);
+      }, 0);
+    }
+  }, [chatScrollPosition, chatInitialLoad]);
+
+  useEffect(() => {
+    setHomeInitialLoad(false);
+  }, []);
+
   useEffect(() => {
     const getChatCount = async () => {
       try {
@@ -127,7 +157,7 @@ const ChatPage = () => {
         console.log(err);
       }
     };
-    if (user) {
+    if (user && chatPageInitialLoad) {
       getChatCount();
     }
   }, [user]);
@@ -280,6 +310,11 @@ const ChatPage = () => {
     try {
       const scrollPosition = scrollableDivRef.current.scrollTop;
       setLoading(true);
+      if (!chatInitialLoad) {
+        setChatInitialLoad(true);
+        setScrollLoadMoreData(true);
+        return;
+      }
       const result = await axios.get(
         `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${user.userId}&lastEvaluatedKey=${lastEvaluatedKey}`,
         { headers: { Authorization: "xxx" } }
@@ -291,7 +326,7 @@ const ChatPage = () => {
       if (!result.data.lastEvaluatedKey) {
         setHasMore(false);
       }
-      setScrollPosition(scrollPosition);
+      setChatScrollPosition(scrollPosition);
     } catch (err) {
       setLoading(false);
       console.log(err);
@@ -306,14 +341,20 @@ const ChatPage = () => {
   }, []);
 
   useEffect(() => {
+    setFavData([]);
+    setFavInitialLoad(true);
+    setAdData([]);
+    setAdInitialLoad(true);
+    setAdPageInitialLoad(true);
+    setFavPageInitialLoad(true);
+  }, []);
+
+  useEffect(() => {
     if (user && user.userId) {
       getChats();
     }
   }, [user]);
 
-  useEffect(() => {
-    scrollableDivRef.current.scrollTo(0, scrollPosition);
-  }, [scrollPosition]);
   return (
     <Layout style={{ height: "100vh", overflow: "hidden" }}>
       <Content style={{ padding: "0 15px" }}>
@@ -370,6 +411,9 @@ const ChatPage = () => {
                             if (item.blocked) {
                               info();
                             } else {
+                              setChatScrollPosition(
+                                scrollableDivRef.current.scrollTop
+                              );
                               navigate("/chat", {
                                 state: { conversationId: item.conversationId },
                               });

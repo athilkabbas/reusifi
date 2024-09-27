@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Input } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
@@ -15,6 +15,7 @@ import {
   ProductFilled,
 } from "@ant-design/icons";
 import { getCurrentUser, signOut } from "@aws-amplify/auth";
+import { Context } from "../context/provider";
 const IconText = [
   "Home",
   "Upload",
@@ -57,6 +58,34 @@ const Contact = () => {
   };
   const [unreadChatCount, setUnreadChatCount] = useState(0);
 
+  const {
+    setHomeInitialLoad,
+    setAdInitialLoad,
+    data,
+    setInitialLoad,
+    adData,
+    setAdData,
+    setFavData,
+    setChatData,
+    setFavInitialLoad,
+    setChatInitialLoad,
+    setChatPageInitialLoad,
+    setFavPageInitialLoad,
+    setAdPageInitialLoad,
+  } = useContext(Context);
+
+  useEffect(() => {
+    setFavData([]);
+    setFavInitialLoad(true);
+    setAdData([]);
+    setAdInitialLoad(true);
+    setChatData([]);
+    setChatInitialLoad(true);
+    setAdPageInitialLoad(true);
+    setFavPageInitialLoad(true);
+    setChatPageInitialLoad(true);
+  }, []);
+
   useEffect(() => {
     const getChatCount = async () => {
       try {
@@ -77,6 +106,18 @@ const Contact = () => {
       }
     };
     getChatCount();
+  }, []);
+
+  useEffect(() => {
+    if (data.length > 0) {
+      setInitialLoad(false);
+    } else {
+      setInitialLoad(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    setHomeInitialLoad(false);
   }, []);
   const items = [
     HomeFilled,

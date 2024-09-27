@@ -67,7 +67,21 @@ const Details = () => {
     }
   };
   const [unreadChatCount, setUnreadChatCount] = useState(0);
-  const { setInitialLoad, setData, data } = useContext(Context);
+  const {
+    setInitialLoad,
+    setData,
+    data,
+    favData,
+    setFavInitialLoad,
+    adData,
+    setAdInitialLoad,
+    setHomeInitialLoad,
+    setFavPageInitialLoad,
+    setChatData,
+    setChatInitialLoad,
+    setAdPageInitialLoad,
+    setChatPageInitialLoad,
+  } = useContext(Context);
   const info = () => {
     messageApi.info("No longer available");
   };
@@ -126,6 +140,34 @@ const Details = () => {
     } else {
       setInitialLoad(true);
     }
+  }, []);
+
+  useEffect(() => {
+    if (favData.length > 0) {
+      setFavInitialLoad(false);
+    } else {
+      setFavInitialLoad(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (adData.length > 0) {
+      setAdInitialLoad(false);
+    } else {
+      setAdInitialLoad(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    setHomeInitialLoad(false);
+    setFavPageInitialLoad(false);
+    setAdPageInitialLoad(false);
+    setChatPageInitialLoad(true);
+  }, []);
+
+  useEffect(() => {
+    setChatData([]);
+    setChatInitialLoad(true);
   }, []);
   useEffect(() => {
     const getData = async () => {

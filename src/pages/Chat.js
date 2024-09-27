@@ -69,7 +69,21 @@ const Chat = () => {
     }
   };
   const [unreadChatCount, setUnreadChatCount] = useState(0);
-  const { setInitialLoad, data } = useContext(Context);
+  const {
+    setInitialLoad,
+    data,
+    chatData,
+    setChatInitialLoad,
+    setHomeInitialLoad,
+    setAdInitialLoad,
+    adData,
+    setFavData,
+    setFavInitialLoad,
+    setAdData,
+    setChatPageInitialLoad,
+    setAdPageInitialLoad,
+    setFavPageInitialLoad,
+  } = useContext(Context);
 
   useEffect(() => {
     const getChatCount = async () => {
@@ -128,6 +142,16 @@ const Chat = () => {
     } else {
       setInitialLoad(true);
     }
+  }, []);
+
+  useEffect(() => {
+    setFavData([]);
+    setFavInitialLoad(true);
+    setAdData([]);
+    setAdInitialLoad(true);
+    setFavPageInitialLoad(true);
+    setAdPageInitialLoad(true);
+    setChatPageInitialLoad(false);
   }, []);
 
   useEffect(() => {
@@ -227,6 +251,18 @@ const Chat = () => {
       console.log(err);
     }
   };
+
+  useEffect(() => {
+    if (chatData.length > 0) {
+      setChatInitialLoad(false);
+    } else {
+      setChatInitialLoad(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    setHomeInitialLoad(false);
+  }, []);
 
   useEffect(() => {
     if (

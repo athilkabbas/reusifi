@@ -69,6 +69,16 @@ const App = () => {
     setHasMore,
     filterList,
     setFilterList,
+    homeInitialLoad,
+    setAdInitialLoad,
+    setChatData,
+    setFavData,
+    setAdData,
+    setFavInitialLoad,
+    setChatInitialLoad,
+    setAdPageInitialLoad,
+    setFavPageInitialLoad,
+    setChatPageInitialLoad,
   } = useContext(Context);
   const [unreadChatCount, setUnreadChatCount] = useState(0);
   const items = [
@@ -97,6 +107,17 @@ const App = () => {
       label: IconText[index],
     };
   });
+  useEffect(() => {
+    setFavData([]);
+    setFavInitialLoad(true);
+    setAdData([]);
+    setAdInitialLoad(true);
+    setChatData([]);
+    setChatInitialLoad(true);
+    setAdPageInitialLoad(true);
+    setFavPageInitialLoad(true);
+    setChatPageInitialLoad(true);
+  }, []);
   useEffect(() => {
     if (scrollableDivRef.current && (!initialLoad || scrollLoadMoreData)) {
       setTimeout(() => {
@@ -127,7 +148,7 @@ const App = () => {
         console.log(err);
       }
     };
-    if (user) {
+    if (user && homeInitialLoad) {
       getChatCount();
     }
   }, [user]);
@@ -163,7 +184,7 @@ const App = () => {
       );
       setFilterList([...results.data.finalResult]);
     };
-    if (user) {
+    if (user && homeInitialLoad) {
       getFavList();
     }
   }, [user]);
@@ -187,6 +208,7 @@ const App = () => {
   const loadMoreData = async () => {
     const currentUser = await getCurrentUser();
     setUser(currentUser);
+    console.log(initialLoad, "athil");
     if (!initialLoad) {
       setInitialLoad(true);
       setScrollLoadMoreData(true);
@@ -258,6 +280,7 @@ const App = () => {
 
   const navigate = useNavigate();
   const handleNavigation = (event) => {
+    setScrollPosition(scrollableDivRef.current.scrollTop);
     switch (event.key) {
       case "1":
         navigate("/");

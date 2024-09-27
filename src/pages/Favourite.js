@@ -53,9 +53,27 @@ const App = () => {
   const [lastEvaluatedKey, setLastEvaluatedKey] = useState(null);
   const [scrollPosition, setScrollPosition] = useState(0);
   const [hasMore, setHasMore] = useState(false);
-  const [favData, setFavData] = useState([]);
-  const { data, initialLoad, setInitialLoad, filterList, setFilterList } =
-    useContext(Context);
+  const {
+    data,
+    initialLoad,
+    setInitialLoad,
+    filterList,
+    setFilterList,
+    favScrollPosition,
+    setFavScrollPosition,
+    favInitialLoad,
+    setFavInitialLoad,
+    favData,
+    setFavData,
+    setHomeInitialLoad,
+    favPageInitialLoad,
+    setAdInitialLoad,
+    setAdData,
+    setChatData,
+    setChatInitialLoad,
+    setAdPageInitialLoad,
+    setChatPageInitialLoad,
+  } = useContext(Context);
   const [unreadChatCount, setUnreadChatCount] = useState(0);
   const items = [
     HomeFilled,
@@ -84,13 +102,17 @@ const App = () => {
     };
   });
   useEffect(() => {
-    if (scrollableDivRef.current && (!initialLoad || scrollLoadMoreData)) {
+    setAdInitialLoad(false);
+  }, []);
+
+  useEffect(() => {
+    if (scrollableDivRef.current && (!favInitialLoad || scrollLoadMoreData)) {
       setTimeout(() => {
-        scrollableDivRef.current.scrollTo(0, scrollPosition);
+        scrollableDivRef.current.scrollTo(0, favScrollPosition);
         setScrollLoadMoreData(false);
       }, 0);
     }
-  }, [scrollPosition, initialLoad]);
+  }, [favScrollPosition, favInitialLoad]);
 
   useEffect(() => {
     if (data.length > 0) {
@@ -121,10 +143,19 @@ const App = () => {
         console.log(err);
       }
     };
-    if (user) {
+    if (user && favPageInitialLoad) {
       getChatCount();
     }
   }, [user]);
+
+  useEffect(() => {
+    setAdData([]);
+    setAdInitialLoad(true);
+    setChatData([]);
+    setChatInitialLoad(true);
+    setAdPageInitialLoad(true);
+    setChatPageInitialLoad(true);
+  }, []);
 
   useEffect(() => {
     const getFavList = async () => {
@@ -136,7 +167,7 @@ const App = () => {
       );
       setFilterList([...results.data.finalResult]);
     };
-    if (user) {
+    if (user && favPageInitialLoad) {
       getFavList();
     }
   }, [user]);
@@ -160,6 +191,11 @@ const App = () => {
   const loadMoreData = async () => {
     const currentUser = await getCurrentUser();
     setUser(currentUser);
+    if (!favInitialLoad) {
+      setFavInitialLoad(true);
+      setScrollLoadMoreData(true);
+      return;
+    }
     try {
       const scrollPosition = scrollableDivRef.current.scrollTop;
       setLoading(true);
@@ -179,7 +215,7 @@ const App = () => {
       }
       setFavData([...favData, ...results.data.finalResult]);
       setLoading(false);
-      setScrollPosition(scrollPosition);
+      setFavScrollPosition(scrollPosition);
     } catch (err) {
       setLoading(false);
       console.log(err);
@@ -218,6 +254,10 @@ const App = () => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+
+  useEffect(() => {
+    setHomeInitialLoad(false);
+  }, []);
   return (
     <Layout style={{ height: "100vh", overflow: "hidden" }}>
       <Content style={{ padding: "0 15px" }}>
@@ -265,7 +305,7 @@ const App = () => {
                         <Card
                           style={{ height: 265 }}
                           onClick={() => {
-                            setScrollPosition(
+                            setFavScrollPosition(
                               scrollableDivRef.current.scrollTop
                             );
                             navigate("/details", {

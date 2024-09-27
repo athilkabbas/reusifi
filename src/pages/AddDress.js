@@ -100,7 +100,21 @@ const AddDress = () => {
   };
 
   const [unreadChatCount, setUnreadChatCount] = useState(0);
-  const { setData, setInitialLoad, data } = useContext(Context);
+  const {
+    setData,
+    setInitialLoad,
+    data,
+    setHomeInitialLoad,
+    setAdInitialLoad,
+    setChatData,
+    setFavData,
+    setAdData,
+    setFavInitialLoad,
+    setChatInitialLoad,
+    setFavPageInitialLoad,
+    setAdPageInitialLoad,
+    setChatPageInitialLoad,
+  } = useContext(Context);
 
   useEffect(() => {
     const getChatCount = async () => {
@@ -206,6 +220,7 @@ const AddDress = () => {
     });
   }, [fileList]);
   const handleSubmit = async () => {
+    setAdInitialLoad(true);
     let invalid = false;
     for (let key in form) {
       if (key === "images" && form[key].length === 0) {
@@ -277,6 +292,22 @@ const AddDress = () => {
       </div>
     </button>
   );
+
+  useEffect(() => {
+    setFavData([]);
+    setFavInitialLoad(true);
+    setAdData([]);
+    setAdInitialLoad(true);
+    setChatData([]);
+    setChatInitialLoad(true);
+    setAdPageInitialLoad(true);
+    setFavPageInitialLoad(true);
+    setChatPageInitialLoad(true);
+  }, []);
+
+  useEffect(() => {
+    setHomeInitialLoad(false);
+  }, []);
 
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -444,12 +475,12 @@ const AddDress = () => {
                 size="large"
                 style={{ padding: "10px" }}
               >
-                {count < 10 && (
+                {count < 20 && (
                   <Button onClick={handleSubmit} type="primary">
                     Submit
                   </Button>
                 )}
-                {count >= 10 && (
+                {count >= 20 && (
                   <Button onClick={handleSubmit} type="primary" disabled>
                     Submit
                   </Button>
@@ -460,7 +491,7 @@ const AddDress = () => {
                 size="large"
                 style={{ padding: "10px" }}
               >
-                {count >= 10 && <Text>Max 10 ads</Text>}
+                {count >= 20 && <Text>Max 10 ads</Text>}
               </Space.Compact>
             </>
           )}
