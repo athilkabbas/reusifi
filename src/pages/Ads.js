@@ -63,6 +63,7 @@ const Ads = () => {
     tS3LEK: null,
   });
   const [unreadChatCount, setUnreadChatCount] = useState(0);
+  const [chatLoading, setChatLoading] = useState(false);
   const {
     setInitialLoad,
     data,
@@ -83,6 +84,7 @@ const Ads = () => {
   } = useContext(Context);
   useEffect(() => {
     const getChatCount = async () => {
+      setChatLoading(true);
       try {
         const result = await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
@@ -94,6 +96,7 @@ const Ads = () => {
         if (!result.data.lastEvaluatedKey) {
           setHasMore(false);
         }
+        setChatLoading(false);
       } catch (err) {
         console.log(err);
       }
@@ -289,7 +292,7 @@ const Ads = () => {
             endMessage={<Divider plain>It is all, nothing more</Divider>}
             scrollableTarget="scrollableDiv"
           >
-            {user && !loading && (
+            {user && !loading && !chatLoading && (
               <List
                 grid={{ xs: 2, gutter: 10, sm: 2, md: 2, lg: 2, xl: 2, xxl: 2 }}
                 dataSource={adData}
@@ -350,7 +353,7 @@ const Ads = () => {
                 }}
               />
             )}
-            {loading && <Spin fullscreen />}
+            {(loading || chatLoading) && <Spin fullscreen />}
           </InfiniteScroll>
         </div>
       </Content>

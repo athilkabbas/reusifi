@@ -40,6 +40,7 @@ const Details = () => {
   const { item, ad } = location.state || "";
   const [user, setUser] = useState(null);
   const [images, setImages] = useState([]);
+  const [chatLoading, setChatLoading] = useState(false);
   const navigate = useNavigate();
   const handleNavigation = (event) => {
     switch (event.key) {
@@ -88,6 +89,7 @@ const Details = () => {
 
   useEffect(() => {
     const getChatCount = async () => {
+      setChatLoading(true);
       try {
         const result = await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
@@ -96,6 +98,7 @@ const Details = () => {
           { headers: { Authorization: "xxx" } }
         );
         setUnreadChatCount(result.data.count);
+        setChatLoading(false);
       } catch (err) {
         console.log(err);
       }
@@ -220,7 +223,7 @@ const Details = () => {
           }}
         >
           {contextHolder}
-          {!loading && images.length > 0 && (
+          {!loading && !chatLoading && images.length > 0 && (
             <>
               <Row style={{ padding: 20 }}>
                 <Col xs={24} sm={5}>
@@ -293,7 +296,7 @@ const Details = () => {
               )}
             </>
           )}
-          {loading && <Spin fullscreen />}
+          {(loading || chatLoading) && <Spin fullscreen />}
         </div>
       </Content>
       <Footer

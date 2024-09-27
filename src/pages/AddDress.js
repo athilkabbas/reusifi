@@ -118,6 +118,7 @@ const AddDress = () => {
 
   useEffect(() => {
     const getChatCount = async () => {
+      setChatLoading(true);
       try {
         const result = await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
@@ -126,6 +127,7 @@ const AddDress = () => {
           { headers: { Authorization: "xxx" } }
         );
         setUnreadChatCount(result.data.count);
+        setChatLoading(false);
       } catch (err) {
         console.log(err);
       }
@@ -190,6 +192,7 @@ const AddDress = () => {
   const [previewImage, setPreviewImage] = useState("");
   const [fileList, setFileList] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [chatLoading, setChatLoading] = useState(false);
   const handlePreview = async (file) => {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
@@ -327,7 +330,7 @@ const AddDress = () => {
           }}
         >
           {contextHolder}
-          {!loading && user && (
+          {!loading && !chatLoading && user && (
             <>
               <Space.Compact
                 block={true}
@@ -491,7 +494,7 @@ const AddDress = () => {
               </Space.Compact>
             </>
           )}
-          {loading && <Spin fullscreen />}
+          {(loading || chatLoading) && <Spin fullscreen />}
         </div>
       </Content>
       <Footer

@@ -84,10 +84,11 @@ const Chat = () => {
     setAdPageInitialLoad,
     setFavPageInitialLoad,
   } = useContext(Context);
-
+  const [chatLoading, setChatLoading] = useState(false);
   useEffect(() => {
     const getChatCount = async () => {
       try {
+        setChatLoading(true);
         const result = await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
             user.userId
@@ -98,6 +99,7 @@ const Chat = () => {
         if (!result.data.lastEvaluatedKey) {
           setHasMore(false);
         }
+        setChatLoading(false);
       } catch (err) {
         console.log(err);
       }
@@ -383,7 +385,7 @@ const Chat = () => {
             }
             scrollableTarget="scrollableDiv"
           >
-            {!loading && user && (
+            {!loading && !chatLoading && user && (
               <>
                 <div ref={bottomRef} />
                 {ichatData.map((item) => {
@@ -424,7 +426,7 @@ const Chat = () => {
                 })}
               </>
             )}
-            {loading && <Spin fullscreen />}
+            {(loading || chatLoading) && <Spin fullscreen />}
           </InfiniteScroll>
         </div>
       </Content>

@@ -52,6 +52,8 @@ const App = () => {
   const [scrollLoadMoreData, setScrollLoadMoreData] = useState(false);
   const [lastEvaluatedKey, setLastEvaluatedKey] = useState(null);
   const [scrollPosition, setScrollPosition] = useState(0);
+  const [chatLoading, setChatLoading] = useState(false);
+  const [favLoading, setFavLoading] = useState(false);
   const [hasMore, setHasMore] = useState(false);
   const {
     data,
@@ -125,6 +127,7 @@ const App = () => {
   useEffect(() => {
     const getChatCount = async () => {
       try {
+        setChatLoading(true);
         const result = await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
             user.userId
@@ -136,6 +139,7 @@ const App = () => {
         if (!result.data.lastEvaluatedKey) {
           setHasMore(false);
         }
+        setChatLoading(false);
       } catch (err) {
         console.log(err);
       }
@@ -156,6 +160,7 @@ const App = () => {
 
   useEffect(() => {
     const getFavList = async () => {
+      setFavLoading(true);
       const results = await axios.get(
         `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getFavourites?email=${
           user.userId
@@ -163,6 +168,7 @@ const App = () => {
         { headers: { Authorization: "xxx" } }
       );
       setFilterList([...results.data.finalResult]);
+      setFavLoading(false);
     };
     if (user && favPageInitialLoad) {
       getFavList();
@@ -291,7 +297,7 @@ const App = () => {
             endMessage={<Divider plain>It is all, nothing more</Divider>}
             scrollableTarget="scrollableDiv"
           >
-            {user && !loading && (
+            {user && !loading && !chatLoading && !favLoading && (
               <List
                 grid={{ xs: 2, gutter: 10, sm: 2, md: 2, lg: 2, xl: 2, xxl: 2 }}
                 dataSource={favData}
@@ -378,7 +384,7 @@ const App = () => {
                 }}
               />
             )}
-            {loading && <Spin fullscreen />}
+            {(loading || chatLoading || favLoading) && <Spin fullscreen />}
           </InfiniteScroll>
         </div>
       </Content>

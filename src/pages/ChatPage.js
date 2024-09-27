@@ -104,6 +104,7 @@ const ChatPage = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   const [unreadChatCount, setUnreadChatCount] = useState(0);
+  const [chatLoading, setChatLoading] = useState(false);
   const {
     setInitialLoad,
     data,
@@ -138,6 +139,7 @@ const ChatPage = () => {
 
   useEffect(() => {
     const getChatCount = async () => {
+      setChatLoading(true);
       try {
         const result = await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
@@ -149,6 +151,7 @@ const ChatPage = () => {
         if (!result.data.lastEvaluatedKey) {
           setHasMore(false);
         }
+        setChatLoading(false);
       } catch (err) {
         console.log(err);
       }
@@ -392,6 +395,7 @@ const ChatPage = () => {
             scrollableTarget="scrollableDiv"
           >
             {!loading &&
+              !chatLoading &&
               user &&
               chatData.map((item, index) => {
                 return (
@@ -472,7 +476,7 @@ const ChatPage = () => {
                   </Row>
                 );
               })}
-            {loading && <Spin fullscreen />}
+            {(loading || chatLoading) && <Spin fullscreen />}
           </InfiniteScroll>
         </div>
       </Content>

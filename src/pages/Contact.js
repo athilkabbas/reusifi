@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Input } from "antd";
+import { Input, Spin } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { Badge } from "antd";
@@ -89,8 +89,8 @@ const Contact = () => {
   useEffect(() => {
     const getChatCount = async () => {
       try {
-        const currentUser = await getCurrentUser();
         setLoading(true);
+        const currentUser = await getCurrentUser();
         const result = await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
             currentUser.userId
@@ -98,10 +98,8 @@ const Contact = () => {
           { headers: { Authorization: "xxx" } }
         );
         setUnreadChatCount(result.data.count);
-        // If no more data to load, set hasMore to false
         setLoading(false);
       } catch (err) {
-        setLoading(false);
         console.log(err);
       }
     };
@@ -172,7 +170,7 @@ const Contact = () => {
               </Text>
             </Space.Compact>
           )}
-          {loading && <Skeleton />}
+          {loading && <Spin fullscreen />}
         </div>
       </Content>
       <Footer
