@@ -150,7 +150,7 @@ const Contact = () => {
           onClick={(event) => handleNavigation(event)}
           theme="dark"
           mode="horizontal"
-          defaultSelectedKeys={["0"]}
+          defaultSelectedKeys={["5"]}
           items={items}
           style={{
             flex: 1,

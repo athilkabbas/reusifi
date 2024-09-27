@@ -156,23 +156,24 @@ const App = () => {
   useEffect(() => {
     const getFavList = async () => {
       const results = await axios.get(
-        `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?favourite=${true}&email=${
+        `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getFavourites?email=${
           user.userId
-        }`,
+        }&favList=${true}`,
         { headers: { Authorization: "xxx" } }
       );
-      setFilterList([...results.data.items]);
+      setFilterList([...results.data.finalResult]);
     };
-    getFavList();
-  });
+    if (user) {
+      getFavList();
+    }
+  }, [user]);
 
   const handleFav = async (id, favourite) => {
-    const favouriteInverse = favourite === "true" ? "false" : "true";
     const results = await axios.get(
-      `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?id=${id}&favourite=${favouriteInverse}&email=${user.userId}`,
+      `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getFavourites?id=${id}&favourite=${favourite}&email=${user.userId}`,
       { headers: { Authorization: "xxx" } }
     );
-    if (!favouriteInverse) {
+    if (!favourite) {
       setFilterList((prevValue) => {
         return prevValue.filter((item) => {
           return item !== id;
@@ -456,7 +457,7 @@ const App = () => {
                               onClick={(event) => {
                                 handleFav(
                                   item["item"]["uuid"],
-                                  item["item"]["favourite"],
+                                  !filterList.includes(item["item"]["uuid"]),
                                   event
                                 );
                                 event.preventDefault();

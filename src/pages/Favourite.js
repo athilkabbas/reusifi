@@ -7,21 +7,22 @@ import React, {
   useContext,
 } from "react";
 import { useNavigate } from "react-router-dom";
-import { Breadcrumb, Layout, Menu, theme } from "antd";
+import { Badge, Breadcrumb, Layout, Menu, theme } from "antd";
 import {
   HomeFilled,
   UploadOutlined,
   MessageFilled,
   LogoutOutlined,
+  SearchOutlined,
+  ProductFilled,
   MailOutlined,
   HeartOutlined,
   HeartFilled,
-  ProductFilled,
 } from "@ant-design/icons";
 import { Button, Input, Select, Space } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Avatar, Divider, List, Skeleton } from "antd";
-import { Card, Badge } from "antd";
+import { Card } from "antd";
 import axios from "axios";
 import { getCurrentUser, signOut } from "@aws-amplify/auth";
 import debounce from "lodash/debounce";
@@ -41,68 +42,21 @@ const capitalize = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
 const { Header, Content, Footer } = Layout;
-const Favourites = () => {
+const App = () => {
   const [loading, setLoading] = useState(false);
-  const [adData, setAdData] = useState([]);
-  const [hasMore, setHasMore] = useState(false);
   const limit = 10;
   const [user, setUser] = useState(null);
-  const [search, setSearch] = useState(null);
   const timer = useRef(null);
   const [districts, setDistricts] = useState([]);
   const scrollableDivRef = useRef(null);
+  const [scrollLoadMoreData, setScrollLoadMoreData] = useState(false);
+  const [lastEvaluatedKey, setLastEvaluatedKey] = useState(null);
   const [scrollPosition, setScrollPosition] = useState(0);
-  const [filterList, setFilterList] = useState([]);
-  const [location, setLocation] = useState({
-    state: null,
-    district: null,
-  });
-  const [lastEvaluatedKeys, setLastEvaluatedKeys] = useState({
-    cLEK: null,
-    tLEK: null,
-    tS1LEK: null,
-    tS2LEK: null,
-    tS3LEK: null,
-  });
+  const [hasMore, setHasMore] = useState(false);
+  const [favData, setFavData] = useState([]);
+  const { data, initialLoad, setInitialLoad, filterList, setFilterList } =
+    useContext(Context);
   const [unreadChatCount, setUnreadChatCount] = useState(0);
-  const { setInitialLoad, data, setData } = useContext(Context);
-  useEffect(() => {
-    const getFavList = async () => {
-      const results = await axios.get(
-        `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?favourite=${true}&email=${
-          user.userId
-        }`,
-        { headers: { Authorization: "xxx" } }
-      );
-      setFilterList([...results.data.items]);
-    };
-    getFavList();
-  });
-  useEffect(() => {
-    const getChatCount = async () => {
-      try {
-        setLoading(true);
-        const result = await axios.get(
-          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
-            user.userId
-          }&count=${true}`,
-          { headers: { Authorization: "xxx" } }
-        );
-        setUnreadChatCount(result.data.count);
-        // If no more data to load, set hasMore to false
-        setLoading(false);
-        if (!result.data.lastEvaluatedKey) {
-          setHasMore(false);
-        }
-      } catch (err) {
-        setLoading(false);
-        console.log(err);
-      }
-    };
-    if (user) {
-      getChatCount();
-    }
-  }, [user]);
   const items = [
     HomeFilled,
     UploadOutlined,
@@ -130,39 +84,91 @@ const Favourites = () => {
     };
   });
   useEffect(() => {
+    if (scrollableDivRef.current && (!initialLoad || scrollLoadMoreData)) {
+      setTimeout(() => {
+        scrollableDivRef.current.scrollTo(0, scrollPosition);
+        setScrollLoadMoreData(false);
+      }, 0);
+    }
+  }, [scrollPosition, initialLoad]);
+
+  useEffect(() => {
     if (data.length > 0) {
       setInitialLoad(false);
     } else {
       setInitialLoad(true);
     }
   }, []);
-  const handleChange = (value, type) => {
-    setAdData([]);
-    setLastEvaluatedKeys({
-      cLEK: null,
-      tLEK: null,
-      tS1LEK: null,
-      tS2LEK: null,
-      tS3LEK: null,
-    });
-    setLastEvaluatedKey(null);
-    setLocation((prevValue) => {
-      return { ...prevValue, [type]: value };
-    });
+
+  useEffect(() => {
+    const getChatCount = async () => {
+      try {
+        setLoading(true);
+        const result = await axios.get(
+          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
+            user.userId
+          }&count=${true}`,
+          { headers: { Authorization: "xxx" } }
+        );
+        setUnreadChatCount(result.data.count);
+        // If no more data to load, set hasMore to false
+        setLoading(false);
+        if (!result.data.lastEvaluatedKey) {
+          setHasMore(false);
+        }
+      } catch (err) {
+        setLoading(false);
+        console.log(err);
+      }
+    };
+    if (user) {
+      getChatCount();
+    }
+  }, [user]);
+
+  useEffect(() => {
+    const getFavList = async () => {
+      const results = await axios.get(
+        `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getFavourites?email=${
+          user.userId
+        }&favList=${true}`,
+        { headers: { Authorization: "xxx" } }
+      );
+      setFilterList([...results.data.finalResult]);
+    };
+    if (user) {
+      getFavList();
+    }
+  }, [user]);
+
+  const handleFav = async (id, favourite) => {
+    const results = await axios.get(
+      `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getFavourites?id=${id}&favourite=${favourite}&email=${user.userId}`,
+      { headers: { Authorization: "xxx" } }
+    );
+    if (!favourite) {
+      setFilterList((prevValue) => {
+        return prevValue.filter((item) => {
+          return item !== id;
+        });
+      });
+    } else {
+      setFilterList([...filterList, id]);
+    }
   };
-  const [lastEvaluatedKey, setLastEvaluatedKey] = useState(null);
 
   const loadMoreData = async () => {
     const currentUser = await getCurrentUser();
     setUser(currentUser);
-    const scrollPosition = scrollableDivRef.current.scrollTop;
     try {
+      const scrollPosition = scrollableDivRef.current.scrollTop;
       setLoading(true);
       let results;
+
       results = await axios.get(
-        `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?limit=${limit}&lastEvaluatedKey=${JSON.stringify(
-          lastEvaluatedKey
-        )}&email=${currentUser.userId}&favourite=${"true"}`,
+        `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getFavourites?email=${
+          currentUser.userId
+        }&limit=${limit}&lastEvaluatedKey=${JSON.stringify(lastEvaluatedKey)}`,
         { headers: { Authorization: "xxx" } }
       );
       setLastEvaluatedKey(results.data.lastEvaluatedKey);
@@ -171,8 +177,7 @@ const Favourites = () => {
       } else {
         setHasMore(true);
       }
-
-      setAdData([...adData, ...results.data.finalResult]);
+      setFavData([...favData, ...results.data.finalResult]);
       setLoading(false);
       setScrollPosition(scrollPosition);
     } catch (err) {
@@ -180,7 +185,6 @@ const Favourites = () => {
       console.log(err);
     }
   };
-
   useEffect(() => {
     loadMoreData();
   }, []);
@@ -211,29 +215,11 @@ const Favourites = () => {
         break;
     }
   };
-  const handleFav = async (id, favourite) => {
-    const results = await axios.get(
-      `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?id=${id}&favourite=${favourite}`,
-      { headers: { Authorization: "xxx" } }
-    );
-  };
-  useEffect(() => {
-    scrollableDivRef.current.scrollTo(0, scrollPosition);
-  }, [scrollPosition]);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   return (
     <Layout style={{ height: "100vh", overflow: "hidden" }}>
-      <div
-        style={{
-          padding: "10px",
-          background: "white",
-          position: "sticky",
-          top: "0px",
-          zIndex: 1,
-        }}
-      ></div>
       <Content style={{ padding: "0 15px" }}>
         <div
           id="scrollableDiv"
@@ -250,8 +236,11 @@ const Favourites = () => {
         >
           <InfiniteScroll
             style={{ overflowX: "hidden" }}
-            dataLength={adData.length}
-            next={loadMoreData}
+            dataLength={favData.length}
+            next={() => {
+              setScrollLoadMoreData(true);
+              loadMoreData();
+            }}
             hasMore={hasMore}
             loader={
               <Skeleton
@@ -268,15 +257,23 @@ const Favourites = () => {
             {user && !loading && (
               <List
                 grid={{ xs: 2, gutter: 10, sm: 2, md: 2, lg: 2, xl: 2, xxl: 2 }}
-                dataSource={adData}
+                dataSource={favData}
                 renderItem={(item) => {
                   return (
                     <>
-                      <List.Item key={item["item"]["_id"]}>
+                      <List.Item key={item["item"]["id"]}>
                         <Card
-                          style={{ height: 260 }}
+                          style={{ height: 265 }}
                           onClick={() => {
-                            navigate("/details", { state: { item, ad: true } });
+                            setScrollPosition(
+                              scrollableDivRef.current.scrollTop
+                            );
+                            navigate("/details", {
+                              state: {
+                                item,
+                                ad: user.userId === item["item"]["email"],
+                              },
+                            });
                           }}
                           cover={
                             <img
@@ -363,7 +360,7 @@ const Favourites = () => {
           onClick={(event) => handleNavigation(event)}
           theme="dark"
           mode="horizontal"
-          defaultSelectedKeys={["4"]}
+          defaultSelectedKeys={["6"]}
           items={items}
           style={{ minWidth: 0, flex: "auto" }}
         />
@@ -371,4 +368,4 @@ const Favourites = () => {
     </Layout>
   );
 };
-export default Favourites;
+export default App;

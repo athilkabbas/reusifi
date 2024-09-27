@@ -38,6 +38,8 @@ const Provider = ({ children }) => {
         setLastEvaluatedKeys,
         hasMore,
         setHasMore,
+        filterList,
+        setFilterList,
       }}
     >
       {children}
