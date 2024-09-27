@@ -55,6 +55,7 @@ const App = () => {
   const [chatLoading, setChatLoading] = useState(false);
   const [favLoading, setFavLoading] = useState(false);
   const [hasMore, setHasMore] = useState(false);
+  const [handleFavLoading, setHandleFavLoading] = useState(false);
   const {
     data,
     initialLoad,
@@ -176,6 +177,7 @@ const App = () => {
   }, [user]);
 
   const handleFav = async (id, favourite) => {
+    setHandleFavLoading(true);
     const results = await axios.get(
       `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getFavourites?id=${id}&favourite=${favourite}&email=${user.userId}`,
       { headers: { Authorization: "xxx" } }
@@ -189,6 +191,7 @@ const App = () => {
     } else {
       setFilterList([...filterList, id]);
     }
+    setHandleFavLoading(false);
   };
 
   const loadMoreData = async () => {
@@ -384,7 +387,9 @@ const App = () => {
                 }}
               />
             )}
-            {(loading || chatLoading || favLoading) && <Spin fullscreen />}
+            {(loading || chatLoading || favLoading || handleFavLoading) && (
+              <Spin fullscreen />
+            )}
           </InfiniteScroll>
         </div>
       </Content>

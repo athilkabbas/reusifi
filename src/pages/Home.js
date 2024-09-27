@@ -83,6 +83,7 @@ const App = () => {
     setChatPageInitialLoad,
   } = useContext(Context);
   const [unreadChatCount, setUnreadChatCount] = useState(0);
+  const [handleFavLoading, setHandleFavLoading] = useState(false);
   const items = [
     HomeFilled,
     UploadOutlined,
@@ -192,6 +193,7 @@ const App = () => {
   }, [user]);
 
   const handleFav = async (id, favourite) => {
+    setHandleFavLoading(true);
     const results = await axios.get(
       `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getFavourites?id=${id}&favourite=${favourite}&email=${user.userId}`,
       { headers: { Authorization: "xxx" } }
@@ -205,6 +207,7 @@ const App = () => {
     } else {
       setFilterList([...filterList, id]);
     }
+    setHandleFavLoading(false);
   };
 
   const loadMoreData = async () => {
@@ -420,7 +423,15 @@ const App = () => {
           >
             {user && !loading && !chatLoading && !favLoading && (
               <List
-                grid={{ xs: 2, gutter: 10, sm: 2, md: 2, lg: 2, xl: 2, xxl: 2 }}
+                grid={{
+                  xs: 2,
+                  gutter: 10,
+                  sm: 2,
+                  md: 2,
+                  lg: 2,
+                  xl: 2,
+                  xxl: 2,
+                }}
                 dataSource={data}
                 renderItem={(item) => {
                   return (
@@ -488,7 +499,10 @@ const App = () => {
                                 event.preventDefault();
                                 event.stopPropagation();
                               }}
-                              style={{ display: "flex", justifyContent: "end" }}
+                              style={{
+                                display: "flex",
+                                justifyContent: "end",
+                              }}
                             >
                               {filterList.includes(item["item"]["uuid"]) && (
                                 <HeartFilled></HeartFilled>
@@ -505,7 +519,9 @@ const App = () => {
                 }}
               />
             )}
-            {(loading || chatLoading || favLoading) && <Spin fullscreen />}
+            {(loading || chatLoading || favLoading || handleFavLoading) && (
+              <Spin fullscreen />
+            )}
           </InfiniteScroll>
         </div>
       </Content>
