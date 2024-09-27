@@ -7,7 +7,7 @@ import React, {
   useContext,
 } from "react";
 import { useNavigate } from "react-router-dom";
-import { Breadcrumb, Layout, Menu, theme } from "antd";
+import { Breadcrumb, Layout, Menu, Spin, theme } from "antd";
 import {
   HomeFilled,
   UploadOutlined,
@@ -84,7 +84,6 @@ const Ads = () => {
   useEffect(() => {
     const getChatCount = async () => {
       try {
-        setLoading(true);
         const result = await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
             user.userId
@@ -92,13 +91,10 @@ const Ads = () => {
           { headers: { Authorization: "xxx" } }
         );
         setUnreadChatCount(result.data.count);
-        // If no more data to load, set hasMore to false
-        setLoading(false);
         if (!result.data.lastEvaluatedKey) {
           setHasMore(false);
         }
       } catch (err) {
-        setLoading(false);
         console.log(err);
       }
     };
@@ -354,7 +350,7 @@ const Ads = () => {
                 }}
               />
             )}
-            {loading && <Skeleton />}
+            {loading && <Spin fullscreen />}
           </InfiniteScroll>
         </div>
       </Content>

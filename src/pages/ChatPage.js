@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
-import { Col, message, Row } from "antd";
+import { Col, message, Row, Spin } from "antd";
 import { Input } from "antd";
 import { useNavigate } from "react-router-dom";
 import { Select, Badge } from "antd";
@@ -139,7 +139,6 @@ const ChatPage = () => {
   useEffect(() => {
     const getChatCount = async () => {
       try {
-        setLoading(true);
         const result = await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
             user.userId
@@ -147,13 +146,10 @@ const ChatPage = () => {
           { headers: { Authorization: "xxx" } }
         );
         setUnreadChatCount(result.data.count);
-        // If no more data to load, set hasMore to false
-        setLoading(false);
         if (!result.data.lastEvaluatedKey) {
           setHasMore(false);
         }
       } catch (err) {
-        setLoading(false);
         console.log(err);
       }
     };
@@ -476,7 +472,7 @@ const ChatPage = () => {
                   </Row>
                 );
               })}
-            {loading && <Skeleton />}
+            {loading && <Spin fullscreen />}
           </InfiniteScroll>
         </div>
       </Content>

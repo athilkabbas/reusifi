@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Col, Row, Skeleton, Space } from "antd";
+import { Col, Row, Skeleton, Space, Spin } from "antd";
 import { Input } from "antd";
 import { useNavigate } from "react-router-dom";
 import { Select } from "antd";
@@ -119,7 +119,6 @@ const AddDress = () => {
   useEffect(() => {
     const getChatCount = async () => {
       try {
-        setLoading(true);
         const result = await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
             user.userId
@@ -127,10 +126,7 @@ const AddDress = () => {
           { headers: { Authorization: "xxx" } }
         );
         setUnreadChatCount(result.data.count);
-        // If no more data to load, set hasMore to false
-        setLoading(false);
       } catch (err) {
-        setLoading(false);
         console.log(err);
       }
     };
@@ -495,7 +491,7 @@ const AddDress = () => {
               </Space.Compact>
             </>
           )}
-          {loading && <Skeleton />}
+          {loading && <Spin fullscreen />}
         </div>
       </Content>
       <Footer
