@@ -213,7 +213,6 @@ const App = () => {
   const loadMoreData = async () => {
     const currentUser = await getCurrentUser();
     setUser(currentUser);
-    console.log(initialLoad, "athil");
     if (!initialLoad) {
       setInitialLoad(true);
       setScrollLoadMoreData(true);
