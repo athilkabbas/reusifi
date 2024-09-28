@@ -219,7 +219,6 @@ const AddDress = () => {
     });
   }, [fileList]);
   const handleSubmit = async () => {
-    setAdInitialLoad(true);
     let invalid = false;
     for (let key in form) {
       if (key === "images" && form[key].length === 0) {
@@ -312,7 +311,7 @@ const AddDress = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   const info = () => {
-    messageApi.info("Max size 50MB");
+    messageApi.info("Max size 50MB per image");
   };
   const infoAllFieldsMandatory = () => {
     messageApi.info("All fields are mandatory");
@@ -467,7 +466,7 @@ const AddDress = () => {
                 size="large"
                 style={{ padding: "10px" }}
               >
-                <Text>The ad will get deleted automatically after 30 days</Text>
+                {count < 10 && <Text>Max 4 images</Text>}
               </Space.Compact>
               <Space.Compact
                 block={true}
@@ -483,6 +482,17 @@ const AddDress = () => {
                   <Button onClick={handleSubmit} type="primary" disabled>
                     Submit
                   </Button>
+                )}
+              </Space.Compact>
+              <Space.Compact
+                block={true}
+                size="large"
+                style={{ padding: "10px" }}
+              >
+                {count < 10 && (
+                  <Text>
+                    The ad will get deleted automatically after 30 days
+                  </Text>
                 )}
               </Space.Compact>
               <Space.Compact

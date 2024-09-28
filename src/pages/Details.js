@@ -201,6 +201,7 @@ const Details = () => {
         }&s3Keys=${JSON.stringify(item["item"]["s3Keys"])}`,
         { headers: { Authorization: "xxx" } }
       );
+      setLoading(true);
     } catch (err) {
       setLoading(false);
       console.log(err);
@@ -271,7 +272,7 @@ const Details = () => {
                       danger
                       onClick={async () => {
                         await handleDelete();
-                        navigate(-1);
+                        navigate("/");
                       }}
                       type="primary"
                     >

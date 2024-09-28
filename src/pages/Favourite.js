@@ -104,9 +104,6 @@ const App = () => {
       label: IconText[index],
     };
   });
-  useEffect(() => {
-    setAdInitialLoad(false);
-  }, []);
 
   useEffect(() => {
     if (scrollableDivRef.current && (!favInitialLoad || scrollLoadMoreData)) {

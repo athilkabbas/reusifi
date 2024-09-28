@@ -308,12 +308,12 @@ const ChatPage = () => {
   const getChats = async () => {
     try {
       const scrollPosition = scrollableDivRef.current.scrollTop;
-      setLoading(true);
       if (!chatInitialLoad) {
         setChatInitialLoad(true);
         setScrollLoadMoreData(true);
         return;
       }
+      setLoading(true);
       const result = await axios.get(
         `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${user.userId}&lastEvaluatedKey=${lastEvaluatedKey}`,
         { headers: { Authorization: "xxx" } }
