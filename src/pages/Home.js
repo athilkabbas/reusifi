@@ -437,7 +437,6 @@ const App = () => {
                     <>
                       <List.Item key={item["item"]["id"]}>
                         <Card
-                          style={{ height: 265 }}
                           onClick={() => {
                             setScrollPosition(
                               scrollableDivRef.current.scrollTop
@@ -454,7 +453,7 @@ const App = () => {
                               alt="example"
                               src={item["image"]}
                               style={{
-                                height: "150px",
+                                height: "17vh",
                                 objectFit: "contain",
                               }}
                             />

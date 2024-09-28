@@ -391,7 +391,7 @@ const Chat = () => {
                 {ichatData.map((item) => {
                   if (item.senderId === user.userId) {
                     return (
-                      <Row key={item.timestamp}>
+                      <Row key={item.timestamp} style={{ padding: "5px" }}>
                         <Col xs={12} offset={12}>
                           <div
                             style={{
@@ -441,7 +441,7 @@ const Chat = () => {
           width: "calc(100% - 10px)",
         }}
       >
-        <Input
+        <TextArea
           onChange={(value) => handleChange(value)}
           placeholder="Enter message"
           value={messageValue}

@@ -301,7 +301,6 @@ const Ads = () => {
                     <>
                       <List.Item key={item["item"]["_id"]}>
                         <Card
-                          style={{ height: 260 }}
                           onClick={() => {
                             setAdScrollPosition(
                               scrollableDivRef.current.scrollTop
@@ -313,7 +312,7 @@ const Ads = () => {
                               alt="example"
                               src={item["image"]}
                               style={{
-                                height: "150px",
+                                height: "17vh",
                                 objectFit: "contain",
                               }}
                             />

@@ -404,7 +404,7 @@ const ChatPage = () => {
                       <Badge dot={item.read === "false" ? true : false}>
                         <Card
                           style={{
-                            height: "120px",
+                            height: "13vh",
                             width: "calc(100vw - 50px)",
                           }}
                           onClick={() => {
