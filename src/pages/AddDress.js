@@ -474,12 +474,12 @@ const AddDress = () => {
                 size="large"
                 style={{ padding: "10px" }}
               >
-                {count < 20 && (
+                {count < 10 && (
                   <Button onClick={handleSubmit} type="primary">
                     Submit
                   </Button>
                 )}
-                {count >= 20 && (
+                {count >= 10 && (
                   <Button onClick={handleSubmit} type="primary" disabled>
                     Submit
                   </Button>
@@ -490,7 +490,7 @@ const AddDress = () => {
                 size="large"
                 style={{ padding: "10px" }}
               >
-                {count >= 20 && <Text>Max 10 ads</Text>}
+                {count >= 10 && <Text>Max 10 ads</Text>}
               </Space.Compact>
             </>
           )}
