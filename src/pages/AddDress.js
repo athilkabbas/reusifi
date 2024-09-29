@@ -338,6 +338,7 @@ const AddDress = () => {
                   onChange={(value) => handleChange(value, "category")}
                   placeholder="Category"
                   value={form.category}
+                  maxLength={100}
                 />
               </Space.Compact>
               <Space.Compact
@@ -349,6 +350,7 @@ const AddDress = () => {
                   onChange={(value) => handleChange(value, "title")}
                   placeholder="Title"
                   value={form.title}
+                  maxLength={100}
                 />
               </Space.Compact>
               <Space.Compact
@@ -358,9 +360,9 @@ const AddDress = () => {
               >
                 <TextArea
                   onChange={(value) => handleChange(value, "description")}
-                  rows={4}
+                  rows={8}
                   placeholder="Description"
-                  maxLength={100}
+                  maxLength={300}
                   value={form.description}
                 />
               </Space.Compact>
@@ -426,6 +428,7 @@ const AddDress = () => {
                   onChange={(value) => handleChange(value, "price")}
                   placeholder="Price"
                   value={form.price}
+                  maxLength={100}
                 />
               </Space.Compact>
               <Space.Compact
