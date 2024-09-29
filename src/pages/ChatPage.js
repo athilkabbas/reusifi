@@ -289,6 +289,20 @@ const ChatPage = () => {
       </Menu>
     );
   };
+  const formatTimeStamp = (timestamp) => {
+    const date = new Date(timestamp);
+
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Months are 0-based
+    const day = date.getDate().toString().padStart(2, "0");
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    const seconds = date.getSeconds().toString().padStart(2, "0");
+
+    // Combine into a human-readable string
+    const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    return formattedDate;
+  };
 
   const menuBlocked = (index) => {
     return (
@@ -404,7 +418,7 @@ const ChatPage = () => {
                       <Badge dot={item.read === "false" ? true : false}>
                         <Card
                           style={{
-                            height: "13vh",
+                            height: "15vh",
                             width: "calc(100vw - 50px)",
                           }}
                           onClick={() => {
@@ -469,6 +483,9 @@ const ChatPage = () => {
                             }}
                           >
                             {item.message}
+                          </div>
+                          <div style={{ fontSize: "10px" }}>
+                            {formatTimeStamp(item.timestamp)}{" "}
                           </div>
                         </Card>
                       </Badge>

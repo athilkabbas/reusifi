@@ -439,7 +439,7 @@ const Chat = () => {
                     );
                   } else {
                     return (
-                      <Row key={item.timestamp}>
+                      <Row key={item.timestamp} style={{ padding: "10px" }}>
                         <Col xs={12}>
                           <div
                             style={{ display: "flex", flexDirection: "column" }}
