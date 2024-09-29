@@ -52,6 +52,7 @@ const Chat = () => {
   const [loading, setLoading] = useState(false);
   const scrollableDivRef = useRef(null);
   const [scrollPosition, setScrollPosition] = useState(0);
+  const { Text, Link } = Typography;
   const sendMessage = (message, recipientUserId, senderUserId) => {
     try {
       if (ws) {
@@ -339,6 +340,21 @@ const Chat = () => {
     setMessageValue("");
   };
 
+  const formatTimeStamp = (timestamp) => {
+    const date = new Date(timestamp);
+
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Months are 0-based
+    const day = date.getDate().toString().padStart(2, "0");
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    const seconds = date.getSeconds().toString().padStart(2, "0");
+
+    // Combine into a human-readable string
+    const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    return formattedDate;
+  };
+
   return (
     <Layout style={{ height: "100vh", overflow: "hidden" }}>
       <Content>
@@ -391,16 +407,32 @@ const Chat = () => {
                 {ichatData.map((item) => {
                   if (item.senderId === user.userId) {
                     return (
-                      <Row key={item.timestamp} style={{ padding: "5px" }}>
+                      <Row key={item.timestamp} style={{ padding: "10px" }}>
                         <Col xs={12} offset={12}>
                           <div
-                            style={{
-                              display: "flex",
-                              wordBreak: "break-word",
-                              justifyContent: "end",
-                            }}
+                            style={{ display: "flex", flexDirection: "column" }}
                           >
-                            {item.message}
+                            <div
+                              style={{
+                                display: "flex",
+                                wordBreak: "break-word",
+                                justifyContent: "end",
+                              }}
+                            >
+                              {item.message.split("\n").map((line, index) => (
+                                <React.Fragment key={index}>
+                                  {line}
+                                  <br />
+                                </React.Fragment>
+                              ))}
+                            </div>
+                            <div
+                              style={{ display: "flex", justifyContent: "end" }}
+                            >
+                              <Text style={{ fontSize: "10px" }}>
+                                {formatTimeStamp(item.timestamp)}
+                              </Text>
+                            </div>
                           </div>
                         </Col>
                       </Row>
@@ -410,14 +442,34 @@ const Chat = () => {
                       <Row key={item.timestamp}>
                         <Col xs={12}>
                           <div
-                            style={{
-                              display: "flex",
-                              wordBreak: "break-wrod",
-                              justifyContent: "start",
-                              paddingLeft: "10px",
-                            }}
+                            style={{ display: "flex", flexDirection: "column" }}
                           >
-                            {item.message}
+                            <div
+                              style={{
+                                display: "flex",
+                                wordBreak: "break-word",
+                                justifyContent: "start",
+                                paddingLeft: "10px",
+                              }}
+                            >
+                              {item.message.split("\n").map((line, index) => (
+                                <React.Fragment key={index}>
+                                  {line}
+                                  <br />
+                                </React.Fragment>
+                              ))}
+                            </div>
+                            <div
+                              style={{
+                                display: "flex",
+                                justifyContent: "start",
+                                paddingLeft: "10px",
+                              }}
+                            >
+                              <Text style={{ fontSize: "10px" }}>
+                                {formatTimeStamp(item.timestamp)}
+                              </Text>
+                            </div>
                           </div>
                         </Col>
                       </Row>
