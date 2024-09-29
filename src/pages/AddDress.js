@@ -239,7 +239,7 @@ const AddDress = () => {
       maxSizeMB: 0.01, // Try to compress the image down to ~10 KB
       maxWidthOrHeight: 800, // Limit the width/height (e.g., 100px)
       useWebWorker: true, // Enable web worker for performance
-      initialQuality: 1, // Start with low quality for aggressive compression
+      initialQuality: 0.6, // Start with low quality for aggressive compression
     };
     for (let i = 0; i < form.images.length; i++) {
       if (form.images[i].size / 1024 / 1024 > 50) {
@@ -247,9 +247,7 @@ const AddDress = () => {
         info();
         return;
       }
-      console.log(form.images[i].size / 1024 / 1024);
       let compressImage = await imageCompression(form.images[i], options);
-      console.log(compressImage.size / 1024 / 1024);
       formData.append(`image${i}`, compressImage);
     }
     formData.append("category", form.category);
