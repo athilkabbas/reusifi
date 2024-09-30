@@ -86,6 +86,12 @@ const AddDress = () => {
     if (type === "price" && !/^(|[1-9]\d*)$/.test(value.target.value)) {
       return;
     }
+    if (type === "category" && !/^[^\s]*\s?$/.test(value.target.value)) {
+      return;
+    }
+    if (type === "title" && !/^(\w+\s*){1,5}$/.test(value.target.value)) {
+      return;
+    }
     setForm((prevValue) => {
       if (
         type === "category" ||
@@ -346,12 +352,26 @@ const AddDress = () => {
                 size="large"
                 style={{ padding: "10px" }}
               >
+                <Text>Max 1 word</Text>
+              </Space.Compact>
+              <Space.Compact
+                block={true}
+                size="large"
+                style={{ padding: "10px" }}
+              >
                 <Input
                   onChange={(value) => handleChange(value, "title")}
                   placeholder="Title"
                   value={form.title}
                   maxLength={100}
                 />
+              </Space.Compact>
+              <Space.Compact
+                block={true}
+                size="large"
+                style={{ padding: "10px" }}
+              >
+                <Text>Max 5 words</Text>
               </Space.Compact>
               <Space.Compact
                 block={true}

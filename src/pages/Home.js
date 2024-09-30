@@ -162,6 +162,7 @@ const App = () => {
       tS1LEK: null,
       tS2LEK: null,
       tS3LEK: null,
+      tS4LEK: null,
     });
     setLastEvaluatedKey(null);
     if (type === "state") {
@@ -335,6 +336,7 @@ const App = () => {
                   tS1LEK: null,
                   tS2LEK: null,
                   tS3LEK: null,
+                  tS4LEK: null,
                 });
               } else {
                 setLastEvaluatedKey(null);

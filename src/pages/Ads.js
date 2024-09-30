@@ -61,6 +61,7 @@ const Ads = () => {
     tS1LEK: null,
     tS2LEK: null,
     tS3LEK: null,
+    tS4LEK: null,
   });
   const [unreadChatCount, setUnreadChatCount] = useState(0);
   const [chatLoading, setChatLoading] = useState(false);
@@ -160,6 +161,7 @@ const Ads = () => {
       tS1LEK: null,
       tS2LEK: null,
       tS3LEK: null,
+      tS4LEK: null,
     });
     setLastEvaluatedKey(null);
     setLocation((prevValue) => {

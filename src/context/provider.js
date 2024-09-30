@@ -16,6 +16,7 @@ const Provider = ({ children }) => {
     tS1LEK: null,
     tS2LEK: null,
     tS3LEK: null,
+    tS4LEK: null,
   });
   const [lastEvaluatedKey, setLastEvaluatedKey] = useState(null);
   const [favScrollPosition, setFavScrollPosition] = useState(0);
