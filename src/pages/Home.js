@@ -227,7 +227,7 @@ const App = () => {
         results = await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?limit=${limit}&lastEvaluatedKeys=${JSON.stringify(
             lastEvaluatedKeys
-          )}&search=${search}&location=${JSON.stringify(location)}`,
+          )}&search=${search.trim()}&location=${JSON.stringify(location)}`,
           { headers: { Authorization: "xxx" } }
         );
         setLastEvaluatedKeys(results.data.lastEvaluatedKeys);
