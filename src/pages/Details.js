@@ -201,7 +201,7 @@ const Details = () => {
         }&s3Keys=${JSON.stringify(item["item"]["s3Keys"])}`,
         { headers: { Authorization: "xxx" } }
       );
-      setLoading(true);
+      setLoading(false);
     } catch (err) {
       setLoading(false);
       console.log(err);
