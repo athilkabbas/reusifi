@@ -237,11 +237,6 @@ const Details = () => {
               </Row>
               <Row style={{ padding: 20 }}>
                 <Col xs={24} sm={5}>
-                  <Input value={item["item"]["category"]} />
-                </Col>
-              </Row>
-              <Row style={{ padding: 20 }}>
-                <Col xs={24} sm={5}>
                   <Input value={item["item"]["title"]} />
                 </Col>
               </Row>

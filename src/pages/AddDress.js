@@ -45,7 +45,6 @@ const AddDress = () => {
   const [user, setUser] = useState("");
   const [messageApi, contextHolder] = message.useMessage();
   const [form, setForm] = useState({
-    category: "",
     title: "",
     description: "",
     state: null,
@@ -86,19 +85,15 @@ const AddDress = () => {
     if (type === "price" && !/^(|[1-9]\d*)$/.test(value.target.value)) {
       return;
     }
-    if (type === "category" && !/^[^\s]*\s?$/.test(value.target.value)) {
-      return;
-    }
-    if (type === "title" && !/^(\w+\s*){1,5}$/.test(value.target.value)) {
+    if (
+      type === "title" &&
+      value.target.value !== "" &&
+      !/^(\w+\s*){1,5}$/.test(value.target.value)
+    ) {
       return;
     }
     setForm((prevValue) => {
-      if (
-        type === "category" ||
-        type === "title" ||
-        type === "description" ||
-        type === "price"
-      ) {
+      if (type === "title" || type === "description" || type === "price") {
         return { ...prevValue, [type]: value.target.value };
       }
       return { ...prevValue, [type]: value };
@@ -256,7 +251,6 @@ const AddDress = () => {
       let compressImage = await imageCompression(form.images[i], options);
       formData.append(`image${i}`, compressImage);
     }
-    formData.append("category", form.category);
     formData.append("title", form.title);
     formData.append("description", form.description);
     formData.append("state", form.state);
@@ -335,25 +329,6 @@ const AddDress = () => {
           {contextHolder}
           {!loading && !chatLoading && user && (
             <>
-              <Space.Compact
-                block={true}
-                size="large"
-                style={{ padding: "10px" }}
-              >
-                <Input
-                  onChange={(value) => handleChange(value, "category")}
-                  placeholder="Category"
-                  value={form.category}
-                  maxLength={100}
-                />
-              </Space.Compact>
-              <Space.Compact
-                block={true}
-                size="large"
-                style={{ padding: "10px" }}
-              >
-                <Text>Max 1 word</Text>
-              </Space.Compact>
               <Space.Compact
                 block={true}
                 size="large"
@@ -487,19 +462,19 @@ const AddDress = () => {
                 size="large"
                 style={{ padding: "10px" }}
               >
-                {count < 10 && <Text>Max 4 images</Text>}
+                {count < 5 && <Text>Max 4 images</Text>}
               </Space.Compact>
               <Space.Compact
                 block={true}
                 size="large"
                 style={{ padding: "10px" }}
               >
-                {count < 10 && (
+                {count < 5 && (
                   <Button onClick={handleSubmit} type="primary">
                     Submit
                   </Button>
                 )}
-                {count >= 10 && (
+                {count >= 5 && (
                   <Button onClick={handleSubmit} type="primary" disabled>
                     Submit
                   </Button>
@@ -510,7 +485,7 @@ const AddDress = () => {
                 size="large"
                 style={{ padding: "10px" }}
               >
-                {count < 10 && (
+                {count < 5 && (
                   <Text>
                     The ad will get deleted automatically after 30 days
                   </Text>
@@ -521,7 +496,7 @@ const AddDress = () => {
                 size="large"
                 style={{ padding: "10px" }}
               >
-                {count >= 10 && <Text>Max 10 ads</Text>}
+                {count >= 5 && <Text>Max 5 ads</Text>}
               </Space.Compact>
             </>
           )}

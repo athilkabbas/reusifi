@@ -157,7 +157,6 @@ const App = () => {
   const handleChange = (value, type) => {
     setData([]);
     setLastEvaluatedKeys({
-      cLEK: null,
       tLEK: null,
       tS1LEK: null,
       tS2LEK: null,
@@ -331,7 +330,6 @@ const App = () => {
             onChange={(event) => {
               if (event.target.value) {
                 setLastEvaluatedKeys({
-                  cLEK: null,
                   tLEK: null,
                   tS1LEK: null,
                   tS2LEK: null,
@@ -461,15 +459,6 @@ const App = () => {
                             />
                           }
                         >
-                          <div
-                            style={{
-                              whiteSpace: "nowrap",
-                              textOverflow: "ellipsis",
-                              overflow: "hidden",
-                            }}
-                          >
-                            <b>{capitalize(item["item"]["category"])}</b>
-                          </div>
                           <div
                             style={{
                               whiteSpace: "nowrap",

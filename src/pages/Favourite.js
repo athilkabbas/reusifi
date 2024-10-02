@@ -335,15 +335,6 @@ const App = () => {
                               overflow: "hidden",
                             }}
                           >
-                            <b>{capitalize(item["item"]["category"])}</b>
-                          </div>
-                          <div
-                            style={{
-                              whiteSpace: "nowrap",
-                              textOverflow: "ellipsis",
-                              overflow: "hidden",
-                            }}
-                          >
                             <b>{capitalize(item["item"]["title"])}</b>
                           </div>
                           <div

@@ -56,7 +56,6 @@ const Ads = () => {
     district: null,
   });
   const [lastEvaluatedKeys, setLastEvaluatedKeys] = useState({
-    cLEK: null,
     tLEK: null,
     tS1LEK: null,
     tS2LEK: null,
@@ -156,7 +155,6 @@ const Ads = () => {
   const handleChange = (value, type) => {
     setAdData([]);
     setLastEvaluatedKeys({
-      cLEK: null,
       tLEK: null,
       tS1LEK: null,
       tS2LEK: null,
@@ -320,15 +318,6 @@ const Ads = () => {
                             />
                           }
                         >
-                          <div
-                            style={{
-                              whiteSpace: "nowrap",
-                              textOverflow: "ellipsis",
-                              overflow: "hidden",
-                            }}
-                          >
-                            <b>{capitalize(item["item"]["category"])}</b>
-                          </div>
                           <div
                             style={{
                               whiteSpace: "nowrap",

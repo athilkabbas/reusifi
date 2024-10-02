@@ -11,7 +11,6 @@ const Provider = ({ children }) => {
   const [search, setSearch] = useState(null);
   const [filterList, setFilterList] = useState([]);
   const [lastEvaluatedKeys, setLastEvaluatedKeys] = useState({
-    cLEK: null,
     tLEK: null,
     tS1LEK: null,
     tS2LEK: null,
