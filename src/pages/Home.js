@@ -203,6 +203,7 @@ const App = () => {
     }
     setHandleFavLoading(false);
   };
+  console.log(hasMore, "athil");
 
   const loadMoreData = async () => {
     const currentUser = await getCurrentUser();
@@ -217,6 +218,7 @@ const App = () => {
       setLoading(true);
       let results;
       if (search) {
+        console.log("adasd");
         results = await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?limit=${limit}&lastEvaluatedKeys=${JSON.stringify(
             lastEvaluatedKeys
@@ -224,13 +226,17 @@ const App = () => {
           { headers: { Authorization: "xxx" } }
         );
         setLastEvaluatedKeys(results.data.lastEvaluatedKeys);
-        const lastEvaluatedKey = false;
-        for (let lastEvaluatedKey in lastEvaluatedKeys) {
-          if (lastEvaluatedKey) {
-            lastEvaluatedKey = true;
+        let lastEvaluatedKeyFlag = false;
+        console.log(results.data.lastEvaluatedKeys, "adsasd");
+        for (let lastEvaluatedKeyItem in results.data.lastEvaluatedKeys) {
+          if (
+            results.data.lastEvaluatedKeys[lastEvaluatedKeyItem] !== "COMPLETE"
+          ) {
+            lastEvaluatedKeyFlag = true;
+            break;
           }
         }
-        if (lastEvaluatedKey) {
+        if (lastEvaluatedKeyFlag) {
           setHasMore(true);
         } else {
           setHasMore(false);
