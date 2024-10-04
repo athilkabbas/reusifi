@@ -202,6 +202,7 @@ const Details = () => {
         { headers: { Authorization: "xxx" } }
       );
       setLoading(false);
+      navigate("/");
     } catch (err) {
       setLoading(false);
       console.log(err);
@@ -263,14 +264,7 @@ const Details = () => {
               {ad && (
                 <Row style={{ padding: 20 }}>
                   <Col xs={24} sm={10}>
-                    <Button
-                      danger
-                      onClick={async () => {
-                        await handleDelete();
-                        navigate("/");
-                      }}
-                      type="primary"
-                    >
+                    <Button danger onClick={handleDelete} type="primary">
                       Delete
                     </Button>
                   </Col>

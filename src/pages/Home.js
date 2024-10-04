@@ -156,13 +156,7 @@ const App = () => {
 
   const handleChange = (value, type) => {
     setData([]);
-    setLastEvaluatedKeys({
-      tLEK: null,
-      tS1LEK: null,
-      tS2LEK: null,
-      tS3LEK: null,
-      tS4LEK: null,
-    });
+    setLastEvaluatedKeys({});
     setLastEvaluatedKey(null);
     if (type === "state") {
       setLocation((prevValue) => {
@@ -329,13 +323,7 @@ const App = () => {
             value={search}
             onChange={(event) => {
               if (event.target.value) {
-                setLastEvaluatedKeys({
-                  tLEK: null,
-                  tS1LEK: null,
-                  tS2LEK: null,
-                  tS3LEK: null,
-                  tS4LEK: null,
-                });
+                setLastEvaluatedKeys({});
               } else {
                 setLastEvaluatedKey(null);
               }
@@ -352,7 +340,7 @@ const App = () => {
             }}
             showSearch
             style={{
-              width: 120,
+              width: "30vw",
             }}
             value={location.state}
             placeholder="State"
@@ -371,7 +359,7 @@ const App = () => {
               }}
               showSearch
               style={{
-                width: 120,
+                width: "30vw",
               }}
               value={location.district}
               placeholder="District"

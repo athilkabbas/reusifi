@@ -10,13 +10,7 @@ const Provider = ({ children }) => {
   const [location, setLocation] = useState({ state: null, district: null });
   const [search, setSearch] = useState(null);
   const [filterList, setFilterList] = useState([]);
-  const [lastEvaluatedKeys, setLastEvaluatedKeys] = useState({
-    tLEK: null,
-    tS1LEK: null,
-    tS2LEK: null,
-    tS3LEK: null,
-    tS4LEK: null,
-  });
+  const [lastEvaluatedKeys, setLastEvaluatedKeys] = useState({});
   const [lastEvaluatedKey, setLastEvaluatedKey] = useState(null);
   const [favScrollPosition, setFavScrollPosition] = useState(0);
   const [favInitialLoad, setFavInitialLoad] = useState(true);

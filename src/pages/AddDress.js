@@ -85,13 +85,6 @@ const AddDress = () => {
     if (type === "price" && !/^(|[1-9]\d*)$/.test(value.target.value)) {
       return;
     }
-    if (
-      type === "title" &&
-      value.target.value !== "" &&
-      !/^(\w+\s*){1,5}$/.test(value.target.value)
-    ) {
-      return;
-    }
     setForm((prevValue) => {
       if (type === "title" || type === "description" || type === "price") {
         return { ...prevValue, [type]: value.target.value };
@@ -243,7 +236,7 @@ const AddDress = () => {
       initialQuality: 0.6, // Start with low quality for aggressive compression
     };
     for (let i = 0; i < form.images.length; i++) {
-      if (form.images[i].size / 1024 / 1024 > 50) {
+      if (form.images[i].size / 1024 / 1024 > 30) {
         setLoading(false);
         info();
         return;
@@ -251,8 +244,8 @@ const AddDress = () => {
       let compressImage = await imageCompression(form.images[i], options);
       formData.append(`image${i}`, compressImage);
     }
-    formData.append("title", form.title);
-    formData.append("description", form.description);
+    formData.append("title", form.title.trim());
+    formData.append("description", form.description.trim());
     formData.append("state", form.state);
     formData.append("district", form.district);
     formData.append("email", form.email);
@@ -309,7 +302,7 @@ const AddDress = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   const info = () => {
-    messageApi.info("Max size 50MB per image");
+    messageApi.info("Max size 30MB per image");
   };
   const infoAllFieldsMandatory = () => {
     messageApi.info("All fields are mandatory");
@@ -340,13 +333,6 @@ const AddDress = () => {
                   value={form.title}
                   maxLength={100}
                 />
-              </Space.Compact>
-              <Space.Compact
-                block={true}
-                size="large"
-                style={{ padding: "10px" }}
-              >
-                <Text>Max 5 words</Text>
               </Space.Compact>
               <Space.Compact
                 block={true}
@@ -437,10 +423,10 @@ const AddDress = () => {
                   fileList={fileList}
                   onPreview={handlePreview}
                   onChange={handleChangeImage}
-                  maxCount={4}
+                  maxCount={6}
                   multiple
                 >
-                  {fileList.length >= 4 ? null : uploadButton}
+                  {fileList.length >= 6 ? null : uploadButton}
                 </Upload>
                 {previewImage && (
                   <Image
@@ -462,7 +448,7 @@ const AddDress = () => {
                 size="large"
                 style={{ padding: "10px" }}
               >
-                {count < 5 && <Text>Max 4 images</Text>}
+                <Text>Max 6 images</Text>
               </Space.Compact>
               <Space.Compact
                 block={true}
