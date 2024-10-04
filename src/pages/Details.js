@@ -82,6 +82,8 @@ const Details = () => {
     setChatInitialLoad,
     setAdPageInitialLoad,
     setChatPageInitialLoad,
+    setLastEvaluatedKey,
+    setLastEvaluatedKeys,
   } = useContext(Context);
   const info = () => {
     messageApi.info("No longer available");
@@ -194,6 +196,8 @@ const Details = () => {
     try {
       setData([]);
       setInitialLoad(true);
+      setLastEvaluatedKey(null);
+      setLastEvaluatedKeys({});
       setLoading(true);
       let results = await axios.get(
         `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/deleteAd?id=${

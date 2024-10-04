@@ -158,6 +158,7 @@ const App = () => {
     setData([]);
     setLastEvaluatedKeys({});
     setLastEvaluatedKey(null);
+    setInitialLoad(true);
     if (type === "state") {
       setLocation((prevValue) => {
         return { ...prevValue, [type]: value, district: null };
@@ -203,7 +204,6 @@ const App = () => {
     }
     setHandleFavLoading(false);
   };
-  console.log(hasMore, "athil");
 
   const loadMoreData = async () => {
     const currentUser = await getCurrentUser();
@@ -272,7 +272,7 @@ const App = () => {
     // Set a new timeout
     timer.current = setTimeout(() => {
       loadMoreData();
-    }, 500);
+    }, 1500);
 
     // Cleanup function to clear the timeout on component unmount or before next effect
     return () => {
@@ -328,12 +328,10 @@ const App = () => {
             addonBefore={<SearchOutlined />}
             value={search}
             onChange={(event) => {
-              if (event.target.value) {
-                setLastEvaluatedKeys({});
-              } else {
-                setLastEvaluatedKey(null);
-              }
+              setLastEvaluatedKeys({});
+              setLastEvaluatedKey(null);
               setData([]);
+              setInitialLoad(true);
               setSearch(event.target.value);
             }}
             placeholder="Search"

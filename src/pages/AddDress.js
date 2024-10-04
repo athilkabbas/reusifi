@@ -108,6 +108,8 @@ const AddDress = () => {
     setFavPageInitialLoad,
     setAdPageInitialLoad,
     setChatPageInitialLoad,
+    setLastEvaluatedKey,
+    setLastEvaluatedKeys,
   } = useContext(Context);
 
   useEffect(() => {
@@ -227,13 +229,14 @@ const AddDress = () => {
     }
     setData([]);
     setInitialLoad(true);
+    setLastEvaluatedKey(null);
+    setLastEvaluatedKeys({});
     setLoading(true);
     const formData = new FormData();
     const options = {
       maxSizeMB: 0.01, // Try to compress the image down to ~10 KB
-      maxWidthOrHeight: 800, // Limit the width/height (e.g., 100px)
       useWebWorker: true, // Enable web worker for performance
-      initialQuality: 0.6, // Start with low quality for aggressive compression
+      initialQuality: 1, // Start with low quality for aggressive compression
     };
     for (let i = 0; i < form.images.length; i++) {
       if (form.images[i].size / 1024 / 1024 > 30) {
