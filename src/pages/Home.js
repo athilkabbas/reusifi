@@ -141,9 +141,6 @@ const App = () => {
           { headers: { Authorization: "xxx" } }
         );
         setUnreadChatCount(result.data.count);
-        if (!result.data.lastEvaluatedKey) {
-          setHasMore(false);
-        }
         setChatLoading(false);
       } catch (err) {
         console.log(err);

@@ -97,9 +97,6 @@ const Chat = () => {
           { headers: { Authorization: "xxx" } }
         );
         setUnreadChatCount(result.data.count);
-        if (!result.data.lastEvaluatedKey) {
-          setHasMore(false);
-        }
         setChatLoading(false);
       } catch (err) {
         console.log(err);
@@ -203,8 +200,8 @@ const Chat = () => {
 
   const getChats = async () => {
     try {
-      setLoading(true);
       const scrollPosition = scrollableDivRef.current.scrollTop;
+      setLoading(true);
       let result;
       if (recipient && recipient["item"]["email"]) {
         result = await axios.get(
@@ -300,7 +297,9 @@ const Chat = () => {
   };
   useEffect(() => {
     setTimeout(() => {
-      scrollableDivRef.current.scrollTo(0, scrollPosition);
+      if (scrollableDivRef.current) {
+        scrollableDivRef.current.scrollTo(0, scrollPosition);
+      }
     }, 100);
   }, [scrollPosition]);
   useEffect(() => {
