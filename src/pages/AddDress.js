@@ -232,12 +232,12 @@ const AddDress = () => {
     setLastEvaluatedKey(null);
     setLastEvaluatedKeys({});
     setLoading(true);
-    const formData = new FormData();
     const options = {
       maxSizeMB: 0.01, // Try to compress the image down to ~10 KB
       useWebWorker: true, // Enable web worker for performance
       initialQuality: 1, // Start with low quality for aggressive compression
     };
+    let s3Keys = [];
     for (let i = 0; i < form.images.length; i++) {
       if (form.images[i].size / 1024 / 1024 > 30) {
         setLoading(false);
@@ -245,21 +245,32 @@ const AddDress = () => {
         return;
       }
       let compressImage = await imageCompression(form.images[i], options);
-      formData.append(`image${i}`, compressImage);
+      const url = await axios.get(
+        `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getUrl?email=${form.email}`,
+        {
+          headers: {
+            Authorization: "xxx",
+          },
+        }
+      );
+      s3Keys.push(url.data.s3Key);
+      await axios.put(url.data.uploadURL, compressImage);
     }
-    formData.append("title", form.title.trim());
-    formData.append("description", form.description.trim());
-    formData.append("state", form.state);
-    formData.append("district", form.district);
-    formData.append("email", form.email);
-    formData.append("price", form.price);
+    let data = {
+      title: form.title.trim().toLowerCase(),
+      description: form.description.trim().toLowerCase(),
+      state: form.state.toLowerCase(),
+      district: form.district.toLowerCase(),
+      email: form.email.toLowerCase(),
+      price: form.price.toLowerCase(),
+      s3Keys,
+    };
     await axios.post(
       "https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/addDress",
-      formData,
+      data,
       {
         headers: {
           Authorization: "xxx",
-          "Content-Type": "multipart/form-data",
         },
       }
     );
