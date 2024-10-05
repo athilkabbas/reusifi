@@ -136,7 +136,7 @@ const Ads = () => {
       setTimeout(() => {
         scrollableDivRef.current.scrollTo(0, adScrollPosition);
         setScrollLoadMoreData(false);
-      }, 0);
+      }, 100);
     }
   }, [adScrollPosition, adInitialLoad]);
 

@@ -110,7 +110,7 @@ const App = () => {
       setTimeout(() => {
         scrollableDivRef.current.scrollTo(0, favScrollPosition);
         setScrollLoadMoreData(false);
-      }, 0);
+      }, 100);
     }
   }, [favScrollPosition, favInitialLoad]);
 

@@ -126,7 +126,7 @@ const App = () => {
       setTimeout(() => {
         scrollableDivRef.current.scrollTo(0, scrollPosition);
         setScrollLoadMoreData(false);
-      }, 0);
+      }, 100);
     }
   }, [scrollPosition, initialLoad]);
 

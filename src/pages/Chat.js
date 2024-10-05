@@ -299,7 +299,9 @@ const Chat = () => {
     }
   };
   useEffect(() => {
-    scrollableDivRef.current.scrollTo(0, scrollPosition);
+    setTimeout(() => {
+      scrollableDivRef.current.scrollTo(0, scrollPosition);
+    }, 100);
   }, [scrollPosition]);
   useEffect(() => {
     scrollToBottom();
