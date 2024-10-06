@@ -69,7 +69,6 @@ const { Header, Content, Footer } = Layout;
 const ChatPage = () => {
   const [lastEvaluatedKey, setLastEvaluatedKey] = useState(null);
   const [scrollLoadMoreData, setScrollLoadMoreData] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -123,6 +122,8 @@ const ChatPage = () => {
     setAdPageInitialLoad,
     setFavPageInitialLoad,
     chatPageInitialLoad,
+    setChatHasMore,
+    chatHasMore,
   } = useContext(Context);
   useEffect(() => {
     if (scrollableDivRef.current && (!chatInitialLoad || scrollLoadMoreData)) {
@@ -318,23 +319,25 @@ const ChatPage = () => {
   };
   const getChats = async () => {
     try {
-      const scrollPosition = scrollableDivRef.current.scrollTop;
       if (!chatInitialLoad) {
         setChatInitialLoad(true);
         setScrollLoadMoreData(true);
         return;
       }
+      const scrollPosition = scrollableDivRef.current.scrollTop;
       setLoading(true);
       const result = await axios.get(
         `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${user.userId}&lastEvaluatedKey=${lastEvaluatedKey}`,
         { headers: { Authorization: "xxx" } }
       );
-      setChatData((prevValue) => [...result.data.items, ...prevValue]);
+      setChatData([...chatData, ...result.data.items]);
       setLastEvaluatedKey(result.data.lastEvaluatedKey);
       // If no more data to load, set hasMore to false
       setLoading(false);
       if (!result.data.lastEvaluatedKey) {
-        setHasMore(false);
+        setChatHasMore(false);
+      } else {
+        setChatHasMore(true);
       }
       setChatScrollPosition(scrollPosition);
     } catch (err) {
@@ -385,9 +388,11 @@ const ChatPage = () => {
               overflowX: "hidden",
             }}
             dataLength={chatData.length}
-            next={getChats}
-            hasMore={hasMore}
-            inverse={true}
+            next={() => {
+              setScrollLoadMoreData(true);
+              getChats();
+            }}
+            hasMore={chatHasMore}
             loader={
               <Skeleton
                 avatar
@@ -410,7 +415,7 @@ const ChatPage = () => {
               user &&
               chatData.map((item, index) => {
                 return (
-                  <Row style={{ padding: "10px" }}>
+                  <Row key={item.timestamp} style={{ padding: "10px" }}>
                     <Col span={24}>
                       <Badge dot={item.read === "false" ? true : false}>
                         <Card

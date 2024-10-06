@@ -54,7 +54,6 @@ const App = () => {
   const [scrollPosition, setScrollPosition] = useState(0);
   const [chatLoading, setChatLoading] = useState(false);
   const [favLoading, setFavLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(false);
   const [handleFavLoading, setHandleFavLoading] = useState(false);
   const {
     data,
@@ -76,6 +75,10 @@ const App = () => {
     setChatInitialLoad,
     setAdPageInitialLoad,
     setChatPageInitialLoad,
+    favHasMore,
+    setFavHasMore,
+    setFavLastEvaluatedKey,
+    favLastEvaluatedKey,
   } = useContext(Context);
   const [unreadChatCount, setUnreadChatCount] = useState(0);
   const items = [
@@ -203,14 +206,16 @@ const App = () => {
       results = await axios.get(
         `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getFavourites?email=${
           currentUser.userId
-        }&limit=${limit}&lastEvaluatedKey=${JSON.stringify(lastEvaluatedKey)}`,
+        }&limit=${limit}&lastEvaluatedKey=${JSON.stringify(
+          favLastEvaluatedKey
+        )}`,
         { headers: { Authorization: "xxx" } }
       );
-      setLastEvaluatedKey(results.data.lastEvaluatedKey);
+      setFavLastEvaluatedKey(results.data.lastEvaluatedKey);
       if (!results.data.lastEvaluatedKey) {
-        setHasMore(false);
+        setFavHasMore(false);
       } else {
-        setHasMore(true);
+        setFavHasMore(true);
       }
       setFavData([...favData, ...results.data.finalResult]);
       setLoading(false);
@@ -280,7 +285,7 @@ const App = () => {
               setScrollLoadMoreData(true);
               loadMoreData();
             }}
-            hasMore={hasMore}
+            hasMore={favHasMore}
             loader={
               <Skeleton
                 avatar

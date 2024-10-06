@@ -6,12 +6,18 @@ const Provider = ({ children }) => {
   const [data, setData] = useState([]);
   const [initialLoad, setInitialLoad] = useState(true);
   const [hasMore, setHasMore] = useState(false);
+  const [adHasMore, setAdHasMore] = useState(false);
+  const [favHasMore, setFavHasMore] = useState(false);
+  const [chatHasMore, setChatHasMore] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
   const [location, setLocation] = useState({ state: null, district: null });
   const [search, setSearch] = useState(null);
   const [filterList, setFilterList] = useState([]);
   const [lastEvaluatedKeys, setLastEvaluatedKeys] = useState({});
   const [lastEvaluatedKey, setLastEvaluatedKey] = useState(null);
+  const [adLastEvaluatedKey, setAdLastEvaluatedKey] = useState(null);
+  const [favLastEvaluatedKey, setFavLastEvaluatedKey] = useState(null);
+  const [chatLastEvaluatedKey, setChatLastEvaluatedKey] = useState(null);
   const [favScrollPosition, setFavScrollPosition] = useState(0);
   const [favInitialLoad, setFavInitialLoad] = useState(true);
   const [favData, setFavData] = useState([]);
@@ -72,6 +78,18 @@ const Provider = ({ children }) => {
         adPageInitialLoad,
         chatPageInitialLoad,
         setChatPageInitialLoad,
+        adHasMore,
+        setAdHasMore,
+        setFavHasMore,
+        favHasMore,
+        chatHasMore,
+        setChatHasMore,
+        adLastEvaluatedKey,
+        favLastEvaluatedKey,
+        chatLastEvaluatedKey,
+        setAdLastEvaluatedKey,
+        setFavLastEvaluatedKey,
+        setChatLastEvaluatedKey,
       }}
     >
       {children}

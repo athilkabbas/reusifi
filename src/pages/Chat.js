@@ -84,6 +84,8 @@ const Chat = () => {
     setChatPageInitialLoad,
     setAdPageInitialLoad,
     setFavPageInitialLoad,
+    chatLastEvaluatedKey,
+    setChatLastEvaluatedKey,
   } = useContext(Context);
   const [chatLoading, setChatLoading] = useState(false);
   useEffect(() => {
@@ -205,7 +207,7 @@ const Chat = () => {
       let result;
       if (recipient && recipient["item"]["email"]) {
         result = await axios.get(
-          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${user.userId}&userId2=${recipient["item"]["email"]}&lastEvaluatedKey=${lastEvaluatedKey}`,
+          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${user.userId}&userId2=${recipient["item"]["email"]}&lastEvaluatedKey=${chatLastEvaluatedKey}`,
           { headers: { Authorization: "xxx" } }
         );
         await axios.get(
@@ -236,7 +238,7 @@ const Chat = () => {
       }
       setLoading(false);
       setIChatData((prevValue) => [...prevValue, ...result.data.items]);
-      setLastEvaluatedKey(result.data.lastEvaluatedKey);
+      setChatLastEvaluatedKey(result.data.lastEvaluatedKey);
       // If no more data to load, set hasMore to false
       if (!result.data.lastEvaluatedKey) {
         setHasMore(false);
@@ -300,7 +302,7 @@ const Chat = () => {
       if (scrollableDivRef.current) {
         scrollableDivRef.current.scrollTo(0, scrollPosition);
       }
-    }, 100);
+    }, 500);
   }, [scrollPosition]);
   useEffect(() => {
     scrollToBottom();

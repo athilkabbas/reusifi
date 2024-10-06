@@ -43,7 +43,6 @@ const { Header, Content, Footer } = Layout;
 const Ads = () => {
   const [loading, setLoading] = useState(false);
   const [scrollLoadMoreData, setScrollLoadMoreData] = useState(false);
-  const [hasMore, setHasMore] = useState(false);
   const limit = 10;
   const [user, setUser] = useState(null);
   const [search, setSearch] = useState(null);
@@ -81,6 +80,10 @@ const Ads = () => {
     adPageInitialLoad,
     setChatPageInitialLoad,
     setFavPageInitialLoad,
+    adHasMore,
+    setAdHasMore,
+    adLastEvaluatedKey,
+    setAdLastEvaluatedKey,
   } = useContext(Context);
   useEffect(() => {
     const getChatCount = async () => {
@@ -179,15 +182,15 @@ const Ads = () => {
       let results;
       results = await axios.get(
         `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?limit=${limit}&lastEvaluatedKey=${JSON.stringify(
-          lastEvaluatedKey
+          adLastEvaluatedKey
         )}&email=${currentUser.userId}`,
         { headers: { Authorization: "xxx" } }
       );
-      setLastEvaluatedKey(results.data.lastEvaluatedKey);
+      setAdLastEvaluatedKey(results.data.lastEvaluatedKey);
       if (!results.data.lastEvaluatedKey) {
-        setHasMore(false);
+        setAdHasMore(false);
       } else {
-        setHasMore(true);
+        setAdHasMore(true);
       }
 
       setAdData([...adData, ...results.data.finalResult]);
@@ -276,7 +279,7 @@ const Ads = () => {
               setScrollLoadMoreData(true);
               loadMoreData();
             }}
-            hasMore={hasMore}
+            hasMore={adHasMore}
             loader={
               <Skeleton
                 avatar
