@@ -44,7 +44,7 @@ const capitalize = (str) => {
 const { Header, Content, Footer } = Layout;
 const App = () => {
   const [loading, setLoading] = useState(false);
-  const limit = 10;
+  const limit = 50;
   const [user, setUser] = useState(null);
   const timer = useRef(null);
   const [districts, setDistricts] = useState([]);
