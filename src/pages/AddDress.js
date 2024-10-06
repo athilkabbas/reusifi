@@ -242,7 +242,7 @@ const AddDress = () => {
     };
     let s3Keys = [];
     for (let i = 0; i < form.images.length; i++) {
-      if (form.images[i].size / 1024 / 1024 > 50) {
+      if (form.images[i].size / 1024 / 1024 > 30) {
         setLoading(false);
         info();
         return;
@@ -475,12 +475,12 @@ const AddDress = () => {
                 size="large"
                 style={{ padding: "10px" }}
               >
-                {count < 60 && (
+                {count < 5 && (
                   <Button onClick={handleSubmit} type="primary">
                     Submit
                   </Button>
                 )}
-                {count >= 60 && (
+                {count >= 5 && (
                   <Button onClick={handleSubmit} type="primary" disabled>
                     Submit
                   </Button>

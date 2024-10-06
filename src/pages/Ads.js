@@ -43,7 +43,7 @@ const { Header, Content, Footer } = Layout;
 const Ads = () => {
   const [loading, setLoading] = useState(false);
   const [scrollLoadMoreData, setScrollLoadMoreData] = useState(false);
-  const limit = 10;
+  const limit = 50;
   const [user, setUser] = useState(null);
   const [search, setSearch] = useState(null);
   const timer = useRef(null);
