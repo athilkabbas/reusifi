@@ -81,6 +81,9 @@ const App = () => {
     setAdPageInitialLoad,
     setFavPageInitialLoad,
     setChatPageInitialLoad,
+    setFavLastEvaluatedKey,
+    setChatLastEvaluatedKey,
+    setAdLastEvaluatedKey,
   } = useContext(Context);
   const [unreadChatCount, setUnreadChatCount] = useState(0);
   const [handleFavLoading, setHandleFavLoading] = useState(false);
@@ -113,10 +116,13 @@ const App = () => {
   useEffect(() => {
     setFavData([]);
     setFavInitialLoad(true);
+    setFavLastEvaluatedKey(null);
     setAdData([]);
     setAdInitialLoad(true);
+    setAdLastEvaluatedKey(null);
     setChatData([]);
     setChatInitialLoad(true);
+    setChatLastEvaluatedKey(null);
     setAdPageInitialLoad(true);
     setFavPageInitialLoad(true);
     setChatPageInitialLoad(true);

@@ -79,6 +79,8 @@ const App = () => {
     setFavHasMore,
     setFavLastEvaluatedKey,
     favLastEvaluatedKey,
+    setChatLastEvaluatedKey,
+    setAdLastEvaluatedKey,
   } = useContext(Context);
   const [unreadChatCount, setUnreadChatCount] = useState(0);
   const items = [
@@ -149,8 +151,10 @@ const App = () => {
   useEffect(() => {
     setAdData([]);
     setAdInitialLoad(true);
+    setAdLastEvaluatedKey(null);
     setChatData([]);
     setChatInitialLoad(true);
+    setChatLastEvaluatedKey(null);
     setAdPageInitialLoad(true);
     setChatPageInitialLoad(true);
   }, []);

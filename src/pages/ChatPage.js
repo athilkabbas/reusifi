@@ -124,6 +124,10 @@ const ChatPage = () => {
     chatPageInitialLoad,
     setChatHasMore,
     chatHasMore,
+    chatLastEvaluatedKey,
+    setFavLastEvaluatedKey,
+    setChatLastEvaluatedKey,
+    setAdLastEvaluatedKey,
   } = useContext(Context);
   useEffect(() => {
     if (scrollableDivRef.current && (!chatInitialLoad || scrollLoadMoreData)) {
@@ -327,11 +331,11 @@ const ChatPage = () => {
       const scrollPosition = scrollableDivRef.current.scrollTop;
       setLoading(true);
       const result = await axios.get(
-        `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${user.userId}&lastEvaluatedKey=${lastEvaluatedKey}`,
+        `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${user.userId}&lastEvaluatedKey=${chatLastEvaluatedKey}`,
         { headers: { Authorization: "xxx" } }
       );
       setChatData([...chatData, ...result.data.items]);
-      setLastEvaluatedKey(result.data.lastEvaluatedKey);
+      setChatLastEvaluatedKey(result.data.lastEvaluatedKey);
       // If no more data to load, set hasMore to false
       setLoading(false);
       if (!result.data.lastEvaluatedKey) {
@@ -356,8 +360,10 @@ const ChatPage = () => {
   useEffect(() => {
     setFavData([]);
     setFavInitialLoad(true);
+    setFavLastEvaluatedKey(null);
     setAdData([]);
     setAdInitialLoad(true);
+    setAdLastEvaluatedKey(null);
     setAdPageInitialLoad(true);
     setFavPageInitialLoad(true);
   }, []);

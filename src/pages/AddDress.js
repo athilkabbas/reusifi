@@ -110,6 +110,9 @@ const AddDress = () => {
     setChatPageInitialLoad,
     setLastEvaluatedKey,
     setLastEvaluatedKeys,
+    setFavLastEvaluatedKey,
+    setChatLastEvaluatedKey,
+    setAdLastEvaluatedKey,
   } = useContext(Context);
 
   useEffect(() => {
@@ -299,10 +302,13 @@ const AddDress = () => {
   useEffect(() => {
     setFavData([]);
     setFavInitialLoad(true);
+    setFavLastEvaluatedKey(null);
     setAdData([]);
     setAdInitialLoad(true);
+    setAdLastEvaluatedKey(null);
     setChatData([]);
     setChatInitialLoad(true);
+    setChatLastEvaluatedKey(null);
     setAdPageInitialLoad(true);
     setFavPageInitialLoad(true);
     setChatPageInitialLoad(true);

@@ -84,6 +84,8 @@ const Ads = () => {
     setAdHasMore,
     adLastEvaluatedKey,
     setAdLastEvaluatedKey,
+    setFavLastEvaluatedKey,
+    setChatLastEvaluatedKey,
   } = useContext(Context);
   useEffect(() => {
     const getChatCount = async () => {
@@ -209,8 +211,10 @@ const Ads = () => {
   useEffect(() => {
     setFavData([]);
     setFavInitialLoad(true);
+    setFavLastEvaluatedKey(null);
     setChatData([]);
     setChatInitialLoad(true);
+    setChatLastEvaluatedKey(null);
     setFavPageInitialLoad(true);
     setChatPageInitialLoad(true);
   }, []);

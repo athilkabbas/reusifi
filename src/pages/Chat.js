@@ -84,8 +84,8 @@ const Chat = () => {
     setChatPageInitialLoad,
     setAdPageInitialLoad,
     setFavPageInitialLoad,
-    chatLastEvaluatedKey,
-    setChatLastEvaluatedKey,
+    setFavLastEvaluatedKey,
+    setAdLastEvaluatedKey,
   } = useContext(Context);
   const [chatLoading, setChatLoading] = useState(false);
   useEffect(() => {
@@ -145,8 +145,10 @@ const Chat = () => {
   useEffect(() => {
     setFavData([]);
     setFavInitialLoad(true);
+    setFavLastEvaluatedKey(null);
     setAdData([]);
     setAdInitialLoad(true);
+    setAdLastEvaluatedKey(null);
     setFavPageInitialLoad(true);
     setAdPageInitialLoad(true);
     setChatPageInitialLoad(false);
@@ -207,7 +209,7 @@ const Chat = () => {
       let result;
       if (recipient && recipient["item"]["email"]) {
         result = await axios.get(
-          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${user.userId}&userId2=${recipient["item"]["email"]}&lastEvaluatedKey=${chatLastEvaluatedKey}`,
+          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${user.userId}&userId2=${recipient["item"]["email"]}&lastEvaluatedKey=${lastEvaluatedKey}`,
           { headers: { Authorization: "xxx" } }
         );
         await axios.get(
@@ -238,7 +240,7 @@ const Chat = () => {
       }
       setLoading(false);
       setIChatData((prevValue) => [...prevValue, ...result.data.items]);
-      setChatLastEvaluatedKey(result.data.lastEvaluatedKey);
+      setLastEvaluatedKey(result.data.lastEvaluatedKey);
       // If no more data to load, set hasMore to false
       if (!result.data.lastEvaluatedKey) {
         setHasMore(false);

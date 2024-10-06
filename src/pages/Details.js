@@ -84,6 +84,7 @@ const Details = () => {
     setChatPageInitialLoad,
     setLastEvaluatedKey,
     setLastEvaluatedKeys,
+    setChatLastEvaluatedKey,
   } = useContext(Context);
   const info = () => {
     messageApi.info("No longer available");
@@ -169,6 +170,7 @@ const Details = () => {
   useEffect(() => {
     setChatData([]);
     setChatInitialLoad(true);
+    setChatLastEvaluatedKey(null);
   }, []);
   useEffect(() => {
     const getData = async () => {

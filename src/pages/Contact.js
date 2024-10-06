@@ -72,15 +72,21 @@ const Contact = () => {
     setChatPageInitialLoad,
     setFavPageInitialLoad,
     setAdPageInitialLoad,
+    setFavLastEvaluatedKey,
+    setChatLastEvaluatedKey,
+    setAdLastEvaluatedKey,
   } = useContext(Context);
 
   useEffect(() => {
     setFavData([]);
     setFavInitialLoad(true);
+    setFavLastEvaluatedKey(null);
     setAdData([]);
     setAdInitialLoad(true);
+    setAdLastEvaluatedKey(null);
     setChatData([]);
     setChatInitialLoad(true);
+    setChatLastEvaluatedKey(null);
     setAdPageInitialLoad(true);
     setFavPageInitialLoad(true);
     setChatPageInitialLoad(true);
