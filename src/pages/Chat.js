@@ -25,6 +25,7 @@ import {
   LogoutOutlined,
 } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
+import testSpeed from "../helpers/internetSpeed";
 const { TextArea } = Input;
 const IconText = [
   "Home",
@@ -52,6 +53,7 @@ const Chat = () => {
   const [loading, setLoading] = useState(false);
   const scrollableDivRef = useRef(null);
   const [scrollPosition, setScrollPosition] = useState(0);
+  const [speed, setSpeed] = useState(0);
   const { Text, Link } = Typography;
   const sendMessage = (message, recipientUserId, senderUserId) => {
     try {
@@ -300,11 +302,21 @@ const Chat = () => {
     }
   };
   useEffect(() => {
-    setTimeout(() => {
-      if (scrollableDivRef.current) {
-        scrollableDivRef.current.scrollTo(0, scrollPosition);
-      }
-    }, 500);
+    const calcSpeed = async () => {
+      let speed = await testSpeed();
+      setSpeed(speed);
+    };
+    calcSpeed();
+  }, []);
+  useEffect(() => {
+    setTimeout(
+      () => {
+        if (scrollableDivRef.current) {
+          scrollableDivRef.current.scrollTo(0, scrollPosition);
+        }
+      },
+      speed >= 1 ? 500 : 800
+    );
   }, [scrollPosition]);
   useEffect(() => {
     scrollToBottom();

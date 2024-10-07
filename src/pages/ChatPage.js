@@ -134,7 +134,7 @@ const ChatPage = () => {
       setTimeout(() => {
         scrollableDivRef.current.scrollTo(0, chatScrollPosition);
         setScrollLoadMoreData(false);
-      }, 100);
+      }, 150);
     }
   }, [chatScrollPosition, chatInitialLoad]);
 
