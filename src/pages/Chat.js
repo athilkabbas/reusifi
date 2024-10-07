@@ -88,6 +88,7 @@ const Chat = () => {
     setFavPageInitialLoad,
     setFavLastEvaluatedKey,
     setAdLastEvaluatedKey,
+    setChatData,
   } = useContext(Context);
   const [chatLoading, setChatLoading] = useState(false);
   useEffect(() => {
@@ -220,6 +221,17 @@ const Chat = () => {
           }&userId2=${recipient["item"]["email"]}&read=${true}`,
           { headers: { Authorization: "xxx" } }
         );
+        setChatData((chatData) => {
+          return chatData.map((item) => {
+            let conversationId = [user.userId, recipient["item"]["email"]]
+              .sort()
+              .join("#");
+            if (item.conversationId === conversationId) {
+              return { ...item, read: "true" };
+            }
+            return item;
+          });
+        });
       } else if (conversationId) {
         let userIds = conversationId.split("#");
         let userId2;
@@ -239,6 +251,15 @@ const Chat = () => {
           }&userId2=${userId2}&read=${true}`,
           { headers: { Authorization: "xxx" } }
         );
+        setChatData((chatData) => {
+          return chatData.map((item) => {
+            let conversationId = [user.userId, userId2].sort().join("#");
+            if (item.conversationId === conversationId) {
+              return { ...item, read: "true" };
+            }
+            return item;
+          });
+        });
       }
       setLoading(false);
       setIChatData((prevValue) => [...prevValue, ...result.data.items]);
