@@ -265,7 +265,7 @@ const AddDress = () => {
       state: form.state.toLowerCase(),
       district: form.district.toLowerCase(),
       email: form.email.toLowerCase(),
-      price: form.price.toLowerCase(),
+      price: parseInt(form.price.toLowerCase()),
       s3Keys,
     };
     await axios.post(

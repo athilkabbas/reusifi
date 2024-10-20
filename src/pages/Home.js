@@ -21,8 +21,8 @@ import {
 } from "@ant-design/icons";
 import { Button, Input, Select, Space } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { Avatar, Divider, List, Skeleton } from "antd";
-import { Card } from "antd";
+import { Avatar, Divider, List, Skeleton, Radio } from "antd";
+import { Card, Typography } from "antd";
 import axios from "axios";
 import { getCurrentUser, signOut } from "@aws-amplify/auth";
 import debounce from "lodash/debounce";
@@ -38,6 +38,7 @@ const IconText = [
   "SignOut",
 ];
 const { Meta } = Card;
+const { Text, Link } = Typography;
 const capitalize = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
@@ -51,6 +52,7 @@ const App = () => {
   const scrollableDivRef = useRef(null);
   const [chatLoading, setChatLoading] = useState(false);
   const [favLoading, setFavLoading] = useState(false);
+  const [priceFilter, setPriceFilter] = useState(null);
   const [scrollLoadMoreData, setScrollLoadMoreData] = useState(false);
   const {
     data,
@@ -225,7 +227,9 @@ const App = () => {
         results = await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?limit=${limit}&lastEvaluatedKeys=${JSON.stringify(
             lastEvaluatedKeys
-          )}&search=${search.trim()}&location=${JSON.stringify(location)}`,
+          )}&search=${search.trim()}&location=${JSON.stringify(
+            location
+          )}&priceFilter=${priceFilter}`,
           { headers: { Authorization: "xxx" } }
         );
         setLastEvaluatedKeys(results.data.lastEvaluatedKeys);
@@ -248,7 +252,7 @@ const App = () => {
         results = await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?limit=${limit}&lastEvaluatedKey=${JSON.stringify(
             lastEvaluatedKey
-          )}&location=${JSON.stringify(location)}`,
+          )}&location=${JSON.stringify(location)}&priceFilter=${priceFilter}`,
           { headers: { Authorization: "xxx" } }
         );
         setLastEvaluatedKey(results.data.lastEvaluatedKey);
@@ -283,7 +287,7 @@ const App = () => {
         clearTimeout(timer.current);
       }
     };
-  }, [search, location]);
+  }, [search, location, priceFilter]);
 
   const navigate = useNavigate();
   const handleNavigation = (event) => {
@@ -315,6 +319,13 @@ const App = () => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+  const onChangePriceFilter = (event) => {
+    setLastEvaluatedKeys({});
+    setLastEvaluatedKey(null);
+    setData([]);
+    setInitialLoad(true);
+    setPriceFilter(event.target.value);
+  };
   return (
     <Layout style={{ height: "100vh", overflow: "hidden" }}>
       <div
@@ -379,6 +390,14 @@ const App = () => {
               options={districts}
             />
           )}
+        </Space.Compact>
+        <Space.Compact block={true} size="large" style={{ padding: "10px" }}>
+          <Text>Price</Text>
+          &nbsp; &nbsp; &nbsp; &nbsp;
+          <Radio.Group onChange={onChangePriceFilter} value={priceFilter}>
+            <Radio value={"true"}>Low to High</Radio>
+            <Radio value={"false"}>High to Low</Radio>
+          </Radio.Group>
         </Space.Compact>
       </div>
       <Content style={{ padding: "0 15px" }}>
