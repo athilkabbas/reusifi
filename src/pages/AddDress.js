@@ -442,6 +442,7 @@ const AddDress = () => {
                   listType="picture-card"
                   fileList={fileList}
                   onPreview={handlePreview}
+                  beforeUpload={() => false}
                   onChange={handleChangeImage}
                   maxCount={6}
                   multiple
