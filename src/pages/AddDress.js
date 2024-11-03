@@ -200,7 +200,14 @@ const AddDress = () => {
     setPreviewOpen(true);
   };
   const handleChangeImage = (file) => {
-    setFileList(file.fileList);
+    if (file.file.size / 1024 / 1024 > 30) {
+      info();
+      return;
+    }
+    let newFileList = file.fileList.filter(
+      (file) => file.size / 1024 / 1024 <= 30
+    );
+    setFileList(newFileList);
   };
   useEffect(() => {
     if (data.length > 0) {
@@ -242,11 +249,6 @@ const AddDress = () => {
     };
     let s3Keys = [];
     for (let i = 0; i < form.images.length; i++) {
-      if (form.images[i].size / 1024 / 1024 > 30) {
-        setLoading(false);
-        info();
-        return;
-      }
       let compressImage = await imageCompression(form.images[i], options);
       const url = await axios.get(
         `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getUrl?email=${form.email}`,

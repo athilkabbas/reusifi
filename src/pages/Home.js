@@ -223,7 +223,6 @@ const App = () => {
       setLoading(true);
       let results;
       if (search) {
-        console.log("adasd");
         results = await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?limit=${limit}&lastEvaluatedKeys=${JSON.stringify(
             lastEvaluatedKeys
@@ -234,7 +233,6 @@ const App = () => {
         );
         setLastEvaluatedKeys(results.data.lastEvaluatedKeys);
         let lastEvaluatedKeyFlag = false;
-        console.log(results.data.lastEvaluatedKeys, "adsasd");
         for (let lastEvaluatedKeyItem in results.data.lastEvaluatedKeys) {
           if (
             results.data.lastEvaluatedKeys[lastEvaluatedKeyItem] !== "COMPLETE"
