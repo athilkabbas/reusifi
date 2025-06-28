@@ -299,9 +299,8 @@ const Ads = () => {
             hasMore={adHasMore}
             loader={
               <Skeleton
-                avatar
                 paragraph={{
-                  rows: 1,
+                  rows: 4,
                 }}
                 active
               />
@@ -376,7 +375,14 @@ const Ads = () => {
                       <Empty description="No items found" />
                     </div>)
             )}
-            {(loading || chatLoading) && <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />}  fullscreen/>}
+            {(loading || chatLoading) &&
+             <Skeleton
+                paragraph={{
+                  rows: 16,
+                }}
+                active
+              />
+            }
           </InfiniteScroll>
         </div>
       </Content>

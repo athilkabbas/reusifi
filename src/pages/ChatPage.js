@@ -414,9 +414,8 @@ const ChatPage = () => {
             hasMore={chatHasMore}
             loader={
               <Skeleton
-                avatar
                 paragraph={{
-                  rows: 1,
+                  rows: 4,
                 }}
                 active
               />
@@ -434,7 +433,7 @@ const ChatPage = () => {
                       <Badge dot={item.read === "false" ? true : false}>
                         <Card
                           style={{
-                            height: "15vh",
+                            height: "150px",
                             width: !isMobile ? "50vw" : "calc(100vw - 50px)",
                           }}
                           onClick={() => {
@@ -509,19 +508,27 @@ const ChatPage = () => {
                   </Row>
                 );
               })}
-              {
-                chatData.length === 0 && (<div
-                                      style={{
-                                        height: "50vh",
-                                        display: "flex",
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                      }}
-                                    >
-                                      <Empty description="No items found" />
-                                    </div>)
-              }
-            {(loading || chatLoading) && <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />}  fullscreen/>}
+            {(loading || chatLoading) && 
+            <Skeleton
+              paragraph={{
+                rows: 16,
+              }}
+              active
+            />
+            }
+            {
+              chatData.length === 0 && !loading && !chatLoading && 
+              (<div
+                  style={{
+                    height: "50vh",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Empty description="No items found" />
+                </div>)
+            }
           </InfiniteScroll>
         </div>
       </Content>

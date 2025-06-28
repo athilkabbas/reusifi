@@ -304,9 +304,8 @@ const App = () => {
             hasMore={favHasMore}
             loader={
               <Skeleton
-                avatar
                 paragraph={{
-                  rows: 1,
+                  rows: 4,
                 }}
                 active
               />
@@ -408,7 +407,12 @@ const App = () => {
               </div>)
             )}
             {(loading || chatLoading || favLoading || handleFavLoading) && (
-              <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />}  fullscreen/>
+              <Skeleton
+                paragraph={{
+                  rows: 16,
+                }}
+                active
+              />
             )}
           </InfiniteScroll>
         </div>

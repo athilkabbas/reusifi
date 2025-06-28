@@ -522,7 +522,14 @@ const AddDress = () => {
                           </Space>
             </>
           )}
-          {(loading || chatLoading) && <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />}  fullscreen/>}
+          {(loading || chatLoading) && 
+           <Skeleton
+              paragraph={{
+                rows: 16,
+              }}
+              active
+            />
+          }
         </div>
       </Content>
       {isMobile && <Footer

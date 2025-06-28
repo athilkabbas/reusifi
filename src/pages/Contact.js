@@ -189,7 +189,14 @@ const Contact = () => {
               </Text>
             </Space.Compact>
           )}
-          {loading && <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />}  fullscreen/>}
+          {loading && 
+          <Skeleton
+            paragraph={{
+              rows: 16,
+            }}
+            active
+          />
+          }
         </div>
       </Content>
       {isMobile && <Footer

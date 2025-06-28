@@ -464,9 +464,8 @@ function formatChatTimestamp(timestamp) {
             inverse={true}
             loader={
               <Skeleton
-                avatar
                 paragraph={{
-                  rows: 1,
+                  rows: 4,
                 }}
                 active
               />
@@ -555,7 +554,14 @@ function formatChatTimestamp(timestamp) {
                 })}
               </>
             )}
-            {(loading || chatLoading) && <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />}  fullscreen/>}
+            {(loading || chatLoading) && 
+             <Skeleton
+                paragraph={{
+                  rows: 16,
+                }}
+                active
+              />
+            }
           </InfiniteScroll>
         </div>
       </Content>

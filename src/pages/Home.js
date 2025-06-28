@@ -217,6 +217,7 @@ const App = () => {
     const currentUser = await getCurrentUser();
     setUser(currentUser);
     if (!initialLoad) {
+      setLoading(false)
       setInitialLoad(true);
       setScrollLoadMoreData(true);
       return;
@@ -440,9 +441,8 @@ const App = () => {
             hasMore={hasMore}
             loader={
               <Skeleton
-                avatar
                 paragraph={{
-                  rows: 1,
+                  rows: 4,
                 }}
                 active
               />
@@ -548,7 +548,12 @@ const App = () => {
                 <Empty description="No items found" />
               </div>))}
             {(loading || chatLoading || favLoading || handleFavLoading) && (
-              <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} fullscreen/>
+             <Skeleton
+                paragraph={{
+                  rows: 16,
+                }}
+                active
+              />
             )}
           </InfiniteScroll>
         </div>
