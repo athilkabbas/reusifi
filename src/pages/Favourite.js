@@ -406,7 +406,7 @@ const App = () => {
                 <Empty description="No items found" />
               </div>)
             )}
-            {(loading || chatLoading || favLoading || handleFavLoading) && (
+            {(loading || chatLoading || favLoading) && (
               <Skeleton
                 paragraph={{
                   rows: 8,
@@ -414,6 +414,11 @@ const App = () => {
                 active
               />
             )}
+              {
+                handleFavLoading && (
+                  <Spin fullscreen indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
+                )
+              }
           </InfiniteScroll>
         </div>
       </Content>

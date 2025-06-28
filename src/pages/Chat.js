@@ -444,11 +444,11 @@ function formatChatTimestamp(timestamp) {
             overflow: "scroll",
             display: "flex",
             flexDirection: "column-reverse",
-            height: "100%",
-            position: "fixed",
-            bottom: "120px",
-            width: "calc(100% - 10px)",
-            paddingTop: "120px",
+            height: !isMobile ? "calc(100% - 120px)" : "100%",
+            position: !isMobile ? "relative" : "fixed",
+            bottom: !isMobile ? "0px" : "120px",
+            width: "100%",
+            paddingTop: !isMobile ? "0px" : "120px",
           }}
         >
           <InfiniteScroll
