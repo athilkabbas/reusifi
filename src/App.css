@@ -61,3 +61,11 @@
 .ant-upload-list {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1)
 }
+
+.ant-menu-overflow-item-rest.ant-menu-submenu {
+  background: #6366F1 !important;
+}
+
+.ant-menu-overflow-item-rest.ant-menu-submenu:hover {
+  background: #4f46e5 !important; /* optional hover color */
+}

@@ -354,7 +354,7 @@ const App = () => {
           background: "#F9FAFB",
         }}
       >
-        <Space.Compact block={true} size="large" style={{ boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)"}}>
+        <Space.Compact block={true} size="large">
           <Input
             addonBefore={<SearchOutlined />}
             value={search}
@@ -366,6 +366,7 @@ const App = () => {
               setSearch(event.target.value);
             }}
             placeholder="Search"
+            style={{ width: !isMobile ? "30vw" : "60vw" ,boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)", borderRadius: "7px"}}
           />
           <Select
             onChange={(value) => {
@@ -375,7 +376,9 @@ const App = () => {
             }}
             showSearch
             style={{
-              width: "30vw",
+              width: !isMobile ? "10vw" : "30vw",
+              boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+              borderRadius: "7px"
             }}
             value={location.state}
             placeholder="State"
