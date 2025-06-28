@@ -13,9 +13,11 @@ import {
   MailOutlined,
   HeartOutlined,
   ProductFilled,
+  LoadingOutlined
 } from "@ant-design/icons";
 import { getCurrentUser, signOut } from "@aws-amplify/auth";
 import { Context } from "../context/provider";
+import { useIsMobile } from "../hooks/windowSize";
 const IconText = [
   "Home",
   "Upload",
@@ -25,7 +27,7 @@ const IconText = [
   "Favourites",
   "SignOut",
 ];
-const { Content, Footer } = Layout;
+const { Content, Footer, Header } = Layout;
 const { Text, Link } = Typography;
 const Contact = () => {
   const location = useLocation();
@@ -123,6 +125,7 @@ const Contact = () => {
   useEffect(() => {
     setHomeInitialLoad(false);
   }, []);
+  const isMobile = useIsMobile()
   const items = [
     HomeFilled,
     UploadOutlined,
@@ -154,6 +157,16 @@ const Contact = () => {
   } = theme.useToken();
   return (
     <Layout style={{ height: "100vh", overflow: "hidden" }}>
+       {!isMobile && <Header style={{ display: 'flex', alignItems: 'center', padding: '0px' }}>
+              <Menu
+                onClick={(event) => handleNavigation(event)}
+                theme="dark"
+                mode="horizontal"
+                defaultSelectedKeys={["5"]}
+                items={items}
+                style={{ minWidth: 0, flex: "auto",background: "#6366F1" }}
+              />
+            </Header>}
       <Content style={{ padding: "0 15px" }}>
         <div
           style={{
@@ -176,10 +189,10 @@ const Contact = () => {
               </Text>
             </Space.Compact>
           )}
-          {loading && <Spin fullscreen />}
+          {loading && <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />}  fullscreen/>}
         </div>
       </Content>
-      <Footer
+      {isMobile && <Footer
         style={{
           position: "fixed",
           bottom: 0,
@@ -198,11 +211,11 @@ const Contact = () => {
           defaultSelectedKeys={["5"]}
           items={items}
           style={{
-            flex: 1,
-            minWidth: 0,
+            flex: "auto",
+            minWidth: 0,background: "#6366F1"
           }}
         />
-      </Footer>
+      </Footer>}
     </Layout>
   );
 };

@@ -7,8 +7,8 @@ import { Select, Badge } from "antd";
 import { Breadcrumb, Layout, Menu, theme, message } from "antd";
 import { states, districts, districtMap } from "../helpers/locations";
 import { PlusOutlined } from "@ant-design/icons";
-import { Image, Upload } from "antd";
-import { Button } from "antd";
+import { Image, Upload, Space } from "antd";
+import { Button ,Typography} from "antd";
 import axios from "axios";
 import { Carousel } from "antd";
 import {
@@ -19,9 +19,11 @@ import {
   MailOutlined,
   HeartOutlined,
   ProductFilled,
+  LoadingOutlined
 } from "@ant-design/icons";
 import { getCurrentUser, signOut } from "@aws-amplify/auth";
 import { Context } from "../context/provider";
+import { useIsMobile } from "../hooks/windowSize";
 const IconText = [
   "Home",
   "Upload",
@@ -89,7 +91,7 @@ const Details = () => {
   const info = () => {
     messageApi.info("No longer available");
   };
-
+const { Text, Link } = Typography;
   useEffect(() => {
     const getChatCount = async () => {
       setChatLoading(true);
@@ -214,16 +216,24 @@ const Details = () => {
       console.log(err);
     }
   };
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
+  const isMobile = useIsMobile()
   return (
-    <Layout style={{ height: "100vh", overflow: "hidden" }}>
+    <Layout style={{ height: "100vh", overflow: "hidden",background:"#F9FAFB" }}>
+       {!isMobile && <Header style={{ display: 'flex', alignItems: 'center', padding: '0px' }}>
+              <Menu
+                onClick={(event) => handleNavigation(event)}
+                theme="dark"
+                mode="horizontal"
+                defaultSelectedKeys={["0"]}
+                items={items}
+                style={{ minWidth: 0, flex: "auto",background: "#6366F1" }}
+              />
+            </Header>}
       <Content style={{ padding: "0 15px" }}>
         <div
           style={{
-            background: colorBgContainer,
-            borderRadius: borderRadiusLG,
+            background: "#F9FAFB",
+            borderRadius: '0px',
             overflowY: "scroll",
             height: "100%",
             overflowX: "hidden",
@@ -233,53 +243,109 @@ const Details = () => {
           {contextHolder}
           {!loading && !chatLoading && images.length > 0 && (
             <>
-              <Row style={{ padding: 20 }}>
-                <Col xs={24} sm={5}>
-                  <Carousel>
-                    {images.map((image, index) => {
-                      return <Image key={index} src={image} />;
-                    })}
-                  </Carousel>
-                </Col>
-              </Row>
-              <Row style={{ padding: 20 }}>
-                <Col xs={24} sm={5}>
-                  <Input value={item["item"]["title"]} />
-                </Col>
-              </Row>
-              <Row style={{ padding: 20 }}>
-                <Col xs={24} sm={10}>
-                  <TextArea value={item["item"]["description"]} />
-                </Col>
-              </Row>
-              <Row style={{ padding: 20 }}>
-                <Col xs={24} sm={5}>
-                  <Input value={item["item"]["state"]} />
-                </Col>
-              </Row>
-              <Row style={{ padding: 20 }}>
-                <Col xs={24} sm={5}>
-                  <Input value={item["item"]["district"]} />
-                </Col>
-              </Row>
-              <Row style={{ padding: 20 }}>
-                <Col xs={24} sm={5}>
-                  <Input prefix="₹" value={item["item"]["price"]} />
-                </Col>
-              </Row>
+            <Space   block={true}
+                size="large"  
+                direction="vertical"
+                style={{
+                padding: "20px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}>
+              <Space.Compact
+              block={true}
+              size="large"
+              style={{
+                padding: "20px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+                <Carousel
+                  autoplay
+                  style={{
+                    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)"
+                  }}
+                >
+                  {images.map((image, index) => (
+                      <Image
+                      width={300}
+                        src={image}
+                        key={index}
+                      />
+
+                  ))}
+                </Carousel>
+            </Space.Compact>
+              <Space.Compact
+                block={true}
+                size="large"
+                style={{ display: "flex", alignItems: "center" }}
+              >
+              <Text style={{  width: !isMobile ? '10vw' : '25vw'}}>Title</Text>
+              <Input style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" , width: !isMobile ? '50vw' : '60vw' }} value={item["item"]["title"]} />
+              </Space.Compact>
+                <Space.Compact
+                block={true}
+                size="large"
+                style={{ display: "flex", alignItems: "center" }}
+              >
+              <Text style={{  width: !isMobile ? '10vw' : '25vw'}}>Description</Text>
+              <TextArea style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",width: !isMobile ? '50vw' : '60vw' }} value={item["item"]["description"]} />
+              </Space.Compact>
+                <Space.Compact
+                block={true}
+                size="large"
+                style={{ display: "flex", alignItems: "center" }}
+              >
+              <Text style={{  width: !isMobile ? '10vw' : '25vw'}}>State</Text>
+              <Input style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",width: !isMobile ? '50vw' : '60vw' }} value={item["item"]["state"]} />
+              </Space.Compact>
+                 <Space.Compact
+                block={true}
+                size="large"
+                style={{display: "flex", alignItems: "center" }}
+              >
+              <Text style={{  width: !isMobile ? '10vw' : '25vw'}}>District</Text>
+              <Input style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",width: !isMobile ? '50vw' : '60vw' }} value={item["item"]["district"]} />
+              </Space.Compact>
+                <Space.Compact
+                block={true}
+                size="large"
+                style={{ display: "flex", alignItems: "center" }}
+              >
+              <Text style={{  width: !isMobile ? '10vw' : '25vw'}}>Price</Text>
+              <Input style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",width: !isMobile ? '50vw' : '60vw' }}  prefix="₹" value={item["item"]["price"]} />
+              </Space.Compact>
               {ad && (
-                <Row style={{ padding: 20 }}>
-                  <Col xs={24} sm={10}>
-                    <Button danger onClick={handleDelete} type="primary">
+                     <Space.Compact
+              block={true}
+              size="large"
+              style={{
+                padding: "20px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+                  <Button style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" }} danger onClick={handleDelete} type="primary">
                       Delete
                     </Button>
-                  </Col>
-                </Row>
+            </Space.Compact>
               )}
               {!ad && (
-                <Row style={{ padding: 20 }}>
-                  <Col xs={24} sm={10}>
-                    <Button
+                  <Space.Compact
+              block={true}
+              size="large"
+              style={{
+                padding: "20px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+                    <Button style={{ background: '#10B981' }}
                       onClick={() => {
                         navigate("/chat", { state: { recipient: item } });
                       }}
@@ -287,15 +353,15 @@ const Details = () => {
                     >
                       Chat
                     </Button>
-                  </Col>
-                </Row>
+            </Space.Compact>
               )}
+            </Space>
             </>
           )}
-          {(loading || chatLoading) && <Spin fullscreen />}
+          {(loading || chatLoading) && <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />}  fullscreen/>}
         </div>
       </Content>
-      <Footer
+      {isMobile && <Footer
         style={{
           position: "fixed",
           bottom: 0,
@@ -314,11 +380,11 @@ const Details = () => {
           defaultSelectedKeys={["0"]}
           items={items}
           style={{
-            flex: 1,
-            minWidth: 0,
+            flex: "auto",
+            minWidth: 0,background: "#6366F1"
           }}
         />
-      </Footer>
+      </Footer>}
     </Layout>
   );
 };

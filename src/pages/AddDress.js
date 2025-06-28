@@ -19,8 +19,10 @@ import {
   MailOutlined,
   HeartOutlined,
   ProductFilled,
+  LoadingOutlined
 } from "@ant-design/icons";
 import { Context } from "../context/provider";
+import { useIsMobile } from "../hooks/windowSize";
 const { Text, Link } = Typography;
 const { TextArea } = Input;
 const IconText = [
@@ -287,6 +289,7 @@ const AddDress = () => {
       style={{
         border: 0,
         background: "none",
+        
       }}
       type="button"
     >
@@ -329,8 +332,19 @@ const AddDress = () => {
   const infoAllFieldsMandatory = () => {
     messageApi.info("All fields are mandatory");
   };
+  const isMobile = useIsMobile()
   return (
-    <Layout style={{ height: "100vh", overflow: "hidden" }}>
+    <Layout style={{ height: "100vh", overflow: "hidden",background:"#F9FAFB" }}>
+         {!isMobile && <Header style={{ display: 'flex', alignItems: 'center', padding: '0px' }}>
+                    <Menu
+                      onClick={(event) => handleNavigation(event)}
+                      theme="dark"
+                      mode="horizontal"
+                      defaultSelectedKeys={["2"]}
+                      items={items}
+                      style={{ minWidth: 0, flex: "auto",background: "#6366F1" }}
+                    />
+                  </Header>}
       <Content style={{ padding: "0 15px" }}>
         <div
           style={{
@@ -350,6 +364,7 @@ const AddDress = () => {
                 style={{ padding: "10px" }}
               >
                 <Input
+                style={{ boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)"}}
                   onChange={(value) => handleChange(value, "title")}
                   placeholder="Title"
                   value={form.title}
@@ -362,6 +377,7 @@ const AddDress = () => {
                 style={{ padding: "10px" }}
               >
                 <TextArea
+                style={{ boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" }}
                   onChange={(value) => handleChange(value, "description")}
                   rows={8}
                   placeholder="Description"
@@ -383,6 +399,7 @@ const AddDress = () => {
                   showSearch
                   style={{
                     width: 190,
+                    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)"
                   }}
                   value={form.state}
                   placeholder="Select State"
@@ -408,6 +425,7 @@ const AddDress = () => {
                     showSearch
                     style={{
                       width: 190,
+                      boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)"
                     }}
                     value={form.district}
                     placeholder="Select District"
@@ -427,6 +445,7 @@ const AddDress = () => {
                 style={{ padding: "10px" }}
               >
                 <Input
+                style={{ boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" }}
                   prefix="₹"
                   onChange={(value) => handleChange(value, "price")}
                   placeholder="Price"
@@ -479,12 +498,12 @@ const AddDress = () => {
                 style={{ padding: "10px" }}
               >
                 {count < 5 && (
-                  <Button onClick={handleSubmit} type="primary">
+                  <Button style={{ background: "#10B981" }} onClick={handleSubmit} type="primary">
                     Submit
                   </Button>
                 )}
                 {count >= 5 && (
-                  <Button onClick={handleSubmit} type="primary" disabled>
+                  <Button style={{ background: "#10B981" }} onClick={handleSubmit} type="primary" disabled>
                     Submit
                   </Button>
                 )}
@@ -509,10 +528,10 @@ const AddDress = () => {
               </Space.Compact>
             </>
           )}
-          {(loading || chatLoading) && <Spin fullscreen />}
+          {(loading || chatLoading) && <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />}  fullscreen/>}
         </div>
       </Content>
-      <Footer
+      {isMobile && <Footer
         style={{
           position: "fixed",
           bottom: 0,
@@ -531,11 +550,11 @@ const AddDress = () => {
           defaultSelectedKeys={["2"]}
           items={items}
           style={{
-            flex: 1,
-            minWidth: 0,
+            flex: "auto",
+            minWidth: 0,background: "#6366F1"
           }}
         />
-      </Footer>
+      </Footer>}
     </Layout>
   );
 };

@@ -16,16 +16,18 @@ import {
   MailOutlined,
   HeartOutlined,
   ProductFilled,
+  LoadingOutlined
 } from "@ant-design/icons";
 import { Button, Input, Select, Space } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { Avatar, Divider, List, Skeleton } from "antd";
+import { Avatar, Divider, List, Skeleton, Empty } from "antd";
 import { Card, Badge } from "antd";
 import axios from "axios";
 import { getCurrentUser, signOut } from "@aws-amplify/auth";
 import debounce from "lodash/debounce";
 import { states, districts, districtMap } from "../helpers/locations";
 import { Context } from "../context/provider";
+import { useIsMobile } from "../hooks/windowSize";
 const IconText = [
   "Home",
   "Upload",
@@ -251,8 +253,19 @@ const Ads = () => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+  const isMobile = useIsMobile()
   return (
     <Layout style={{ height: "100vh", overflow: "hidden" }}>
+         {!isMobile && <Header style={{ display: 'flex', alignItems: 'center', padding: '0px', padding: '0px' }}>
+                    <Menu
+                      onClick={(event) => handleNavigation(event)}
+                      theme="dark"
+                      mode="horizontal"
+                      defaultSelectedKeys={["4"]}
+                      items={items}
+                      style={{ minWidth: 0, flex: "auto",background: "#6366F1" }}
+                    />
+                  </Header>}
       <div
         style={{
           padding: "10px",
@@ -293,11 +306,11 @@ const Ads = () => {
                 active
               />
             }
-            endMessage={<Divider plain>It is all, nothing more</Divider>}
+            endMessage={adData.length > 0 ? <Divider plain>It is all, nothing more</Divider> : ''}
             scrollableTarget="scrollableDiv"
           >
             {user && !loading && !chatLoading && (
-              <List
+              adData.length > 0 ? (<List
                 grid={{ xs: 2, gutter: 10, sm: 2, md: 2, lg: 2, xl: 2, xxl: 2 }}
                 dataSource={adData}
                 renderItem={(item) => {
@@ -345,13 +358,22 @@ const Ads = () => {
                     </>
                   );
                 }}
-              />
+              />) : (<div
+                      style={{
+                        height: "50vh",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Empty description="No items found" />
+                    </div>)
             )}
-            {(loading || chatLoading) && <Spin fullscreen />}
+            {(loading || chatLoading) && <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />}  fullscreen/>}
           </InfiniteScroll>
         </div>
       </Content>
-      <Footer
+      {isMobile && <Footer
         style={{
           position: "fixed",
           bottom: 0,
@@ -368,9 +390,9 @@ const Ads = () => {
           mode="horizontal"
           defaultSelectedKeys={["4"]}
           items={items}
-          style={{ minWidth: 0, flex: "auto" }}
+          style={{ minWidth: 0, flex: "auto",background: "#6366F1" }}
         />
-      </Footer>
+      </Footer>}
     </Layout>
   );
 };

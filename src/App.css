@@ -36,3 +36,28 @@
     transform: rotate(360deg);
   }
 }
+
+* {
+  border-color: #E5E7EB !important;
+}
+
+/* Menu background already set inline */
+.ant-menu-dark, 
+.ant-menu-dark .ant-menu-item, 
+.ant-menu-dark .ant-menu-submenu-title {
+  color: white; /* unselected item text color */
+}
+
+.ant-menu-dark .ant-menu-item:hover,
+.ant-menu-dark .ant-menu-submenu-title:hover {
+  color: #a5b4fc; /* hover text color */
+}
+
+.ant-menu-dark .ant-menu-item-selected {
+  background-color: #4f46e5 !important; /* selected item background */
+  color: white !important; /* selected item text */
+}
+
+.ant-upload-list {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1)
+}

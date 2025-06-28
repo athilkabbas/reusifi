@@ -27,8 +27,10 @@ import {
   MailOutlined,
   HeartOutlined,
   ProductFilled,
+  LoadingOutlined
 } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
+import { useIsMobile } from "../hooks/windowSize";
 const { TextArea } = Input;
 const IconText = [
   "Home",
@@ -373,9 +375,19 @@ const ChatPage = () => {
       getChats();
     }
   }, [user]);
-
+  const isMobile = useIsMobile()
   return (
     <Layout style={{ height: "100vh", overflow: "hidden" }}>
+       {!isMobile && <Header style={{ display: 'flex', alignItems: 'center', padding: '0px' }}>
+              <Menu
+                onClick={(event) => handleNavigation(event)}
+                theme="dark"
+                mode="horizontal"
+                defaultSelectedKeys={["3"]}
+                items={items}
+                style={{ minWidth: 0, flex: "auto",background: "#6366F1" }}
+              />
+            </Header>}
       <Content style={{ padding: "0 15px" }}>
         {contextHolder}
         <div
@@ -408,12 +420,7 @@ const ChatPage = () => {
                 active
               />
             }
-            endMessage={
-              <>
-                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}></Empty>
-                <Divider plain>It is all, nothing more</Divider>
-              </>
-            }
+            endMessage={chatData.length > 0 ? <Divider plain>It is all, nothing more</Divider> : ''}
             scrollableTarget="scrollableDiv"
           >
             {!loading &&
@@ -501,11 +508,23 @@ const ChatPage = () => {
                   </Row>
                 );
               })}
-            {(loading || chatLoading) && <Spin fullscreen />}
+              {
+                chatData.length === 0 && (<div
+                                      style={{
+                                        height: "50vh",
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                      }}
+                                    >
+                                      <Empty description="No items found" />
+                                    </div>)
+              }
+            {(loading || chatLoading) && <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />}  fullscreen/>}
           </InfiniteScroll>
         </div>
       </Content>
-      <Footer
+      {isMobile && <Footer
         style={{
           position: "fixed",
           bottom: 0,
@@ -524,11 +543,11 @@ const ChatPage = () => {
           defaultSelectedKeys={["3"]}
           items={items}
           style={{
-            flex: 1,
-            minWidth: 0,
+            flex: "auto",
+            minWidth: 0,background: "#6366F1"
           }}
         />
-      </Footer>
+      </Footer>}
     </Layout>
   );
 };

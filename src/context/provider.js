@@ -31,6 +31,7 @@ const Provider = ({ children }) => {
   const [favPageInitialLoad, setFavPageInitialLoad] = useState(true);
   const [adPageInitialLoad, setAdPageInitialLoad] = useState(true);
   const [chatPageInitialLoad, setChatPageInitialLoad] = useState(true);
+  const [priceFilter, setPriceFilter] = useState(null);
   return (
     <Context.Provider
       value={{
@@ -42,6 +43,8 @@ const Provider = ({ children }) => {
         setScrollPosition,
         location,
         setLocation,
+        priceFilter,
+        setPriceFilter,
         search,
         setSearch,
         lastEvaluatedKey,

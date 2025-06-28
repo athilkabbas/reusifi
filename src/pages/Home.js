@@ -18,8 +18,9 @@ import {
   MailOutlined,
   HeartOutlined,
   HeartFilled,
+  LoadingOutlined
 } from "@ant-design/icons";
-import { Button, Input, Select, Space } from "antd";
+import { Button, Input, Select, Space, Empty } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Avatar, Divider, List, Skeleton, Radio } from "antd";
 import { Card, Typography } from "antd";
@@ -28,6 +29,7 @@ import { getCurrentUser, signOut } from "@aws-amplify/auth";
 import debounce from "lodash/debounce";
 import { states, districts, districtMap } from "../helpers/locations";
 import { Context } from "../context/provider";
+import { useIsMobile } from "../hooks/windowSize";
 const IconText = [
   "Home",
   "Upload",
@@ -52,7 +54,6 @@ const App = () => {
   const scrollableDivRef = useRef(null);
   const [chatLoading, setChatLoading] = useState(false);
   const [favLoading, setFavLoading] = useState(false);
-  const [priceFilter, setPriceFilter] = useState(null);
   const [scrollLoadMoreData, setScrollLoadMoreData] = useState(false);
   const {
     data,
@@ -61,6 +62,8 @@ const App = () => {
     setSearch,
     location,
     setLocation,
+    priceFilter,
+    setPriceFilter,
     scrollPosition,
     setScrollPosition,
     initialLoad,
@@ -275,10 +278,15 @@ const App = () => {
     }
 
     // Set a new timeout
-    timer.current = setTimeout(() => {
+    if(search || Object.values(location).some((value) => value) || priceFilter){
+      setLoading(true)
+      timer.current = setTimeout(() => {
       loadMoreData();
-    }, 1500);
-
+      }, 1500);
+    }
+    else{
+      loadMoreData()
+    }
     // Cleanup function to clear the timeout on component unmount or before next effect
     return () => {
       if (timer.current) {
@@ -288,6 +296,7 @@ const App = () => {
   }, [search, location, priceFilter]);
 
   const navigate = useNavigate();
+  const isMobile = useIsMobile()
   const handleNavigation = (event) => {
     setScrollPosition(scrollableDivRef.current.scrollTop);
     switch (event.key) {
@@ -314,9 +323,7 @@ const App = () => {
         break;
     }
   };
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
+
   const onChangePriceFilter = (event) => {
     setLastEvaluatedKeys({});
     setLastEvaluatedKey(null);
@@ -325,7 +332,17 @@ const App = () => {
     setPriceFilter(event.target.value);
   };
   return (
-    <Layout style={{ height: "100vh", overflow: "hidden" }}>
+    <Layout style={{ height: "100vh", overflow: "hidden", background:"#F9FAFB" }}>
+         {!isMobile && <Header style={{ display: 'flex', alignItems: 'center', padding: '0px'  }}>
+        <Menu
+          onClick={(event) => handleNavigation(event)}
+          theme="dark"
+          mode="horizontal"
+          defaultSelectedKeys={["1"]}
+          items={items}
+          style={{ minWidth: 0, flex: "auto", background: "#6366F1" }}
+        />
+      </Header>}
       <div
         style={{
           padding: "10px",
@@ -333,9 +350,10 @@ const App = () => {
           position: "sticky",
           top: "0px",
           zIndex: 1,
+          background: "#F9FAFB",
         }}
       >
-        <Space.Compact block={true} size="large">
+        <Space.Compact block={true} size="large" style={{ boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)"}}>
           <Input
             addonBefore={<SearchOutlined />}
             value={search}
@@ -389,12 +407,12 @@ const App = () => {
             />
           )}
         </Space.Compact>
-        <Space.Compact block={true} size="large" style={{ padding: "10px" }}>
-          <Text>Price</Text>
-          &nbsp; &nbsp; &nbsp; &nbsp;
-          <Radio.Group onChange={onChangePriceFilter} value={priceFilter}>
-            <Radio value={"true"}>Low to High</Radio>
-            <Radio value={"false"}>High to Low</Radio>
+        <Space.Compact block={true} size="large" style={{ padding: "10px",display: "flex", alignItems: "center" }}>
+          <Text strong>Price</Text>
+          &nbsp; &nbsp;
+          <Radio.Group style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" }} buttonStyle="solid" onChange={onChangePriceFilter} value={priceFilter}>
+            <Radio.Button value={"true"}>Low to High</Radio.Button>
+            <Radio.Button value={"false"}>High to Low</Radio.Button>
           </Radio.Group>
         </Space.Compact>
       </div>
@@ -405,8 +423,8 @@ const App = () => {
           style={{
             padding: 5,
             height: "100%",
-            background: colorBgContainer,
-            borderRadius: borderRadiusLG,
+            background: "#F9FAFB",
+            borderRadius: '0px',
             overflowY: "scroll",
             overflowX: "hidden",
             paddingBottom: "60px",
@@ -429,11 +447,11 @@ const App = () => {
                 active
               />
             }
-            endMessage={<Divider plain>It is all, nothing more</Divider>}
+            endMessage={data.length > 0 ? <Divider plain>It is all, nothing more</Divider> : ''}
             scrollableTarget="scrollableDiv"
           >
             {user && !loading && !chatLoading && !favLoading && (
-              <List
+              data.length > 0 ? (<List
                 grid={{
                   xs: 2,
                   gutter: 10,
@@ -448,7 +466,7 @@ const App = () => {
                   return (
                     <>
                       <List.Item key={item["item"]["id"]}>
-                        <Card
+                        <Card style={{   boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" }}
                           onClick={() => {
                             setScrollPosition(
                               scrollableDivRef.current.scrollTop
@@ -506,7 +524,7 @@ const App = () => {
                               }}
                             >
                               {filterList.includes(item["item"]["uuid"]) && (
-                                <HeartFilled></HeartFilled>
+                                <HeartFilled style={{ color: '#10B981' }} ></HeartFilled>
                               )}
                               {!filterList.includes(item["item"]["uuid"]) && (
                                 <HeartOutlined></HeartOutlined>
@@ -519,14 +537,23 @@ const App = () => {
                   );
                 }}
               />
-            )}
+            ):  (<div
+                style={{
+                  height: "50vh",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Empty description="No items found" />
+              </div>))}
             {(loading || chatLoading || favLoading || handleFavLoading) && (
-              <Spin fullscreen />
+              <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} fullscreen/>
             )}
           </InfiniteScroll>
         </div>
       </Content>
-      <Footer
+      {isMobile && <Footer
         style={{
           position: "fixed",
           bottom: 0,
@@ -543,9 +570,9 @@ const App = () => {
           mode="horizontal"
           defaultSelectedKeys={["1"]}
           items={items}
-          style={{ minWidth: 0, flex: "auto" }}
+          style={{ minWidth: 0, flex: "auto",background: "#6366F1" }}
         />
-      </Footer>
+      </Footer>}
     </Layout>
   );
 };

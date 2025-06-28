@@ -23,9 +23,11 @@ import {
   MailOutlined,
   HeartOutlined,
   LogoutOutlined,
+  LoadingOutlined
 } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
 import testSpeed from "../helpers/internetSpeed";
+import { useIsMobile } from "../hooks/windowSize";
 const { TextArea } = Input;
 const IconText = [
   "Home",
@@ -378,6 +380,8 @@ const Chat = () => {
     setMessageValue("");
   };
 
+  const isMobile = useIsMobile()
+
   const formatTimeStamp = (timestamp) => {
     const date = new Date(timestamp);
 
@@ -395,6 +399,16 @@ const Chat = () => {
 
   return (
     <Layout style={{ height: "100vh", overflow: "hidden" }}>
+         {!isMobile && <Header style={{ display: 'flex', alignItems: 'center', padding: '0px' }}>
+                    <Menu
+                      onClick={(event) => handleNavigation(event)}
+                      theme="dark"
+                      mode="horizontal"
+                      defaultSelectedKeys={["0"]}
+                      items={items}
+                      style={{ minWidth: 0, flex: "auto",background: "#6366F1" }}
+                    />
+                  </Header>}
       <Content>
         <div
           id="scrollableDiv"
@@ -516,7 +530,7 @@ const Chat = () => {
                 })}
               </>
             )}
-            {(loading || chatLoading) && <Spin fullscreen />}
+            {(loading || chatLoading) && <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />}  fullscreen/>}
           </InfiniteScroll>
         </div>
       </Content>
@@ -540,7 +554,7 @@ const Chat = () => {
           send
         </Button>
       </Space.Compact>
-      <Footer
+      {isMobile && <Footer
         style={{
           position: "fixed",
           bottom: 0,
@@ -559,11 +573,11 @@ const Chat = () => {
           defaultSelectedKeys={["0"]}
           items={items}
           style={{
-            flex: 1,
-            minWidth: 0,
+            flex: "auto",
+            minWidth: 0,background: "#6366F1"
           }}
         />
-      </Footer>
+      </Footer>}
     </Layout>
   );
 };
