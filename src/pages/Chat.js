@@ -397,8 +397,33 @@ const Chat = () => {
     return formattedDate;
   };
 
+function formatChatTimestamp(timestamp) {
+  const date = new Date(timestamp);
+  const now = new Date();
+
+  const isToday = date.toDateString() === now.toDateString();
+
+  const yesterday = new Date();
+  yesterday.setDate(now.getDate() - 1);
+  const isYesterday = date.toDateString() === yesterday.toDateString();
+
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear();
+
+  const timeString = date.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
+  if (isToday) return timeString;
+  if (isYesterday) return `Yesterday ${timeString}`;
+
+  return `${day}/${month}/${year} ${timeString}`;
+}
+
   return (
-    <Layout style={{ height: "100vh", overflow: "hidden" }}>
+    <Layout style={{ height: "100vh", overflow: "hidden", background: "#F9FAFB", }}>
          {!isMobile && <Header style={{ display: 'flex', alignItems: 'center', padding: '0px' }}>
                     <Menu
                       onClick={(event) => handleNavigation(event)}
@@ -414,8 +439,8 @@ const Chat = () => {
           id="scrollableDiv"
           ref={scrollableDivRef}
           style={{
-            background: colorBgContainer,
-            borderRadius: borderRadiusLG,
+            background: "#F9FAFB",
+            borderRadius: "0px",
             overflow: "scroll",
             display: "flex",
             flexDirection: "column-reverse",
@@ -431,6 +456,7 @@ const Chat = () => {
               overflowX: "hidden",
               display: "flex",
               flexDirection: "column-reverse",
+              background: "#F9FAFB",
             }}
             dataLength={ichatData.length}
             next={getChats}
@@ -447,7 +473,6 @@ const Chat = () => {
             }
             endMessage={
               <>
-                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}></Empty>
                 <Divider plain>It is all, nothing more</Divider>
               </>
             }
@@ -462,7 +487,7 @@ const Chat = () => {
                       <Row key={item.timestamp} style={{ padding: "10px" }}>
                         <Col xs={12} offset={12}>
                           <div
-                            style={{ display: "flex", flexDirection: "column" }}
+                            style={{ display: "flex", flexDirection: "column", background: "#E5E7EB",borderRadius: "16px 16px 4px 16px", padding: "10px" }}
                           >
                             <div
                               style={{
@@ -482,7 +507,7 @@ const Chat = () => {
                               style={{ display: "flex", justifyContent: "end" }}
                             >
                               <Text style={{ fontSize: "10px" }}>
-                                {formatTimeStamp(item.timestamp)}
+                                {formatChatTimestamp(item.timestamp)}
                               </Text>
                             </div>
                           </div>
@@ -494,7 +519,7 @@ const Chat = () => {
                       <Row key={item.timestamp} style={{ padding: "10px" }}>
                         <Col xs={12}>
                           <div
-                            style={{ display: "flex", flexDirection: "column" }}
+                            style={{ display: "flex", flexDirection: "column", background: "#E0E7FF",borderRadius: "16px 16px 16px 4px", padding:"10px" }}
                           >
                             <div
                               style={{
@@ -519,7 +544,7 @@ const Chat = () => {
                               }}
                             >
                               <Text style={{ fontSize: "10px" }}>
-                                {formatTimeStamp(item.timestamp)}
+                                {formatChatTimestamp(item.timestamp)}
                               </Text>
                             </div>
                           </div>
@@ -550,7 +575,7 @@ const Chat = () => {
           placeholder="Enter message"
           value={messageValue}
         />
-        <Button type="primary" onClick={() => handleSubmit()}>
+        <Button style={{ background: '#10B981' }} type="primary" onClick={() => handleSubmit()}>
           send
         </Button>
       </Space.Compact>

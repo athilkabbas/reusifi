@@ -250,27 +250,29 @@ const { Text, Link } = Typography;
                 padding: "20px",
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "center",
+                marginTop: '30px'
               }}>
               <Space.Compact
               block={true}
               size="large"
               style={{
-                padding: "20px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
+                display: "flex"
               }}
             >
                 <Carousel
-                  autoplay
+                arrows
+                autoplay
+                autoplaySpeed={1000}
                   style={{
-                    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)"
+                    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+                    width: 250,
+                    height: 300
                   }}
                 >
                   {images.map((image, index) => (
                       <Image
-                      width={300}
+                      width={250}
+                      height={300}
                         src={image}
                         key={index}
                       />
@@ -278,58 +280,65 @@ const { Text, Link } = Typography;
                   ))}
                 </Carousel>
             </Space.Compact>
-              <Space.Compact
+            <Space  block={true}
+                size="large"  
+                direction="vertical"
+                style={{
+                marginTop: "30px",
+                display: "flex",
+                alignItems: "center"
+              }}>
+                                <Space.Compact
                 block={true}
                 size="large"
                 style={{ display: "flex", alignItems: "center" }}
               >
-              <Text style={{  width: !isMobile ? '10vw' : '25vw'}}>Title</Text>
-              <Input style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" , width: !isMobile ? '50vw' : '60vw' }} value={item["item"]["title"]} />
+              <Text strong style={{  width: !isMobile ? '10vw' : '25vw'}}>Title</Text>
+              <Input style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" , width: !isMobile ? '35vw' : '60vw' }} value={item["item"]["title"]} />
               </Space.Compact>
                 <Space.Compact
                 block={true}
                 size="large"
                 style={{ display: "flex", alignItems: "center" }}
               >
-              <Text style={{  width: !isMobile ? '10vw' : '25vw'}}>Description</Text>
-              <TextArea style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",width: !isMobile ? '50vw' : '60vw' }} value={item["item"]["description"]} />
+              <Text strong style={{  width: !isMobile ? '10vw' : '25vw'}}>Description</Text>
+              <TextArea  autoSize={{ minRows: 2, maxRows: 5 }} style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",width: !isMobile ? '35vw' : '60vw' }} value={item["item"]["description"]} />
               </Space.Compact>
                 <Space.Compact
                 block={true}
                 size="large"
                 style={{ display: "flex", alignItems: "center" }}
               >
-              <Text style={{  width: !isMobile ? '10vw' : '25vw'}}>State</Text>
-              <Input style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",width: !isMobile ? '50vw' : '60vw' }} value={item["item"]["state"]} />
+              <Text strong style={{  width: !isMobile ? '10vw' : '25vw'}}>State</Text>
+              <Input style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",width: !isMobile ? '35vw' : '60vw' }} value={item["item"]["state"]} />
               </Space.Compact>
                  <Space.Compact
                 block={true}
                 size="large"
                 style={{display: "flex", alignItems: "center" }}
               >
-              <Text style={{  width: !isMobile ? '10vw' : '25vw'}}>District</Text>
-              <Input style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",width: !isMobile ? '50vw' : '60vw' }} value={item["item"]["district"]} />
+              <Text strong style={{  width: !isMobile ? '10vw' : '25vw'}}>District</Text>
+              <Input style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",width: !isMobile ? '35vw' : '60vw' }} value={item["item"]["district"]} />
               </Space.Compact>
                 <Space.Compact
                 block={true}
                 size="large"
                 style={{ display: "flex", alignItems: "center" }}
               >
-              <Text style={{  width: !isMobile ? '10vw' : '25vw'}}>Price</Text>
-              <Input style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",width: !isMobile ? '50vw' : '60vw' }}  prefix="₹" value={item["item"]["price"]} />
+              <Text strong style={{  width: !isMobile ? '10vw' : '25vw'}}>Price</Text>
+              <Input style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",width: !isMobile ? '35vw' : '60vw' }}  prefix="₹" value={item["item"]["price"]} />
               </Space.Compact>
+            </Space>
               {ad && (
                      <Space.Compact
               block={true}
               size="large"
               style={{
-                padding: "20px",
                 display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
+                marginTop: '30px'
               }}
             >
-                  <Button style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" }} danger onClick={handleDelete} type="primary">
+                  <Button danger onClick={handleDelete} type="primary">
                       Delete
                     </Button>
             </Space.Compact>
@@ -339,10 +348,8 @@ const { Text, Link } = Typography;
               block={true}
               size="large"
               style={{
-                padding: "20px",
                 display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
+                marginTop: '30px'
               }}
             >
                     <Button style={{ background: '#10B981' }}

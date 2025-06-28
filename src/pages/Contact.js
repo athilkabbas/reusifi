@@ -170,8 +170,8 @@ const Contact = () => {
       <Content style={{ padding: "0 15px" }}>
         <div
           style={{
-            background: colorBgContainer,
-            borderRadius: borderRadiusLG,
+            background: "#F9FAFB",
+            borderRadius: "0px",
             overflowY: "scroll",
             height: "100%",
             overflowX: "hidden",

@@ -348,8 +348,8 @@ const AddDress = () => {
       <Content style={{ padding: "0 15px" }}>
         <div
           style={{
-            background: colorBgContainer,
-            borderRadius: borderRadiusLG,
+            background: '#F9FAFB',
+            borderRadius: '0px',
             overflow: "scroll",
             height: "100%",
             paddingBottom: "60px",
@@ -358,13 +358,19 @@ const AddDress = () => {
           {contextHolder}
           {!loading && !chatLoading && user && (
             <>
-              <Space.Compact
+               <Space   block={true}
+                            size="large"  
+                            direction="vertical"
+                            style={{
+                            padding: "20px",
+                            display: "flex"
+                          }}>
+      <Space.Compact
                 block={true}
                 size="large"
-                style={{ padding: "10px" }}
               >
                 <Input
-                style={{ boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)"}}
+                style={{ boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)", width: !isMobile ? '50vw' : '90vw', marginTop: '30px'}}
                   onChange={(value) => handleChange(value, "title")}
                   placeholder="Title"
                   value={form.title}
@@ -374,12 +380,11 @@ const AddDress = () => {
               <Space.Compact
                 block={true}
                 size="large"
-                style={{ padding: "10px" }}
               >
                 <TextArea
-                style={{ boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" }}
+                style={{ boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" ,width: !isMobile ? '50vw' : '90vw'}}
                   onChange={(value) => handleChange(value, "description")}
-                  rows={8}
+                  autoSize={{ minRows: 8, maxRows: 8 }}
                   placeholder="Description"
                   maxLength={300}
                   value={form.description}
@@ -388,7 +393,6 @@ const AddDress = () => {
               <Space.Compact
                 block={true}
                 size="large"
-                style={{ padding: "10px" }}
               >
                 <Select
                   onChange={(value) => {
@@ -416,7 +420,6 @@ const AddDress = () => {
                 <Space.Compact
                   block={true}
                   size="large"
-                  style={{ padding: "10px" }}
                 >
                   <Select
                     onChange={(value) => {
@@ -442,10 +445,9 @@ const AddDress = () => {
               <Space.Compact
                 block={true}
                 size="large"
-                style={{ padding: "10px" }}
               >
                 <Input
-                style={{ boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" }}
+                style={{ boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",width: !isMobile ? '50vw' : '90vw' }}
                   prefix="₹"
                   onChange={(value) => handleChange(value, "price")}
                   placeholder="Price"
@@ -456,7 +458,6 @@ const AddDress = () => {
               <Space.Compact
                 block={true}
                 size="large"
-                style={{ padding: "10px" }}
               >
                 <Upload
                   accept="image/png,image/jpeg"
@@ -488,22 +489,16 @@ const AddDress = () => {
               <Space.Compact
                 block={true}
                 size="large"
-                style={{ padding: "10px" }}
               >
                 <Text>Max 6 images</Text>
               </Space.Compact>
               <Space.Compact
                 block={true}
                 size="large"
-                style={{ padding: "10px" }}
+                style={{ display: "flex", justifyContent: !isMobile ? 'flex-start' : 'center', marginTop: '30px' }}
               >
                 {count < 5 && (
-                  <Button style={{ background: "#10B981" }} onClick={handleSubmit} type="primary">
-                    Submit
-                  </Button>
-                )}
-                {count >= 5 && (
-                  <Button style={{ background: "#10B981" }} onClick={handleSubmit} type="primary" disabled>
+                  <Button style={{ background: "#10B981" }} onClick={handleSubmit} type="primary" disabled={count >= 5 ? true : false}>
                     Submit
                   </Button>
                 )}
@@ -511,7 +506,6 @@ const AddDress = () => {
               <Space.Compact
                 block={true}
                 size="large"
-                style={{ padding: "10px" }}
               >
                 {count < 5 && (
                   <Text>
@@ -522,10 +516,10 @@ const AddDress = () => {
               <Space.Compact
                 block={true}
                 size="large"
-                style={{ padding: "10px" }}
               >
                 {count >= 5 && <Text>Max 5 ads</Text>}
               </Space.Compact>
+                          </Space>
             </>
           )}
           {(loading || chatLoading) && <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />}  fullscreen/>}

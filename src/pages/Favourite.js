@@ -280,22 +280,22 @@ const App = () => {
                 style={{ minWidth: 0, flex: "auto",background: "#6366F1" }}
               />
             </Header>}
-      <Content style={{ padding: "0 15px" }}>
+      <Content style={{ padding: "0 15px", marginTop: '30px' }}>
         <div
           id="scrollableDiv"
           ref={scrollableDivRef}
           style={{
             padding: 5,
             height: "100%",
-            background: colorBgContainer,
-            borderRadius: borderRadiusLG,
+            background: "#F9FAFB",
+            borderRadius: "0px",
             overflowY: "scroll",
             overflowX: "hidden",
             paddingBottom: "60px",
           }}
         >
           <InfiniteScroll
-            style={{ overflowX: "hidden" }}
+            style={{ overflowX: "hidden",background: "#F9FAFB", }}
             dataLength={favData.length}
             next={() => {
               setScrollLoadMoreData(true);
@@ -316,13 +316,20 @@ const App = () => {
           >
             {user && !loading && !chatLoading && !favLoading && (
               favData.length > 0 ? (<List
-                grid={{ xs: 2, gutter: 10, sm: 2, md: 2, lg: 2, xl: 2, xxl: 2 }}
+                grid={{  xs: 2,
+                  gutter: 10,
+                  sm: 3,
+                  md: 3,
+                  lg: 4,
+                  xl: 6,
+                  xxl: 6 }}
                 dataSource={favData}
                 renderItem={(item) => {
                   return (
                     <>
                       <List.Item key={item["item"]["id"]}>
                         <Card
+                        style={{   boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)", height: '30vh' }}
                           onClick={() => {
                             setFavScrollPosition(
                               scrollableDivRef.current.scrollTop
@@ -352,7 +359,7 @@ const App = () => {
                               overflow: "hidden",
                             }}
                           >
-                            <b>{capitalize(item["item"]["title"])}</b>
+                            <b>{item["item"]["title"]}</b>
                           </div>
                           <div
                             style={{
@@ -377,7 +384,7 @@ const App = () => {
                               style={{ display: "flex", justifyContent: "end" }}
                             >
                               {filterList.includes(item["item"]["uuid"]) && (
-                                <HeartFilled></HeartFilled>
+                                <HeartFilled style={{ color: '#10B981' }}></HeartFilled>
                               )}
                               {!filterList.includes(item["item"]["uuid"]) && (
                                 <HeartOutlined></HeartOutlined>

@@ -431,7 +431,7 @@ const App = () => {
           }}
         >
           <InfiniteScroll
-            style={{ overflowX: "hidden" }}
+            style={{ overflowX: "hidden", background:"#F9FAFB" }}
             dataLength={data.length}
             next={() => {
               setScrollLoadMoreData(true);
@@ -455,18 +455,18 @@ const App = () => {
                 grid={{
                   xs: 2,
                   gutter: 10,
-                  sm: 2,
-                  md: 2,
-                  lg: 2,
-                  xl: 2,
-                  xxl: 2,
+                  sm: 3,
+                  md: 3,
+                  lg: 4,
+                  xl: 6,
+                  xxl: 6
                 }}
                 dataSource={data}
                 renderItem={(item) => {
                   return (
                     <>
                       <List.Item key={item["item"]["id"]}>
-                        <Card style={{   boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" }}
+                        <Card style={{   boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)", height: '30vh' }}
                           onClick={() => {
                             setScrollPosition(
                               scrollableDivRef.current.scrollTop
@@ -496,7 +496,7 @@ const App = () => {
                               overflow: "hidden",
                             }}
                           >
-                            <b>{capitalize(item["item"]["title"])}</b>
+                            <b>{item["item"]["title"]}</b>
                           </div>
                           <div
                             style={{

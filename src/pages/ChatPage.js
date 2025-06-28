@@ -394,8 +394,8 @@ const ChatPage = () => {
           id="scrollableDiv"
           ref={scrollableDivRef}
           style={{
-            background: colorBgContainer,
-            borderRadius: borderRadiusLG,
+            background: "#F9FAFB",
+            borderRadius: "0px",
             overflow: "scroll",
             height: "100%",
             paddingBottom: "60px",
@@ -404,6 +404,7 @@ const ChatPage = () => {
           <InfiniteScroll
             style={{
               overflowX: "hidden",
+              background: "#F9FAFB",
             }}
             dataLength={chatData.length}
             next={() => {
@@ -434,7 +435,7 @@ const ChatPage = () => {
                         <Card
                           style={{
                             height: "15vh",
-                            width: "calc(100vw - 50px)",
+                            width: !isMobile ? "50vw" : "calc(100vw - 50px)",
                           }}
                           onClick={() => {
                             if (item.blocked) {
@@ -458,7 +459,7 @@ const ChatPage = () => {
                               </Col>
                               <Col>
                                 {!item.blocked && (
-                                  <Dropdown overlay={menu(index)}>
+                                  <Dropdown overlay={menu(index)} trigger={['click']}>
                                     <a
                                       onClick={(e) => {
                                         e.preventDefault();
@@ -472,7 +473,7 @@ const ChatPage = () => {
                                   </Dropdown>
                                 )}
                                 {item.blocked && (
-                                  <Dropdown overlay={menuBlocked(index)}>
+                                  <Dropdown overlay={menuBlocked(index)} trigger={['click']}>
                                     <a
                                       onClick={(e) => {
                                         e.preventDefault();

@@ -255,7 +255,7 @@ const Ads = () => {
   } = theme.useToken();
   const isMobile = useIsMobile()
   return (
-    <Layout style={{ height: "100vh", overflow: "hidden" }}>
+    <Layout style={{ height: "100vh", overflow: "hidden",  background: "#F9FAFB", }}>
          {!isMobile && <Header style={{ display: 'flex', alignItems: 'center', padding: '0px', padding: '0px' }}>
                     <Menu
                       onClick={(event) => handleNavigation(event)}
@@ -275,22 +275,22 @@ const Ads = () => {
           zIndex: 1,
         }}
       ></div>
-      <Content style={{ padding: "0 15px" }}>
+      <Content style={{ padding: "0 15px", marginTop: '30px' }}>
         <div
           id="scrollableDiv"
           ref={scrollableDivRef}
           style={{
             padding: 5,
             height: "100%",
-            background: colorBgContainer,
-            borderRadius: borderRadiusLG,
+            background: "#F9FAFB",
+            borderRadius: "0px",
             overflowY: "scroll",
             overflowX: "hidden",
             paddingBottom: "60px",
           }}
         >
           <InfiniteScroll
-            style={{ overflowX: "hidden" }}
+            style={{ overflowX: "hidden",  background: "#F9FAFB", }}
             dataLength={adData.length}
             next={() => {
               setScrollLoadMoreData(true);
@@ -311,13 +311,20 @@ const Ads = () => {
           >
             {user && !loading && !chatLoading && (
               adData.length > 0 ? (<List
-                grid={{ xs: 2, gutter: 10, sm: 2, md: 2, lg: 2, xl: 2, xxl: 2 }}
+                grid={{  xs: 2,
+                  gutter: 10,
+                  sm: 3,
+                  md: 3,
+                  lg: 4,
+                  xl: 6,
+                  xxl: 6}}
                 dataSource={adData}
                 renderItem={(item) => {
                   return (
                     <>
                       <List.Item key={item["item"]["_id"]}>
                         <Card
+                        style={{   boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)", height: '30vh' }}
                           onClick={() => {
                             setAdScrollPosition(
                               scrollableDivRef.current.scrollTop
@@ -342,7 +349,7 @@ const Ads = () => {
                               overflow: "hidden",
                             }}
                           >
-                            <b>{capitalize(item["item"]["title"])}</b>
+                            <b>{item["item"]["title"]}</b>
                           </div>
                           <div
                             style={{
