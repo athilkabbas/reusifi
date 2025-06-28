@@ -368,7 +368,7 @@ const { Text, Link } = Typography;
           {(loading || chatLoading) && 
           <Skeleton
             paragraph={{
-              rows: 16,
+              rows: 8,
             }}
             active
           />

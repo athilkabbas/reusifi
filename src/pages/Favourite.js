@@ -409,7 +409,7 @@ const App = () => {
             {(loading || chatLoading || favLoading || handleFavLoading) && (
               <Skeleton
                 paragraph={{
-                  rows: 16,
+                  rows: 8,
                 }}
                 active
               />

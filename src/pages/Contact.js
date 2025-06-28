@@ -192,7 +192,7 @@ const Contact = () => {
           {loading && 
           <Skeleton
             paragraph={{
-              rows: 16,
+              rows: 8,
             }}
             active
           />
