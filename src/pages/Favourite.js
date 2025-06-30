@@ -83,6 +83,9 @@ const App = () => {
     favLastEvaluatedKey,
     setChatLastEvaluatedKey,
     setAdLastEvaluatedKey,
+    setContactInitialLoad,
+    setIChatInitialLoad,
+    setAddProductInitialLoad
   } = useContext(Context);
   const [unreadChatCount, setUnreadChatCount] = useState(0);
   const items = [
@@ -112,14 +115,13 @@ const App = () => {
     };
   });
 
-  // useEffect(() => {
-  //   if (scrollableDivRef.current && (!favInitialLoad || scrollLoadMoreData)) {
-  //     setTimeout(() => {
-  //       scrollableDivRef.current.scrollTo(0, favScrollPosition);
-  //       setScrollLoadMoreData(false);
-  //     }, 150);
-  //   }
-  // }, [favScrollPosition, favInitialLoad]);
+    useEffect(() => {
+      const getUser = async () => {
+        const currentUser = await getCurrentUser();
+        setUser(currentUser);
+      }
+      getUser()
+    },[])
 
     useEffect(() => {
     if (scrollableDivRef.current &&  !loading && !handleFavLoading) {
@@ -130,62 +132,28 @@ const App = () => {
     }
   }, [favScrollPosition,loading,favData,handleFavLoading]);
 
-  useEffect(() => {
-    if (data.length > 0) {
-      setInitialLoad(false);
-    } else {
-      setInitialLoad(true);
+    useEffect(() => {
+    const getChatCount = async () => {
+      try {
+        setChatLoading(true);
+        const result = await axios.get(
+          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
+            user.userId
+          }&count=${true}`,
+          { headers: { Authorization: "xxx" } }
+        );
+        setUnreadChatCount(result.data.count);
+        setChatLoading(false);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    if (user && favInitialLoad) {
+      getChatCount();
     }
-  }, []);
+  }, [user]);
 
-  // useEffect(() => {
-  //   const getChatCount = async () => {
-  //     try {
-  //       setChatLoading(true);
-  //       const result = await axios.get(
-  //         `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
-  //           user.userId
-  //         }&count=${true}`,
-  //         { headers: { Authorization: "xxx" } }
-  //       );
-  //       setUnreadChatCount(result.data.count);
-  //       setChatLoading(false);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   };
-  //   if (user && favPageInitialLoad) {
-  //     getChatCount();
-  //   }
-  // }, [user]);
 
-  useEffect(() => {
-    // setAdData([]);
-    setAdInitialLoad(false);
-    // setAdLastEvaluatedKey(null);
-    // setChatData([]);
-    setChatInitialLoad(false);
-    // setChatLastEvaluatedKey(null);
-    // setAdPageInitialLoad(true);
-    // setChatPageInitialLoad(true);
-  }, []);
-
-  // useEffect(() => {
-  //   const getFavList = async () => {
-  //     setFavLoading(true);
-  //     const results = await axios.get(
-  //       `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getFavourites?email=${
-  //         user.userId
-  //       }&favList=${true}`,
-  //       { headers: { Authorization: "xxx" } }
-  //     );
-  //     setFilterList([...results.data.finalResult]);
-  //     setFavLoading(false);
-  //   };
-  //   if (user && favPageInitialLoad) {
-  //     getFavList();
-  //   }
-  // }, [user]);
   const isMobile = useIsMobile()
   const handleFav = async (id, favourite) => {
     setFavScrollPosition(scrollableDivRef.current.scrollTop);
@@ -212,13 +180,6 @@ const App = () => {
   };
 
   const loadMoreData = async () => {
-    const currentUser = await getCurrentUser();
-    setUser(currentUser);
-    if (!favInitialLoad) {
-      setFavInitialLoad(true);
-      setScrollLoadMoreData(true);
-      return;
-    }
     try {
       const scrollPosition = scrollableDivRef.current.scrollTop;
       setLoading(true);
@@ -226,7 +187,7 @@ const App = () => {
 
       results = await axios.get(
         `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getFavourites?email=${
-          currentUser.userId
+          user.userId
         }&limit=${limit}&lastEvaluatedKey=${JSON.stringify(
           favLastEvaluatedKey
         )}`,
@@ -241,14 +202,17 @@ const App = () => {
       setFavData([...favData, ...results.data.finalResult]);
       setLoading(false);
       setFavScrollPosition(scrollPosition);
+      setFavInitialLoad(false)
     } catch (err) {
       setLoading(false);
       console.log(err);
     }
   };
   useEffect(() => {
-    loadMoreData();
-  }, []);
+    if(favInitialLoad){
+      loadMoreData();
+    }
+  }, [user]);
 
   const navigate = useNavigate();
   const handleNavigation = (event) => {
@@ -280,9 +244,6 @@ const App = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
-  // useEffect(() => {
-  //   setHomeInitialLoad(false);
-  // }, []);
   return (
     <Layout style={{ height: "100vh", overflow: "hidden" }}>
        {!isMobile && <Header style={{ display: 'flex', alignItems: 'center', padding: '0px' }}>

@@ -44,7 +44,7 @@ const getBase64 = (file) =>
   });
 
 const AddDress = () => {
-  const [user, setUser] = useState("");
+  const [user, setUser] = useState(null);
   const [messageApi, contextHolder] = message.useMessage();
   const [form, setForm] = useState({
     title: "",
@@ -55,19 +55,25 @@ const AddDress = () => {
     images: [],
     price: null,
   });
+    useEffect(() => {
+      const getUser = async () => {
+          let currentUser = await getCurrentUser();
+        setForm((prevValue) => {
+          return { ...prevValue, email: currentUser.userId };
+        });
+        setUser(currentUser);
+      }
+      getUser()
+    },[])
+
   useEffect(() => {
-    const fetchUser = async () => {
-      let currentUser = await getCurrentUser();
-      setForm((prevValue) => {
-        return { ...prevValue, email: currentUser.userId };
-      });
-      setUser(currentUser);
+    const getAdCount = async () => {
       try {
         setLoading(true);
         let result;
         result = await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?count=${true}&email=${
-            currentUser.userId
+            user.userId
           }`,
           { headers: { Authorization: "xxx" } }
         );
@@ -78,8 +84,10 @@ const AddDress = () => {
         console.log(err);
       }
     };
-    fetchUser();
-  }, []);
+    if(user && addProductInitialLoad){
+      getAdCount();
+    }
+  }, [user]);
 
   const [districts, setDistricts] = useState([]);
   const [count, setCount] = useState(0);
@@ -115,28 +123,33 @@ const AddDress = () => {
     setFavLastEvaluatedKey,
     setChatLastEvaluatedKey,
     setAdLastEvaluatedKey,
+    addProductInitialLoad,
+    setContactInitialLoad,
+    setIChatInitialLoad,
+    setAddProductInitialLoad
   } = useContext(Context);
 
-  // useEffect(() => {
-  //   const getChatCount = async () => {
-  //     setChatLoading(true);
-  //     try {
-  //       const result = await axios.get(
-  //         `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
-  //           user.userId
-  //         }&count=${true}`,
-  //         { headers: { Authorization: "xxx" } }
-  //       );
-  //       setUnreadChatCount(result.data.count);
-  //       setChatLoading(false);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   };
-  //   if (user) {
-  //     getChatCount();
-  //   }
-  // }, [user]);
+  useEffect(() => {
+    const getChatCount = async () => {
+      setChatLoading(true);
+      try {
+        const result = await axios.get(
+          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
+            user.userId
+          }&count=${true}`,
+          { headers: { Authorization: "xxx" } }
+        );
+        setUnreadChatCount(result.data.count);
+        setChatLoading(false);
+        setAddProductInitialLoad(false)
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    if (user && addProductInitialLoad) {
+      getChatCount();
+    }
+  }, [user]);
   const items = [
     HomeFilled,
     UploadOutlined,
@@ -211,13 +224,7 @@ const AddDress = () => {
     );
     setFileList(newFileList);
   };
-  useEffect(() => {
-    if (data.length > 0) {
-      setInitialLoad(false);
-    } else {
-      setInitialLoad(true);
-    }
-  }, []);
+
   useEffect(() => {
     setForm((prevValue) => {
       return {
@@ -281,6 +288,7 @@ const AddDress = () => {
         },
       }
     );
+    setAdPageInitialLoad(true)
     setLoading(false);
     navigate("/");
   };
@@ -303,25 +311,6 @@ const AddDress = () => {
       </div>
     </button>
   );
-
-  useEffect(() => {
-    // setFavData([]);
-    setFavInitialLoad(false);
-    // setFavLastEvaluatedKey(null);
-    // setAdData([]);
-    setAdInitialLoad(false);
-    // setAdLastEvaluatedKey(null);
-    // setChatData([]);
-    setChatInitialLoad(false);
-    // setChatLastEvaluatedKey(null);
-    // setAdPageInitialLoad(true);
-    // setFavPageInitialLoad(true);
-    // setChatPageInitialLoad(true);
-  }, []);
-
-  // useEffect(() => {
-  //   setHomeInitialLoad(false);
-  // }, []);
 
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -358,7 +347,7 @@ const AddDress = () => {
           {contextHolder}
           {!loading && !chatLoading && user && (
             <>
-               <Space   block={true}
+               <Space   
                             size="large"  
                             direction="vertical"
                             style={{
@@ -366,7 +355,7 @@ const AddDress = () => {
                             display: "flex"
                           }}>
       <Space.Compact
-                block={true}
+                
                 size="large"
               >
                 <Input
@@ -378,7 +367,7 @@ const AddDress = () => {
                 />
               </Space.Compact>
               <Space.Compact
-                block={true}
+                
                 size="large"
               >
                 <TextArea
@@ -391,7 +380,7 @@ const AddDress = () => {
                 />
               </Space.Compact>
               <Space.Compact
-                block={true}
+                
                 size="large"
               >
                 <Select
@@ -418,7 +407,7 @@ const AddDress = () => {
               </Space.Compact>
               {districts.length > 0 && (
                 <Space.Compact
-                  block={true}
+                  
                   size="large"
                 >
                   <Select
@@ -443,7 +432,7 @@ const AddDress = () => {
                 </Space.Compact>
               )}
               <Space.Compact
-                block={true}
+                
                 size="large"
               >
                 <Input
@@ -456,7 +445,7 @@ const AddDress = () => {
                 />
               </Space.Compact>
               <Space.Compact
-                block={true}
+                
                 size="large"
               >
                 <Upload
@@ -487,13 +476,13 @@ const AddDress = () => {
                 )}
               </Space.Compact>
               <Space.Compact
-                block={true}
+                
                 size="large"
               >
                 <Text>Max 6 images</Text>
               </Space.Compact>
               <Space.Compact
-                block={true}
+                
                 size="large"
                 style={{ display: "flex", justifyContent: !isMobile ? 'flex-start' : 'center', marginTop: '30px' }}
               >
@@ -504,7 +493,7 @@ const AddDress = () => {
                 )}
               </Space.Compact>
               <Space.Compact
-                block={true}
+                
                 size="large"
               >
                 {count < 5 && (
@@ -514,7 +503,7 @@ const AddDress = () => {
                 )}
               </Space.Compact>
               <Space.Compact
-                block={true}
+                
                 size="large"
               >
                 {count >= 5 && <Text>Max 5 ads</Text>}

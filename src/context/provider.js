@@ -20,6 +20,7 @@ const Provider = ({ children }) => {
   const [chatLastEvaluatedKey, setChatLastEvaluatedKey] = useState(null);
   const [favScrollPosition, setFavScrollPosition] = useState(0);
   const [favInitialLoad, setFavInitialLoad] = useState(true);
+  const [addProductInitialLoad, setAddProductInitialLoad] = useState(true);
   const [favData, setFavData] = useState([]);
   const [adScrollPosition, setAdScrollPosition] = useState(0);
   const [adInitialLoad, setAdInitialLoad] = useState(true);
@@ -32,9 +33,20 @@ const Provider = ({ children }) => {
   const [adPageInitialLoad, setAdPageInitialLoad] = useState(true);
   const [chatPageInitialLoad, setChatPageInitialLoad] = useState(true);
   const [priceFilter, setPriceFilter] = useState(null);
+  const [detailInitialLoad, setDetailInitialLoad] = useState(true)
+  const [contactInitialLoad, setContactInitialLoad] = useState(true)
+  const [iChatInitialLoad, setIChatInitialLoad] = useState(true)
   return (
     <Context.Provider
       value={{
+        contactInitialLoad,
+        setContactInitialLoad,
+        iChatInitialLoad,
+        setIChatInitialLoad,
+        addProductInitialLoad,
+        setAddProductInitialLoad,
+        detailInitialLoad,
+        setDetailInitialLoad,
         data,
         setData,
         initialLoad,

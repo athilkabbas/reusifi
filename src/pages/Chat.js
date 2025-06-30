@@ -92,29 +92,33 @@ const Chat = () => {
     setFavLastEvaluatedKey,
     setAdLastEvaluatedKey,
     setChatData,
-    setChatLastEvaluatedKey
+    setChatLastEvaluatedKey,
+    setContactInitialLoad,
+    setAddProductInitialLoad,
+    iChatInitialLoad,
+    setIChatInitialLoad,
   } = useContext(Context);
   const [chatLoading, setChatLoading] = useState(false);
-  // useEffect(() => {
-  //   const getChatCount = async () => {
-  //     try {
-  //       setChatLoading(true);
-  //       const result = await axios.get(
-  //         `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
-  //           user.userId
-  //         }&count=${true}`,
-  //         { headers: { Authorization: "xxx" } }
-  //       );
-  //       setUnreadChatCount(result.data.count);
-  //       setChatLoading(false);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   };
-  //   if (user) {
-  //     getChatCount();
-  //   }
-  // }, [user, ichatData]);
+  useEffect(() => {
+    const getChatCount = async () => {
+      try {
+        setChatLoading(true);
+        const result = await axios.get(
+          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
+            user.userId
+          }&count=${true}`,
+          { headers: { Authorization: "xxx" } }
+        );
+        setUnreadChatCount(result.data.count);
+        setChatLoading(false);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    if (user && iChatInitialLoad) {
+      getChatCount();
+    }
+  }, [user]);
   const items = [
     HomeFilled,
     UploadOutlined,
@@ -147,18 +151,6 @@ const Chat = () => {
     } else {
       setInitialLoad(true);
     }
-  }, []);
-
-  useEffect(() => {
-    // setFavData([]);
-    setFavInitialLoad(false);
-    // setFavLastEvaluatedKey(null);
-    // setAdData([]);
-    setAdInitialLoad(false);
-    // setAdLastEvaluatedKey(null);
-    // setFavPageInitialLoad(true);
-    // setAdPageInitialLoad(true);
-    // setChatPageInitialLoad(false);
   }, []);
 
   useEffect(() => {
@@ -273,6 +265,7 @@ const Chat = () => {
       }
       setLoading(false);
       setScrollPosition(scrollPosition);
+      setIChatInitialLoad(false)
     } catch (err) {
       setLoading(false);
       console.log(err);
@@ -502,7 +495,7 @@ function formatChatTimestamp(timestamp) {
               setScrollLoadMoreData(true);
             }}
             hasMore={hasMore}
-            inverse={true}
+            inverse
             loader={
               <Skeleton
                 paragraph={{
@@ -607,7 +600,6 @@ function formatChatTimestamp(timestamp) {
         </div>
       </Content>
       <Space.Compact
-        block={true}
         size="large"
         style={{
           padding: 10,

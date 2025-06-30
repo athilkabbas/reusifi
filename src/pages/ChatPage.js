@@ -131,16 +131,10 @@ const ChatPage = () => {
     setFavLastEvaluatedKey,
     setChatLastEvaluatedKey,
     setAdLastEvaluatedKey,
+    setContactInitialLoad,
+    setIChatInitialLoad,
+    setAddProductInitialLoad
   } = useContext(Context);
-  // useEffect(() => {
-  //   if (scrollableDivRef.current && (!chatInitialLoad || scrollLoadMoreData)) {
-  //     setTimeout(() => {
-  //       scrollableDivRef.current.scrollTo(0, chatScrollPosition);
-  //       setScrollLoadMoreData(false);
-  //     }, 150);
-  //   }
-  // }, [chatScrollPosition, chatInitialLoad]);
-
 
       useEffect(() => {
       if (scrollableDivRef.current &&  !loading) {
@@ -151,30 +145,26 @@ const ChatPage = () => {
       }
     }, [chatScrollPosition,loading,scrollLoadMoreData,chatData]);
 
-  // useEffect(() => {
-  //   setHomeInitialLoad(false);
-  // }, []);
-
-  // useEffect(() => {
-  //   const getChatCount = async () => {
-  //     setChatLoading(true);
-  //     try {
-  //       const result = await axios.get(
-  //         `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
-  //           user.userId
-  //         }&count=${true}`,
-  //         { headers: { Authorization: "xxx" } }
-  //       );
-  //       setUnreadChatCount(result.data.count);
-  //       setChatLoading(false);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   };
-  //   if (user && chatPageInitialLoad) {
-  //     getChatCount();
-  //   }
-  // }, [user]);
+  useEffect(() => {
+    const getChatCount = async () => {
+      setChatLoading(true);
+      try {
+        const result = await axios.get(
+          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
+            user.userId
+          }&count=${true}`,
+          { headers: { Authorization: "xxx" } }
+        );
+        setUnreadChatCount(result.data.count);
+        setChatLoading(false);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    if (user && chatInitialLoad) {
+      getChatCount();
+    }
+  }, [user]);
 
   const items = [
     HomeFilled,
@@ -395,11 +385,6 @@ const ChatPage = () => {
   };
   const getChats = async () => {
     try {
-      if (!chatInitialLoad) {
-        setChatInitialLoad(true);
-        setScrollLoadMoreData(true);
-        return;
-      }
       const scrollPosition = scrollableDivRef.current.scrollTop;
       setLoading(true);
       const result = await axios.get(
@@ -416,6 +401,7 @@ const ChatPage = () => {
         setChatHasMore(true);
       }
       setChatScrollPosition(scrollPosition);
+      setChatInitialLoad(false)
     } catch (err) {
       setLoading(false);
       console.log(err);
@@ -430,18 +416,7 @@ const ChatPage = () => {
   }, []);
 
   useEffect(() => {
-    // setFavData([]);
-    setFavInitialLoad(false);
-    // setFavLastEvaluatedKey(null);
-    // setAdData([]);
-    setAdInitialLoad(false);
-    // setAdLastEvaluatedKey(null);
-    // setAdPageInitialLoad(true);
-    // setFavPageInitialLoad(true);
-  }, []);
-
-  useEffect(() => {
-    if (user && user.userId) {
+    if (user && user.userId && chatInitialLoad) {
       getChats();
     }
   }, [user]);
@@ -497,6 +472,9 @@ const ChatPage = () => {
               !chatLoading &&
               user &&
               chatData.map((item, index) => {
+                if(item.deleted){
+                  return null
+                }
                 return (
                   <Row key={item.timestamp} style={{ padding: "10px" }}>
                     <Col span={24}>
@@ -558,7 +536,7 @@ const ChatPage = () => {
                               </Col>
                             </Row>
                           }
-                          bordered={true}
+                          bordered
                         >
                           <div
                             style={{

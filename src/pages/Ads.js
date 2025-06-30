@@ -88,27 +88,30 @@ const Ads = () => {
     setAdLastEvaluatedKey,
     setFavLastEvaluatedKey,
     setChatLastEvaluatedKey,
+    setContactInitialLoad,
+    setIChatInitialLoad,
+    setAddProductInitialLoad
   } = useContext(Context);
-  // useEffect(() => {
-  //   const getChatCount = async () => {
-  //     setChatLoading(true);
-  //     try {
-  //       const result = await axios.get(
-  //         `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
-  //           user.userId
-  //         }&count=${true}`,
-  //         { headers: { Authorization: "xxx" } }
-  //       );
-  //       setUnreadChatCount(result.data.count);
-  //       setChatLoading(false);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   };
-  //   if (user && adPageInitialLoad) {
-  //     getChatCount();
-  //   }
-  // }, [user]);
+  useEffect(() => {
+    const getChatCount = async () => {
+      setChatLoading(true);
+      try {
+        const result = await axios.get(
+          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
+            user.userId
+          }&count=${true}`,
+          { headers: { Authorization: "xxx" } }
+        );
+        setUnreadChatCount(result.data.count);
+        setChatLoading(false);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    if (user && adInitialLoad) {
+      getChatCount();
+    }
+  }, [user]);
   const items = [
     HomeFilled,
     UploadOutlined,
@@ -135,14 +138,14 @@ const Ads = () => {
       label: IconText[index],
     };
   });
-  // useEffect(() => {
-  //   if (scrollableDivRef.current && (!adInitialLoad || scrollLoadMoreData)) {
-  //     setTimeout(() => {
-  //       scrollableDivRef.current.scrollTo(0, adScrollPosition);
-  //       setScrollLoadMoreData(false);
-  //     }, 150);
-  //   }
-  // }, [adScrollPosition, adInitialLoad]);
+
+    useEffect(() => {
+      const getUser = async () => {
+        const currentUser = await getCurrentUser();
+        setUser(currentUser);
+      }
+      getUser()
+    },[])
 
         useEffect(() => {
         if (scrollableDivRef.current &&  !loading) {
@@ -152,44 +155,10 @@ const Ads = () => {
           });
         }
       }, [adScrollPosition,loading,scrollLoadMoreData,adData]);
-  
 
-  useEffect(() => {
-    if (data.length > 0) {
-      setInitialLoad(false);
-    } else {
-      setInitialLoad(true);
-    }
-  }, []);
-
-  // useEffect(() => {
-  //   setHomeInitialLoad(false);
-  // }, []);
-
-  const handleChange = (value, type) => {
-    setAdData([]);
-    setLastEvaluatedKeys({
-      tLEK: null,
-      tS1LEK: null,
-      tS2LEK: null,
-      tS3LEK: null,
-      tS4LEK: null,
-    });
-    setLastEvaluatedKey(null);
-    setLocation((prevValue) => {
-      return { ...prevValue, [type]: value };
-    });
-  };
   const [lastEvaluatedKey, setLastEvaluatedKey] = useState(null);
 
   const loadMoreData = async () => {
-    const currentUser = await getCurrentUser();
-    setUser(currentUser);
-    if (!adInitialLoad) {
-      setAdInitialLoad(true);
-      setScrollLoadMoreData(true);
-      return;
-    }
     const scrollPosition = scrollableDivRef.current.scrollTop;
     try {
       setLoading(true);
@@ -197,7 +166,7 @@ const Ads = () => {
       results = await axios.get(
         `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?limit=${limit}&lastEvaluatedKey=${JSON.stringify(
           adLastEvaluatedKey
-        )}&email=${currentUser.userId}`,
+        )}&email=${user.userId}`,
         { headers: { Authorization: "xxx" } }
       );
       setAdLastEvaluatedKey(results.data.lastEvaluatedKey);
@@ -210,6 +179,7 @@ const Ads = () => {
       setAdData([...adData, ...results.data.finalResult]);
       setLoading(false);
       setAdScrollPosition(scrollPosition);
+      setAdInitialLoad(false)
     } catch (err) {
       setLoading(false);
       console.log(err);
@@ -217,19 +187,10 @@ const Ads = () => {
   };
 
   useEffect(() => {
-    loadMoreData();
-  }, []);
-
-  useEffect(() => {
-    // setFavData([]);
-    setFavInitialLoad(false);
-    // setFavLastEvaluatedKey(null);
-    // setChatData([]);
-    setChatInitialLoad(false);
-    // setChatLastEvaluatedKey(null);
-    // setFavPageInitialLoad(true);
-    // setChatPageInitialLoad(true);
-  }, []);
+    if(adInitialLoad){
+      loadMoreData();
+    }
+  }, [user]);
 
   const navigate = useNavigate();
   const handleNavigation = (event) => {

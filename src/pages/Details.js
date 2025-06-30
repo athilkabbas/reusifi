@@ -87,31 +87,34 @@ const Details = () => {
     setLastEvaluatedKey,
     setLastEvaluatedKeys,
     setChatLastEvaluatedKey,
+    detailInitialLoad,
+    setDetailInitialLoad,
   } = useContext(Context);
   const info = () => {
     messageApi.info("No longer available");
   };
 const { Text, Link } = Typography;
-  // useEffect(() => {
-  //   const getChatCount = async () => {
-  //     setChatLoading(true);
-  //     try {
-  //       const result = await axios.get(
-  //         `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
-  //           user.userId
-  //         }&count=${true}`,
-  //         { headers: { Authorization: "xxx" } }
-  //       );
-  //       setUnreadChatCount(result.data.count);
-  //       setChatLoading(false);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   };
-  //   if (user) {
-  //     getChatCount();
-  //   }
-  // }, [user]);
+  useEffect(() => {
+    const getChatCount = async () => {
+      setChatLoading(true);
+      try {
+        const result = await axios.get(
+          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
+            user.userId
+          }&count=${true}`,
+          { headers: { Authorization: "xxx" } }
+        );
+        setUnreadChatCount(result.data.count);
+        setChatLoading(false);
+        setDetailInitialLoad(false)
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    if (user && detailInitialLoad) {
+      getChatCount();
+    }
+  }, [user]);
   const items = [
     HomeFilled,
     UploadOutlined,
@@ -138,36 +141,14 @@ const { Text, Link } = Typography;
       label: IconText[index],
     };
   });
-  useEffect(() => {
-    if (data.length > 0) {
-      setInitialLoad(false);
-    } else {
-      setInitialLoad(true);
-    }
-  }, []);
 
-  useEffect(() => {
-    if (favData.length > 0) {
-      setFavInitialLoad(false);
-    } else {
-      setFavInitialLoad(true);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (adData.length > 0) {
-      setAdInitialLoad(false);
-    } else {
-      setAdInitialLoad(true);
-    }
-  }, []);
-
-  useEffect(() => {
-    // setHomeInitialLoad(false);
-    setFavPageInitialLoad(false);
-    setAdPageInitialLoad(false);
-    setChatPageInitialLoad(true);
-  }, []);
+    useEffect(() => {
+      const getUser = async () => {
+        const currentUser = await getCurrentUser();
+        setUser(currentUser);
+      }
+      getUser()
+    },[])
 
   useEffect(() => {
     setChatData([]);
@@ -176,8 +157,6 @@ const { Text, Link } = Typography;
   }, []);
   useEffect(() => {
     const getData = async () => {
-      const currentUser = await getCurrentUser();
-      setUser(currentUser);
       try {
         setLoading(true);
         const result = await axios.get(
@@ -243,7 +222,7 @@ const { Text, Link } = Typography;
           {contextHolder}
           {!loading && !chatLoading && images.length > 0 && (
             <>
-            <Space   block={true}
+            <Space
                 size="large"  
                 direction="vertical"
                 style={{
@@ -253,7 +232,6 @@ const { Text, Link } = Typography;
                 marginTop: '30px'
               }}>
               <Space.Compact
-              block={true}
               size="large"
               style={{
                 display: "flex"
@@ -280,7 +258,7 @@ const { Text, Link } = Typography;
                   ))}
                 </Carousel>
             </Space.Compact>
-            <Space  block={true}
+            <Space
                 size="large"  
                 direction="vertical"
                 style={{
@@ -289,7 +267,6 @@ const { Text, Link } = Typography;
                 alignItems: "center"
               }}>
                                 <Space.Compact
-                block={true}
                 size="large"
                 style={{ display: "flex", alignItems: "center" }}
               >
@@ -297,7 +274,6 @@ const { Text, Link } = Typography;
               <Input style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" , width: !isMobile ? '35vw' : '60vw' }} value={item["item"]["title"]} />
               </Space.Compact>
                 <Space.Compact
-                block={true}
                 size="large"
                 style={{ display: "flex", alignItems: "center" }}
               >
@@ -305,7 +281,6 @@ const { Text, Link } = Typography;
               <TextArea  autoSize={{ minRows: 2, maxRows: 5 }} style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",width: !isMobile ? '35vw' : '60vw' }} value={item["item"]["description"]} />
               </Space.Compact>
                 <Space.Compact
-                block={true}
                 size="large"
                 style={{ display: "flex", alignItems: "center" }}
               >
@@ -313,7 +288,6 @@ const { Text, Link } = Typography;
               <Input style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",width: !isMobile ? '35vw' : '60vw' }} value={item["item"]["state"]} />
               </Space.Compact>
                  <Space.Compact
-                block={true}
                 size="large"
                 style={{display: "flex", alignItems: "center" }}
               >
@@ -321,7 +295,6 @@ const { Text, Link } = Typography;
               <Input style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",width: !isMobile ? '35vw' : '60vw' }} value={item["item"]["district"]} />
               </Space.Compact>
                 <Space.Compact
-                block={true}
                 size="large"
                 style={{ display: "flex", alignItems: "center" }}
               >
@@ -331,7 +304,6 @@ const { Text, Link } = Typography;
             </Space>
               {ad && (
                      <Space.Compact
-              block={true}
               size="large"
               style={{
                 display: "flex",
@@ -345,7 +317,6 @@ const { Text, Link } = Typography;
               )}
               {!ad && (
                   <Space.Compact
-              block={true}
               size="large"
               style={{
                 display: "flex",

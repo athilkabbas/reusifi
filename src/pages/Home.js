@@ -89,6 +89,9 @@ const App = () => {
     setFavLastEvaluatedKey,
     setChatLastEvaluatedKey,
     setAdLastEvaluatedKey,
+    setContactInitialLoad,
+    setIChatInitialLoad,
+    setAddProductInitialLoad
   } = useContext(Context);
   const [unreadChatCount, setUnreadChatCount] = useState(0);
   const [handleFavLoading, setHandleFavLoading] = useState(false);
@@ -119,32 +122,12 @@ const App = () => {
     };
   });
   useEffect(() => {
-    // setFavData([]);
-    // setFavInitialLoad(true);
-    if(!initialLoad){
-          setFavInitialLoad(false);
-          setChatInitialLoad(false);
-          setAdInitialLoad(false);
+    const getUser = async () => {
+      const currentUser = await getCurrentUser();
+      setUser(currentUser);
     }
-    // setFavLastEvaluatedKey(null);
-    // setAdData([]);
-    // setAdInitialLoad(true);
-    // setAdLastEvaluatedKey(null);
-    // setChatData([]);
-    // setChatInitialLoad(true);
-    // setChatLastEvaluatedKey(null);
-    // setAdPageInitialLoad(true);
-    // setFavPageInitialLoad(true);
-    // setChatPageInitialLoad(true);
-  }, []);
-  // useEffect(() => {
-  //   if (scrollableDivRef.current && (!initialLoad || scrollLoadMoreData)) {
-  //     setTimeout(() => {
-  //       scrollableDivRef.current.scrollTo(0, scrollPosition);
-  //       setScrollLoadMoreData(false);
-  //     }, 0);
-  //   }
-  // }, [scrollPosition, initialLoad]);
+    getUser()
+  },[])
 
   useEffect(() => {
   if (scrollableDivRef.current && !chatLoading && !favLoading && !handleFavLoading && !loading) {
@@ -171,7 +154,7 @@ const App = () => {
         console.log(err);
       }
     };
-    if (user && homeInitialLoad) {
+    if (user && initialLoad) {
       getChatCount();
     }
   }, [user]);
@@ -204,7 +187,7 @@ const App = () => {
       setFilterList([...results.data.finalResult]);
       setFavLoading(false);
     };
-    if (user && homeInitialLoad) {
+    if (user && initialLoad) {
       getFavList();
     }
   }, [user]);
@@ -230,14 +213,6 @@ const App = () => {
   };
 
   const loadMoreData = async () => {
-    const currentUser = await getCurrentUser();
-    setUser(currentUser);
-    if (!initialLoad) {
-      setLoading(false)
-      setInitialLoad(true);
-      setScrollLoadMoreData(true);
-      return;
-    }
     try {
       const scrollPosition = scrollableDivRef.current.scrollTop;
       setLoading(true);
@@ -283,6 +258,7 @@ const App = () => {
       setData([...data, ...results.data.finalResult]);
       setLoading(false);
       setScrollPosition(scrollPosition);
+      setInitialLoad(false);
     } catch (err) {
       setLoading(false);
       console.log(err);
@@ -295,14 +271,16 @@ const App = () => {
     }
 
     // Set a new timeout
-    if(search || Object.values(location).some((value) => value) || priceFilter){
+    if(initialLoad && (search || Object.values(location).some((value) => value) || priceFilter)){
       setLoading(true)
       timer.current = setTimeout(() => {
       loadMoreData();
       }, 1500);
     }
     else{
-      loadMoreData()
+      if(initialLoad){
+        loadMoreData()
+      }
     }
     // Cleanup function to clear the timeout on component unmount or before next effect
     return () => {
@@ -370,7 +348,7 @@ const App = () => {
           background: "#F9FAFB",
         }}
       >
-        <Space.Compact block={true} size="large">
+        <Space.Compact size="large">
           <Input
             addonBefore={<SearchOutlined />}
             value={search}
@@ -427,7 +405,7 @@ const App = () => {
             />
           )}
         </Space.Compact>
-        <Space.Compact block={true} size="large" style={{ padding: "10px",display: "flex", alignItems: "center" }}>
+        <Space.Compact size="large" style={{ padding: "10px",display: "flex", alignItems: "center" }}>
           <Text strong>Price</Text>
           &nbsp; &nbsp;
           <Radio.Group style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" }} buttonStyle="solid" onChange={onChangePriceFilter} value={priceFilter}>
