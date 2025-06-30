@@ -506,7 +506,6 @@ const App = () => {
                           >
                             <b>₹{item["item"]["price"]}</b>
                           </div>
-                          <HeartFilled style={{ color: '#10B981' }} ></HeartFilled>
                           {item["item"]["email"] !== user.userId && (
                             <div
                               onClick={(event) => {
