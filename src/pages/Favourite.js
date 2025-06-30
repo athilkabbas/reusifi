@@ -112,14 +112,23 @@ const App = () => {
     };
   });
 
-  useEffect(() => {
-    if (scrollableDivRef.current && (!favInitialLoad || scrollLoadMoreData)) {
-      setTimeout(() => {
+  // useEffect(() => {
+  //   if (scrollableDivRef.current && (!favInitialLoad || scrollLoadMoreData)) {
+  //     setTimeout(() => {
+  //       scrollableDivRef.current.scrollTo(0, favScrollPosition);
+  //       setScrollLoadMoreData(false);
+  //     }, 150);
+  //   }
+  // }, [favScrollPosition, favInitialLoad]);
+
+    useEffect(() => {
+    if (scrollableDivRef.current &&  !loading && !handleFavLoading) {
+      requestAnimationFrame(() => {
         scrollableDivRef.current.scrollTo(0, favScrollPosition);
-        setScrollLoadMoreData(false);
-      }, 150);
+        setScrollLoadMoreData(false,scrollLoadMoreData);
+      });
     }
-  }, [favScrollPosition, favInitialLoad]);
+  }, [favScrollPosition,loading,favData,handleFavLoading]);
 
   useEffect(() => {
     if (data.length > 0) {
@@ -129,56 +138,57 @@ const App = () => {
     }
   }, []);
 
-  useEffect(() => {
-    const getChatCount = async () => {
-      try {
-        setChatLoading(true);
-        const result = await axios.get(
-          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
-            user.userId
-          }&count=${true}`,
-          { headers: { Authorization: "xxx" } }
-        );
-        setUnreadChatCount(result.data.count);
-        setChatLoading(false);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    if (user && favPageInitialLoad) {
-      getChatCount();
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   const getChatCount = async () => {
+  //     try {
+  //       setChatLoading(true);
+  //       const result = await axios.get(
+  //         `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
+  //           user.userId
+  //         }&count=${true}`,
+  //         { headers: { Authorization: "xxx" } }
+  //       );
+  //       setUnreadChatCount(result.data.count);
+  //       setChatLoading(false);
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
+  //   if (user && favPageInitialLoad) {
+  //     getChatCount();
+  //   }
+  // }, [user]);
 
   useEffect(() => {
-    setAdData([]);
-    setAdInitialLoad(true);
-    setAdLastEvaluatedKey(null);
-    setChatData([]);
-    setChatInitialLoad(true);
-    setChatLastEvaluatedKey(null);
-    setAdPageInitialLoad(true);
-    setChatPageInitialLoad(true);
+    // setAdData([]);
+    setAdInitialLoad(false);
+    // setAdLastEvaluatedKey(null);
+    // setChatData([]);
+    setChatInitialLoad(false);
+    // setChatLastEvaluatedKey(null);
+    // setAdPageInitialLoad(true);
+    // setChatPageInitialLoad(true);
   }, []);
 
-  useEffect(() => {
-    const getFavList = async () => {
-      setFavLoading(true);
-      const results = await axios.get(
-        `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getFavourites?email=${
-          user.userId
-        }&favList=${true}`,
-        { headers: { Authorization: "xxx" } }
-      );
-      setFilterList([...results.data.finalResult]);
-      setFavLoading(false);
-    };
-    if (user && favPageInitialLoad) {
-      getFavList();
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   const getFavList = async () => {
+  //     setFavLoading(true);
+  //     const results = await axios.get(
+  //       `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getFavourites?email=${
+  //         user.userId
+  //       }&favList=${true}`,
+  //       { headers: { Authorization: "xxx" } }
+  //     );
+  //     setFilterList([...results.data.finalResult]);
+  //     setFavLoading(false);
+  //   };
+  //   if (user && favPageInitialLoad) {
+  //     getFavList();
+  //   }
+  // }, [user]);
   const isMobile = useIsMobile()
   const handleFav = async (id, favourite) => {
+    setFavScrollPosition(scrollableDivRef.current.scrollTop);
     setHandleFavLoading(true);
     const results = await axios.get(
       `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getFavourites?id=${id}&favourite=${favourite}&email=${user.userId}`,
@@ -188,6 +198,11 @@ const App = () => {
       setFilterList((prevValue) => {
         return prevValue.filter((item) => {
           return item !== id;
+        });
+      });
+        setFavData((prevValue) => {
+        return prevValue.filter((item) => {
+          return item['item']['uuid'] !== id;
         });
       });
     } else {
@@ -265,9 +280,9 @@ const App = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
-  useEffect(() => {
-    setHomeInitialLoad(false);
-  }, []);
+  // useEffect(() => {
+  //   setHomeInitialLoad(false);
+  // }, []);
   return (
     <Layout style={{ height: "100vh", overflow: "hidden" }}>
        {!isMobile && <Header style={{ display: 'flex', alignItems: 'center', padding: '0px' }}>

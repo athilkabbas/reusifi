@@ -77,6 +77,7 @@ const ChatPage = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const scrollableDivRef = useRef(null);
   const handleNavigation = (event) => {
+    setChatScrollPosition(scrollableDivRef.current.scrollTop);
     switch (event.key) {
       case "1":
         navigate("/");
@@ -131,39 +132,50 @@ const ChatPage = () => {
     setChatLastEvaluatedKey,
     setAdLastEvaluatedKey,
   } = useContext(Context);
-  useEffect(() => {
-    if (scrollableDivRef.current && (!chatInitialLoad || scrollLoadMoreData)) {
-      setTimeout(() => {
-        scrollableDivRef.current.scrollTo(0, chatScrollPosition);
-        setScrollLoadMoreData(false);
-      }, 150);
-    }
-  }, [chatScrollPosition, chatInitialLoad]);
+  // useEffect(() => {
+  //   if (scrollableDivRef.current && (!chatInitialLoad || scrollLoadMoreData)) {
+  //     setTimeout(() => {
+  //       scrollableDivRef.current.scrollTo(0, chatScrollPosition);
+  //       setScrollLoadMoreData(false);
+  //     }, 150);
+  //   }
+  // }, [chatScrollPosition, chatInitialLoad]);
 
-  useEffect(() => {
-    setHomeInitialLoad(false);
-  }, []);
 
-  useEffect(() => {
-    const getChatCount = async () => {
-      setChatLoading(true);
-      try {
-        const result = await axios.get(
-          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
-            user.userId
-          }&count=${true}`,
-          { headers: { Authorization: "xxx" } }
-        );
-        setUnreadChatCount(result.data.count);
-        setChatLoading(false);
-      } catch (err) {
-        console.log(err);
+      useEffect(() => {
+      if (scrollableDivRef.current &&  !loading) {
+        requestAnimationFrame(() => {
+          scrollableDivRef.current.scrollTo(0, chatScrollPosition);
+          setScrollLoadMoreData(false);
+        });
       }
-    };
-    if (user && chatPageInitialLoad) {
-      getChatCount();
-    }
-  }, [user]);
+    }, [chatScrollPosition,loading,scrollLoadMoreData,chatData]);
+
+  // useEffect(() => {
+  //   setHomeInitialLoad(false);
+  // }, []);
+
+  // useEffect(() => {
+  //   const getChatCount = async () => {
+  //     setChatLoading(true);
+  //     try {
+  //       const result = await axios.get(
+  //         `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
+  //           user.userId
+  //         }&count=${true}`,
+  //         { headers: { Authorization: "xxx" } }
+  //       );
+  //       setUnreadChatCount(result.data.count);
+  //       setChatLoading(false);
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
+  //   if (user && chatPageInitialLoad) {
+  //     getChatCount();
+  //   }
+  // }, [user]);
+
   const items = [
     HomeFilled,
     UploadOutlined,
@@ -204,6 +216,7 @@ const ChatPage = () => {
 
   const handleMenuClick = async (e, index) => {
     try {
+      setChatScrollPosition(scrollableDivRef.current.scrollTop);
       e.domEvent.preventDefault();
       e.domEvent.stopPropagation();
       // This will give you the key of the clicked item
@@ -224,6 +237,14 @@ const ChatPage = () => {
           }&userId2=${userId2}`,
           { headers: { Authorization: "xxx" } }
         );
+        setChatData((prevValue) => {
+          return prevValue.map((item) => {
+              if(item.conversationId === chatData[index].conversationId){
+                  return {...item, blocked: true}
+              }
+              return item
+          })
+        })
       } else {
         const result = await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/blockUser?deleteChat=${true}&userId1=${
@@ -231,9 +252,16 @@ const ChatPage = () => {
           }&userId2=${userId2}`,
           { headers: { Authorization: "xxx" } }
         );
+        setChatData((prevValue) => {
+          return prevValue.map((item) => {
+              if(item.conversationId === chatData[index].conversationId){
+                  return {...item, deleted: true}
+              }
+              return item
+          })
+        })
       }
       setLoading(false);
-      window.location.reload();
     } catch (err) {
       setLoading(false);
       console.log(err);
@@ -242,6 +270,7 @@ const ChatPage = () => {
 
   const handleMenuClickUnblock = async (e, index) => {
     try {
+      setChatScrollPosition(scrollableDivRef.current.scrollTop);
       setLoading(true);
       e.domEvent.preventDefault();
       e.domEvent.stopPropagation();
@@ -262,6 +291,14 @@ const ChatPage = () => {
           }&userId2=${userId2}`,
           { headers: { Authorization: "xxx" } }
         );
+        setChatData((prevValue) => {
+          return prevValue.map((item) => {
+              if(item.conversationId === chatData[index].conversationId){
+                  return {...item, blocked: false}
+              }
+              return item
+          })
+        })
       } else {
         const result = await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/blockUser?deleteChat=${true}&userId1=${
@@ -269,9 +306,16 @@ const ChatPage = () => {
           }&userId2=${userId2}`,
           { headers: { Authorization: "xxx" } }
         );
+        setChatData((prevValue) => {
+          return prevValue.map((item) => {
+              if(item.conversationId === chatData[index].conversationId){
+                  return {...item, deleted: true}
+              }
+              return item
+          })
+        })
       }
       setLoading(false);
-      window.location.reload();
     } catch (err) {
       setLoading(false);
       console.log(err);
@@ -307,6 +351,32 @@ const ChatPage = () => {
     const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     return formattedDate;
   };
+
+  function formatChatTimestamp(timestamp) {
+  const date = new Date(timestamp);
+  const now = new Date();
+
+  const isToday = date.toDateString() === now.toDateString();
+
+  const yesterday = new Date();
+  yesterday.setDate(now.getDate() - 1);
+  const isYesterday = date.toDateString() === yesterday.toDateString();
+
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear();
+
+  const timeString = date.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
+  if (isToday) return timeString;
+  if (isYesterday) return `Yesterday ${timeString}`;
+
+  return `${day}/${month}/${year} ${timeString}`;
+}
+
 
   const menuBlocked = (index) => {
     return (
@@ -360,14 +430,14 @@ const ChatPage = () => {
   }, []);
 
   useEffect(() => {
-    setFavData([]);
-    setFavInitialLoad(true);
-    setFavLastEvaluatedKey(null);
-    setAdData([]);
-    setAdInitialLoad(true);
-    setAdLastEvaluatedKey(null);
-    setAdPageInitialLoad(true);
-    setFavPageInitialLoad(true);
+    // setFavData([]);
+    setFavInitialLoad(false);
+    // setFavLastEvaluatedKey(null);
+    // setAdData([]);
+    setAdInitialLoad(false);
+    // setAdLastEvaluatedKey(null);
+    // setAdPageInitialLoad(true);
+    // setFavPageInitialLoad(true);
   }, []);
 
   useEffect(() => {
@@ -500,7 +570,7 @@ const ChatPage = () => {
                             {item.message}
                           </div>
                           <div style={{ fontSize: "10px" }}>
-                            {formatTimeStamp(item.timestamp)}{" "}
+                            {formatChatTimestamp(item.timestamp)}{" "}
                           </div>
                         </Card>
                       </Badge>

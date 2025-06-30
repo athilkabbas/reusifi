@@ -92,26 +92,26 @@ const Details = () => {
     messageApi.info("No longer available");
   };
 const { Text, Link } = Typography;
-  useEffect(() => {
-    const getChatCount = async () => {
-      setChatLoading(true);
-      try {
-        const result = await axios.get(
-          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
-            user.userId
-          }&count=${true}`,
-          { headers: { Authorization: "xxx" } }
-        );
-        setUnreadChatCount(result.data.count);
-        setChatLoading(false);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    if (user) {
-      getChatCount();
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   const getChatCount = async () => {
+  //     setChatLoading(true);
+  //     try {
+  //       const result = await axios.get(
+  //         `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
+  //           user.userId
+  //         }&count=${true}`,
+  //         { headers: { Authorization: "xxx" } }
+  //       );
+  //       setUnreadChatCount(result.data.count);
+  //       setChatLoading(false);
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
+  //   if (user) {
+  //     getChatCount();
+  //   }
+  // }, [user]);
   const items = [
     HomeFilled,
     UploadOutlined,
@@ -163,7 +163,7 @@ const { Text, Link } = Typography;
   }, []);
 
   useEffect(() => {
-    setHomeInitialLoad(false);
+    // setHomeInitialLoad(false);
     setFavPageInitialLoad(false);
     setAdPageInitialLoad(false);
     setChatPageInitialLoad(true);

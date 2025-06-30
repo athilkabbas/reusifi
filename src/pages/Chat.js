@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useContext } from "react";
+import React, { useEffect, useState, useRef, useContext, useLayoutEffect } from "react";
 import { Col, message, Row, Spin } from "antd";
 import { Input } from "antd";
 import { useNavigate } from "react-router-dom";
@@ -57,6 +57,7 @@ const Chat = () => {
   const [scrollPosition, setScrollPosition] = useState(0);
   const [speed, setSpeed] = useState(0);
   const { Text, Link } = Typography;
+  const [scrollLoadMoreData, setScrollLoadMoreData] = useState(false);
   const sendMessage = (message, recipientUserId, senderUserId) => {
     try {
       if (ws) {
@@ -91,28 +92,29 @@ const Chat = () => {
     setFavLastEvaluatedKey,
     setAdLastEvaluatedKey,
     setChatData,
+    setChatLastEvaluatedKey
   } = useContext(Context);
   const [chatLoading, setChatLoading] = useState(false);
-  useEffect(() => {
-    const getChatCount = async () => {
-      try {
-        setChatLoading(true);
-        const result = await axios.get(
-          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
-            user.userId
-          }&count=${true}`,
-          { headers: { Authorization: "xxx" } }
-        );
-        setUnreadChatCount(result.data.count);
-        setChatLoading(false);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    if (user) {
-      getChatCount();
-    }
-  }, [user, ichatData]);
+  // useEffect(() => {
+  //   const getChatCount = async () => {
+  //     try {
+  //       setChatLoading(true);
+  //       const result = await axios.get(
+  //         `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
+  //           user.userId
+  //         }&count=${true}`,
+  //         { headers: { Authorization: "xxx" } }
+  //       );
+  //       setUnreadChatCount(result.data.count);
+  //       setChatLoading(false);
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
+  //   if (user) {
+  //     getChatCount();
+  //   }
+  // }, [user, ichatData]);
   const items = [
     HomeFilled,
     UploadOutlined,
@@ -148,15 +150,15 @@ const Chat = () => {
   }, []);
 
   useEffect(() => {
-    setFavData([]);
-    setFavInitialLoad(true);
-    setFavLastEvaluatedKey(null);
-    setAdData([]);
-    setAdInitialLoad(true);
-    setAdLastEvaluatedKey(null);
-    setFavPageInitialLoad(true);
-    setAdPageInitialLoad(true);
-    setChatPageInitialLoad(false);
+    // setFavData([]);
+    setFavInitialLoad(false);
+    // setFavLastEvaluatedKey(null);
+    // setAdData([]);
+    setAdInitialLoad(false);
+    // setAdLastEvaluatedKey(null);
+    // setFavPageInitialLoad(true);
+    // setAdPageInitialLoad(true);
+    // setChatPageInitialLoad(false);
   }, []);
 
   useEffect(() => {
@@ -263,13 +265,13 @@ const Chat = () => {
           });
         });
       }
-      setLoading(false);
       setIChatData((prevValue) => [...prevValue, ...result.data.items]);
       setLastEvaluatedKey(result.data.lastEvaluatedKey);
       // If no more data to load, set hasMore to false
       if (!result.data.lastEvaluatedKey) {
         setHasMore(false);
       }
+      setLoading(false);
       setScrollPosition(scrollPosition);
     } catch (err) {
       setLoading(false);
@@ -285,9 +287,9 @@ const Chat = () => {
     }
   }, []);
 
-  useEffect(() => {
-    setHomeInitialLoad(false);
-  }, []);
+  // useEffect(() => {
+  //   setHomeInitialLoad(false);
+  // }, []);
 
   useEffect(() => {
     if (
@@ -331,25 +333,42 @@ const Chat = () => {
     };
     calcSpeed();
   }, []);
-  useEffect(() => {
-    setTimeout(
-      () => {
-        if (scrollableDivRef.current) {
+  // useEffect(() => {
+  //   setTimeout(
+  //     () => {
+  //       if (scrollableDivRef.current) {
+  //         scrollableDivRef.current.scrollTo(0, scrollPosition);
+  //       }
+  //     },
+  //     speed >= 1 ? 500 : 800
+  //   );
+  // }, [scrollPosition]);
+
+    useEffect(() => {
+      if(scrollableDivRef.current && !loading)
+      requestAnimationFrame(() => {
           scrollableDivRef.current.scrollTo(0, scrollPosition);
-        }
-      },
-      speed >= 1 ? 500 : 800
-    );
-  }, [scrollPosition]);
-  useEffect(() => {
-    scrollToBottom();
-  }, []);
+          setScrollLoadMoreData(false)
+      });
+    }, [scrollPosition,loading,scrollLoadMoreData,ichatData]);
+
+  // useEffect(() => {
+  //   scrollToBottom();
+  // }, []);
 
   const scrollToBottom = () => {
     if (bottomRef.current) {
       bottomRef.current.scrollIntoView({ behavior: "auto" }); // Smooth scrolling to the bottom
     }
   };
+
+//   const scrollToBottom = () => {
+//   if (bottomRef.current) {
+//     requestAnimationFrame(() => {
+//       bottomRef.current.scrollIntoView({ behavior: "auto" }); // or "smooth"
+//     });
+//   }
+// };
 
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -361,6 +380,17 @@ const Chat = () => {
     if (messageValue) {
       if (recipient && recipient["item"]["email"]) {
         sendMessage(messageValue, recipient["item"]["email"], user.userId);
+        setChatData((chatData) => {
+          return chatData.map((item) => {
+            let conversationId = [user.userId, recipient["item"]["email"]]
+              .sort()
+              .join("#");
+            if (item.conversationId === conversationId) {
+              return { ...item, message: messageValue };
+            }
+            return item;
+          });
+        });
       } else if (conversationId) {
         let userIds = conversationId.split("#");
         let userId2;
@@ -371,6 +401,14 @@ const Chat = () => {
           }
         }
         sendMessage(messageValue, userId2, user.userId);
+        setChatData((chatData) => {
+          return chatData.map((item) => {
+            if (item.conversationId === conversationId) {
+              return { ...item, message: messageValue };
+            }
+            return item;
+          });
+        });
       }
       setIChatData((prevValue) => [
         { message: messageValue, timestamp: Date.now(), senderId: user.userId },
@@ -459,7 +497,10 @@ function formatChatTimestamp(timestamp) {
               background: "#F9FAFB",
             }}
             dataLength={ichatData.length}
-            next={getChats}
+            next={() => {
+              getChats()
+              setScrollLoadMoreData(true);
+            }}
             hasMore={hasMore}
             inverse={true}
             loader={

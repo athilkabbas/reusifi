@@ -89,26 +89,26 @@ const Ads = () => {
     setFavLastEvaluatedKey,
     setChatLastEvaluatedKey,
   } = useContext(Context);
-  useEffect(() => {
-    const getChatCount = async () => {
-      setChatLoading(true);
-      try {
-        const result = await axios.get(
-          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
-            user.userId
-          }&count=${true}`,
-          { headers: { Authorization: "xxx" } }
-        );
-        setUnreadChatCount(result.data.count);
-        setChatLoading(false);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    if (user && adPageInitialLoad) {
-      getChatCount();
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   const getChatCount = async () => {
+  //     setChatLoading(true);
+  //     try {
+  //       const result = await axios.get(
+  //         `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
+  //           user.userId
+  //         }&count=${true}`,
+  //         { headers: { Authorization: "xxx" } }
+  //       );
+  //       setUnreadChatCount(result.data.count);
+  //       setChatLoading(false);
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
+  //   if (user && adPageInitialLoad) {
+  //     getChatCount();
+  //   }
+  // }, [user]);
   const items = [
     HomeFilled,
     UploadOutlined,
@@ -135,14 +135,24 @@ const Ads = () => {
       label: IconText[index],
     };
   });
-  useEffect(() => {
-    if (scrollableDivRef.current && (!adInitialLoad || scrollLoadMoreData)) {
-      setTimeout(() => {
-        scrollableDivRef.current.scrollTo(0, adScrollPosition);
-        setScrollLoadMoreData(false);
-      }, 150);
-    }
-  }, [adScrollPosition, adInitialLoad]);
+  // useEffect(() => {
+  //   if (scrollableDivRef.current && (!adInitialLoad || scrollLoadMoreData)) {
+  //     setTimeout(() => {
+  //       scrollableDivRef.current.scrollTo(0, adScrollPosition);
+  //       setScrollLoadMoreData(false);
+  //     }, 150);
+  //   }
+  // }, [adScrollPosition, adInitialLoad]);
+
+        useEffect(() => {
+        if (scrollableDivRef.current &&  !loading) {
+          requestAnimationFrame(() => {
+            scrollableDivRef.current.scrollTo(0, adScrollPosition);
+            setScrollLoadMoreData(false);
+          });
+        }
+      }, [adScrollPosition,loading,scrollLoadMoreData,adData]);
+  
 
   useEffect(() => {
     if (data.length > 0) {
@@ -152,9 +162,9 @@ const Ads = () => {
     }
   }, []);
 
-  useEffect(() => {
-    setHomeInitialLoad(false);
-  }, []);
+  // useEffect(() => {
+  //   setHomeInitialLoad(false);
+  // }, []);
 
   const handleChange = (value, type) => {
     setAdData([]);
@@ -211,14 +221,14 @@ const Ads = () => {
   }, []);
 
   useEffect(() => {
-    setFavData([]);
-    setFavInitialLoad(true);
-    setFavLastEvaluatedKey(null);
-    setChatData([]);
-    setChatInitialLoad(true);
-    setChatLastEvaluatedKey(null);
-    setFavPageInitialLoad(true);
-    setChatPageInitialLoad(true);
+    // setFavData([]);
+    setFavInitialLoad(false);
+    // setFavLastEvaluatedKey(null);
+    // setChatData([]);
+    setChatInitialLoad(false);
+    // setChatLastEvaluatedKey(null);
+    // setFavPageInitialLoad(true);
+    // setChatPageInitialLoad(true);
   }, []);
 
   const navigate = useNavigate();

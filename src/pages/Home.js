@@ -119,27 +119,41 @@ const App = () => {
     };
   });
   useEffect(() => {
-    setFavData([]);
-    setFavInitialLoad(true);
-    setFavLastEvaluatedKey(null);
-    setAdData([]);
-    setAdInitialLoad(true);
-    setAdLastEvaluatedKey(null);
-    setChatData([]);
-    setChatInitialLoad(true);
-    setChatLastEvaluatedKey(null);
-    setAdPageInitialLoad(true);
-    setFavPageInitialLoad(true);
-    setChatPageInitialLoad(true);
-  }, []);
-  useEffect(() => {
-    if (scrollableDivRef.current && (!initialLoad || scrollLoadMoreData)) {
-      setTimeout(() => {
-        scrollableDivRef.current.scrollTo(0, scrollPosition);
-        setScrollLoadMoreData(false);
-      }, 150);
+    // setFavData([]);
+    // setFavInitialLoad(true);
+    if(!initialLoad){
+          setFavInitialLoad(false);
+          setChatInitialLoad(false);
+          setAdInitialLoad(false);
     }
-  }, [scrollPosition, initialLoad]);
+    // setFavLastEvaluatedKey(null);
+    // setAdData([]);
+    // setAdInitialLoad(true);
+    // setAdLastEvaluatedKey(null);
+    // setChatData([]);
+    // setChatInitialLoad(true);
+    // setChatLastEvaluatedKey(null);
+    // setAdPageInitialLoad(true);
+    // setFavPageInitialLoad(true);
+    // setChatPageInitialLoad(true);
+  }, []);
+  // useEffect(() => {
+  //   if (scrollableDivRef.current && (!initialLoad || scrollLoadMoreData)) {
+  //     setTimeout(() => {
+  //       scrollableDivRef.current.scrollTo(0, scrollPosition);
+  //       setScrollLoadMoreData(false);
+  //     }, 0);
+  //   }
+  // }, [scrollPosition, initialLoad]);
+
+  useEffect(() => {
+  if (scrollableDivRef.current && !chatLoading && !favLoading && !handleFavLoading && !loading) {
+    requestAnimationFrame(() => {
+      scrollableDivRef.current.scrollTo(0, scrollPosition);
+      setScrollLoadMoreData(false);
+    });
+  }
+}, [scrollPosition,chatLoading,favLoading,handleFavLoading,loading,scrollLoadMoreData,data]);
 
   useEffect(() => {
     const getChatCount = async () => {
@@ -196,6 +210,8 @@ const App = () => {
   }, [user]);
 
   const handleFav = async (id, favourite) => {
+    setScrollPosition(scrollableDivRef.current.scrollTop);
+    setFavInitialLoad(true);
     setHandleFavLoading(true);
     const results = await axios.get(
       `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getFavourites?id=${id}&favourite=${favourite}&email=${user.userId}`,

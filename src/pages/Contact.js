@@ -80,39 +80,39 @@ const Contact = () => {
   } = useContext(Context);
 
   useEffect(() => {
-    setFavData([]);
-    setFavInitialLoad(true);
-    setFavLastEvaluatedKey(null);
-    setAdData([]);
-    setAdInitialLoad(true);
-    setAdLastEvaluatedKey(null);
-    setChatData([]);
-    setChatInitialLoad(true);
-    setChatLastEvaluatedKey(null);
-    setAdPageInitialLoad(true);
-    setFavPageInitialLoad(true);
-    setChatPageInitialLoad(true);
+    // setFavData([]);
+    setFavInitialLoad(false);
+    // setFavLastEvaluatedKey(null);
+    // setAdData([]);
+    setAdInitialLoad(false);
+    // setAdLastEvaluatedKey(null);
+    // setChatData([]);
+    setChatInitialLoad(false);
+    // setChatLastEvaluatedKey(null);
+    // setAdPageInitialLoad(true);
+    // setFavPageInitialLoad(true);
+    // setChatPageInitialLoad(true);
   }, []);
 
-  useEffect(() => {
-    const getChatCount = async () => {
-      try {
-        setLoading(true);
-        const currentUser = await getCurrentUser();
-        const result = await axios.get(
-          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
-            currentUser.userId
-          }&count=${true}`,
-          { headers: { Authorization: "xxx" } }
-        );
-        setUnreadChatCount(result.data.count);
-        setLoading(false);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    getChatCount();
-  }, []);
+  // useEffect(() => {
+  //   const getChatCount = async () => {
+  //     try {
+  //       setLoading(true);
+  //       const currentUser = await getCurrentUser();
+  //       const result = await axios.get(
+  //         `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
+  //           currentUser.userId
+  //         }&count=${true}`,
+  //         { headers: { Authorization: "xxx" } }
+  //       );
+  //       setUnreadChatCount(result.data.count);
+  //       setLoading(false);
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
+  //   getChatCount();
+  // }, []);
 
   useEffect(() => {
     if (data.length > 0) {
@@ -122,9 +122,9 @@ const Contact = () => {
     }
   }, []);
 
-  useEffect(() => {
-    setHomeInitialLoad(false);
-  }, []);
+  // useEffect(() => {
+  //   setHomeInitialLoad(false);
+  // }, []);
   const isMobile = useIsMobile()
   const items = [
     HomeFilled,
