@@ -46,7 +46,7 @@ const capitalize = (str) => {
 const { Header, Content, Footer } = Layout;
 const App = () => {
   const [loading, setLoading] = useState(false);
-  const limit = 50;
+  const limit = 20;
   const [user, setUser] = useState(null);
   const timer = useRef(null);
   const [districts, setDistricts] = useState([]);
@@ -123,6 +123,15 @@ const App = () => {
       getUser()
     },[])
 
+      useEffect(() => {
+        if (scrollableDivRef.current  &&  !loading && !handleFavLoading && !chatLoading && !favLoading) {
+          const el = scrollableDivRef.current;
+          if (el.scrollHeight <= el.clientHeight && favHasMore) {
+            loadMoreData();
+          }
+        }
+      }, [loading,favData,handleFavLoading,chatLoading,favLoading]); 
+
     useEffect(() => {
     if (scrollableDivRef.current &&  !loading && !handleFavLoading) {
       requestAnimationFrame(() => {
@@ -152,6 +161,24 @@ const App = () => {
       getChatCount();
     }
   }, [user]);
+
+    useEffect(() => {
+    const getFavList = async () => {
+      setFavLoading(true);
+      const results = await axios.get(
+        `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getFavourites?email=${
+          user.userId
+        }&favList=${true}`,
+        { headers: { Authorization: "xxx" } }
+      );
+      setFilterList([...results.data.finalResult]);
+      setFavLoading(false);
+    };
+    if (user && favInitialLoad) {
+      getFavList();
+    }
+  }, [user]);
+
 
 
   const isMobile = useIsMobile()
@@ -304,7 +331,9 @@ const App = () => {
                     <>
                       <List.Item key={item["item"]["id"]}>
                         <Card
-                        style={{   boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)", height: '30vh' }}
+                        hoverable
+                        bodyStyle={{ padding: '15px 0px 0px 0px' }}
+                        style={{   boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)", padding: '10px'}}
                           onClick={() => {
                             setFavScrollPosition(
                               scrollableDivRef.current.scrollTop
@@ -321,8 +350,8 @@ const App = () => {
                               alt="example"
                               src={item["image"]}
                               style={{
-                                height: "17vh",
-                                objectFit: "contain",
+                                height: "20vh",
+                                objectFit: "cover",
                               }}
                             />
                           }

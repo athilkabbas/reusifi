@@ -47,7 +47,7 @@ const capitalize = (str) => {
 const { Header, Content, Footer } = Layout;
 const App = () => {
   const [loading, setLoading] = useState(false);
-  const limit = 50;
+  const limit = 20;
   const [user, setUser] = useState(null);
   const timer = useRef(null);
   const [districts, setDistricts] = useState([]);
@@ -121,6 +121,16 @@ const App = () => {
       label: IconText[index],
     };
   });
+
+useEffect(() => {
+  if (scrollableDivRef.current && !chatLoading && !favLoading && !handleFavLoading && !loading) {
+    const el = scrollableDivRef.current;
+    if (el.scrollHeight <= el.clientHeight && hasMore) {
+      loadMoreData();
+    }
+  }
+}, [chatLoading,favLoading,handleFavLoading,loading,data]); 
+
   useEffect(() => {
     const getUser = async () => {
       const currentUser = await getCurrentUser();
@@ -482,7 +492,7 @@ const App = () => {
                               alt="example"
                               src={item["image"]}
                               style={{
-                                objectFit: "contain",
+                                objectFit: "cover",
                                 height: "20vh"
                               }}
                             />
@@ -530,6 +540,13 @@ const App = () => {
                               )}
                             </div>
                           )}
+                          {
+                            item["item"]["email"] === user.userId && (
+                              <div style={{ display: 'flex', visibility: 'hidden' }}>
+                                <HeartFilled style={{ color: '#10B981' }} ></HeartFilled>
+                              </div>
+                            )
+                          }
                         </Card>
                       </List.Item>
                     </>

@@ -240,7 +240,7 @@ const { Text, Link } = Typography;
                 <Carousel
                 arrows
                 autoplay
-                autoplaySpeed={1000}
+                autoplaySpeed={3000}
                   style={{
                     boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                     width: 250,

@@ -68,6 +68,7 @@ const menuItemsBlocked = [
   },
 ];
 const { Header, Content, Footer } = Layout;
+const limit = 20
 const ChatPage = () => {
   const [lastEvaluatedKey, setLastEvaluatedKey] = useState(null);
   const [scrollLoadMoreData, setScrollLoadMoreData] = useState(false);
@@ -136,14 +137,23 @@ const ChatPage = () => {
     setAddProductInitialLoad
   } = useContext(Context);
 
+     useEffect(() => {
+          if (scrollableDivRef.current  &&  !loading && !chatLoading) {
+            const el = scrollableDivRef.current;
+            if (el.scrollHeight <= el.clientHeight && chatHasMore) {
+              getChats();
+            }
+          }
+        }, [loading,chatData,chatLoading]); 
+
       useEffect(() => {
-      if (scrollableDivRef.current &&  !loading) {
+      if (scrollableDivRef.current &&  !loading && !chatLoading) {
         requestAnimationFrame(() => {
           scrollableDivRef.current.scrollTo(0, chatScrollPosition);
           setScrollLoadMoreData(false);
         });
       }
-    }, [chatScrollPosition,loading,scrollLoadMoreData,chatData]);
+    }, [chatScrollPosition,loading,scrollLoadMoreData,chatData,chatLoading]);
 
   useEffect(() => {
     const getChatCount = async () => {
@@ -388,7 +398,7 @@ const ChatPage = () => {
       const scrollPosition = scrollableDivRef.current.scrollTop;
       setLoading(true);
       const result = await axios.get(
-        `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${user.userId}&lastEvaluatedKey=${chatLastEvaluatedKey}`,
+        `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${user.userId}&lastEvaluatedKey=${chatLastEvaluatedKey}&limit=${limit}`,
         { headers: { Authorization: "xxx" } }
       );
       setChatData([...chatData, ...result.data.items]);

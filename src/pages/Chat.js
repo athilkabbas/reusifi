@@ -74,6 +74,7 @@ const Chat = () => {
       setReconnect((reconnect) => !reconnect);
     }
   };
+  const limit = 20
   const [unreadChatCount, setUnreadChatCount] = useState(0);
   const {
     setInitialLoad,
@@ -208,7 +209,7 @@ const Chat = () => {
       let result;
       if (recipient && recipient["item"]["email"]) {
         result = await axios.get(
-          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${user.userId}&userId2=${recipient["item"]["email"]}&lastEvaluatedKey=${lastEvaluatedKey}`,
+          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${user.userId}&userId2=${recipient["item"]["email"]}&lastEvaluatedKey=${lastEvaluatedKey}&limit=${limit}`,
           { headers: { Authorization: "xxx" } }
         );
         await axios.get(
@@ -238,7 +239,7 @@ const Chat = () => {
           }
         }
         result = await axios.get(
-          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${user.userId}&userId2=${userId2}&lastEvaluatedKey=${lastEvaluatedKey}`,
+          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${user.userId}&userId2=${userId2}&lastEvaluatedKey=${lastEvaluatedKey}&limit=${limit}`,
           { headers: { Authorization: "xxx" } }
         );
         await axios.get(
@@ -320,48 +321,21 @@ const Chat = () => {
     }
   };
   useEffect(() => {
-    const calcSpeed = async () => {
-      let speed = await testSpeed();
-      setSpeed(speed);
-    };
-    calcSpeed();
-  }, []);
-  // useEffect(() => {
-  //   setTimeout(
-  //     () => {
-  //       if (scrollableDivRef.current) {
-  //         scrollableDivRef.current.scrollTo(0, scrollPosition);
-  //       }
-  //     },
-  //     speed >= 1 ? 500 : 800
-  //   );
-  // }, [scrollPosition]);
+    if (scrollableDivRef.current && !loading && !chatLoading) {
+      const el = scrollableDivRef.current;
+      if (el.scrollHeight <= el.clientHeight && hasMore) {
+        getChats();
+      }
+    }
+  }, [ichatData,loading,chatLoading]); 
 
     useEffect(() => {
-      if(scrollableDivRef.current && !loading)
+      if(scrollableDivRef.current && !loading && !chatLoading)
       requestAnimationFrame(() => {
           scrollableDivRef.current.scrollTo(0, scrollPosition);
           setScrollLoadMoreData(false)
       });
-    }, [scrollPosition,loading,scrollLoadMoreData,ichatData]);
-
-  // useEffect(() => {
-  //   scrollToBottom();
-  // }, []);
-
-  const scrollToBottom = () => {
-    if (bottomRef.current) {
-      bottomRef.current.scrollIntoView({ behavior: "auto" }); // Smooth scrolling to the bottom
-    }
-  };
-
-//   const scrollToBottom = () => {
-//   if (bottomRef.current) {
-//     requestAnimationFrame(() => {
-//       bottomRef.current.scrollIntoView({ behavior: "auto" }); // or "smooth"
-//     });
-//   }
-// };
+    }, [scrollPosition,loading,scrollLoadMoreData,ichatData,chatLoading]);
 
   const {
     token: { colorBgContainer, borderRadiusLG },

@@ -16,7 +16,8 @@ import {
   MailOutlined,
   HeartOutlined,
   ProductFilled,
-  LoadingOutlined
+  LoadingOutlined,
+  HeartFilled
 } from "@ant-design/icons";
 import { Button, Input, Select, Space } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -45,7 +46,7 @@ const { Header, Content, Footer } = Layout;
 const Ads = () => {
   const [loading, setLoading] = useState(false);
   const [scrollLoadMoreData, setScrollLoadMoreData] = useState(false);
-  const limit = 50;
+  const limit = 20;
   const [user, setUser] = useState(null);
   const [search, setSearch] = useState(null);
   const timer = useRef(null);
@@ -147,14 +148,23 @@ const Ads = () => {
       getUser()
     },[])
 
+      useEffect(() => {
+        if (scrollableDivRef.current && !loading && !chatLoading) {
+          const el = scrollableDivRef.current;
+          if (el.scrollHeight <= el.clientHeight && adHasMore) {
+            loadMoreData();
+          }
+        }
+      }, [loading,adData,chatLoading]); 
+
         useEffect(() => {
-        if (scrollableDivRef.current &&  !loading) {
+        if (scrollableDivRef.current &&  !loading && !chatLoading) {
           requestAnimationFrame(() => {
             scrollableDivRef.current.scrollTo(0, adScrollPosition);
             setScrollLoadMoreData(false);
           });
         }
-      }, [adScrollPosition,loading,scrollLoadMoreData,adData]);
+      }, [adScrollPosition,loading,scrollLoadMoreData,adData,chatLoading]);
 
   const [lastEvaluatedKey, setLastEvaluatedKey] = useState(null);
 
@@ -294,7 +304,9 @@ const Ads = () => {
                     <>
                       <List.Item key={item["item"]["_id"]}>
                         <Card
-                        style={{   boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)", height: '30vh' }}
+                        hoverable
+                        bodyStyle={{ padding: '15px 0px 0px 0px' }}
+                        style={{   boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)", padding: '10px' }}
                           onClick={() => {
                             setAdScrollPosition(
                               scrollableDivRef.current.scrollTop
@@ -306,8 +318,8 @@ const Ads = () => {
                               alt="example"
                               src={item["image"]}
                               style={{
-                                height: "17vh",
-                                objectFit: "contain",
+                                height: "20vh",
+                                objectFit: "cover",
                               }}
                             />
                           }
@@ -330,6 +342,9 @@ const Ads = () => {
                           >
                             <b>₹{item["item"]["price"]}</b>
                           </div>
+                            <div style={{ display: 'flex', visibility: 'hidden' }}>
+                              <HeartFilled style={{ color: '#10B981' }} ></HeartFilled>
+                            </div>
                         </Card>
                       </List.Item>
                     </>
