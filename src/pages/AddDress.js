@@ -359,7 +359,7 @@ const AddDress = () => {
                 size="large"
               >
                 <Input
-                style={{ boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)", width: !isMobile ? '50vw' : '90vw', marginTop: '30px'}}
+                style={{ boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)", width: !isMobile ? '50vw' : '85vw', marginTop: '30px'}}
                   onChange={(value) => handleChange(value, "title")}
                   placeholder="Title"
                   value={form.title}
@@ -371,7 +371,7 @@ const AddDress = () => {
                 size="large"
               >
                 <TextArea
-                style={{ boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" ,width: !isMobile ? '50vw' : '90vw'}}
+                style={{ boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" ,width: !isMobile ? '50vw' : '85vw'}}
                   onChange={(value) => handleChange(value, "description")}
                   autoSize={{ minRows: 8, maxRows: 8 }}
                   placeholder="Description"
@@ -436,7 +436,7 @@ const AddDress = () => {
                 size="large"
               >
                 <Input
-                style={{ boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",width: !isMobile ? '50vw' : '90vw' }}
+                style={{ boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",width: !isMobile ? '50vw' : '85vw' }}
                   prefix="₹"
                   onChange={(value) => handleChange(value, "price")}
                   placeholder="Price"

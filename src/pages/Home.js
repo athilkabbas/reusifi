@@ -348,7 +348,7 @@ const App = () => {
           background: "#F9FAFB",
         }}
       >
-        <Space.Compact size="large">
+        <Space.Compact size="large" style={{ height: 'fit-content' }}>
           <Input
             addonBefore={<SearchOutlined />}
             value={search}
@@ -360,9 +360,10 @@ const App = () => {
               setSearch(event.target.value);
             }}
             placeholder="Search"
-            style={{ width: !isMobile ? "30vw" : "60vw" ,boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)", borderRadius: "7px"}}
+            style={{ width: !isMobile ? "30vw" : "60vw" ,height: 'fit-content', boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)", borderRadius: "7px"}}
           />
-          <Select
+          <Space.Compact size="large" style={{ display: "flex", flexDirection: !isMobile ? 'row' : "column" }}>
+                      <Select
             onChange={(value) => {
               handleChange(value, "state");
               let districts = districtMap();
@@ -370,7 +371,7 @@ const App = () => {
             }}
             showSearch
             style={{
-              width: !isMobile ? "10vw" : "30vw",
+              width: !isMobile ? "20vw" : "35vw",
               boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
               borderRadius: "7px"
             }}
@@ -391,7 +392,7 @@ const App = () => {
               }}
               showSearch
               style={{
-                width: "30vw",
+                width: !isMobile ? "20vw" : "35vw",
               }}
               value={location.district}
               placeholder="District"
@@ -404,6 +405,7 @@ const App = () => {
               options={districts}
             />
           )}
+          </Space.Compact>
         </Space.Compact>
         <Space.Compact size="large" style={{ padding: "10px",display: "flex", alignItems: "center" }}>
           <Text strong>Price</Text>
@@ -463,7 +465,7 @@ const App = () => {
                   return (
                     <>
                       <List.Item key={item["item"]["id"]}>
-                        <Card style={{   boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)", height: '30vh' }}
+                        <Card hoverable bodyStyle={{ padding: '15px 0px 0px 0px' }} style={{   boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)", padding: '10px' }}
                           onClick={() => {
                             setScrollPosition(
                               scrollableDivRef.current.scrollTop
@@ -480,8 +482,8 @@ const App = () => {
                               alt="example"
                               src={item["image"]}
                               style={{
-                                height: "17vh",
                                 objectFit: "contain",
+                                height: "20vh"
                               }}
                             />
                           }
@@ -504,6 +506,7 @@ const App = () => {
                           >
                             <b>₹{item["item"]["price"]}</b>
                           </div>
+                          <HeartFilled style={{ color: '#10B981' }} ></HeartFilled>
                           {item["item"]["email"] !== user.userId && (
                             <div
                               onClick={(event) => {

@@ -69,3 +69,8 @@
 .ant-menu-overflow-item-rest.ant-menu-submenu:hover {
   background: #4f46e5 !important; /* optional hover color */
 }
+
+.ant-radio-button-wrapper-checked {
+  /* your styles for the checked radio button */
+  background: #6366F1 !important;
+}
