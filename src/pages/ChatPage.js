@@ -234,7 +234,7 @@ const ChatPage = () => {
         const result = await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/blockUser?block=${true}&userId1=${
             user.userId
-          }&userId2=${userId2}`,
+          }&userId2=${userId2}&productId=${chatData[index].productId}`,
           { headers: { Authorization: "xxx" } }
         );
         setChatData((prevValue) => {
@@ -249,7 +249,7 @@ const ChatPage = () => {
         const result = await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/blockUser?deleteChat=${true}&userId1=${
             user.userId
-          }&userId2=${userId2}`,
+          }&userId2=${userId2}&productId=${chatData[index].productId}`,
           { headers: { Authorization: "xxx" } }
         );
         setChatData((prevValue) => {
@@ -288,7 +288,7 @@ const ChatPage = () => {
         const result = await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/blockUser?unBlock=${true}&userId1=${
             user.userId
-          }&userId2=${userId2}`,
+          }&userId2=${userId2}&productId=${chatData[index].productId}`,
           { headers: { Authorization: "xxx" } }
         );
         setChatData((prevValue) => {
@@ -303,7 +303,7 @@ const ChatPage = () => {
         const result = await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/blockUser?deleteChat=${true}&userId1=${
             user.userId
-          }&userId2=${userId2}`,
+          }&userId2=${userId2}&productId=${chatData[index].productId}`,
           { headers: { Authorization: "xxx" } }
         );
         setChatData((prevValue) => {
@@ -502,7 +502,7 @@ const ChatPage = () => {
                                 scrollableDivRef.current.scrollTop
                               );
                               navigate("/chat", {
-                                state: { conversationId: item.conversationId },
+                                state: { conversationId: item.conversationId, productId: item.productId },
                               });
                             }
                           }}

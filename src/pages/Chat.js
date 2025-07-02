@@ -43,7 +43,7 @@ const Chat = () => {
   const [ichatData, setIChatData] = useState([]);
   const location = useLocation();
   const { recipient } = location.state || "";
-  const { conversationId } = location.state;
+  const { conversationId, productId } = location.state;
   const [messageValue, setMessageValue] = useState("");
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
@@ -58,7 +58,7 @@ const Chat = () => {
   const [speed, setSpeed] = useState(0);
   const { Text, Link } = Typography;
   const [scrollLoadMoreData, setScrollLoadMoreData] = useState(false);
-  const sendMessage = (message, recipientUserId, senderUserId) => {
+  const sendMessage = (message, recipientUserId, senderUserId,productId) => {
     try {
       if (ws) {
         ws.send(
@@ -66,6 +66,7 @@ const Chat = () => {
             action: "sendMessage",
             recipientUserId: recipientUserId,
             senderUserId: senderUserId,
+            productId: productId,
             message: message,
           })
         );
@@ -161,7 +162,7 @@ const Chat = () => {
         const currentUser = await getCurrentUser();
         setUser(currentUser);
         socket = new WebSocket(
-          `wss://vcj0ne6oh5.execute-api.ap-south-1.amazonaws.com/production?userId=${currentUser.userId}`
+          `wss://vcj0ne6oh5.execute-api.ap-south-1.amazonaws.com/production?userId=${currentUser.userId}&productId=${recipient["item"]["uuid"] || productId}`
         );
         setWs(socket);
         socket.onopen = () => {
@@ -177,6 +178,7 @@ const Chat = () => {
               timestamp: data.timestamp,
               recipientId: data.recipientUserId,
               senderId: data.senderUserId,
+              productId: data.productId
             },
             ...prevValue,
           ]);
@@ -198,7 +200,9 @@ const Chat = () => {
 
     fetchUser();
     return () => {
-      socket.close();
+      if(socket){
+        socket.close();
+      }
     };
   }, [reconnect]);
 
@@ -209,20 +213,20 @@ const Chat = () => {
       let result;
       if (recipient && recipient["item"]["email"]) {
         result = await axios.get(
-          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${user.userId}&userId2=${recipient["item"]["email"]}&lastEvaluatedKey=${lastEvaluatedKey}&limit=${limit}`,
+          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${user.userId}&userId2=${recipient["item"]["email"]}&productId=${recipient["item"]["uuid"]}&lastEvaluatedKey=${lastEvaluatedKey}&limit=${limit}`,
           { headers: { Authorization: "xxx" } }
         );
         await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
             user.userId
-          }&userId2=${recipient["item"]["email"]}&read=${true}`,
+          }&userId2=${recipient["item"]["email"]}&productId=${recipient["item"]["uuid"]}&read=${true}`,
           { headers: { Authorization: "xxx" } }
         );
         setChatData((chatData) => {
           return chatData.map((item) => {
             let conversationId = [user.userId, recipient["item"]["email"]]
               .sort()
-              .join("#");
+              .join(`#${recipient["item"]["uuid"]}#`);
             if (item.conversationId === conversationId) {
               return { ...item, read: "true" };
             }
@@ -231,6 +235,7 @@ const Chat = () => {
         });
       } else if (conversationId) {
         let userIds = conversationId.split("#");
+        userIds.splice(1,1)
         let userId2;
         for (let userId of userIds) {
           if (user.userId !== userId) {
@@ -239,18 +244,18 @@ const Chat = () => {
           }
         }
         result = await axios.get(
-          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${user.userId}&userId2=${userId2}&lastEvaluatedKey=${lastEvaluatedKey}&limit=${limit}`,
+          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${user.userId}&userId2=${userId2}&productId=${productId}&lastEvaluatedKey=${lastEvaluatedKey}&limit=${limit}`,
           { headers: { Authorization: "xxx" } }
         );
         await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
             user.userId
-          }&userId2=${userId2}&read=${true}`,
+          }&userId2=${userId2}&productId=${productId}&read=${true}`,
           { headers: { Authorization: "xxx" } }
         );
         setChatData((chatData) => {
           return chatData.map((item) => {
-            let conversationId = [user.userId, userId2].sort().join("#");
+            let conversationId = [user.userId, userId2].sort().join(`#${productId}#`);
             if (item.conversationId === conversationId) {
               return { ...item, read: "true" };
             }
@@ -346,12 +351,12 @@ const Chat = () => {
   const handleSubmit = () => {
     if (messageValue) {
       if (recipient && recipient["item"]["email"]) {
-        sendMessage(messageValue, recipient["item"]["email"], user.userId);
+        sendMessage(messageValue, recipient["item"]["email"], user.userId,recipient["item"]["uuid"]);
         setChatData((chatData) => {
           return chatData.map((item) => {
             let conversationId = [user.userId, recipient["item"]["email"]]
               .sort()
-              .join("#");
+              .join(`#${recipient["item"]["uuid"]}#`);
             if (item.conversationId === conversationId) {
               return { ...item, message: messageValue };
             }
@@ -360,6 +365,7 @@ const Chat = () => {
         });
       } else if (conversationId) {
         let userIds = conversationId.split("#");
+        userIds.splice(1,1)
         let userId2;
         for (let userId of userIds) {
           if (user.userId !== userId) {
@@ -367,7 +373,7 @@ const Chat = () => {
             break;
           }
         }
-        sendMessage(messageValue, userId2, user.userId);
+        sendMessage(messageValue, userId2, user.userId, productId);
         setChatData((chatData) => {
           return chatData.map((item) => {
             if (item.conversationId === conversationId) {
@@ -378,7 +384,7 @@ const Chat = () => {
         });
       }
       setIChatData((prevValue) => [
-        { message: messageValue, timestamp: Date.now(), senderId: user.userId },
+        { message: messageValue, timestamp: Date.now(), senderId: user.userId, productId: productId },
         ...prevValue,
       ]);
     }
