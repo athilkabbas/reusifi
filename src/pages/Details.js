@@ -151,11 +151,6 @@ const { Text, Link } = Typography;
     },[])
 
   useEffect(() => {
-    setChatData([]);
-    setChatInitialLoad(true);
-    setChatLastEvaluatedKey(null);
-  }, []);
-  useEffect(() => {
     const getData = async () => {
       try {
         setLoading(true);
