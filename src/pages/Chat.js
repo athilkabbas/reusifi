@@ -107,8 +107,8 @@ const Chat = () => {
         setChatLoading(true);
         const result = await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
-            user.userId
-          }&count=${true}`,
+            encodeURIComponent(user.userId)
+          }&count=${encodeURIComponent(true)}`,
           { headers: { Authorization: "xxx" } }
         );
         setUnreadChatCount(result.data.count);
@@ -184,8 +184,8 @@ const Chat = () => {
           ]);
           await axios.get(
             `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
-              data.recipientUserId
-            }&userId2=${data.senderUserId}&read=${true}`,
+              encodeURIComponent(data.recipientUserId)
+            }&userId2=${encodeURIComponent(data.senderUserId)}&read=${encodeURIComponent(true)}`,
             { headers: { Authorization: "xxx" } }
           );
         };
@@ -213,13 +213,13 @@ const Chat = () => {
       let result;
       if (recipient && recipient["item"]["email"]) {
         result = await axios.get(
-          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${user.userId}&userId2=${recipient["item"]["email"]}&productId=${recipient["item"]["uuid"]}&lastEvaluatedKey=${lastEvaluatedKey}&limit=${limit}`,
+          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${encodeURIComponent(user.userId)}&userId2=${encodeURIComponent(recipient["item"]["email"])}&productId=${encodeURIComponent(recipient["item"]["uuid"])}&lastEvaluatedKey=${encodeURIComponent(lastEvaluatedKey)}&limit=${encodeURIComponent(limit)}`,
           { headers: { Authorization: "xxx" } }
         );
         await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
-            user.userId
-          }&userId2=${recipient["item"]["email"]}&productId=${recipient["item"]["uuid"]}&read=${true}`,
+            encodeURIComponent(user.userId)
+          }&userId2=${encodeURIComponent(recipient["item"]["email"])}&productId=${encodeURIComponent(recipient["item"]["uuid"])}&read=${encodeURIComponent(true)}`,
           { headers: { Authorization: "xxx" } }
         );
         setChatData((chatData) => {
@@ -244,13 +244,13 @@ const Chat = () => {
           }
         }
         result = await axios.get(
-          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${user.userId}&userId2=${userId2}&productId=${productId}&lastEvaluatedKey=${lastEvaluatedKey}&limit=${limit}`,
+          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${encodeURIComponent(user.userId)}&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(productId)}&lastEvaluatedKey=${encodeURIComponent(lastEvaluatedKey)}&limit=${encodeURIComponent(limit)}`,
           { headers: { Authorization: "xxx" } }
         );
         await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
-            user.userId
-          }&userId2=${userId2}&productId=${productId}&read=${true}`,
+            encodeURIComponent(user.userId)
+          }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(productId)}&read=${encodeURIComponent(true)}`,
           { headers: { Authorization: "xxx" } }
         );
         setChatData((chatData) => {

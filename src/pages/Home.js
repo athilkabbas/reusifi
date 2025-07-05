@@ -154,8 +154,8 @@ useEffect(() => {
         setChatLoading(true);
         const result = await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
-            user.userId
-          }&count=${true}`,
+            encodeURIComponent(user.userId)
+          }&count=${encodeURIComponent(true)}`,
           { headers: { Authorization: "xxx" } }
         );
         setUnreadChatCount(result.data.count);
@@ -190,8 +190,8 @@ useEffect(() => {
       setFavLoading(true);
       const results = await axios.get(
         `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getFavourites?email=${
-          user.userId
-        }&favList=${true}`,
+          encodeURIComponent(user.userId)
+        }&favList=${encodeURIComponent(true)}`,
         { headers: { Authorization: "xxx" } }
       );
       setFilterList([...results.data.finalResult]);
@@ -207,7 +207,7 @@ useEffect(() => {
     setFavInitialLoad(true);
     setHandleFavLoading(true);
     const results = await axios.get(
-      `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getFavourites?id=${id}&favourite=${favourite}&email=${user.userId}`,
+      `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getFavourites?id=${encodeURIComponent(id)}&favourite=${encodeURIComponent(favourite)}&email=${encodeURIComponent(user.userId)}`,
       { headers: { Authorization: "xxx" } }
     );
     if (!favourite) {
@@ -228,34 +228,27 @@ useEffect(() => {
       setLoading(true);
       let results;
       if (search) {
+        console.log(JSON.stringify(lastEvaluatedKeys))
         results = await axios.get(
-          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?limit=${limit}&lastEvaluatedKeys=${JSON.stringify(
+          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?limit=${encodeURIComponent(limit)}&lastEvaluatedKeys=${encodeURIComponent(JSON.stringify(
             lastEvaluatedKeys
-          )}&search=${search.trim()}&location=${JSON.stringify(
+          ))}&search=${encodeURIComponent(search.trim())}&location=${encodeURIComponent(JSON.stringify(
             location
-          )}&priceFilter=${priceFilter}`,
+          ))}&priceFilter=${encodeURIComponent(priceFilter)}`,
           { headers: { Authorization: "xxx" } }
         );
         setLastEvaluatedKeys(results.data.lastEvaluatedKeys);
-        let lastEvaluatedKeyFlag = false;
-        for (let lastEvaluatedKeyItem in results.data.lastEvaluatedKeys) {
-          if (
-            results.data.lastEvaluatedKeys[lastEvaluatedKeyItem] !== "COMPLETE"
-          ) {
-            lastEvaluatedKeyFlag = true;
-            break;
-          }
-        }
-        if (lastEvaluatedKeyFlag) {
+        // console.log(results.data)
+        if (results.data.hasMore) {
           setHasMore(true);
         } else {
           setHasMore(false);
         }
       } else {
         results = await axios.get(
-          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?limit=${limit}&lastEvaluatedKey=${JSON.stringify(
+          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?limit=${encodeURIComponent(limit)}&lastEvaluatedKey=${encodeURIComponent(JSON.stringify(
             lastEvaluatedKey
-          )}&location=${JSON.stringify(location)}&priceFilter=${priceFilter}`,
+          ))}&location=${encodeURIComponent(JSON.stringify(location))}&priceFilter=${encodeURIComponent(priceFilter)}`,
           { headers: { Authorization: "xxx" } }
         );
         setLastEvaluatedKey(results.data.lastEvaluatedKey);
@@ -385,6 +378,7 @@ useEffect(() => {
               boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
               borderRadius: "7px"
             }}
+            disabled={!search}
             value={location.state}
             placeholder="State"
             optionFilterProp="label"
@@ -404,6 +398,7 @@ useEffect(() => {
               style={{
                 width: !isMobile ? "20vw" : "35vw",
               }}
+              disabled={!search}
               value={location.district}
               placeholder="District"
               optionFilterProp="label"
@@ -420,7 +415,7 @@ useEffect(() => {
         <Space.Compact size="large" style={{ padding: "10px",display: "flex", alignItems: "center" }}>
           <Text strong>Price</Text>
           &nbsp; &nbsp;
-          <Radio.Group style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" }} buttonStyle="solid" onChange={onChangePriceFilter} value={priceFilter}>
+          <Radio.Group  disabled={!search} style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" }} buttonStyle="solid" onChange={onChangePriceFilter} value={priceFilter}>
             <Radio.Button value={"true"}>Low to High</Radio.Button>
             <Radio.Button value={"false"}>High to Low</Radio.Button>
           </Radio.Group>

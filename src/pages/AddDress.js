@@ -73,7 +73,7 @@ const AddDress = () => {
         let result;
         result = await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?count=${true}&email=${
-            user.userId
+            encodeURIComponent(user.userId)
           }`,
           { headers: { Authorization: "xxx" } }
         );
@@ -135,7 +135,7 @@ const AddDress = () => {
       try {
         const result = await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
-            user.userId
+            encodeURIComponent(user.userId)
           }&count=${true}`,
           { headers: { Authorization: "xxx" } }
         );
@@ -233,65 +233,85 @@ const AddDress = () => {
       };
     });
   }, [fileList]);
+
   const handleSubmit = async () => {
-    let invalid = false;
-    for (let key in form) {
-      if (key === "images" && form[key].length === 0) {
-        invalid = true;
-      } else if (form[key] === "" || form[key] === null) {
-        invalid = true;
+    const isValid = () => {
+      if (!form.images || form.images.length === 0) return false;
+      for (let key in form) {
+        if (key !== "images" && (form[key] === "" || form[key] === null)) {
+          return false;
+        }
       }
-    }
-    if (invalid) {
+        return true;
+    };
+
+    if (!isValid()) {
       infoAllFieldsMandatory();
       return;
     }
+
     setData([]);
     setInitialLoad(true);
     setLastEvaluatedKey(null);
     setLastEvaluatedKeys({});
     setLoading(true);
+
     const options = {
-      maxSizeMB: 0.01, // Try to compress the image down to ~10 KB
-      useWebWorker: true, // Enable web worker for performance
-      initialQuality: 1, // Start with low quality for aggressive compression
+      maxSizeMB: 0.01,
+      useWebWorker: true,
+      initialQuality: 1,
     };
-    let s3Keys = [];
-    for (let i = 0; i < form.images.length; i++) {
-      let compressImage = await imageCompression(form.images[i], options);
-      const url = await axios.get(
-        `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getUrl?email=${form.email}`,
-        {
-          headers: {
-            Authorization: "xxx",
-          },
-        }
+
+    try {
+      // Compress all images in parallel
+      const compressedImages = await Promise.all(
+        form.images.map((image) => imageCompression(image, options))
       );
-      s3Keys.push(url.data.s3Key);
-      await axios.put(url.data.uploadURL, compressImage);
-    }
-    let data = {
-      title: form.title.trim().toLowerCase(),
-      description: form.description.trim().toLowerCase(),
-      state: form.state.toLowerCase(),
-      district: form.district.toLowerCase(),
-      email: form.email.toLowerCase(),
-      price: parseInt(form.price.toLowerCase()),
-      s3Keys,
-    };
-    await axios.post(
-      "https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/addDress",
-      data,
-      {
-        headers: {
-          Authorization: "xxx",
-        },
-      }
-    );
-    setAdPageInitialLoad(true)
-    setLoading(false);
-    navigate("/");
-  };
+
+      // Get upload URLs in parallel
+      const uploadUrlPromises = compressedImages.map(() =>
+        axios.get(
+          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getUrl?email=${encodeURIComponent(form.email)}`,
+          { headers: { Authorization: "xxx" } }
+        )
+      );
+      const uploadUrlResponses = await Promise.all(uploadUrlPromises);
+
+      // Upload all images in parallel
+      await Promise.all(
+        compressedImages.map((img, idx) =>
+          axios.put(uploadUrlResponses[idx].data.uploadURL, img)
+        )
+      );
+
+      const s3Keys = uploadUrlResponses.map((res) => res.data.s3Key);
+
+      const data = {
+        title: form.title.trim().toLowerCase(),
+        description: form.description.trim().toLowerCase(),
+        state: form.state.toLowerCase(),
+        district: form.district.toLowerCase(),
+        email: form.email.toLowerCase(),
+        price: parseInt(form.price),
+        s3Keys,
+      };
+
+      await axios.post(
+        "https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/addDress",
+        encodeURIComponent(data),
+        { headers: { Authorization: "xxx" } }
+      );
+
+      setAdPageInitialLoad(true);
+      setLoading(false);
+      navigate("/");
+  } catch (error) {
+      setLoading(false);
+      console.error("Error during submission:", error);
+    // Optionally, handle error UI here
+  }
+};
+
   const uploadButton = (
     <button
       style={{

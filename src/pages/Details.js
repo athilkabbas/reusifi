@@ -100,8 +100,8 @@ const { Text, Link } = Typography;
       try {
         const result = await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
-            user.userId
-          }&count=${true}`,
+            encodeURIComponent(user.userId)
+          }&count=${encodeURIComponent(true)}`,
           { headers: { Authorization: "xxx" } }
         );
         setUnreadChatCount(result.data.count);
@@ -155,7 +155,7 @@ const { Text, Link } = Typography;
       try {
         setLoading(true);
         const result = await axios.get(
-          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?id=${item["item"]["uuid"]}`,
+          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?id=${encodeURIComponent(item["item"]["uuid"])}`,
           { headers: { Authorization: "xxx" } }
         );
         setLoading(false);
@@ -179,8 +179,8 @@ const { Text, Link } = Typography;
       setLoading(true);
       let results = await axios.get(
         `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/deleteAd?id=${
-          item["item"]["uuid"]
-        }&s3Keys=${JSON.stringify(item["item"]["s3Keys"])}`,
+          encodeURIComponent(item["item"]["uuid"])
+        }&s3Keys=${encodeURIComponent(JSON.stringify(item["item"]["s3Keys"]))}`,
         { headers: { Authorization: "xxx" } }
       );
       setLoading(false);

@@ -99,7 +99,7 @@ const Ads = () => {
       try {
         const result = await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
-            user.userId
+            encodeURIComponent(user.userId)
           }&count=${true}`,
           { headers: { Authorization: "xxx" } }
         );
@@ -174,9 +174,9 @@ const Ads = () => {
       setLoading(true);
       let results;
       results = await axios.get(
-        `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?limit=${limit}&lastEvaluatedKey=${JSON.stringify(
+        `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?limit=${encodeURIComponent(limit)}&lastEvaluatedKey=${encodeURIComponent(JSON.stringify(
           adLastEvaluatedKey
-        )}&email=${user.userId}`,
+        ))}&email=${encodeURIComponent(user.userId)}`,
         { headers: { Authorization: "xxx" } }
       );
       setAdLastEvaluatedKey(results.data.lastEvaluatedKey);

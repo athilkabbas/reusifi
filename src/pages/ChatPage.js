@@ -161,8 +161,8 @@ const ChatPage = () => {
       try {
         const result = await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
-            user.userId
-          }&count=${true}`,
+            encodeURIComponent(user.userId)
+          }&count=${encodeURIComponent(true)}`,
           { headers: { Authorization: "xxx" } }
         );
         setUnreadChatCount(result.data.count);
@@ -233,8 +233,8 @@ const ChatPage = () => {
       if (clickedItemKey === "1") {
         const result = await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/blockUser?block=${true}&userId1=${
-            user.userId
-          }&userId2=${userId2}&productId=${chatData[index].productId}`,
+            encodeURIComponent(user.userId)
+          }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(chatData[index].productId)}`,
           { headers: { Authorization: "xxx" } }
         );
         setChatData((prevValue) => {
@@ -248,8 +248,8 @@ const ChatPage = () => {
       } else {
         const result = await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/blockUser?deleteChat=${true}&userId1=${
-            user.userId
-          }&userId2=${userId2}&productId=${chatData[index].productId}`,
+            encodeURIComponent(user.userId)
+          }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(chatData[index].productId)}`,
           { headers: { Authorization: "xxx" } }
         );
         setChatData((prevValue) => {
@@ -287,8 +287,8 @@ const ChatPage = () => {
       if (clickedItemKey === "1") {
         const result = await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/blockUser?unBlock=${true}&userId1=${
-            user.userId
-          }&userId2=${userId2}&productId=${chatData[index].productId}`,
+            encodeURIComponent(user.userId)
+          }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(chatData[index].productId)}`,
           { headers: { Authorization: "xxx" } }
         );
         setChatData((prevValue) => {
@@ -302,8 +302,8 @@ const ChatPage = () => {
       } else {
         const result = await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/blockUser?deleteChat=${true}&userId1=${
-            user.userId
-          }&userId2=${userId2}&productId=${chatData[index].productId}`,
+            encodeURIComponent(user.userId)
+          }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(chatData[index].productId)}`,
           { headers: { Authorization: "xxx" } }
         );
         setChatData((prevValue) => {
@@ -398,7 +398,7 @@ const ChatPage = () => {
       const scrollPosition = scrollableDivRef.current.scrollTop;
       setLoading(true);
       const result = await axios.get(
-        `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${user.userId}&lastEvaluatedKey=${chatLastEvaluatedKey}&limit=${limit}`,
+        `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${encodeURIComponent(user.userId)}&lastEvaluatedKey=${encodeURIComponent(chatLastEvaluatedKey)}&limit=${encodeURIComponent(limit)}`,
         { headers: { Authorization: "xxx" } }
       );
       setChatData([...chatData, ...result.data.items]);

@@ -147,8 +147,8 @@ const App = () => {
         setChatLoading(true);
         const result = await axios.get(
           `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
-            user.userId
-          }&count=${true}`,
+            encodeURIComponent(user.userId)
+          }&count=${encodeURIComponent(true)}`,
           { headers: { Authorization: "xxx" } }
         );
         setUnreadChatCount(result.data.count);
@@ -167,8 +167,8 @@ const App = () => {
       setFavLoading(true);
       const results = await axios.get(
         `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getFavourites?email=${
-          user.userId
-        }&favList=${true}`,
+          encodeURIComponent(user.userId)
+        }&favList=${encodeURIComponent(true)}`,
         { headers: { Authorization: "xxx" } }
       );
       setFilterList([...results.data.finalResult]);
@@ -186,7 +186,7 @@ const App = () => {
     setFavScrollPosition(scrollableDivRef.current.scrollTop);
     setHandleFavLoading(true);
     const results = await axios.get(
-      `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getFavourites?id=${id}&favourite=${favourite}&email=${user.userId}`,
+      `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getFavourites?id=${encodeURIComponent(id)}&favourite=${encodeURIComponent(favourite)}&email=${encodeURIComponent(user.userId)}`,
       { headers: { Authorization: "xxx" } }
     );
     if (!favourite) {
@@ -214,10 +214,10 @@ const App = () => {
 
       results = await axios.get(
         `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getFavourites?email=${
-          user.userId
-        }&limit=${limit}&lastEvaluatedKey=${JSON.stringify(
+          encodeURIComponent(user.userId)
+        }&limit=${encodeURIComponent(limit)}&lastEvaluatedKey=${encodeURIComponent(JSON.stringify(
           favLastEvaluatedKey
-        )}`,
+        ))}`,
         { headers: { Authorization: "xxx" } }
       );
       setFavLastEvaluatedKey(results.data.lastEvaluatedKey);
