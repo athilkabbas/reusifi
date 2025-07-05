@@ -72,6 +72,7 @@ const App = () => {
     setLastEvaluatedKey,
     lastEvaluatedKeys,
     setLastEvaluatedKeys,
+    setExhaustedShards,
     hasMore,
     setHasMore,
     filterList,
@@ -172,7 +173,7 @@ useEffect(() => {
   const handleChange = (value, type) => {
     setData([]);
     setLastEvaluatedKeys({});
-    setLastEvaluatedKey(null);
+    setExhaustedShards({})
     setInitialLoad(true);
     if (type === "state") {
       setLocation((prevValue) => {
@@ -238,6 +239,7 @@ useEffect(() => {
           { headers: { Authorization: "xxx" } }
         );
         setLastEvaluatedKeys(results.data.lastEvaluatedKeys);
+        setExhaustedShards(results.data.exhaustedShards)
         // console.log(results.data)
         if (results.data.hasMore) {
           setHasMore(true);
@@ -246,16 +248,17 @@ useEffect(() => {
         }
       } else {
         results = await axios.get(
-          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?limit=${encodeURIComponent(limit)}&lastEvaluatedKey=${encodeURIComponent(JSON.stringify(
-            lastEvaluatedKey
+          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?limit=${encodeURIComponent(limit)}&lastEvaluatedKeys=${encodeURIComponent(JSON.stringify(
+            lastEvaluatedKeys
           ))}&location=${encodeURIComponent(JSON.stringify(location))}&priceFilter=${encodeURIComponent(priceFilter)}`,
           { headers: { Authorization: "xxx" } }
         );
-        setLastEvaluatedKey(results.data.lastEvaluatedKey);
-        if (!results.data.lastEvaluatedKey) {
-          setHasMore(false);
-        } else {
+        setLastEvaluatedKeys(results.data.lastEvaluatedKeys);
+        setExhaustedShards(results.data.exhaustedShards)
+        if (results.data.hasMore) {
           setHasMore(true);
+        } else {
+          setHasMore(false);
         }
       }
       setData([...data, ...results.data.finalResult]);
@@ -324,7 +327,7 @@ useEffect(() => {
 
   const onChangePriceFilter = (event) => {
     setLastEvaluatedKeys({});
-    setLastEvaluatedKey(null);
+    setExhaustedShards({})
     setData([]);
     setInitialLoad(true);
     setPriceFilter(event.target.value);
@@ -357,7 +360,7 @@ useEffect(() => {
             value={search}
             onChange={(event) => {
               setLastEvaluatedKeys({});
-              setLastEvaluatedKey(null);
+              setExhaustedShards({})
               setData([]);
               setInitialLoad(true);
               setSearch(event.target.value);
@@ -485,7 +488,7 @@ useEffect(() => {
                           cover={
                             <img
                               alt="example"
-                              src={item["image"]}
+                              src={item["images"][0]}
                               style={{
                                 objectFit: "cover",
                                 height: "20vh"
@@ -568,7 +571,7 @@ useEffect(() => {
             )}
             {
               handleFavLoading && (
-                <Spin fullscreen indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
+                <Spin fullscreen indicator={<LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />} />
               )
             }
           </InfiniteScroll>

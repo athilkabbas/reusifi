@@ -120,6 +120,7 @@ const AddDress = () => {
     setChatPageInitialLoad,
     setLastEvaluatedKey,
     setLastEvaluatedKeys,
+    setExhaustedShards,
     setFavLastEvaluatedKey,
     setChatLastEvaluatedKey,
     setAdLastEvaluatedKey,
@@ -252,14 +253,16 @@ const AddDress = () => {
 
     setData([]);
     setInitialLoad(true);
-    setLastEvaluatedKey(null);
     setLastEvaluatedKeys({});
+    setExhaustedShards({})
     setLoading(true);
 
     const options = {
-      maxSizeMB: 0.01,
+      maxSizeMB: 0.2,               
+      maxWidthOrHeight: 1024,     
       useWebWorker: true,
-      initialQuality: 1,
+      initialQuality: 0.8,     
+      fileType: "image/webp"
     };
 
     try {
@@ -298,7 +301,7 @@ const AddDress = () => {
 
       await axios.post(
         "https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/addDress",
-        encodeURIComponent(data),
+        data,
         { headers: { Authorization: "xxx" } }
       );
 

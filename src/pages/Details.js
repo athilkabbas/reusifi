@@ -86,6 +86,7 @@ const Details = () => {
     setChatPageInitialLoad,
     setLastEvaluatedKey,
     setLastEvaluatedKeys,
+    setExhaustedShards,
     setChatLastEvaluatedKey,
     detailInitialLoad,
     setDetailInitialLoad,
@@ -159,7 +160,7 @@ const { Text, Link } = Typography;
           { headers: { Authorization: "xxx" } }
         );
         setLoading(false);
-        setImages(result.data.images);
+        setImages(result?.data[0]?.images);
       } catch (err) {
         setLoading(false);
         console.log(err);
@@ -174,8 +175,8 @@ const { Text, Link } = Typography;
     try {
       setData([]);
       setInitialLoad(true);
-      setLastEvaluatedKey(null);
       setLastEvaluatedKeys({});
+      setExhaustedShards({})
       setLoading(true);
       let results = await axios.get(
         `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/deleteAd?id=${

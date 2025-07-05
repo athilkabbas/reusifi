@@ -316,7 +316,7 @@ const Ads = () => {
                           cover={
                             <img
                               alt="example"
-                              src={item["image"]}
+                              src={item["images"][0]}
                               style={{
                                 height: "20vh",
                                 objectFit: "cover",

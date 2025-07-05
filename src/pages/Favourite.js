@@ -421,7 +421,7 @@ const App = () => {
             )}
               {
                 handleFavLoading && (
-                  <Spin fullscreen indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
+                  <Spin fullscreen indicator={<LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />} />
                 )
               }
           </InfiniteScroll>

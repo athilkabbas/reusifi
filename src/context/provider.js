@@ -14,6 +14,7 @@ const Provider = ({ children }) => {
   const [search, setSearch] = useState(null);
   const [filterList, setFilterList] = useState([]);
   const [lastEvaluatedKeys, setLastEvaluatedKeys] = useState({});
+  const [exhaustedShards, setExhaustedShards] = useState({})
   const [lastEvaluatedKey, setLastEvaluatedKey] = useState(null);
   const [adLastEvaluatedKey, setAdLastEvaluatedKey] = useState(null);
   const [favLastEvaluatedKey, setFavLastEvaluatedKey] = useState(null);
@@ -39,6 +40,8 @@ const Provider = ({ children }) => {
   return (
     <Context.Provider
       value={{
+        exhaustedShards,
+        setExhaustedShards,
         contactInitialLoad,
         setContactInitialLoad,
         iChatInitialLoad,

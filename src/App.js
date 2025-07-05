@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {
+  LoadingOutlined
+} from "@ant-design/icons";
 import { Amplify } from "aws-amplify";
 import awsconfig from "./aws-exports";
 import {
@@ -17,40 +20,20 @@ import ChatPage from "./pages/ChatPage";
 import Ads from "./pages/Ads";
 import Contact from "./pages/Contact";
 import Favourites from "./pages/Favourite";
+import { Spin  } from "antd";
 
 import "./App.css";
+import { useSessionCheck } from "./hooks/sessionCheck";
 
 Amplify.configure(awsconfig);
 
 function App() {
-  const [isSignedIn, setIsSignedIn] = useState(false);
-  const [checked, setChecked] = useState(false);
 
-  useEffect(() => {
-    const checkSession = async () => {
-      try {
-        const session = await fetchAuthSession();
-        const tokens = session.tokens;
-        if (tokens?.idToken) {
-          setIsSignedIn(true);
-        } else {
-          setIsSignedIn(false);
-        }
-      } catch {
-        setIsSignedIn(false);
-      } finally {
-        setChecked(true);
-      }
-    };
+  const { isSignedIn, checked } = useSessionCheck();
 
-    checkSession();
-  }, []);
-
-  useEffect(() => {
-    if (checked && !isSignedIn) {
-      signInWithRedirect();
-    }
-  }, [checked, isSignedIn]);
+  if(!checked){
+    return <Spin fullscreen indicator={<LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />} />
+  }
 
   if (!isSignedIn) {
   return (
