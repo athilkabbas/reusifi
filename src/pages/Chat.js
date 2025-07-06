@@ -62,7 +62,6 @@ const Chat = () => {
   const sendMessage = (message, recipientUserId, senderUserId,productId) => {
     try {
       if (ws) {
-        console.log('hey ehere')
         ws.send(
           JSON.stringify({
             action: "sendMessage",
@@ -209,14 +208,15 @@ const Chat = () => {
         console.log("Error fetching user", error);
       }
     };
-
-    fetchUser();
+    if(token){
+      fetchUser();
+    }
     return () => {
       if(socket){
         socket.close();
       }
     };
-  }, [reconnect]);
+  }, [reconnect,token]);
 
   const getChats = async () => {
     try {
