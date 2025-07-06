@@ -51,7 +51,7 @@ const Chat = () => {
   const [reconnect, setReconnect] = useState(false);
   const [lastEvaluatedKey, setLastEvaluatedKey] = useState(null);
   const bottomRef = useRef(null); // To reference the bottom of the chat container
-  const [hasMore, setHasMore] = useState(true);
+  const [hasMore, setHasMore] = useState(false);
   const [loading, setLoading] = useState(false);
   const scrollableDivRef = useRef(null);
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -162,7 +162,7 @@ const Chat = () => {
         const currentUser = await getCurrentUser();
         setUser(currentUser);
         socket = new WebSocket(
-          `wss://d33iiy9qcb0yoj.cloudfront.net/production?userId=${currentUser.userId}&productId=${recipient["item"]["uuid"] || productId}`
+          `wss://d33iiy9qcb0yoj.cloudfront.net/production?userId=${currentUser.userId}&productId=${productId || recipient["item"]["uuid"]}`
         );
         setWs(socket);
         socket.onopen = () => {
@@ -266,8 +266,11 @@ const Chat = () => {
       setIChatData((prevValue) => [...prevValue, ...result.data.items]);
       setLastEvaluatedKey(result.data.lastEvaluatedKey);
       // If no more data to load, set hasMore to false
-      if (!result.data.lastEvaluatedKey) {
-        setHasMore(false);
+      if (result.data.lastEvaluatedKey) {
+        setHasMore(true);
+      }
+      else{
+         setHasMore(false);
       }
       setLoading(false);
       setScrollPosition(scrollPosition);
@@ -497,72 +500,90 @@ function formatChatTimestamp(timestamp) {
                 {ichatData.map((item) => {
                   if (item.senderId === user.userId) {
                     return (
-                      <Row key={item.timestamp} style={{ padding: "10px" }}>
-                        <Col xs={12} offset={12}>
+                      <div
+                        key={item.timestamp}
+                        style={{ display: "flex", justifyContent: "flex-end", padding: "10px" }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            background: "#E5E7EB",
+                            borderRadius: "16px 16px 4px 16px",
+                            padding: "10px",
+                            minWidth: "40vw",
+                            maxWidth: "80vw", // prevent it from overflowing
+                          }}
+                        >
                           <div
-                            style={{ display: "flex", flexDirection: "column", background: "#E5E7EB",borderRadius: "16px 16px 4px 16px", padding: "10px" }}
+                            style={{
+                              display: "flex",
+                              wordBreak: "break-word",
+                              justifyContent: "end",
+                              whiteSpace: "pre-wrap",
+                            }}
                           >
-                            <div
-                              style={{
-                                display: "flex",
-                                wordBreak: "break-word",
-                                justifyContent: "end",
-                              }}
-                            >
-                              {item.message.split("\n").map((line, index) => (
-                                <React.Fragment key={index}>
-                                  {line}
-                                  <br />
-                                </React.Fragment>
-                              ))}
-                            </div>
-                            <div
-                              style={{ display: "flex", justifyContent: "end" }}
-                            >
-                              <Text style={{ fontSize: "10px" }}>
-                                {formatChatTimestamp(item.timestamp)}
-                              </Text>
-                            </div>
+                            {item.message.split("\n").map((line, index) => (
+                              <React.Fragment key={index}>
+                                {line}
+                                <br />
+                              </React.Fragment>
+                            ))}
                           </div>
-                        </Col>
-                      </Row>
+                          <div style={{ display: "flex", justifyContent: "end" }}>
+                            <Text style={{ fontSize: "10px" }}>
+                              {formatChatTimestamp(item.timestamp)}
+                            </Text>
+                          </div>
+                        </div>
+                      </div>
                     );
                   } else {
                     return (
-                      <Row key={item.timestamp} style={{ padding: "10px" }}>
-                        <Col xs={12}>
+                      <div
+                        key={item.timestamp}
+                        style={{ display: "flex", justifyContent: "flex-start", padding: "10px" }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            background: "#E0E7FF",
+                            borderRadius: "16px 16px 16px 4px",
+                            padding: "10px",
+                            minWidth:"40vw",
+                            maxWidth: "80vw", // prevent overflow
+                          }}
+                        >
                           <div
-                            style={{ display: "flex", flexDirection: "column", background: "#E0E7FF",borderRadius: "16px 16px 16px 4px", padding:"10px" }}
+                            style={{
+                              display: "flex",
+                              wordBreak: "break-word",
+                              justifyContent: "start",
+                              paddingLeft: "10px",
+                            }}
                           >
-                            <div
-                              style={{
-                                display: "flex",
-                                wordBreak: "break-word",
-                                justifyContent: "start",
-                                paddingLeft: "10px",
-                              }}
-                            >
-                              {item.message.split("\n").map((line, index) => (
-                                <React.Fragment key={index}>
-                                  {line}
-                                  <br />
-                                </React.Fragment>
-                              ))}
-                            </div>
-                            <div
-                              style={{
-                                display: "flex",
-                                justifyContent: "start",
-                                paddingLeft: "10px",
-                              }}
-                            >
-                              <Text style={{ fontSize: "10px" }}>
-                                {formatChatTimestamp(item.timestamp)}
-                              </Text>
-                            </div>
+                            {item.message.split("\n").map((line, index) => (
+                              <React.Fragment key={index}>
+                                {line}
+                                <br />
+                              </React.Fragment>
+                            ))}
                           </div>
-                        </Col>
-                      </Row>
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "start",
+                              paddingLeft: "10px",
+                            }}
+                          >
+                            <Text style={{ fontSize: "10px" }}>
+                              {formatChatTimestamp(item.timestamp)}
+                            </Text>
+                          </div>
+                        </div>
+                      </div>
+
                     );
                   }
                 })}
