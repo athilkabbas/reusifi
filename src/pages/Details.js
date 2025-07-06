@@ -24,6 +24,7 @@ import {
 import { getCurrentUser, signOut } from "@aws-amplify/auth";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
+import { useSessionCheck } from "../hooks/sessionCheck";
 const IconText = [
   "Home",
   "Upload",
@@ -95,6 +96,7 @@ const Details = () => {
     messageApi.info("No longer available");
   };
 const { Text, Link } = Typography;
+const { token } = useSessionCheck()
   useEffect(() => {
     const getChatCount = async () => {
       setChatLoading(true);
@@ -103,7 +105,7 @@ const { Text, Link } = Typography;
           `https://dwo94t377z7ed.cloudfront.net/prod/getChat?userId1=${
             encodeURIComponent(user.userId)
           }&count=${encodeURIComponent(true)}`,
-          { headers: { Authorization: "xxx" } }
+          { headers: { Authorization: token } }
         );
         setUnreadChatCount(result.data.count);
         setChatLoading(false);
@@ -112,10 +114,10 @@ const { Text, Link } = Typography;
         console.log(err);
       }
     };
-    if (user && detailInitialLoad) {
+    if (user && detailInitialLoad && token) {
       getChatCount();
     }
-  }, [user]);
+  }, [user,token,detailInitialLoad]);
   const items = [
     HomeFilled,
     UploadOutlined,
@@ -157,7 +159,7 @@ const { Text, Link } = Typography;
         setLoading(true);
         const result = await axios.get(
           `https://dwo94t377z7ed.cloudfront.net/prod/getDress?id=${encodeURIComponent(item["item"]["uuid"])}`,
-          { headers: { Authorization: "xxx" } }
+          { headers: { Authorization: token } }
         );
         setLoading(false);
         setImages(result?.data[0]?.images);
@@ -167,10 +169,10 @@ const { Text, Link } = Typography;
         info();
       }
     };
-    if (item) {
+    if (item && token) {
       getData();
     }
-  }, []);
+  }, [item, token]);
   const handleDelete = async () => {
     try {
       setData([]);
@@ -182,7 +184,7 @@ const { Text, Link } = Typography;
         `https://dwo94t377z7ed.cloudfront.net/prod/deleteAd?id=${
           encodeURIComponent(item["item"]["uuid"])
         }&s3Keys=${encodeURIComponent(JSON.stringify(item["item"]["s3Keys"]))}`,
-        { headers: { Authorization: "xxx" } }
+        { headers: { Authorization: token } }
       );
       setLoading(false);
       navigate("/");

@@ -18,6 +18,7 @@ import {
 import { getCurrentUser, signOut } from "@aws-amplify/auth";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
+import { useSessionCheck } from "../hooks/sessionCheck";
 const IconText = [
   "Home",
   "Upload",
@@ -84,6 +85,7 @@ const Contact = () => {
     setContactInitialLoad
   } = useContext(Context);
 
+  const { token } = useSessionCheck()
   useEffect(() => {
     const getChatCount = async () => {
       try {
@@ -93,7 +95,7 @@ const Contact = () => {
           `https://dwo94t377z7ed.cloudfront.net/prod/getChat?userId1=${
             encodeURIComponent(currentUser.userId)
           }&count=${encodeURIComponent(true)}`,
-          { headers: { Authorization: "xxx" } }
+          { headers: { Authorization: token } }
         );
         setUnreadChatCount(result.data.count);
         setLoading(false);
@@ -102,10 +104,10 @@ const Contact = () => {
         console.log(err);
       }
     };
-    if(contactInitialLoad){
+    if(contactInitialLoad && token){
         getChatCount();
     }
-  }, []);
+  }, [contactInitialLoad, token]);
 
   const isMobile = useIsMobile()
   const items = [

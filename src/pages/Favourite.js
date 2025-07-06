@@ -30,6 +30,7 @@ import debounce from "lodash/debounce";
 import { states, districts, districtMap } from "../helpers/locations";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
+import { useSessionCheck } from "../hooks/sessionCheck";
 const IconText = [
   "Home",
   "Upload",
@@ -114,6 +115,7 @@ const App = () => {
       label: IconText[index],
     };
   });
+const { token } = useSessionCheck()
 
     useEffect(() => {
       const getUser = async () => {
@@ -149,7 +151,7 @@ const App = () => {
           `https://dwo94t377z7ed.cloudfront.net/prod/getChat?userId1=${
             encodeURIComponent(user.userId)
           }&count=${encodeURIComponent(true)}`,
-          { headers: { Authorization: "xxx" } }
+          { headers: { Authorization: token } }
         );
         setUnreadChatCount(result.data.count);
         setChatLoading(false);
@@ -157,10 +159,10 @@ const App = () => {
         console.log(err);
       }
     };
-    if (user && favInitialLoad) {
+    if (user && favInitialLoad && token) {
       getChatCount();
     }
-  }, [user]);
+  }, [user,token,favInitialLoad]);
 
     useEffect(() => {
     const getFavList = async () => {
@@ -169,15 +171,15 @@ const App = () => {
         `https://dwo94t377z7ed.cloudfront.net/prod/getFavourites?email=${
           encodeURIComponent(user.userId)
         }&favList=${encodeURIComponent(true)}`,
-        { headers: { Authorization: "xxx" } }
+        { headers: { Authorization: token } }
       );
       setFilterList([...results.data.finalResult]);
       setFavLoading(false);
     };
-    if (user && favInitialLoad) {
+    if (user && favInitialLoad && token) {
       getFavList();
     }
-  }, [user]);
+  }, [user,token,favInitialLoad]);
 
 
 
@@ -187,7 +189,7 @@ const App = () => {
     setHandleFavLoading(true);
     const results = await axios.get(
       `https://dwo94t377z7ed.cloudfront.net/prod/getFavourites?id=${encodeURIComponent(id)}&favourite=${encodeURIComponent(favourite)}&email=${encodeURIComponent(user.userId)}`,
-      { headers: { Authorization: "xxx" } }
+      { headers: { Authorization: token } }
     );
     if (!favourite) {
       setFilterList((prevValue) => {
@@ -218,7 +220,7 @@ const App = () => {
         }&limit=${encodeURIComponent(limit)}&lastEvaluatedKey=${encodeURIComponent(JSON.stringify(
           favLastEvaluatedKey
         ))}`,
-        { headers: { Authorization: "xxx" } }
+        { headers: { Authorization: token } }
       );
       setFavLastEvaluatedKey(results.data.lastEvaluatedKey);
       if (!results.data.lastEvaluatedKey) {
@@ -236,10 +238,10 @@ const App = () => {
     }
   };
   useEffect(() => {
-    if(favInitialLoad){
+    if(favInitialLoad && token && user){
       loadMoreData();
     }
-  }, [user]);
+  }, [user,token, favInitialLoad]);
 
   const navigate = useNavigate();
   const handleNavigation = (event) => {

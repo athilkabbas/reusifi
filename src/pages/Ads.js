@@ -29,6 +29,7 @@ import debounce from "lodash/debounce";
 import { states, districts, districtMap } from "../helpers/locations";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
+import { useSessionCheck } from "../hooks/sessionCheck";
 const IconText = [
   "Home",
   "Upload",
@@ -93,6 +94,7 @@ const Ads = () => {
     setIChatInitialLoad,
     setAddProductInitialLoad
   } = useContext(Context);
+  const { token } = useSessionCheck()
   useEffect(() => {
     const getChatCount = async () => {
       setChatLoading(true);
@@ -101,7 +103,7 @@ const Ads = () => {
           `https://dwo94t377z7ed.cloudfront.net/prod/getChat?userId1=${
             encodeURIComponent(user.userId)
           }&count=${true}`,
-          { headers: { Authorization: "xxx" } }
+          { headers: { Authorization: token } }
         );
         setUnreadChatCount(result.data.count);
         setChatLoading(false);
@@ -109,10 +111,10 @@ const Ads = () => {
         console.log(err);
       }
     };
-    if (user && adInitialLoad) {
+    if (user && adInitialLoad && token) {
       getChatCount();
     }
-  }, [user]);
+  }, [user,adInitialLoad,token]);
   const items = [
     HomeFilled,
     UploadOutlined,
@@ -177,7 +179,7 @@ const Ads = () => {
         `https://dwo94t377z7ed.cloudfront.net/prod/getDress?limit=${encodeURIComponent(limit)}&lastEvaluatedKey=${encodeURIComponent(JSON.stringify(
           adLastEvaluatedKey
         ))}&email=${encodeURIComponent(user.userId)}`,
-        { headers: { Authorization: "xxx" } }
+        { headers: { Authorization: token } }
       );
       setAdLastEvaluatedKey(results.data.lastEvaluatedKey);
       if (!results.data.lastEvaluatedKey) {
@@ -197,10 +199,10 @@ const Ads = () => {
   };
 
   useEffect(() => {
-    if(adInitialLoad){
+    if(adInitialLoad && token && user){
       loadMoreData();
     }
-  }, [user]);
+  }, [user,token,adInitialLoad]);
 
   const navigate = useNavigate();
   const handleNavigation = (event) => {

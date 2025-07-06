@@ -23,6 +23,7 @@ import {
 } from "@ant-design/icons";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
+import { useSessionCheck } from "../hooks/sessionCheck";
 const { Text, Link } = Typography;
 const { TextArea } = Input;
 const IconText = [
@@ -55,56 +56,7 @@ const AddDress = () => {
     images: [],
     price: null,
   });
-    useEffect(() => {
-      const getUser = async () => {
-          let currentUser = await getCurrentUser();
-        setForm((prevValue) => {
-          return { ...prevValue, email: currentUser.userId };
-        });
-        setUser(currentUser);
-      }
-      getUser()
-    },[])
-
-  useEffect(() => {
-    const getAdCount = async () => {
-      try {
-        setLoading(true);
-        let result;
-        result = await axios.get(
-          `https://dwo94t377z7ed.cloudfront.net/prod/getDress?count=${true}&email=${
-            encodeURIComponent(user.userId)
-          }`,
-          { headers: { Authorization: "xxx" } }
-        );
-        setCount(result.data.count);
-        setLoading(false);
-      } catch (err) {
-        setLoading(false);
-        console.log(err);
-      }
-    };
-    if(user && addProductInitialLoad){
-      getAdCount();
-    }
-  }, [user]);
-
-  const [districts, setDistricts] = useState([]);
-  const [count, setCount] = useState(0);
-  const handleChange = (value, type) => {
-    if (type === "price" && !/^(|[1-9]\d*)$/.test(value.target.value)) {
-      return;
-    }
-    setForm((prevValue) => {
-      if (type === "title" || type === "description" || type === "price") {
-        return { ...prevValue, [type]: value.target.value };
-      }
-      return { ...prevValue, [type]: value };
-    });
-  };
-
-  const [unreadChatCount, setUnreadChatCount] = useState(0);
-  const {
+   const {
     setData,
     setInitialLoad,
     data,
@@ -130,6 +82,57 @@ const AddDress = () => {
     setAddProductInitialLoad
   } = useContext(Context);
 
+      const { token } = useSessionCheck()
+    useEffect(() => {
+      const getUser = async () => {
+          let currentUser = await getCurrentUser();
+        setForm((prevValue) => {
+          return { ...prevValue, email: currentUser.userId };
+        });
+        setUser(currentUser);
+      }
+      getUser()
+    },[])
+
+  useEffect(() => {
+    const getAdCount = async () => {
+      try {
+        setLoading(true);
+        let result;
+        result = await axios.get(
+          `https://dwo94t377z7ed.cloudfront.net/prod/getDress?count=${true}&email=${
+            encodeURIComponent(user.userId)
+          }`,
+          { headers: { Authorization: token } }
+        );
+        setCount(result.data.count);
+        setLoading(false);
+      } catch (err) {
+        setLoading(false);
+        console.log(err);
+      }
+    };
+    if(user && addProductInitialLoad && token){
+      getAdCount();
+    }
+  }, [user,addProductInitialLoad, token]);
+
+  const [districts, setDistricts] = useState([]);
+  const [count, setCount] = useState(0);
+  const handleChange = (value, type) => {
+    if (type === "price" && !/^(|[1-9]\d*)$/.test(value.target.value)) {
+      return;
+    }
+    setForm((prevValue) => {
+      if (type === "title" || type === "description" || type === "price") {
+        return { ...prevValue, [type]: value.target.value };
+      }
+      return { ...prevValue, [type]: value };
+    });
+  };
+
+  const [unreadChatCount, setUnreadChatCount] = useState(0);
+
   useEffect(() => {
     const getChatCount = async () => {
       setChatLoading(true);
@@ -138,7 +141,7 @@ const AddDress = () => {
           `https://dwo94t377z7ed.cloudfront.net/prod/getChat?userId1=${
             encodeURIComponent(user.userId)
           }&count=${true}`,
-          { headers: { Authorization: "xxx" } }
+          { headers: { Authorization: token } }
         );
         setUnreadChatCount(result.data.count);
         setChatLoading(false);
@@ -147,10 +150,10 @@ const AddDress = () => {
         console.log(err);
       }
     };
-    if (user && addProductInitialLoad) {
+    if (user && addProductInitialLoad && token) {
       getChatCount();
     }
-  }, [user]);
+  }, [user,token,addProductInitialLoad]);
   const items = [
     HomeFilled,
     UploadOutlined,
@@ -275,7 +278,7 @@ const AddDress = () => {
       const uploadUrlPromises = compressedImages.map((img) =>
         axios.get(
           `https://dwo94t377z7ed.cloudfront.net/prod/getUrl?email=${encodeURIComponent(form.email)}&contentType=${encodeURIComponent(img.type)}`,
-          { headers: { Authorization: "xxx" } }
+          { headers: { Authorization: token } }
         )
       );
       const uploadUrlResponses = await Promise.all(uploadUrlPromises);
@@ -302,7 +305,7 @@ const AddDress = () => {
       await axios.post(
         "https://dwo94t377z7ed.cloudfront.net/prod/addDress",
         data,
-        { headers: { Authorization: "xxx" } }
+        { headers: { Authorization: token } }
       );
 
       setAdPageInitialLoad(true);

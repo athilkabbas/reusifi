@@ -30,6 +30,7 @@ import debounce from "lodash/debounce";
 import { states, districts, districtMap } from "../helpers/locations";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
+import { useSessionCheck } from "../hooks/sessionCheck";
 const IconText = [
   "Home",
   "Upload",
@@ -122,7 +123,7 @@ const App = () => {
       label: IconText[index],
     };
   });
-
+const { token } = useSessionCheck()
 useEffect(() => {
   if (scrollableDivRef.current && !chatLoading && !favLoading && !handleFavLoading && !loading) {
     const el = scrollableDivRef.current;
@@ -157,7 +158,7 @@ useEffect(() => {
           `https://dwo94t377z7ed.cloudfront.net/prod/getChat?userId1=${
             encodeURIComponent(user.userId)
           }&count=${encodeURIComponent(true)}`,
-          { headers: { Authorization: "xxx" } }
+          { headers: { Authorization: token } }
         );
         setUnreadChatCount(result.data.count);
         setChatLoading(false);
@@ -165,10 +166,10 @@ useEffect(() => {
         console.log(err);
       }
     };
-    if (user && initialLoad) {
+    if (user && initialLoad && token) {
       getChatCount();
     }
-  }, [user]);
+  }, [user,token, initialLoad]);
 
   const handleChange = (value, type) => {
     setData([]);
@@ -193,15 +194,15 @@ useEffect(() => {
         `https://dwo94t377z7ed.cloudfront.net/prod/getFavourites?email=${
           encodeURIComponent(user.userId)
         }&favList=${encodeURIComponent(true)}`,
-        { headers: { Authorization: "xxx" } }
+        { headers: { Authorization: token } }
       );
       setFilterList([...results.data.finalResult]);
       setFavLoading(false);
     };
-    if (user && initialLoad) {
+    if (user && initialLoad && token) {
       getFavList();
     }
-  }, [user]);
+  }, [user, token, initialLoad]);
 
   const handleFav = async (id, favourite) => {
     setScrollPosition(scrollableDivRef.current.scrollTop);
@@ -209,7 +210,7 @@ useEffect(() => {
     setHandleFavLoading(true);
     const results = await axios.get(
       `https://dwo94t377z7ed.cloudfront.net/prod/getFavourites?id=${encodeURIComponent(id)}&favourite=${encodeURIComponent(favourite)}&email=${encodeURIComponent(user.userId)}`,
-      { headers: { Authorization: "xxx" } }
+      { headers: { Authorization: token } }
     );
     if (!favourite) {
       setFilterList((prevValue) => {
@@ -236,7 +237,7 @@ useEffect(() => {
           ))}&search=${encodeURIComponent(search.trim())}&location=${encodeURIComponent(JSON.stringify(
             location
           ))}&priceFilter=${encodeURIComponent(priceFilter)}`,
-          { headers: { Authorization: "xxx" } }
+          { headers: { Authorization: token } }
         );
         setLastEvaluatedKeys(results.data.lastEvaluatedKeys);
         setExhaustedShards(results.data.exhaustedShards)
@@ -251,7 +252,7 @@ useEffect(() => {
           `https://dwo94t377z7ed.cloudfront.net/prod/getDress?limit=${encodeURIComponent(limit)}&lastEvaluatedKeys=${encodeURIComponent(JSON.stringify(
             lastEvaluatedKeys
           ))}&location=${encodeURIComponent(JSON.stringify(location))}&priceFilter=${encodeURIComponent(priceFilter)}`,
-          { headers: { Authorization: "xxx" } }
+          { headers: { Authorization: token } }
         );
         setLastEvaluatedKeys(results.data.lastEvaluatedKeys);
         setExhaustedShards(results.data.exhaustedShards)
@@ -277,14 +278,14 @@ useEffect(() => {
     }
 
     // Set a new timeout
-    if(initialLoad && (search || Object.values(location).some((value) => value) || priceFilter)){
+    if(token && initialLoad && (search || Object.values(location).some((value) => value) || priceFilter)){
       setLoading(true)
       timer.current = setTimeout(() => {
       loadMoreData();
       }, 1500);
     }
     else{
-      if(initialLoad){
+      if(initialLoad && token){
         loadMoreData()
       }
     }
@@ -294,7 +295,7 @@ useEffect(() => {
         clearTimeout(timer.current);
       }
     };
-  }, [search, location, priceFilter]);
+  }, [search, location, priceFilter,token]);
 
   const navigate = useNavigate();
   const isMobile = useIsMobile()

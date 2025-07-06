@@ -28,6 +28,7 @@ import {
 import { useLocation } from "react-router-dom";
 import testSpeed from "../helpers/internetSpeed";
 import { useIsMobile } from "../hooks/windowSize";
+import { useSessionCheck } from "../hooks/sessionCheck";
 const { TextArea } = Input;
 const IconText = [
   "Home",
@@ -101,6 +102,7 @@ const Chat = () => {
     setIChatInitialLoad,
   } = useContext(Context);
   const [chatLoading, setChatLoading] = useState(false);
+  const { token } = useSessionCheck()
   useEffect(() => {
     const getChatCount = async () => {
       try {
@@ -109,7 +111,7 @@ const Chat = () => {
           `https://dwo94t377z7ed.cloudfront.net/prod/getChat?userId1=${
             encodeURIComponent(user.userId)
           }&count=${encodeURIComponent(true)}`,
-          { headers: { Authorization: "xxx" } }
+          { headers: { Authorization: token } }
         );
         setUnreadChatCount(result.data.count);
         setChatLoading(false);
@@ -117,10 +119,10 @@ const Chat = () => {
         console.log(err);
       }
     };
-    if (user && iChatInitialLoad) {
+    if (user && iChatInitialLoad && token) {
       getChatCount();
     }
-  }, [user]);
+  }, [user,token,iChatInitialLoad]);
   const items = [
     HomeFilled,
     UploadOutlined,
@@ -186,7 +188,7 @@ const Chat = () => {
             `https://dwo94t377z7ed.cloudfront.net/prod/getChat?userId1=${
               encodeURIComponent(data.recipientUserId)
             }&userId2=${encodeURIComponent(data.senderUserId)}&read=${encodeURIComponent(true)}`,
-            { headers: { Authorization: "xxx" } }
+            { headers: { Authorization: token } }
           );
         };
         // To close the connection
@@ -214,13 +216,13 @@ const Chat = () => {
       if (recipient && recipient["item"]["email"]) {
         result = await axios.get(
           `https://dwo94t377z7ed.cloudfront.net/prod/getChat?userId1=${encodeURIComponent(user.userId)}&userId2=${encodeURIComponent(recipient["item"]["email"])}&productId=${encodeURIComponent(recipient["item"]["uuid"])}&lastEvaluatedKey=${encodeURIComponent(lastEvaluatedKey)}&limit=${encodeURIComponent(limit)}`,
-          { headers: { Authorization: "xxx" } }
+          { headers: { Authorization: token } }
         );
         await axios.get(
           `https://dwo94t377z7ed.cloudfront.net/prod/getChat?userId1=${
             encodeURIComponent(user.userId)
           }&userId2=${encodeURIComponent(recipient["item"]["email"])}&productId=${encodeURIComponent(recipient["item"]["uuid"])}&read=${encodeURIComponent(true)}`,
-          { headers: { Authorization: "xxx" } }
+          { headers: { Authorization: token } }
         );
         setChatData((chatData) => {
           return chatData.map((item) => {
@@ -245,13 +247,13 @@ const Chat = () => {
         }
         result = await axios.get(
           `https://dwo94t377z7ed.cloudfront.net/prod/getChat?userId1=${encodeURIComponent(user.userId)}&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(productId)}&lastEvaluatedKey=${encodeURIComponent(lastEvaluatedKey)}&limit=${encodeURIComponent(limit)}`,
-          { headers: { Authorization: "xxx" } }
+          { headers: { Authorization: token } }
         );
         await axios.get(
           `https://dwo94t377z7ed.cloudfront.net/prod/getChat?userId1=${
             encodeURIComponent(user.userId)
           }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(productId)}&read=${encodeURIComponent(true)}`,
-          { headers: { Authorization: "xxx" } }
+          { headers: { Authorization: token } }
         );
         setChatData((chatData) => {
           return chatData.map((item) => {
@@ -295,13 +297,13 @@ const Chat = () => {
 
   useEffect(() => {
     if (
-      user &&
+      token && user &&
       user.userId &&
       ((recipient && recipient["item"]["email"]) || conversationId)
     ) {
       getChats();
     }
-  }, [user, recipient, conversationId]);
+  }, [user, recipient, conversationId,token]);
 
   const handleNavigation = (event) => {
     switch (event.key) {

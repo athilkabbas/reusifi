@@ -31,6 +31,7 @@ import {
 } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
 import { useIsMobile } from "../hooks/windowSize";
+import { useSessionCheck } from "../hooks/sessionCheck";
 const { TextArea } = Input;
 const IconText = [
   "Home",
@@ -137,6 +138,8 @@ const ChatPage = () => {
     setAddProductInitialLoad
   } = useContext(Context);
 
+    const { token } = useSessionCheck()
+
      useEffect(() => {
           if (scrollableDivRef.current  &&  !loading && !chatLoading) {
             const el = scrollableDivRef.current;
@@ -163,7 +166,7 @@ const ChatPage = () => {
           `https://dwo94t377z7ed.cloudfront.net/prod/getChat?userId1=${
             encodeURIComponent(user.userId)
           }&count=${encodeURIComponent(true)}`,
-          { headers: { Authorization: "xxx" } }
+          { headers: { Authorization: token } }
         );
         setUnreadChatCount(result.data.count);
         setChatLoading(false);
@@ -171,10 +174,10 @@ const ChatPage = () => {
         console.log(err);
       }
     };
-    if (user && chatInitialLoad) {
+    if (user && chatInitialLoad && token) {
       getChatCount();
     }
-  }, [user]);
+  }, [user,chatInitialLoad, token]);
 
   const items = [
     HomeFilled,
@@ -202,6 +205,7 @@ const ChatPage = () => {
       label: IconText[index],
     };
   });
+
   useEffect(() => {
     if (data.length > 0) {
       setInitialLoad(false);
@@ -235,7 +239,7 @@ const ChatPage = () => {
           `https://dwo94t377z7ed.cloudfront.net/prod/blockUser?block=${true}&userId1=${
             encodeURIComponent(user.userId)
           }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(chatData[index].productId)}`,
-          { headers: { Authorization: "xxx" } }
+          { headers: { Authorization: token } }
         );
         setChatData((prevValue) => {
           return prevValue.map((item) => {
@@ -250,7 +254,7 @@ const ChatPage = () => {
           `https://dwo94t377z7ed.cloudfront.net/prod/blockUser?deleteChat=${true}&userId1=${
             encodeURIComponent(user.userId)
           }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(chatData[index].productId)}`,
-          { headers: { Authorization: "xxx" } }
+          { headers: { Authorization: token } }
         );
         setChatData((prevValue) => {
           return prevValue.map((item) => {
@@ -289,7 +293,7 @@ const ChatPage = () => {
           `https://dwo94t377z7ed.cloudfront.net/prod/blockUser?unBlock=${true}&userId1=${
             encodeURIComponent(user.userId)
           }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(chatData[index].productId)}`,
-          { headers: { Authorization: "xxx" } }
+          { headers: { Authorization: token } }
         );
         setChatData((prevValue) => {
           return prevValue.map((item) => {
@@ -304,7 +308,7 @@ const ChatPage = () => {
           `https://dwo94t377z7ed.cloudfront.net/prod/blockUser?deleteChat=${true}&userId1=${
             encodeURIComponent(user.userId)
           }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(chatData[index].productId)}`,
-          { headers: { Authorization: "xxx" } }
+          { headers: { Authorization: token } }
         );
         setChatData((prevValue) => {
           return prevValue.map((item) => {
@@ -399,7 +403,7 @@ const ChatPage = () => {
       setLoading(true);
       const result = await axios.get(
         `https://dwo94t377z7ed.cloudfront.net/prod/getChat?userId1=${encodeURIComponent(user.userId)}&lastEvaluatedKey=${encodeURIComponent(chatLastEvaluatedKey)}&limit=${encodeURIComponent(limit)}`,
-        { headers: { Authorization: "xxx" } }
+        { headers: { Authorization: token } }
       );
       setChatData([...chatData, ...result.data.items]);
       setChatLastEvaluatedKey(result.data.lastEvaluatedKey);
@@ -426,10 +430,10 @@ const ChatPage = () => {
   }, []);
 
   useEffect(() => {
-    if (user && user.userId && chatInitialLoad) {
+    if (user && user.userId && chatInitialLoad && token) {
       getChats();
     }
-  }, [user]);
+  }, [user,token]);
   const isMobile = useIsMobile()
   return (
     <Layout style={{ height: "100vh", overflow: "hidden" }}>
