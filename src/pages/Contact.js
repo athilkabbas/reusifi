@@ -90,7 +90,7 @@ const Contact = () => {
         setLoading(true);
         const currentUser = await getCurrentUser();
         const result = await axios.get(
-          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
+          `https://dwo94t377z7ed.cloudfront.net/prod/getChat?userId1=${
             encodeURIComponent(currentUser.userId)
           }&count=${encodeURIComponent(true)}`,
           { headers: { Authorization: "xxx" } }

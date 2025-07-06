@@ -8,7 +8,7 @@ const awsmobile = {
     "aws_user_pools_id": "ap-south-1_R9wR17tT5",
     "aws_user_pools_web_client_id": "7jeltl9uu4apdfugbmo1cub7ti",
     "oauth": {
-        "domain": "reusifia5121928-a5121928-dev.auth.ap-south-1.amazoncognito.com",
+        "domain": "auth.reusifi.com",
         "scope": [
             "phone",
             "email",

@@ -72,7 +72,7 @@ const AddDress = () => {
         setLoading(true);
         let result;
         result = await axios.get(
-          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?count=${true}&email=${
+          `https://dwo94t377z7ed.cloudfront.net/prod/getDress?count=${true}&email=${
             encodeURIComponent(user.userId)
           }`,
           { headers: { Authorization: "xxx" } }
@@ -135,7 +135,7 @@ const AddDress = () => {
       setChatLoading(true);
       try {
         const result = await axios.get(
-          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
+          `https://dwo94t377z7ed.cloudfront.net/prod/getChat?userId1=${
             encodeURIComponent(user.userId)
           }&count=${true}`,
           { headers: { Authorization: "xxx" } }
@@ -272,9 +272,9 @@ const AddDress = () => {
       );
 
       // Get upload URLs in parallel
-      const uploadUrlPromises = compressedImages.map(() =>
+      const uploadUrlPromises = compressedImages.map((img) =>
         axios.get(
-          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getUrl?email=${encodeURIComponent(form.email)}`,
+          `https://dwo94t377z7ed.cloudfront.net/prod/getUrl?email=${encodeURIComponent(form.email)}&contentType=${encodeURIComponent(img.type)}`,
           { headers: { Authorization: "xxx" } }
         )
       );
@@ -283,7 +283,7 @@ const AddDress = () => {
       // Upload all images in parallel
       await Promise.all(
         compressedImages.map((img, idx) =>
-          axios.put(uploadUrlResponses[idx].data.uploadURL, img)
+          axios.put(uploadUrlResponses[idx].data.uploadURL, img,{headers: { "Content-Type": img.type }})
         )
       );
 
@@ -300,7 +300,7 @@ const AddDress = () => {
       };
 
       await axios.post(
-        "https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/addDress",
+        "https://dwo94t377z7ed.cloudfront.net/prod/addDress",
         data,
         { headers: { Authorization: "xxx" } }
       );

@@ -154,7 +154,7 @@ useEffect(() => {
       try {
         setChatLoading(true);
         const result = await axios.get(
-          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
+          `https://dwo94t377z7ed.cloudfront.net/prod/getChat?userId1=${
             encodeURIComponent(user.userId)
           }&count=${encodeURIComponent(true)}`,
           { headers: { Authorization: "xxx" } }
@@ -190,7 +190,7 @@ useEffect(() => {
     const getFavList = async () => {
       setFavLoading(true);
       const results = await axios.get(
-        `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getFavourites?email=${
+        `https://dwo94t377z7ed.cloudfront.net/prod/getFavourites?email=${
           encodeURIComponent(user.userId)
         }&favList=${encodeURIComponent(true)}`,
         { headers: { Authorization: "xxx" } }
@@ -208,7 +208,7 @@ useEffect(() => {
     setFavInitialLoad(true);
     setHandleFavLoading(true);
     const results = await axios.get(
-      `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getFavourites?id=${encodeURIComponent(id)}&favourite=${encodeURIComponent(favourite)}&email=${encodeURIComponent(user.userId)}`,
+      `https://dwo94t377z7ed.cloudfront.net/prod/getFavourites?id=${encodeURIComponent(id)}&favourite=${encodeURIComponent(favourite)}&email=${encodeURIComponent(user.userId)}`,
       { headers: { Authorization: "xxx" } }
     );
     if (!favourite) {
@@ -231,7 +231,7 @@ useEffect(() => {
       if (search) {
         console.log(JSON.stringify(lastEvaluatedKeys))
         results = await axios.get(
-          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?limit=${encodeURIComponent(limit)}&lastEvaluatedKeys=${encodeURIComponent(JSON.stringify(
+          `https://dwo94t377z7ed.cloudfront.net/prod/getDress?limit=${encodeURIComponent(limit)}&lastEvaluatedKeys=${encodeURIComponent(JSON.stringify(
             lastEvaluatedKeys
           ))}&search=${encodeURIComponent(search.trim())}&location=${encodeURIComponent(JSON.stringify(
             location
@@ -248,7 +248,7 @@ useEffect(() => {
         }
       } else {
         results = await axios.get(
-          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?limit=${encodeURIComponent(limit)}&lastEvaluatedKeys=${encodeURIComponent(JSON.stringify(
+          `https://dwo94t377z7ed.cloudfront.net/prod/getDress?limit=${encodeURIComponent(limit)}&lastEvaluatedKeys=${encodeURIComponent(JSON.stringify(
             lastEvaluatedKeys
           ))}&location=${encodeURIComponent(JSON.stringify(location))}&priceFilter=${encodeURIComponent(priceFilter)}`,
           { headers: { Authorization: "xxx" } }

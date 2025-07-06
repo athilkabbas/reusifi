@@ -160,7 +160,7 @@ const ChatPage = () => {
       setChatLoading(true);
       try {
         const result = await axios.get(
-          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
+          `https://dwo94t377z7ed.cloudfront.net/prod/getChat?userId1=${
             encodeURIComponent(user.userId)
           }&count=${encodeURIComponent(true)}`,
           { headers: { Authorization: "xxx" } }
@@ -232,7 +232,7 @@ const ChatPage = () => {
       }
       if (clickedItemKey === "1") {
         const result = await axios.get(
-          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/blockUser?block=${true}&userId1=${
+          `https://dwo94t377z7ed.cloudfront.net/prod/blockUser?block=${true}&userId1=${
             encodeURIComponent(user.userId)
           }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(chatData[index].productId)}`,
           { headers: { Authorization: "xxx" } }
@@ -247,7 +247,7 @@ const ChatPage = () => {
         })
       } else {
         const result = await axios.get(
-          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/blockUser?deleteChat=${true}&userId1=${
+          `https://dwo94t377z7ed.cloudfront.net/prod/blockUser?deleteChat=${true}&userId1=${
             encodeURIComponent(user.userId)
           }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(chatData[index].productId)}`,
           { headers: { Authorization: "xxx" } }
@@ -286,7 +286,7 @@ const ChatPage = () => {
       }
       if (clickedItemKey === "1") {
         const result = await axios.get(
-          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/blockUser?unBlock=${true}&userId1=${
+          `https://dwo94t377z7ed.cloudfront.net/prod/blockUser?unBlock=${true}&userId1=${
             encodeURIComponent(user.userId)
           }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(chatData[index].productId)}`,
           { headers: { Authorization: "xxx" } }
@@ -301,7 +301,7 @@ const ChatPage = () => {
         })
       } else {
         const result = await axios.get(
-          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/blockUser?deleteChat=${true}&userId1=${
+          `https://dwo94t377z7ed.cloudfront.net/prod/blockUser?deleteChat=${true}&userId1=${
             encodeURIComponent(user.userId)
           }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(chatData[index].productId)}`,
           { headers: { Authorization: "xxx" } }
@@ -398,7 +398,7 @@ const ChatPage = () => {
       const scrollPosition = scrollableDivRef.current.scrollTop;
       setLoading(true);
       const result = await axios.get(
-        `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${encodeURIComponent(user.userId)}&lastEvaluatedKey=${encodeURIComponent(chatLastEvaluatedKey)}&limit=${encodeURIComponent(limit)}`,
+        `https://dwo94t377z7ed.cloudfront.net/prod/getChat?userId1=${encodeURIComponent(user.userId)}&lastEvaluatedKey=${encodeURIComponent(chatLastEvaluatedKey)}&limit=${encodeURIComponent(limit)}`,
         { headers: { Authorization: "xxx" } }
       );
       setChatData([...chatData, ...result.data.items]);

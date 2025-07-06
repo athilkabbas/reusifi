@@ -98,7 +98,7 @@ const Ads = () => {
       setChatLoading(true);
       try {
         const result = await axios.get(
-          `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getChat?userId1=${
+          `https://dwo94t377z7ed.cloudfront.net/prod/getChat?userId1=${
             encodeURIComponent(user.userId)
           }&count=${true}`,
           { headers: { Authorization: "xxx" } }
@@ -174,7 +174,7 @@ const Ads = () => {
       setLoading(true);
       let results;
       results = await axios.get(
-        `https://odkn534jbf.execute-api.ap-south-1.amazonaws.com/prod/getDress?limit=${encodeURIComponent(limit)}&lastEvaluatedKey=${encodeURIComponent(JSON.stringify(
+        `https://dwo94t377z7ed.cloudfront.net/prod/getDress?limit=${encodeURIComponent(limit)}&lastEvaluatedKey=${encodeURIComponent(JSON.stringify(
           adLastEvaluatedKey
         ))}&email=${encodeURIComponent(user.userId)}`,
         { headers: { Authorization: "xxx" } }
