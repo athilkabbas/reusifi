@@ -59,7 +59,6 @@ const Contact = () => {
         break;
     }
   };
-  const [unreadChatCount, setUnreadChatCount] = useState(0);
 
   const {
     setHomeInitialLoad,
@@ -82,7 +81,9 @@ const Contact = () => {
     contactInitialLoad,
     setIChatInitialLoad,
     setAddProductInitialLoad,
-    setContactInitialLoad
+    setContactInitialLoad,
+    unreadChatCount,
+    setUnreadChatCount
   } = useContext(Context);
 
   const { token } = useSessionCheck()

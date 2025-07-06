@@ -62,6 +62,7 @@ const Chat = () => {
   const sendMessage = (message, recipientUserId, senderUserId,productId) => {
     try {
       if (ws) {
+        console.log('hey ehere')
         ws.send(
           JSON.stringify({
             action: "sendMessage",
@@ -77,7 +78,6 @@ const Chat = () => {
     }
   };
   const limit = 20
-  const [unreadChatCount, setUnreadChatCount] = useState(0);
   const {
     setInitialLoad,
     data,
@@ -100,6 +100,8 @@ const Chat = () => {
     setAddProductInitialLoad,
     iChatInitialLoad,
     setIChatInitialLoad,
+    unreadChatCount,
+    setUnreadChatCount
   } = useContext(Context);
   const [chatLoading, setChatLoading] = useState(false);
   const { token } = useSessionCheck()
@@ -123,6 +125,14 @@ const Chat = () => {
       getChatCount();
     }
   }, [user,token,iChatInitialLoad]);
+
+ useEffect(() => {
+  if(!chatLoading){
+    setUnreadChatCount((prevValue) => Math.max(prevValue - 1, 0))
+  }
+
+ },[chatLoading]) 
+
   const items = [
     HomeFilled,
     UploadOutlined,
@@ -614,6 +624,7 @@ function formatChatTimestamp(timestamp) {
         }}
       >
         <TextArea
+          autoSize={{ minRows: 1, maxRows: 1 }}
           onChange={(value) => handleChange(value)}
           placeholder="Enter message"
           value={messageValue}

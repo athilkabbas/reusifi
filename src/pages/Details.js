@@ -71,7 +71,6 @@ const Details = () => {
         break;
     }
   };
-  const [unreadChatCount, setUnreadChatCount] = useState(0);
   const {
     setInitialLoad,
     setData,
@@ -94,6 +93,8 @@ const Details = () => {
     setDetailInitialLoad,
     detailData,
     setDetailData,
+    unreadChatCount,
+    setUnreadChatCount
   } = useContext(Context);
   const info = () => {
     messageApi.info("No longer available");

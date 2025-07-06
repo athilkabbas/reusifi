@@ -79,7 +79,9 @@ const AddDress = () => {
     addProductInitialLoad,
     setContactInitialLoad,
     setIChatInitialLoad,
-    setAddProductInitialLoad
+    setAddProductInitialLoad,
+    unreadChatCount,
+    setUnreadChatCount
   } = useContext(Context);
 
       const { token } = useSessionCheck()
@@ -130,8 +132,6 @@ const AddDress = () => {
       return { ...prevValue, [type]: value };
     });
   };
-
-  const [unreadChatCount, setUnreadChatCount] = useState(0);
 
   useEffect(() => {
     const getChatCount = async () => {

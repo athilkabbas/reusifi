@@ -86,9 +86,10 @@ const App = () => {
     setAdLastEvaluatedKey,
     setContactInitialLoad,
     setIChatInitialLoad,
-    setAddProductInitialLoad
+    setAddProductInitialLoad,
+    unreadChatCount,
+    setUnreadChatCount
   } = useContext(Context);
-  const [unreadChatCount, setUnreadChatCount] = useState(0);
   const items = [
     HomeFilled,
     UploadOutlined,

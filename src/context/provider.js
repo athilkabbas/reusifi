@@ -38,9 +38,12 @@ const Provider = ({ children }) => {
   const [contactInitialLoad, setContactInitialLoad] = useState(true)
   const [iChatInitialLoad, setIChatInitialLoad] = useState(true)
   const [detailData, setDetailData] = useState([])
+  const [unreadChatCount, setUnreadChatCount] = useState(0)
   return (
     <Context.Provider
       value={{
+        unreadChatCount,
+        setUnreadChatCount,
         detailData,
         setDetailData,
         exhaustedShards,
