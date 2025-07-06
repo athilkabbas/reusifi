@@ -162,7 +162,7 @@ const Chat = () => {
         const currentUser = await getCurrentUser();
         setUser(currentUser);
         socket = new WebSocket(
-          `wss://vcj0ne6oh5.execute-api.ap-south-1.amazonaws.com/production?userId=${currentUser.userId}&productId=${recipient["item"]["uuid"] || productId}`
+          `wss://d33iiy9qcb0yoj.cloudfront.net/production?userId=${currentUser.userId}&productId=${recipient["item"]["uuid"] || productId}`
         );
         setWs(socket);
         socket.onopen = () => {
