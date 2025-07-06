@@ -283,7 +283,7 @@ const { token } = useSessionCheck()
               display: loadedImages[index] ? "block" : "none",
               width: "100%",
               height: "400px",
-              objectFit: "contain",
+              objectFit: "cover",
             }}
             onLoad={() => handleLoad(index)}
             onError={() => handleLoad(index)}

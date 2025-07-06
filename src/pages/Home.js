@@ -513,7 +513,6 @@ useEffect(() => {
                                 </div>
                               )}
                               <img
-                              loading="lazy"
                                 src={item["images"][0]}
                                 style={{
                                   display: loadedImages[item["item"]["uuid"]] ? "block" : "none",
@@ -521,8 +520,8 @@ useEffect(() => {
                                   height: "200px",
                                   objectFit: "cover",
                                 }}
-                                  onLoad={() => handleImageLoad(item.item.uuid)}
-                                  onError={() => handleImageLoad(item.item.uuid)}
+                                  onLoad={() => handleImageLoad(item["item"]["uuid"])}
+                                  onError={() => handleImageLoad(item["item"]["uuid"])}
                               />
                             </div>
                           }
