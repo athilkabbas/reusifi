@@ -351,7 +351,7 @@ const { token } = useSessionCheck()
                             <img
                               loading="lazy"
                               alt="example"
-                              src={item["image"]}
+                              src={item["images"][0]}
                               style={{
                                 height: "20vh",
                                 objectFit: "cover",

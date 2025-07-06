@@ -238,82 +238,120 @@ const AddDress = () => {
     });
   }, [fileList]);
 
-  const handleSubmit = async () => {
-    const isValid = () => {
-      if (!form.images || form.images.length === 0) return false;
-      for (let key in form) {
-        if (key !== "images" && (form[key] === "" || form[key] === null)) {
-          return false;
-        }
+const handleSubmit = async () => {
+  const isValid = () => {
+    if (!form.images || form.images.length === 0) return false;
+    for (let key in form) {
+      if (key !== "images" && (form[key] === "" || form[key] === null)) {
+        return false;
       }
-        return true;
-    };
-
-    if (!isValid()) {
-      infoAllFieldsMandatory();
-      return;
     }
+    return true;
+  };
 
-    setData([]);
-    setInitialLoad(true);
-    setLastEvaluatedKeys({});
-    setExhaustedShards({})
-    setLoading(true);
+  if (!isValid()) {
+    infoAllFieldsMandatory();
+    return;
+  }
 
-    const options = {
-      maxSizeMB: 0.1,               
-      maxWidthOrHeight: 700,     
-      useWebWorker: true,
-      initialQuality: 0.75,     
-      fileType: "image/webp"
+  setData([]);
+  setInitialLoad(true);
+  setLastEvaluatedKeys({});
+  setExhaustedShards({});
+  setLoading(true);
+
+  const thumbnailOptions = {
+    maxSizeMB: 0.1,
+    maxWidthOrHeight: 700,
+    useWebWorker: true,
+    initialQuality: 0.75,
+    fileType: "image/webp",
+  };
+
+  const viewingOptions = {
+    maxSizeMB: 0.3,
+    maxWidthOrHeight: 1200,
+    useWebWorker: true,
+    initialQuality: 0.9,
+    fileType: "image/webp",
+  };
+
+  try {
+    // Compress thumbnails and viewings in parallel
+    const compressedThumbnails = [await imageCompression(form.images[0], thumbnailOptions)];
+    const compressedViewings = await Promise.all(
+      form.images.map((image) => imageCompression(image, viewingOptions))
+    );
+
+    // Get upload URLs for thumbnails
+    const thumbnailUploadUrlPromises = compressedThumbnails.map((img) =>
+      axios.get(
+        `https://dwo94t377z7ed.cloudfront.net/prod/getUrl?email=${encodeURIComponent(
+          form.email
+        )}&contentType=${encodeURIComponent(img.type)}`,
+        { headers: { Authorization: token } }
+      )
+    );
+
+    // Get upload URLs for viewing images
+    const viewingUploadUrlPromises = compressedViewings.map((img) =>
+      axios.get(
+        `https://dwo94t377z7ed.cloudfront.net/prod/getUrl?email=${encodeURIComponent(
+          form.email
+        )}&contentType=${encodeURIComponent(img.type)}`,
+        { headers: { Authorization: token } }
+      )
+    );
+
+    const thumbnailUploadUrls = await Promise.all(thumbnailUploadUrlPromises);
+    const viewingUploadUrls = await Promise.all(viewingUploadUrlPromises);
+
+    // Upload thumbnails
+    await Promise.all(
+      compressedThumbnails.map((img, idx) =>
+        axios.put(thumbnailUploadUrls[idx].data.uploadURL, img, {
+          headers: { "Content-Type": img.type },
+        })
+      )
+    );
+
+    // Upload viewing images
+    await Promise.all(
+      compressedViewings.map((img, idx) =>
+        axios.put(viewingUploadUrls[idx].data.uploadURL, img, {
+          headers: { "Content-Type": img.type },
+        })
+      )
+    );
+
+    // Extract s3 keys separately
+    const thumbnailS3Keys = thumbnailUploadUrls.map((res) => res.data.s3Key);
+    const viewingS3Keys = viewingUploadUrls.map((res) => res.data.s3Key);
+
+    // Prepare form data with separate keys for thumbnails and viewings
+    const data = {
+      title: form.title.trim().toLowerCase(),
+      description: form.description.trim().toLowerCase(),
+      state: form.state.toLowerCase(),
+      district: form.district.toLowerCase(),
+      email: form.email.toLowerCase(),
+      price: parseInt(form.price),
+      thumbnailS3Keys,
+      viewingS3Keys,
     };
 
-    try {
-      // Compress all images in parallel
-      const compressedImages = await Promise.all(
-        form.images.map((image) => imageCompression(image, options))
-      );
+    await axios.post(
+      "https://dwo94t377z7ed.cloudfront.net/prod/addDress",
+      data,
+      { headers: { Authorization: token } }
+    );
 
-      // Get upload URLs in parallel
-      const uploadUrlPromises = compressedImages.map((img) =>
-        axios.get(
-          `https://dwo94t377z7ed.cloudfront.net/prod/getUrl?email=${encodeURIComponent(form.email)}&contentType=${encodeURIComponent(img.type)}`,
-          { headers: { Authorization: token } }
-        )
-      );
-      const uploadUrlResponses = await Promise.all(uploadUrlPromises);
-
-      // Upload all images in parallel
-      await Promise.all(
-        compressedImages.map((img, idx) =>
-          axios.put(uploadUrlResponses[idx].data.uploadURL, img,{headers: { "Content-Type": img.type }})
-        )
-      );
-
-      const s3Keys = uploadUrlResponses.map((res) => res.data.s3Key);
-
-      const data = {
-        title: form.title.trim().toLowerCase(),
-        description: form.description.trim().toLowerCase(),
-        state: form.state.toLowerCase(),
-        district: form.district.toLowerCase(),
-        email: form.email.toLowerCase(),
-        price: parseInt(form.price),
-        s3Keys,
-      };
-
-      await axios.post(
-        "https://dwo94t377z7ed.cloudfront.net/prod/addDress",
-        data,
-        { headers: { Authorization: token } }
-      );
-
-      setAdPageInitialLoad(true);
-      setLoading(false);
-      navigate("/");
+    setAdPageInitialLoad(true);
+    setLoading(false);
+    navigate("/");
   } catch (error) {
-      setLoading(false);
-      console.error("Error during submission:", error);
+    setLoading(false);
+    console.error("Error during submission:", error);
     // Optionally, handle error UI here
   }
 };

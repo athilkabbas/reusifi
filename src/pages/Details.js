@@ -162,7 +162,7 @@ const { token } = useSessionCheck()
           { headers: { Authorization: token } }
         );
         setLoading(false);
-        setImages(result?.data[0]?.images);
+        setImages(result?.data[0]?.hiResImg);
       } catch (err) {
         setLoading(false);
         console.log(err);
