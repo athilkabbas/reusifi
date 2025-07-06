@@ -349,6 +349,7 @@ const { token } = useSessionCheck()
                           }}
                           cover={
                             <img
+                              loading="lazy"
                               alt="example"
                               src={item["image"]}
                               style={{

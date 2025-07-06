@@ -261,10 +261,10 @@ const AddDress = () => {
     setLoading(true);
 
     const options = {
-      maxSizeMB: 0.2,               
-      maxWidthOrHeight: 1024,     
+      maxSizeMB: 0.1,               
+      maxWidthOrHeight: 700,     
       useWebWorker: true,
-      initialQuality: 0.8,     
+      initialQuality: 0.75,     
       fileType: "image/webp"
     };
 

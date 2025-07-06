@@ -462,12 +462,12 @@ useEffect(() => {
               data.length > 0 ? (<List
                 grid={{
                   xs: 2,
-                  gutter: 10,
                   sm: 3,
-                  md: 3,
-                  lg: 4,
+                  md: 4,
+                  lg: 5,
                   xl: 6,
-                  xxl: 6
+                  xxl: 8,
+                  gutter: 10,
                 }}
                 dataSource={data}
                 renderItem={(item) => {
@@ -488,6 +488,7 @@ useEffect(() => {
                           }}
                           cover={
                             <img
+                              loading="lazy"
                               alt="example"
                               src={item["images"][0]}
                               style={{

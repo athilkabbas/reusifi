@@ -317,6 +317,7 @@ const Ads = () => {
                           }}
                           cover={
                             <img
+                              loading="lazy"
                               alt="example"
                               src={item["images"][0]}
                               style={{

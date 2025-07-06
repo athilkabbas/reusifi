@@ -251,6 +251,7 @@ const { token } = useSessionCheck()
                       height={300}
                         src={image}
                         key={index}
+                        placeholder="blur"
                       />
 
                   ))}
