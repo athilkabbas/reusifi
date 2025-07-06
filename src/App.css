@@ -74,3 +74,13 @@
   /* your styles for the checked radio button */
   background: #6366F1 !important;
 }
+
+/* For most browsers */
+.hide-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}

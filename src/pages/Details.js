@@ -44,6 +44,7 @@ const Details = () => {
   const [user, setUser] = useState(null);
   const [images, setImages] = useState([]);
   const [chatLoading, setChatLoading] = useState(false);
+  const [imageLoad, setImageLoad] = useState(false)
   const navigate = useNavigate();
   const handleNavigation = (event) => {
     switch (event.key) {
@@ -91,6 +92,8 @@ const Details = () => {
     setChatLastEvaluatedKey,
     detailInitialLoad,
     setDetailInitialLoad,
+    detailData,
+    setDetailData,
   } = useContext(Context);
   const info = () => {
     messageApi.info("No longer available");
@@ -162,7 +165,8 @@ const { token } = useSessionCheck()
           { headers: { Authorization: token } }
         );
         setLoading(false);
-        setImages(result?.data[0]?.hiResImg);
+        // setImages(result?.data[0]?.hiResImg);
+        setDetailData(result.data)
       } catch (err) {
         setLoading(false);
         console.log(err);
@@ -173,6 +177,7 @@ const { token } = useSessionCheck()
       getData();
     }
   }, [item, token]);
+
   const handleDelete = async () => {
     try {
       setData([]);
@@ -183,7 +188,7 @@ const { token } = useSessionCheck()
       let results = await axios.get(
         `https://dwo94t377z7ed.cloudfront.net/prod/deleteAd?id=${
           encodeURIComponent(item["item"]["uuid"])
-        }&s3Keys=${encodeURIComponent(JSON.stringify(item["item"]["s3Keys"]))}`,
+        }&thumbnailS3Keys=${encodeURIComponent(JSON.stringify(detailData[0]["item"]["thumbnailS3Keys"]))}&viewingS3Keys=${encodeURIComponent(JSON.stringify(detailData[0]["item"]["viewingS3Keys"]))}`,
         { headers: { Authorization: token } }
       );
       setLoading(false);
@@ -194,6 +199,11 @@ const { token } = useSessionCheck()
     }
   };
   const isMobile = useIsMobile()
+  const [loadedImages, setLoadedImages] = useState({});
+
+  const handleLoad = (index) => {
+    setLoadedImages((prev) => ({ ...prev, [index]: true }));
+  };
   return (
     <Layout style={{ height: "100vh", overflow: "hidden",background:"#F9FAFB" }}>
        {!isMobile && <Header style={{ display: 'flex', alignItems: 'center', padding: '0px' }}>
@@ -208,6 +218,7 @@ const { token } = useSessionCheck()
             </Header>}
       <Content style={{ padding: "0 15px" }}>
         <div
+          className="hide-scrollbar overflow-auto"
           style={{
             background: "#F9FAFB",
             borderRadius: '0px',
@@ -218,7 +229,7 @@ const { token } = useSessionCheck()
           }}
         >
           {contextHolder}
-          {!loading && !chatLoading && images.length > 0 && (
+          {!loading && !chatLoading && detailData.length > 0 && (
             <>
             <Space
                 size="large"  
@@ -235,29 +246,52 @@ const { token } = useSessionCheck()
                 display: "flex"
               }}
             >
-                <Carousel
-                arrows
-                autoplay
-                autoplaySpeed={3000}
-                  style={{
-                    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-                    width: 250,
-                    height: 300
-                  }}
-                >
-                  {images.map((image, index) => (
-                      <Image
-                      width={250}
-                      height={300}
-                        src={image}
-                        key={index}
-                        placeholder="blur"
-                      />
-
-                  ))}
-                </Carousel>
+                  <Carousel
+      arrows
+      autoplay
+      autoplaySpeed={3000}
+      style={{
+        boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+        width: "300px",
+        height: "400px",
+      }}
+    >
+      {detailData[0]["hiResImg"].map((image, index) => (
+        <div key={index} style={{ width: "100%", height: "100%" }}>
+          {!loadedImages[index] && (
+            <div
+              style={{
+                width: "100%",
+                height: "400px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: "#f0f0f0",
+              }}
+            >
+              <Spin
+                indicator={
+                  <LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />
+                }
+              />
+            </div>
+          )}
+          <Image
+            src={image}
+            preview={true}
+            style={{
+              display: loadedImages[index] ? "block" : "none",
+              width: "100%",
+              height: "400px",
+              objectFit: "contain",
+            }}
+            onLoad={() => handleLoad(index)}
+          />
+        </div>
+      ))}
+    </Carousel>
             </Space.Compact>
-            <Space
+            {Object.values(loadedImages).some((item) => item) && <Space
                 size="large"  
                 direction="vertical"
                 style={{
@@ -270,38 +304,40 @@ const { token } = useSessionCheck()
                 style={{ display: "flex", alignItems: "center" }}
               >
               <Text strong style={{  width: !isMobile ? '10vw' : '25vw'}}>Title</Text>
-              <Input style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" , width: !isMobile ? '35vw' : '60vw' }} value={item["item"]["title"]} />
+              <Input style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" , width: !isMobile ? '35vw' : '60vw' }} value={detailData[0]["item"]["title"]} />
               </Space.Compact>
                 <Space.Compact
                 size="large"
                 style={{ display: "flex", alignItems: "center" }}
               >
               <Text strong style={{  width: !isMobile ? '10vw' : '25vw'}}>Description</Text>
-              <TextArea  autoSize={{ minRows: 2, maxRows: 5 }} style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",width: !isMobile ? '35vw' : '60vw' }} value={item["item"]["description"]} />
+              <TextArea  autoSize={{ minRows: 2, maxRows: 5 }} style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",width: !isMobile ? '35vw' : '60vw' }} value={detailData[0]["item"]["description"]} />
               </Space.Compact>
                 <Space.Compact
                 size="large"
                 style={{ display: "flex", alignItems: "center" }}
               >
               <Text strong style={{  width: !isMobile ? '10vw' : '25vw'}}>State</Text>
-              <Input style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",width: !isMobile ? '35vw' : '60vw' }} value={item["item"]["state"]} />
+              <Input style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",width: !isMobile ? '35vw' : '60vw' }} value={detailData[0]["item"]["state"]} />
               </Space.Compact>
                  <Space.Compact
                 size="large"
                 style={{display: "flex", alignItems: "center" }}
               >
               <Text strong style={{  width: !isMobile ? '10vw' : '25vw'}}>District</Text>
-              <Input style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",width: !isMobile ? '35vw' : '60vw' }} value={item["item"]["district"]} />
+              <Input style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",width: !isMobile ? '35vw' : '60vw' }} value={detailData[0]["item"]["district"]} />
               </Space.Compact>
                 <Space.Compact
                 size="large"
                 style={{ display: "flex", alignItems: "center" }}
               >
               <Text strong style={{  width: !isMobile ? '10vw' : '25vw'}}>Price</Text>
-              <Input style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",width: !isMobile ? '35vw' : '60vw' }}  prefix="₹" value={item["item"]["price"]} />
+              <Input style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",width: !isMobile ? '35vw' : '60vw' }}  prefix="₹" value={detailData[0]["item"]["price"]} />
               </Space.Compact>
-            </Space>
-              {ad && (
+            </Space>}
+            {
+              Object.values(loadedImages).some((item) => item) && <>
+                            {ad && (
                      <Space.Compact
               size="large"
               style={{
@@ -332,6 +368,8 @@ const { token } = useSessionCheck()
                     </Button>
             </Space.Compact>
               )}
+              </>
+            }
             </Space>
             </>
           )}

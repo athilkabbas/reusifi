@@ -261,8 +261,8 @@ const handleSubmit = async () => {
   setLoading(true);
 
   const thumbnailOptions = {
-    maxSizeMB: 0.1,
-    maxWidthOrHeight: 700,
+    maxSizeMB: 0.15,
+    maxWidthOrHeight: 250,
     useWebWorker: true,
     initialQuality: 0.75,
     fileType: "image/webp",
@@ -272,7 +272,7 @@ const handleSubmit = async () => {
     maxSizeMB: 0.3,
     maxWidthOrHeight: 1200,
     useWebWorker: true,
-    initialQuality: 0.9,
+    initialQuality: 0.75,
     fileType: "image/webp",
   };
 
@@ -400,6 +400,7 @@ const handleSubmit = async () => {
                   </Header>}
       <Content style={{ padding: "0 15px" }}>
         <div
+         className="hide-scrollbar overflow-auto"
           style={{
             background: '#F9FAFB',
             borderRadius: '0px',

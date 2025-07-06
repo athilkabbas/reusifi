@@ -260,6 +260,7 @@ const Ads = () => {
       ></div>
       <Content style={{ padding: "0 15px", marginTop: '30px' }}>
         <div
+         className="hide-scrollbar overflow-auto"
           id="scrollableDiv"
           ref={scrollableDivRef}
           style={{
@@ -304,7 +305,7 @@ const Ads = () => {
                 renderItem={(item) => {
                   return (
                     <>
-                      <List.Item key={item["item"]["_id"]}>
+                      <List.Item key={item["item"]["uuid"]}>
                         <Card
                         hoverable
                         bodyStyle={{ padding: '15px 0px 0px 0px' }}
@@ -321,7 +322,7 @@ const Ads = () => {
                               alt="example"
                               src={item["images"][0]}
                               style={{
-                                height: "20vh",
+                                height: '200px',
                                 objectFit: "cover",
                               }}
                             />

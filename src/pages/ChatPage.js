@@ -450,6 +450,7 @@ const ChatPage = () => {
       <Content style={{ padding: "0 15px" }}>
         {contextHolder}
         <div
+         className="hide-scrollbar overflow-auto"
           id="scrollableDiv"
           ref={scrollableDivRef}
           style={{

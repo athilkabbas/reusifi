@@ -452,6 +452,7 @@ function formatChatTimestamp(timestamp) {
                   </Header>}
       <Content>
         <div
+         className="hide-scrollbar overflow-auto"
           id="scrollableDiv"
           ref={scrollableDivRef}
           style={{
