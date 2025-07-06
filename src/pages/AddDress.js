@@ -112,10 +112,10 @@ const AddDress = () => {
         console.log(err);
       }
     };
-    if(user && addProductInitialLoad && token){
+    if(user && token){
       getAdCount();
     }
-  }, [user,addProductInitialLoad, token]);
+  }, [user, token]);
 
   const [districts, setDistricts] = useState([]);
   const [count, setCount] = useState(0);

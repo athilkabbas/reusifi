@@ -7,7 +7,7 @@ import React, {
   useContext,
 } from "react";
 import { useNavigate } from "react-router-dom";
-import { Badge, Breadcrumb, Layout, Menu, Spin, theme } from "antd";
+import { Badge, Breadcrumb, Layout, Menu, Spin, theme, Image } from "antd";
 import {
   HomeFilled,
   UploadOutlined,
@@ -123,6 +123,11 @@ const App = () => {
       label: IconText[index],
     };
   });
+  const [loadedImages, setLoadedImages] = useState({});
+
+const handleImageLoad = (uuid) => {
+  setLoadedImages((prev) => ({ ...prev, [uuid]: true }));
+};
 const { token } = useSessionCheck()
 useEffect(() => {
   if (scrollableDivRef.current && !chatLoading && !favLoading && !handleFavLoading && !loading) {
@@ -488,15 +493,37 @@ useEffect(() => {
                             });
                           }}
                           cover={
-                            <img
-                              loading="lazy"
-                              alt="example"
-                              src={item["images"][0]}
-                              style={{
-                                objectFit: "cover",
-                                height: "20vh"
-                              }}
-                            />
+                              <div key={item["item"]["uuid"]} style={{ width: "100%", height: "100%" }}>
+          {!loadedImages[item["item"]["uuid"]] && (
+            <div
+              style={{
+                width: "100%",
+                height: "200px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: "#f0f0f0",
+              }}
+            >
+              <Spin
+                indicator={
+                  <LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />
+                }
+              />
+            </div>
+          )}
+          <img
+            src={item["images"][0]}
+            style={{
+              display: loadedImages[item["item"]["uuid"]] ? "block" : "none",
+              width: "100%",
+              height: "200px",
+              objectFit: "cover",
+            }}
+              onLoad={() => handleImageLoad(item.item.uuid)}
+              onError={() => handleImageLoad(item.item.uuid)}
+          />
+        </div>
                           }
                         >
                           <div

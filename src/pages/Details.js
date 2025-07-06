@@ -286,6 +286,7 @@ const { token } = useSessionCheck()
               objectFit: "contain",
             }}
             onLoad={() => handleLoad(index)}
+            onError={() => handleLoad(index)}
           />
         </div>
       ))}
