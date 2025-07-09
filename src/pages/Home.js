@@ -337,7 +337,7 @@ useEffect(() => {
     setExhaustedShards({})
     setData([]);
     setInitialLoad(true);
-    setPriceFilter(event.target.value);
+    setPriceFilter(event.target.value === 'true' ? 'LOWTOHIGH' : 'HIGHTOLOW');
   };
   return (
     <Layout style={{ height: "100vh", overflow: "hidden", background:"#F9FAFB" }}>
