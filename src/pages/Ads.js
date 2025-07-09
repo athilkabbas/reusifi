@@ -47,7 +47,6 @@ const { Header, Content, Footer } = Layout;
 const Ads = () => {
   const [loading, setLoading] = useState(false);
   const [scrollLoadMoreData, setScrollLoadMoreData] = useState(false);
-  const limit = 20;
   const [user, setUser] = useState(null);
   const [search, setSearch] = useState(null);
   const timer = useRef(null);
@@ -96,6 +95,38 @@ const Ads = () => {
     unreadChatCount
   } = useContext(Context);
       const [loadedImages, setLoadedImages] = useState({});
+
+            const calculateLimit = () => {
+            const viewportHeight = window.innerHeight;
+            const itemHeight = 300; // adjust if needed
+            const rowsVisible = Math.ceil(viewportHeight / itemHeight);
+            const columns = getColumnCount(); // depending on screen size (see below)
+            return rowsVisible * columns * 2;
+          };
+          
+          const getColumnCount = () => {
+            const width = window.innerWidth;
+            if (width < 576) return 2; // xs
+            if (width < 768) return 3; // sm
+            if (width < 992) return 4; // md
+            if (width < 1200) return 5; // lg
+            if (width < 1600) return 6; // xl
+            return 8; // xxl
+          };
+          
+          const [limit, setLimit] = useState(0); // default
+          
+          useEffect(() => {
+            const updateLimit = () => {
+              const newLimit = calculateLimit();
+              setLimit(newLimit);
+            };
+            updateLimit(); // on mount
+            window.addEventListener("resize", updateLimit);
+            return () => window.removeEventListener("resize", updateLimit);
+          }, []);
+          
+        
     
     const handleImageLoad = (uuid) => {
       setLoadedImages((prev) => ({ ...prev, [uuid]: true }));
@@ -159,11 +190,11 @@ const Ads = () => {
       useEffect(() => {
         if (scrollableDivRef.current && !loading && !chatLoading) {
           const el = scrollableDivRef.current;
-          if (el.scrollHeight <= el.clientHeight && adHasMore) {
+          if (el.scrollHeight <= el.clientHeight && adHasMore && limit) {
             loadMoreData();
           }
         }
-      }, [loading,adData,chatLoading]); 
+      }, [loading,adData,chatLoading,limit]); 
 
         useEffect(() => {
         if (scrollableDivRef.current &&  !loading && !chatLoading) {
@@ -205,10 +236,10 @@ const Ads = () => {
   };
 
   useEffect(() => {
-    if(adInitialLoad && token && user){
+    if(adInitialLoad && token && user && limit){
       loadMoreData();
     }
-  }, [user,token,adInitialLoad]);
+  }, [user,token,adInitialLoad,limit]);
 
   const navigate = useNavigate();
   const handleNavigation = (event) => {

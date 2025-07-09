@@ -76,7 +76,6 @@ const Chat = () => {
       setReconnect((reconnect) => !reconnect);
     }
   };
-  const limit = 20
   const {
     setInitialLoad,
     data,
@@ -104,6 +103,37 @@ const Chat = () => {
   } = useContext(Context);
   const [chatLoading, setChatLoading] = useState(false);
   const { token } = useSessionCheck()
+
+   const calculateLimit = () => {
+                  const viewportHeight = window.innerHeight;
+                  const itemHeight = 70; // adjust if needed
+                  const rowsVisible = Math.ceil(viewportHeight / itemHeight);
+                  const columns = getColumnCount(); // depending on screen size (see below)
+                  return rowsVisible * 2;
+                };
+                
+                const getColumnCount = () => {
+                  const width = window.innerWidth;
+                  if (width < 576) return 2; // xs
+                  if (width < 768) return 3; // sm
+                  if (width < 992) return 4; // md
+                  if (width < 1200) return 5; // lg
+                  if (width < 1600) return 6; // xl
+                  return 8; // xxl
+                };
+                
+                const [limit, setLimit] = useState(0); // default
+                
+                useEffect(() => {
+                  const updateLimit = () => {
+                    const newLimit = calculateLimit();
+                    setLimit(newLimit);
+                  };
+                  updateLimit(); // on mount
+                  window.addEventListener("resize", updateLimit);
+                  return () => window.removeEventListener("resize", updateLimit);
+                }, []);
+
   useEffect(() => {
     const getChatCount = async () => {
       try {
@@ -307,13 +337,13 @@ const Chat = () => {
 
   useEffect(() => {
     if (
-      token && user &&
+      token && user && limit &&
       user.userId &&
       ((recipient && recipient["item"]["email"]) || conversationId)
     ) {
       getChats();
     }
-  }, [user, recipient, conversationId,token]);
+  }, [user, recipient, conversationId,token,limit]);
 
   const handleNavigation = (event) => {
     switch (event.key) {
@@ -343,11 +373,11 @@ const Chat = () => {
   useEffect(() => {
     if (scrollableDivRef.current && !loading && !chatLoading) {
       const el = scrollableDivRef.current;
-      if (el.scrollHeight <= el.clientHeight && hasMore) {
+      if (el.scrollHeight <= el.clientHeight && hasMore && limit) {
         getChats();
       }
     }
-  }, [ichatData,loading,chatLoading]); 
+  }, [ichatData,loading,chatLoading,limit]); 
 
     useEffect(() => {
       if(scrollableDivRef.current && !loading && !chatLoading)

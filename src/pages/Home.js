@@ -48,7 +48,6 @@ const capitalize = (str) => {
 const { Header, Content, Footer } = Layout;
 const App = () => {
   const [loading, setLoading] = useState(false);
-  const limit = 20;
   const [user, setUser] = useState(null);
   const timer = useRef(null);
   const [districts, setDistricts] = useState([]);
@@ -95,7 +94,8 @@ const App = () => {
     setIChatInitialLoad,
     setAddProductInitialLoad,
     unreadChatCount,
-    setUnreadChatCount
+    setUnreadChatCount,
+    exhaustedShards
   } = useContext(Context);
   const [handleFavLoading, setHandleFavLoading] = useState(false);
   const items = [
@@ -126,6 +126,36 @@ const App = () => {
   });
   const [loadedImages, setLoadedImages] = useState({});
 
+  const calculateLimit = () => {
+  const viewportHeight = window.innerHeight;
+  const itemHeight = 300; // adjust if needed
+  const rowsVisible = Math.ceil(viewportHeight / itemHeight);
+  const columns = getColumnCount(); // depending on screen size (see below)
+  return rowsVisible * columns * 2;
+};
+
+const getColumnCount = () => {
+  const width = window.innerWidth;
+  if (width < 576) return 2; // xs
+  if (width < 768) return 3; // sm
+  if (width < 992) return 4; // md
+  if (width < 1200) return 5; // lg
+  if (width < 1600) return 6; // xl
+  return 8; // xxl
+};
+
+const [limit, setLimit] = useState(0); // default
+
+useEffect(() => {
+  const updateLimit = () => {
+    const newLimit = calculateLimit();
+    setLimit(newLimit);
+  };
+  updateLimit(); // on mount
+  window.addEventListener("resize", updateLimit);
+  return () => window.removeEventListener("resize", updateLimit);
+}, []);
+
 const handleImageLoad = (uuid) => {
   setLoadedImages((prev) => ({ ...prev, [uuid]: true }));
 };
@@ -133,11 +163,11 @@ const { token } = useSessionCheck()
 useEffect(() => {
   if (scrollableDivRef.current && !chatLoading && !favLoading && !handleFavLoading && !loading) {
     const el = scrollableDivRef.current;
-    if (el.scrollHeight <= el.clientHeight && hasMore) {
+    if (el.scrollHeight <= el.clientHeight && hasMore && limit) {
       loadMoreData();
     }
   }
-}, [chatLoading,favLoading,handleFavLoading,loading,data]); 
+}, [chatLoading,favLoading,handleFavLoading,loading,data,limit]); 
 
   useEffect(() => {
     const getUser = async () => {
@@ -240,7 +270,7 @@ useEffect(() => {
         results = await axios.get(
           `https://dwo94t377z7ed.cloudfront.net/prod/getDress?limit=${encodeURIComponent(limit)}&lastEvaluatedKeys=${encodeURIComponent(JSON.stringify(
             lastEvaluatedKeys
-          ))}&search=${encodeURIComponent(search.trim())}&location=${encodeURIComponent(JSON.stringify(
+          ))}&exhaustedShards=${encodeURIComponent(JSON.stringify(exhaustedShards))}&search=${encodeURIComponent(search.trim())}&location=${encodeURIComponent(JSON.stringify(
             location
           ))}&priceFilter=${encodeURIComponent(priceFilter)}`,
           { headers: { Authorization: token } }
@@ -257,7 +287,7 @@ useEffect(() => {
         results = await axios.get(
           `https://dwo94t377z7ed.cloudfront.net/prod/getDress?limit=${encodeURIComponent(limit)}&lastEvaluatedKeys=${encodeURIComponent(JSON.stringify(
             lastEvaluatedKeys
-          ))}&location=${encodeURIComponent(JSON.stringify(location))}&priceFilter=${encodeURIComponent(priceFilter)}`,
+          ))}&location=${encodeURIComponent(JSON.stringify(location))}&exhaustedShards=${encodeURIComponent(JSON.stringify(exhaustedShards))}&priceFilter=${encodeURIComponent(priceFilter)}`,
           { headers: { Authorization: token } }
         );
         setLastEvaluatedKeys(results.data.lastEvaluatedKeys);
@@ -284,14 +314,14 @@ useEffect(() => {
     }
 
     // Set a new timeout
-    if(token && initialLoad && (search || Object.values(location).some((value) => value) || priceFilter)){
+    if(token && initialLoad && limit && (search || Object.values(location).some((value) => value) || priceFilter)){
       setLoading(true)
       timer.current = setTimeout(() => {
       loadMoreData();
       }, 1500);
     }
     else{
-      if(initialLoad && token){
+      if(initialLoad && token && limit){
         loadMoreData()
       }
     }
@@ -301,7 +331,7 @@ useEffect(() => {
         clearTimeout(timer.current);
       }
     };
-  }, [search, location, priceFilter,token]);
+  }, [search, location, priceFilter,token,limit]);
 
   const navigate = useNavigate();
   const isMobile = useIsMobile()

@@ -69,7 +69,6 @@ const menuItemsBlocked = [
   },
 ];
 const { Header, Content, Footer } = Layout;
-const limit = 20
 const ChatPage = () => {
   const [lastEvaluatedKey, setLastEvaluatedKey] = useState(null);
   const [scrollLoadMoreData, setScrollLoadMoreData] = useState(false);
@@ -141,14 +140,45 @@ const ChatPage = () => {
 
     const { token } = useSessionCheck()
 
+          const calculateLimit = () => {
+                const viewportHeight = window.innerHeight;
+                const itemHeight = 170; // adjust if needed
+                const rowsVisible = Math.ceil(viewportHeight / itemHeight);
+                const columns = getColumnCount(); // depending on screen size (see below)
+                return rowsVisible * 2;
+              };
+              
+              const getColumnCount = () => {
+                const width = window.innerWidth;
+                if (width < 576) return 2; // xs
+                if (width < 768) return 3; // sm
+                if (width < 992) return 4; // md
+                if (width < 1200) return 5; // lg
+                if (width < 1600) return 6; // xl
+                return 8; // xxl
+              };
+              
+              const [limit, setLimit] = useState(0); // default
+              
+              useEffect(() => {
+                const updateLimit = () => {
+                  const newLimit = calculateLimit();
+                  setLimit(newLimit);
+                };
+                updateLimit(); // on mount
+                window.addEventListener("resize", updateLimit);
+                return () => window.removeEventListener("resize", updateLimit);
+              }, []);
+              
+
      useEffect(() => {
           if (scrollableDivRef.current  &&  !loading && !chatLoading) {
             const el = scrollableDivRef.current;
-            if (el.scrollHeight <= el.clientHeight && chatHasMore) {
+            if (el.scrollHeight <= el.clientHeight && chatHasMore && limit) {
               getChats();
             }
           }
-        }, [loading,chatData,chatLoading]); 
+        }, [loading,chatData,chatLoading,limit]); 
 
       useEffect(() => {
       if (scrollableDivRef.current &&  !loading && !chatLoading) {
@@ -431,10 +461,10 @@ const ChatPage = () => {
   }, []);
 
   useEffect(() => {
-    if (user && user.userId && chatInitialLoad && token) {
+    if (user && user.userId && chatInitialLoad && token && limit) {
       getChats();
     }
-  }, [user,token]);
+  }, [user,token,limit]);
   const isMobile = useIsMobile()
   return (
     <Layout style={{ height: "100vh", overflow: "hidden" }}>

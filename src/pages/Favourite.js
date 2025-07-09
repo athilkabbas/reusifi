@@ -47,7 +47,6 @@ const capitalize = (str) => {
 const { Header, Content, Footer } = Layout;
 const App = () => {
   const [loading, setLoading] = useState(false);
-  const limit = 20;
   const [user, setUser] = useState(null);
   const timer = useRef(null);
   const [districts, setDistricts] = useState([]);
@@ -117,6 +116,37 @@ const App = () => {
     };
   });
     const [loadedImages, setLoadedImages] = useState({});
+
+      const calculateLimit = () => {
+      const viewportHeight = window.innerHeight;
+      const itemHeight = 300; // adjust if needed
+      const rowsVisible = Math.ceil(viewportHeight / itemHeight);
+      const columns = getColumnCount(); // depending on screen size (see below)
+      return rowsVisible * columns * 2;
+    };
+    
+    const getColumnCount = () => {
+      const width = window.innerWidth;
+      if (width < 576) return 2; // xs
+      if (width < 768) return 3; // sm
+      if (width < 992) return 4; // md
+      if (width < 1200) return 5; // lg
+      if (width < 1600) return 6; // xl
+      return 8; // xxl
+    };
+    
+    const [limit, setLimit] = useState(0); // default
+    
+    useEffect(() => {
+      const updateLimit = () => {
+        const newLimit = calculateLimit();
+        setLimit(newLimit);
+      };
+      updateLimit(); // on mount
+      window.addEventListener("resize", updateLimit);
+      return () => window.removeEventListener("resize", updateLimit);
+    }, []);
+    
   
   const handleImageLoad = (uuid) => {
     setLoadedImages((prev) => ({ ...prev, [uuid]: true }));
@@ -134,11 +164,11 @@ const { token } = useSessionCheck()
       useEffect(() => {
         if (scrollableDivRef.current  &&  !loading && !handleFavLoading && !chatLoading && !favLoading) {
           const el = scrollableDivRef.current;
-          if (el.scrollHeight <= el.clientHeight && favHasMore) {
+          if (el.scrollHeight <= el.clientHeight && favHasMore && limit) {
             loadMoreData();
           }
         }
-      }, [loading,favData,handleFavLoading,chatLoading,favLoading]); 
+      }, [loading,favData,handleFavLoading,chatLoading,favLoading,limit]); 
 
     useEffect(() => {
     if (scrollableDivRef.current &&  !loading && !handleFavLoading) {
@@ -244,10 +274,10 @@ const { token } = useSessionCheck()
     }
   };
   useEffect(() => {
-    if(favInitialLoad && token && user){
+    if(favInitialLoad && token && user && limit){
       loadMoreData();
     }
-  }, [user,token, favInitialLoad]);
+  }, [user,token, favInitialLoad, limit]);
 
   const navigate = useNavigate();
   const handleNavigation = (event) => {
