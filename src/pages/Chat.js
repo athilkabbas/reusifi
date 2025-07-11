@@ -130,9 +130,14 @@ const Chat = () => {
                     setLimit(newLimit);
                   };
                   updateLimit(); // on mount
-                  window.addEventListener("resize", updateLimit);
-                  return () => window.removeEventListener("resize", updateLimit);
-                }, []);
+                  const handleResize = () => {
+                    if (hasMore) {
+                      updateLimit();
+                    }
+                  };
+                  window.addEventListener("resize",handleResize);
+                  return () => window.removeEventListener("resize", handleResize);
+                }, [hasMore]);
 
   useEffect(() => {
     const getChatCount = async () => {
@@ -370,14 +375,14 @@ const Chat = () => {
         break;
     }
   };
-  useEffect(() => {
-    if (scrollableDivRef.current && !loading && !chatLoading) {
-      const el = scrollableDivRef.current;
-      if (el.scrollHeight <= el.clientHeight && hasMore && limit) {
-        getChats();
-      }
-    }
-  }, [ichatData,loading,chatLoading,limit]); 
+  // useEffect(() => {
+  //   if (scrollableDivRef.current && !loading && !chatLoading) {
+  //     const el = scrollableDivRef.current;
+  //     if (el.scrollHeight <= el.clientHeight && hasMore && limit) {
+  //       getChats();
+  //     }
+  //   }
+  // }, [ichatData,loading,chatLoading,limit]); 
 
     useEffect(() => {
       if(scrollableDivRef.current && !loading && !chatLoading)
@@ -554,7 +559,6 @@ function formatChatTimestamp(timestamp) {
                             background: "#E5E7EB",
                             borderRadius: "16px 16px 4px 16px",
                             padding: "10px",
-                            minWidth: "40vw",
                             maxWidth: "80vw", // prevent it from overflowing
                           }}
                         >
@@ -594,7 +598,6 @@ function formatChatTimestamp(timestamp) {
                             background: "#E0E7FF",
                             borderRadius: "16px 16px 16px 4px",
                             padding: "10px",
-                            minWidth:"40vw",
                             maxWidth: "80vw", // prevent overflow
                           }}
                         >

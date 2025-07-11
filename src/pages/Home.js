@@ -146,28 +146,34 @@ const getColumnCount = () => {
 
 const [limit, setLimit] = useState(0); // default
 
-useEffect(() => {
-  const updateLimit = () => {
-    const newLimit = calculateLimit();
-    setLimit(newLimit);
-  };
-  updateLimit(); // on mount
-  window.addEventListener("resize", updateLimit);
-  return () => window.removeEventListener("resize", updateLimit);
-}, []);
+  useEffect(() => {
+    const updateLimit = () => {
+      const newLimit = calculateLimit();
+      setLimit(newLimit);
+    };
+    updateLimit(); // on mount
+    const handleResize = () => {
+      if (hasMore) {
+        setInitialLoad(false)
+        updateLimit();
+      }
+    };
+    window.addEventListener("resize",handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [hasMore]);
 
 const handleImageLoad = (uuid) => {
   setLoadedImages((prev) => ({ ...prev, [uuid]: true }));
 };
 const { token } = useSessionCheck()
-useEffect(() => {
-  if (scrollableDivRef.current && !chatLoading && !favLoading && !handleFavLoading && !loading) {
-    const el = scrollableDivRef.current;
-    if (el.scrollHeight <= el.clientHeight && hasMore && limit) {
-      loadMoreData();
-    }
-  }
-}, [chatLoading,favLoading,handleFavLoading,loading,data,limit]); 
+// useEffect(() => {
+//   if (scrollableDivRef.current && !chatLoading && !favLoading && !handleFavLoading && !loading) {
+//     const el = scrollableDivRef.current;
+//     if (el.scrollHeight <= el.clientHeight && hasMore && limit) {
+//       loadMoreData();
+//     }
+//   }
+// }, [chatLoading,favLoading,handleFavLoading,loading,data,limit]); 
 
   useEffect(() => {
     const getUser = async () => {

@@ -143,9 +143,16 @@ const App = () => {
         setLimit(newLimit);
       };
       updateLimit(); // on mount
-      window.addEventListener("resize", updateLimit);
-      return () => window.removeEventListener("resize", updateLimit);
-    }, []);
+      const handleResize = () => {
+        if (favHasMore) {
+          setFavInitialLoad(false)
+          updateLimit();
+        }
+      };
+      window.addEventListener("resize",handleResize);
+      return () => window.removeEventListener("resize", handleResize);
+    }, [favHasMore]);
+  
     
   
   const handleImageLoad = (uuid) => {
@@ -161,14 +168,14 @@ const { token } = useSessionCheck()
       getUser()
     },[])
 
-      useEffect(() => {
-        if (scrollableDivRef.current  &&  !loading && !handleFavLoading && !chatLoading && !favLoading) {
-          const el = scrollableDivRef.current;
-          if (el.scrollHeight <= el.clientHeight && favHasMore && limit) {
-            loadMoreData();
-          }
-        }
-      }, [loading,favData,handleFavLoading,chatLoading,favLoading,limit]); 
+      // useEffect(() => {
+      //   if (scrollableDivRef.current  &&  !loading && !handleFavLoading && !chatLoading && !favLoading) {
+      //     const el = scrollableDivRef.current;
+      //     if (el.scrollHeight <= el.clientHeight && favHasMore && limit) {
+      //       loadMoreData();
+      //     }
+      //   }
+      // }, [loading,favData,handleFavLoading,chatLoading,favLoading,limit]); 
 
     useEffect(() => {
     if (scrollableDivRef.current &&  !loading && !handleFavLoading) {
@@ -357,13 +364,15 @@ const { token } = useSessionCheck()
           >
             {user && !loading && !chatLoading && !favLoading && (
               favData.length > 0 ? (<List
-                grid={{  xs: 2,
-                  gutter: 10,
+                  grid={{
+                  xs: 2,
                   sm: 3,
-                  md: 3,
-                  lg: 4,
+                  md: 4,
+                  lg: 5,
                   xl: 6,
-                  xxl: 6 }}
+                  xxl: 8,
+                  gutter: 10,
+                }}
                 dataSource={favData}
                 renderItem={(item) => {
                   return (

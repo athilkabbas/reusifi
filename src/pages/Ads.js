@@ -122,10 +122,16 @@ const Ads = () => {
               setLimit(newLimit);
             };
             updateLimit(); // on mount
-            window.addEventListener("resize", updateLimit);
-            return () => window.removeEventListener("resize", updateLimit);
-          }, []);
-          
+            const handleResize = () => {
+              if (adHasMore) {
+                setAdInitialLoad(false)
+                updateLimit();
+              }
+            };
+            window.addEventListener("resize",handleResize);
+            return () => window.removeEventListener("resize", handleResize);
+          }, [adHasMore]);
+                      
         
     
     const handleImageLoad = (uuid) => {
@@ -187,14 +193,14 @@ const Ads = () => {
       getUser()
     },[])
 
-      useEffect(() => {
-        if (scrollableDivRef.current && !loading && !chatLoading) {
-          const el = scrollableDivRef.current;
-          if (el.scrollHeight <= el.clientHeight && adHasMore && limit) {
-            loadMoreData();
-          }
-        }
-      }, [loading,adData,chatLoading,limit]); 
+      // useEffect(() => {
+      //   if (scrollableDivRef.current && !loading && !chatLoading) {
+      //     const el = scrollableDivRef.current;
+      //     if (el.scrollHeight <= el.clientHeight && adHasMore && limit) {
+      //       loadMoreData();
+      //     }
+      //   }
+      // }, [loading,adData,chatLoading,limit]); 
 
         useEffect(() => {
         if (scrollableDivRef.current &&  !loading && !chatLoading) {
@@ -331,13 +337,15 @@ const Ads = () => {
           >
             {user && !loading && !chatLoading && (
               adData.length > 0 ? (<List
-                grid={{  xs: 2,
-                  gutter: 10,
+                  grid={{
+                  xs: 2,
                   sm: 3,
-                  md: 3,
-                  lg: 4,
+                  md: 4,
+                  lg: 5,
                   xl: 6,
-                  xxl: 6}}
+                  xxl: 8,
+                  gutter: 10,
+                }}
                 dataSource={adData}
                 renderItem={(item) => {
                   return (

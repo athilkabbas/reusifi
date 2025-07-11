@@ -160,25 +160,32 @@ const ChatPage = () => {
               
               const [limit, setLimit] = useState(0); // default
               
-              useEffect(() => {
-                const updateLimit = () => {
-                  const newLimit = calculateLimit();
-                  setLimit(newLimit);
-                };
-                updateLimit(); // on mount
-                window.addEventListener("resize", updateLimit);
-                return () => window.removeEventListener("resize", updateLimit);
-              }, []);
+                useEffect(() => {
+                  const updateLimit = () => {
+                    const newLimit = calculateLimit();
+                    setLimit(newLimit);
+                  };
+                  updateLimit(); // on mount
+                  const handleResize = () => {
+                    if (chatHasMore) {
+                      setChatInitialLoad(false)
+                      updateLimit();
+                    }
+                  };
+                  window.addEventListener("resize",handleResize);
+                  return () => window.removeEventListener("resize", handleResize);
+                }, [chatHasMore]);
+              
               
 
-     useEffect(() => {
-          if (scrollableDivRef.current  &&  !loading && !chatLoading) {
-            const el = scrollableDivRef.current;
-            if (el.scrollHeight <= el.clientHeight && chatHasMore && limit) {
-              getChats();
-            }
-          }
-        }, [loading,chatData,chatLoading,limit]); 
+    //  useEffect(() => {
+    //       if (scrollableDivRef.current  &&  !loading && !chatLoading) {
+    //         const el = scrollableDivRef.current;
+    //         if (el.scrollHeight <= el.clientHeight && chatHasMore && limit) {
+    //           getChats();
+    //         }
+    //       }
+    //     }, [loading,chatData,chatLoading,limit]); 
 
       useEffect(() => {
       if (scrollableDivRef.current &&  !loading && !chatLoading) {
