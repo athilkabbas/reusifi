@@ -197,7 +197,7 @@ const { token } = useSessionCheck()
       try {
         setChatLoading(true);
         const result = await axios.get(
-          `https://dwo94t377z7ed.cloudfront.net/prod/getChat?userId1=${
+          `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${
             encodeURIComponent(user.userId)
           }&count=${encodeURIComponent(true)}`,
           { headers: { Authorization: token } }
@@ -233,7 +233,7 @@ const { token } = useSessionCheck()
     const getFavList = async () => {
       setFavLoading(true);
       const results = await axios.get(
-        `https://dwo94t377z7ed.cloudfront.net/prod/getFavourites?email=${
+        `https://dwo94t377z7ed.cloudfront.net/prod/getFavouritesList?email=${
           encodeURIComponent(user.userId)
         }&favList=${encodeURIComponent(true)}`,
         { headers: { Authorization: token } }
@@ -250,10 +250,18 @@ const { token } = useSessionCheck()
     setScrollPosition(scrollableDivRef.current.scrollTop);
     setFavInitialLoad(true);
     setHandleFavLoading(true);
-    const results = await axios.get(
-      `https://dwo94t377z7ed.cloudfront.net/prod/getFavourites?id=${encodeURIComponent(id)}&favourite=${encodeURIComponent(favourite)}&email=${encodeURIComponent(user.userId)}`,
+    if(favourite){
+       const results = await axios.get(
+      `https://dwo94t377z7ed.cloudfront.net/prod/getFavouritesAdd?id=${encodeURIComponent(id)}&favourite=${encodeURIComponent(favourite)}&email=${encodeURIComponent(user.userId)}`,
       { headers: { Authorization: token } }
     );
+    }
+    else{
+          const results = await axios.get(
+      `https://dwo94t377z7ed.cloudfront.net/prod/getFavouritesRemove?id=${encodeURIComponent(id)}&favourite=${encodeURIComponent(favourite)}&email=${encodeURIComponent(user.userId)}`,
+      { headers: { Authorization: token } }
+    );
+    }
     if (!favourite) {
       setFilterList((prevValue) => {
         return prevValue.filter((item) => {
@@ -274,7 +282,7 @@ const { token } = useSessionCheck()
       if (search) {
         console.log(JSON.stringify(lastEvaluatedKeys))
         results = await axios.get(
-          `https://dwo94t377z7ed.cloudfront.net/prod/getDress?limit=${encodeURIComponent(limit)}&lastEvaluatedKeys=${encodeURIComponent(JSON.stringify(
+          `https://dwo94t377z7ed.cloudfront.net/prod/getProductsSearch?limit=${encodeURIComponent(limit)}&lastEvaluatedKeys=${encodeURIComponent(JSON.stringify(
             lastEvaluatedKeys
           ))}&exhaustedShards=${encodeURIComponent(JSON.stringify(exhaustedShards))}&search=${encodeURIComponent(search.trim())}&location=${encodeURIComponent(JSON.stringify(
             location
@@ -291,7 +299,7 @@ const { token } = useSessionCheck()
         }
       } else {
         results = await axios.get(
-          `https://dwo94t377z7ed.cloudfront.net/prod/getDress?limit=${encodeURIComponent(limit)}&lastEvaluatedKeys=${encodeURIComponent(JSON.stringify(
+          `https://dwo94t377z7ed.cloudfront.net/prod/getProducts?limit=${encodeURIComponent(limit)}&lastEvaluatedKeys=${encodeURIComponent(JSON.stringify(
             lastEvaluatedKeys
           ))}&location=${encodeURIComponent(JSON.stringify(location))}&exhaustedShards=${encodeURIComponent(JSON.stringify(exhaustedShards))}&priceFilter=${encodeURIComponent(priceFilter)}`,
           { headers: { Authorization: token } }

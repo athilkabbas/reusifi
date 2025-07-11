@@ -106,7 +106,7 @@ const { token } = useSessionCheck()
       setChatLoading(true);
       try {
         const result = await axios.get(
-          `https://dwo94t377z7ed.cloudfront.net/prod/getChat?userId1=${
+          `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${
             encodeURIComponent(user.userId)
           }&count=${encodeURIComponent(true)}`,
           { headers: { Authorization: token } }
@@ -162,7 +162,7 @@ const { token } = useSessionCheck()
       try {
         setLoading(true);
         const result = await axios.get(
-          `https://dwo94t377z7ed.cloudfront.net/prod/getDress?id=${encodeURIComponent(item["item"]["uuid"])}`,
+          `https://dwo94t377z7ed.cloudfront.net/prod/getProductsId?id=${encodeURIComponent(item["item"]["uuid"])}`,
           { headers: { Authorization: token } }
         );
         setLoading(false);
@@ -187,7 +187,7 @@ const { token } = useSessionCheck()
       setExhaustedShards({})
       setLoading(true);
       let results = await axios.get(
-        `https://dwo94t377z7ed.cloudfront.net/prod/deleteAd?id=${
+        `https://dwo94t377z7ed.cloudfront.net/prod/deleteAdNew?id=${
           encodeURIComponent(item["item"]["uuid"])
         }&thumbnailS3Keys=${encodeURIComponent(JSON.stringify(detailData[0]["item"]["thumbnailS3Keys"]))}&viewingS3Keys=${encodeURIComponent(JSON.stringify(detailData[0]["item"]["viewingS3Keys"]))}`,
         { headers: { Authorization: token } }

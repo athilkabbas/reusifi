@@ -201,7 +201,7 @@ const ChatPage = () => {
       setChatLoading(true);
       try {
         const result = await axios.get(
-          `https://dwo94t377z7ed.cloudfront.net/prod/getChat?userId1=${
+          `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${
             encodeURIComponent(user.userId)
           }&count=${encodeURIComponent(true)}`,
           { headers: { Authorization: token } }
@@ -440,7 +440,7 @@ const ChatPage = () => {
       const scrollPosition = scrollableDivRef.current.scrollTop;
       setLoading(true);
       const result = await axios.get(
-        `https://dwo94t377z7ed.cloudfront.net/prod/getChat?userId1=${encodeURIComponent(user.userId)}&lastEvaluatedKey=${encodeURIComponent(chatLastEvaluatedKey)}&limit=${encodeURIComponent(limit)}`,
+        `https://dwo94t377z7ed.cloudfront.net/prod/getChatsNew?userId1=${encodeURIComponent(user.userId)}&lastEvaluatedKey=${encodeURIComponent(chatLastEvaluatedKey)}&limit=${encodeURIComponent(limit)}`,
         { headers: { Authorization: token } }
       );
       setChatData([...chatData, ...result.data.items]);

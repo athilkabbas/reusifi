@@ -143,7 +143,7 @@ const Ads = () => {
       setChatLoading(true);
       try {
         const result = await axios.get(
-          `https://dwo94t377z7ed.cloudfront.net/prod/getChat?userId1=${
+          `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${
             encodeURIComponent(user.userId)
           }&count=${true}`,
           { headers: { Authorization: token } }
@@ -219,7 +219,7 @@ const Ads = () => {
       setLoading(true);
       let results;
       results = await axios.get(
-        `https://dwo94t377z7ed.cloudfront.net/prod/getDress?limit=${encodeURIComponent(limit)}&lastEvaluatedKey=${encodeURIComponent(JSON.stringify(
+        `https://dwo94t377z7ed.cloudfront.net/prod/getProductsEmail?limit=${encodeURIComponent(limit)}&lastEvaluatedKey=${encodeURIComponent(JSON.stringify(
           adLastEvaluatedKey
         ))}&email=${encodeURIComponent(user.userId)}`,
         { headers: { Authorization: token } }

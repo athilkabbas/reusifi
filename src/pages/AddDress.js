@@ -102,7 +102,7 @@ const AddDress = () => {
         setLoading(true);
         let result;
         result = await axios.get(
-          `https://dwo94t377z7ed.cloudfront.net/prod/getDress?count=${true}&email=${
+          `https://dwo94t377z7ed.cloudfront.net/prod/getProductsCount?count=${true}&email=${
             encodeURIComponent(user.userId)
           }`,
           { headers: { Authorization: token } }
@@ -138,7 +138,7 @@ const AddDress = () => {
       setChatLoading(true);
       try {
         const result = await axios.get(
-          `https://dwo94t377z7ed.cloudfront.net/prod/getChat?userId1=${
+          `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${
             encodeURIComponent(user.userId)
           }&count=${true}`,
           { headers: { Authorization: token } }
@@ -286,7 +286,7 @@ const handleSubmit = async () => {
     // Get upload URLs for thumbnails
     const thumbnailUploadUrlPromises = compressedThumbnails.map((img) =>
       axios.get(
-        `https://dwo94t377z7ed.cloudfront.net/prod/getUrl?email=${encodeURIComponent(
+        `https://dwo94t377z7ed.cloudfront.net/prod/getUrlNew?email=${encodeURIComponent(
           form.email
         )}&contentType=${encodeURIComponent(img.type)}`,
         { headers: { Authorization: token } }
@@ -296,7 +296,7 @@ const handleSubmit = async () => {
     // Get upload URLs for viewing images
     const viewingUploadUrlPromises = compressedViewings.map((img) =>
       axios.get(
-        `https://dwo94t377z7ed.cloudfront.net/prod/getUrl?email=${encodeURIComponent(
+        `https://dwo94t377z7ed.cloudfront.net/prod/getUrlNew?email=${encodeURIComponent(
           form.email
         )}&contentType=${encodeURIComponent(img.type)}`,
         { headers: { Authorization: token } }
@@ -341,7 +341,7 @@ const handleSubmit = async () => {
     };
 
     await axios.post(
-      "https://dwo94t377z7ed.cloudfront.net/prod/addDress",
+      "https://dwo94t377z7ed.cloudfront.net/prod/addProduct",
       data,
       { headers: { Authorization: token } }
     );

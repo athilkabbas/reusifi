@@ -191,7 +191,7 @@ const { token } = useSessionCheck()
       try {
         setChatLoading(true);
         const result = await axios.get(
-          `https://dwo94t377z7ed.cloudfront.net/prod/getChat?userId1=${
+          `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${
             encodeURIComponent(user.userId)
           }&count=${encodeURIComponent(true)}`,
           { headers: { Authorization: token } }
@@ -211,7 +211,7 @@ const { token } = useSessionCheck()
     const getFavList = async () => {
       setFavLoading(true);
       const results = await axios.get(
-        `https://dwo94t377z7ed.cloudfront.net/prod/getFavourites?email=${
+        `https://dwo94t377z7ed.cloudfront.net/prod/getFavouritesList?email=${
           encodeURIComponent(user.userId)
         }&favList=${encodeURIComponent(true)}`,
         { headers: { Authorization: token } }
@@ -230,10 +230,18 @@ const { token } = useSessionCheck()
   const handleFav = async (id, favourite) => {
     setFavScrollPosition(scrollableDivRef.current.scrollTop);
     setHandleFavLoading(true);
-    const results = await axios.get(
-      `https://dwo94t377z7ed.cloudfront.net/prod/getFavourites?id=${encodeURIComponent(id)}&favourite=${encodeURIComponent(favourite)}&email=${encodeURIComponent(user.userId)}`,
+    if(favourite){
+        const results = await axios.get(
+      `https://dwo94t377z7ed.cloudfront.net/prod/getFavouritesAdd?id=${encodeURIComponent(id)}&favourite=${encodeURIComponent(favourite)}&email=${encodeURIComponent(user.userId)}`,
       { headers: { Authorization: token } }
     );
+    }
+    else{
+          const results = await axios.get(
+      `https://dwo94t377z7ed.cloudfront.net/prod/getFavouritesRemove?id=${encodeURIComponent(id)}&favourite=${encodeURIComponent(favourite)}&email=${encodeURIComponent(user.userId)}`,
+      { headers: { Authorization: token } }
+    );
+    }
     if (!favourite) {
       setFilterList((prevValue) => {
         return prevValue.filter((item) => {
@@ -258,7 +266,7 @@ const { token } = useSessionCheck()
       let results;
 
       results = await axios.get(
-        `https://dwo94t377z7ed.cloudfront.net/prod/getFavourites?email=${
+        `https://dwo94t377z7ed.cloudfront.net/prod/getFavouritesEmail?email=${
           encodeURIComponent(user.userId)
         }&limit=${encodeURIComponent(limit)}&lastEvaluatedKey=${encodeURIComponent(JSON.stringify(
           favLastEvaluatedKey
