@@ -60,6 +60,8 @@ const AddDress = () => {
     setData,
     setInitialLoad,
     data,
+    count,
+    setCount,
     setHomeInitialLoad,
     setAdInitialLoad,
     setChatData,
@@ -117,7 +119,7 @@ const AddDress = () => {
     Promise.all([getChatCount, getAdCount])
       .then(([chatResult,adResult]) => {
         setUnreadChatCount(chatResult.data.count);
-         setCount(adResult.data.count);
+        setCount(adResult.data.count);
       })
       .catch((err) => {
         console.error(err);
@@ -130,31 +132,30 @@ const AddDress = () => {
   }
 }, [user, token, addProductInitialLoad]);
 
-  useEffect(() => {
-    const getAdCount = async () => {
-      try {
-        setLoading(true);
-        let result;
-        result = await axios.get(
-          `https://dwo94t377z7ed.cloudfront.net/prod/getProductsCount?count=${true}&email=${
-            encodeURIComponent(user.userId)
-          }`,
-          { headers: { Authorization: token } }
-        );
-        setCount(result.data.count);
-        setLoading(false);
-      } catch (err) {
-        setLoading(false);
-        console.log(err);
-      }
-    };
-    if(user && token && !addProductInitialLoad){
-      getAdCount();
-    }
-  }, [user, token]);
+  // useEffect(() => {
+  //   const getAdCount = async () => {
+  //     try {
+  //       setLoading(true);
+  //       let result;
+  //       result = await axios.get(
+  //         `https://dwo94t377z7ed.cloudfront.net/prod/getProductsCount?count=${true}&email=${
+  //           encodeURIComponent(user.userId)
+  //         }`,
+  //         { headers: { Authorization: token } }
+  //       );
+  //       setCount(result.data.count);
+  //       setLoading(false);
+  //     } catch (err) {
+  //       setLoading(false);
+  //       console.log(err);
+  //     }
+  //   };
+  //   if(user && token && !addProductInitialLoad){
+  //     getAdCount();
+  //   }
+  // }, [user, token]);
 
   const [districts, setDistricts] = useState([]);
-  const [count, setCount] = useState(0);
   const handleChange = (value, type) => {
     if (type === "price" && !/^(|[1-9]\d*)$/.test(value.target.value)) {
       return;
@@ -379,7 +380,7 @@ const handleSubmit = async () => {
       data,
       { headers: { Authorization: token } }
     );
-
+    setCount((prevValue) => prevValue + 1)
     setAdInitialLoad(true);
     setLoading(false);
     navigate("/");

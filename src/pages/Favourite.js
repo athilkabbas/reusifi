@@ -45,7 +45,7 @@ const capitalize = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
 const { Header, Content, Footer } = Layout;
-const App = () => {
+const Favourites = () => {
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
   const timer = useRef(null);
@@ -279,7 +279,14 @@ const { token } = useSessionCheck()
       } else {
         setFavHasMore(true);
       }
-      setFavData([...favData, ...results.data.finalResult]);
+      if(favInitialLoad){
+        setFavData([...results.data.finalResult]);
+      }
+      else{
+        setFavData([...favData, ...results.data.finalResult]);
+      }
+      const uuids = results.data.finalResult.map((item) => item["item"]["uuid"])
+      setFilterList([...filterList,...uuids])
       setLoading(false);
       setFavScrollPosition(scrollPosition);
       setFavInitialLoad(false)
@@ -305,17 +312,16 @@ const { token } = useSessionCheck()
       { headers: { Authorization: token } }
     );
 
-    const getFavList = axios.get(
-      `https://dwo94t377z7ed.cloudfront.net/prod/getFavouritesList?email=${encodeURIComponent(user.userId)}&favList=${encodeURIComponent(true)}`,
-      { headers: { Authorization: token } }
-    );
+    // const getFavList = axios.get(
+    //   `https://dwo94t377z7ed.cloudfront.net/prod/getFavouritesList?email=${encodeURIComponent(user.userId)}&favList=${encodeURIComponent(true)}`,
+    //   { headers: { Authorization: token } }
+    // );
 
     const loadMoreDataPromise = loadMoreData();
 
-    Promise.all([getChatCount, getFavList, loadMoreDataPromise])
+    Promise.all([getChatCount,loadMoreDataPromise])
       .then(([chatResult, favResult]) => {
         setUnreadChatCount(chatResult.data.count);
-        setFilterList([...favResult.data.finalResult]);
       })
       .catch((err) => {
         console.error(err);
@@ -563,4 +569,4 @@ const { token } = useSessionCheck()
     </Layout>
   );
 };
-export default App;
+export default Favourites;

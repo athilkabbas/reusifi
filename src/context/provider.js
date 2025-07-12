@@ -5,6 +5,7 @@ export const Context = createContext();
 const Provider = ({ children }) => {
   const [data, setData] = useState([]);
   const [initialLoad, setInitialLoad] = useState(true);
+  const [count, setCount] = useState(0);
   const [hasMore, setHasMore] = useState(false);
   const [adHasMore, setAdHasMore] = useState(false);
   const [favHasMore, setFavHasMore] = useState(false);
@@ -42,6 +43,8 @@ const Provider = ({ children }) => {
   return (
     <Context.Provider
       value={{
+        count,
+        setCount,
         unreadChatCount,
         setUnreadChatCount,
         detailData,

@@ -217,6 +217,7 @@ const { token } = useSessionCheck()
     setData([]);
     setLastEvaluatedKeys({});
     setExhaustedShards({})
+    setInitialLoad(true);
     if (type === "state") {
       setLocation((prevValue) => {
         return { ...prevValue, [type]: value, district: null };
@@ -245,30 +246,36 @@ const { token } = useSessionCheck()
   //   }
   // }, [user, token, initialLoad]);
 
-  const handleFav = async (id, favourite) => {
+  const handleFav = async (selectedItem, favourite) => {
     setScrollPosition(scrollableDivRef.current.scrollTop);
-    setFavInitialLoad(true);
+    // setFavInitialLoad(true);
     setHandleFavLoading(true);
     if(favourite){
        const results = await axios.get(
-      `https://dwo94t377z7ed.cloudfront.net/prod/getFavouritesAdd?id=${encodeURIComponent(id)}&favourite=${encodeURIComponent(favourite)}&email=${encodeURIComponent(user.userId)}`,
+      `https://dwo94t377z7ed.cloudfront.net/prod/getFavouritesAdd?id=${encodeURIComponent(selectedItem["item"]["uuid"])}&favourite=${encodeURIComponent(favourite)}&email=${encodeURIComponent(user.userId)}`,
       { headers: { Authorization: token } }
     );
     }
     else{
           const results = await axios.get(
-      `https://dwo94t377z7ed.cloudfront.net/prod/getFavouritesRemove?id=${encodeURIComponent(id)}&favourite=${encodeURIComponent(favourite)}&email=${encodeURIComponent(user.userId)}`,
+      `https://dwo94t377z7ed.cloudfront.net/prod/getFavouritesRemove?id=${encodeURIComponent(selectedItem["item"]["uuid"])}&favourite=${encodeURIComponent(favourite)}&email=${encodeURIComponent(user.userId)}`,
       { headers: { Authorization: token } }
     );
     }
     if (!favourite) {
       setFilterList((prevValue) => {
         return prevValue.filter((item) => {
-          return item !== id;
+          return item !== selectedItem["item"]["uuid"];
+        });
+      });
+       setFavData((prevValue) => {
+        return prevValue.filter((item) => {
+          return item['item']['uuid'] !== selectedItem["item"]["uuid"];
         });
       });
     } else {
-      setFilterList([...filterList, id]);
+      setFilterList([...filterList, selectedItem["item"]["uuid"]]);
+      setFavData((prevValue) => [...prevValue,selectedItem])
     }
     setHandleFavLoading(false);
   };
@@ -312,6 +319,12 @@ const { token } = useSessionCheck()
         }
       }
       setData([...data, ...results.data.finalResult]);
+      const favList = results.data.finalResult.map((item) => item["item"]["uuid"])
+      const favResult = await axios.get(
+      `https://dwo94t377z7ed.cloudfront.net/prod/getFavouritesList?email=${encodeURIComponent(user.userId)}&favList=${encodeURIComponent(JSON.stringify(favList))}`,
+      { headers: { Authorization: token } }
+      );
+      setFilterList([...favResult.data.finalResult]);
       setLoading(false);
       setScrollPosition(scrollPosition);
       setInitialLoad(false);
@@ -328,7 +341,7 @@ const { token } = useSessionCheck()
     }
 
     // Set a new timeout
-    if(token && limit && !initialLoad){
+    if(token && limit && initialLoad && (search || Object.values(location).some((value) => value) || priceFilter)){
       setLoading(true)
       timer.current = setTimeout(() => {
       loadMoreData();
@@ -343,7 +356,7 @@ const { token } = useSessionCheck()
   }, [search, location, priceFilter,token,limit]);
 
   useEffect(() => {
-  if (user && initialLoad && token && limit) {
+  if (user && initialLoad && token && limit && !search) {
     setChatLoading(true);
     setFavLoading(true);
     setLoading(true);
@@ -353,17 +366,11 @@ const { token } = useSessionCheck()
       { headers: { Authorization: token } }
     );
 
-    const getFavList = axios.get(
-      `https://dwo94t377z7ed.cloudfront.net/prod/getFavouritesList?email=${encodeURIComponent(user.userId)}&favList=${encodeURIComponent(true)}`,
-      { headers: { Authorization: token } }
-    );
+    const loadMoreDataPromise =  loadMoreData();
 
-    const loadMoreDataPromise = loadMoreData();
-
-    Promise.all([getChatCount, getFavList, loadMoreDataPromise])
-      .then(([chatResult, favResult]) => {
+    Promise.all([getChatCount, loadMoreDataPromise])
+      .then(([chatResult]) => {
         setUnreadChatCount(chatResult.data.count);
-        setFilterList([...favResult.data.finalResult]);
       })
       .catch((err) => {
         console.error(err);
@@ -374,7 +381,7 @@ const { token } = useSessionCheck()
         setLoading(false);
       });
   }
-}, [user, token, initialLoad, limit]);
+}, [user, token, initialLoad, limit, search]);
 
 
   const navigate = useNavigate();
@@ -410,6 +417,7 @@ const { token } = useSessionCheck()
     setLastEvaluatedKeys({});
     setExhaustedShards({})
     setData([]);
+    setInitialLoad(true);
     setPriceFilter(event.target.value === 'true' ? 'LOWTOHIGH' : 'HIGHTOLOW');
   };
   return (
@@ -442,6 +450,7 @@ const { token } = useSessionCheck()
               setLastEvaluatedKeys({});
               setExhaustedShards({})
               setData([]);
+              setInitialLoad(true);
               setSearch(event.target.value);
               if(!event.target.value){
                 setLocation({ state: null, district: null})
@@ -626,7 +635,7 @@ const { token } = useSessionCheck()
                             <div
                               onClick={(event) => {
                                 handleFav(
-                                  item["item"]["uuid"],
+                                  item,
                                   !filterList.includes(item["item"]["uuid"]),
                                   event
                                 );
