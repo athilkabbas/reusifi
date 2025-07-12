@@ -196,26 +196,26 @@ const ChatPage = () => {
       }
     }, [chatScrollPosition,loading,scrollLoadMoreData,chatData,chatLoading]);
 
-  useEffect(() => {
-    const getChatCount = async () => {
-      setChatLoading(true);
-      try {
-        const result = await axios.get(
-          `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${
-            encodeURIComponent(user.userId)
-          }&count=${encodeURIComponent(true)}`,
-          { headers: { Authorization: token } }
-        );
-        setUnreadChatCount(result.data.count);
-        setChatLoading(false);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    if (user && chatInitialLoad && token) {
-      getChatCount();
-    }
-  }, [user,chatInitialLoad, token]);
+  // useEffect(() => {
+  //   const getChatCount = async () => {
+  //     setChatLoading(true);
+  //     try {
+  //       const result = await axios.get(
+  //         `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${
+  //           encodeURIComponent(user.userId)
+  //         }&count=${encodeURIComponent(true)}`,
+  //         { headers: { Authorization: token } }
+  //       );
+  //       setUnreadChatCount(result.data.count);
+  //       setChatLoading(false);
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
+  //   if (user && chatInitialLoad && token) {
+  //     getChatCount();
+  //   }
+  // }, [user,chatInitialLoad, token]);
 
   const items = [
     HomeFilled,
@@ -467,11 +467,38 @@ const ChatPage = () => {
     fetchUser();
   }, []);
 
-  useEffect(() => {
-    if (user && user.userId && chatInitialLoad && token && limit) {
-      getChats();
-    }
-  }, [user,token,limit]);
+useEffect(() => {
+  if (user && user.userId && chatInitialLoad && token && limit) {
+    setChatLoading(true);
+    setLoading(true);
+
+    const getChatCount = axios.get(
+      `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,
+      { headers: { Authorization: token } }
+    );
+
+    const getChatsPromise = getChats()
+
+
+    Promise.all([getChatCount, getChatsPromise])
+      .then(([chatResult]) => {
+        setUnreadChatCount(chatResult.data.count);
+      })
+      .catch((err) => {
+        console.error(err);
+      })
+      .finally(() => {
+        setChatLoading(false);
+        setLoading(false);
+      });
+  }
+}, [user, token, chatInitialLoad,limit]);
+
+  // useEffect(() => {
+  //   if (user && user.userId && chatInitialLoad && token && limit) {
+  //     getChats();
+  //   }
+  // }, [user,token,limit]);
   const isMobile = useIsMobile()
   return (
     <Layout style={{ height: "100vh", overflow: "hidden" }}>

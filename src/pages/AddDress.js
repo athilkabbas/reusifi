@@ -96,6 +96,40 @@ const AddDress = () => {
       getUser()
     },[])
 
+      useEffect(() => {
+  if (user && addProductInitialLoad && token) {
+    setChatLoading(true);
+    setLoading(true);
+
+    const getChatCount = axios.get(
+      `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,
+      { headers: { Authorization: token } }
+    );
+
+    const getAdCount = axios.get(
+          `https://dwo94t377z7ed.cloudfront.net/prod/getProductsCount?count=${true}&email=${
+            encodeURIComponent(user.userId)
+          }`,
+          { headers: { Authorization: token } }
+        );
+
+
+    Promise.all([getChatCount, getAdCount])
+      .then(([chatResult,adResult]) => {
+        setUnreadChatCount(chatResult.data.count);
+         setCount(adResult.data.count);
+      })
+      .catch((err) => {
+        console.error(err);
+      })
+      .finally(() => {
+        setChatLoading(false);
+        setLoading(false);
+        setAddProductInitialLoad(false)
+      });
+  }
+}, [user, token, addProductInitialLoad]);
+
   useEffect(() => {
     const getAdCount = async () => {
       try {
@@ -114,7 +148,7 @@ const AddDress = () => {
         console.log(err);
       }
     };
-    if(user && token){
+    if(user && token && !addProductInitialLoad){
       getAdCount();
     }
   }, [user, token]);
@@ -133,27 +167,27 @@ const AddDress = () => {
     });
   };
 
-  useEffect(() => {
-    const getChatCount = async () => {
-      setChatLoading(true);
-      try {
-        const result = await axios.get(
-          `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${
-            encodeURIComponent(user.userId)
-          }&count=${true}`,
-          { headers: { Authorization: token } }
-        );
-        setUnreadChatCount(result.data.count);
-        setChatLoading(false);
-        setAddProductInitialLoad(false)
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    if (user && addProductInitialLoad && token) {
-      getChatCount();
-    }
-  }, [user,token,addProductInitialLoad]);
+  // useEffect(() => {
+  //   const getChatCount = async () => {
+  //     setChatLoading(true);
+  //     try {
+  //       const result = await axios.get(
+  //         `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${
+  //           encodeURIComponent(user.userId)
+  //         }&count=${true}`,
+  //         { headers: { Authorization: token } }
+  //       );
+  //       setUnreadChatCount(result.data.count);
+  //       setChatLoading(false);
+  //       setAddProductInitialLoad(false)
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
+  //   if (user && addProductInitialLoad && token) {
+  //     getChatCount();
+  //   }
+  // }, [user,token,addProductInitialLoad]);
   const items = [
     HomeFilled,
     UploadOutlined,
@@ -346,7 +380,7 @@ const handleSubmit = async () => {
       { headers: { Authorization: token } }
     );
 
-    setAdPageInitialLoad(true);
+    setAdInitialLoad(true);
     setLoading(false);
     navigate("/");
   } catch (error) {

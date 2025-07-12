@@ -139,26 +139,26 @@ const Chat = () => {
                   return () => window.removeEventListener("resize", handleResize);
                 }, [hasMore]);
 
-  useEffect(() => {
-    const getChatCount = async () => {
-      try {
-        setChatLoading(true);
-        const result = await axios.get(
-          `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${
-            encodeURIComponent(user.userId)
-          }&count=${encodeURIComponent(true)}`,
-          { headers: { Authorization: token } }
-        );
-        setUnreadChatCount(result.data.count);
-        setChatLoading(false);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    if (user && iChatInitialLoad && token) {
-      getChatCount();
-    }
-  }, [user,token,iChatInitialLoad]);
+  // useEffect(() => {
+  //   const getChatCount = async () => {
+  //     try {
+  //       setChatLoading(true);
+  //       const result = await axios.get(
+  //         `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${
+  //           encodeURIComponent(user.userId)
+  //         }&count=${encodeURIComponent(true)}`,
+  //         { headers: { Authorization: token } }
+  //       );
+  //       setUnreadChatCount(result.data.count);
+  //       setChatLoading(false);
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
+  //   if (user && iChatInitialLoad && token) {
+  //     getChatCount();
+  //   }
+  // }, [user,token,iChatInitialLoad]);
 
  useEffect(() => {
   if(!chatLoading){
@@ -341,10 +341,37 @@ const Chat = () => {
   // }, []);
 
   useEffect(() => {
+  if (user && user.userId && token && limit && iChatInitialLoad && ((recipient && recipient["item"]["email"]) || conversationId)) {
+    setChatLoading(true);
+    setLoading(true);
+
+    const getChatCount = axios.get(
+      `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,
+      { headers: { Authorization: token } }
+    );
+
+    const getChat = getChats()
+
+
+    Promise.all([getChatCount, getChat])
+      .then(([chatResult]) => {
+        setUnreadChatCount(chatResult.data.count);
+      })
+      .catch((err) => {
+        console.error(err);
+      })
+      .finally(() => {
+        setChatLoading(false);
+        setLoading(false);
+      });
+  }
+}, [user, token, iChatInitialLoad,limit,conversationId,recipient]);
+
+  useEffect(() => {
     if (
       token && user && limit &&
       user.userId &&
-      ((recipient && recipient["item"]["email"]) || conversationId)
+      ((recipient && recipient["item"]["email"]) || conversationId) && !iChatInitialLoad
     ) {
       getChats();
     }

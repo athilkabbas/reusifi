@@ -186,43 +186,43 @@ const { token } = useSessionCheck()
     }
   }, [favScrollPosition,loading,favData,handleFavLoading]);
 
-    useEffect(() => {
-    const getChatCount = async () => {
-      try {
-        setChatLoading(true);
-        const result = await axios.get(
-          `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${
-            encodeURIComponent(user.userId)
-          }&count=${encodeURIComponent(true)}`,
-          { headers: { Authorization: token } }
-        );
-        setUnreadChatCount(result.data.count);
-        setChatLoading(false);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    if (user && favInitialLoad && token) {
-      getChatCount();
-    }
-  }, [user,token,favInitialLoad]);
+  //   useEffect(() => {
+  //   const getChatCount = async () => {
+  //     try {
+  //       setChatLoading(true);
+  //       const result = await axios.get(
+  //         `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${
+  //           encodeURIComponent(user.userId)
+  //         }&count=${encodeURIComponent(true)}`,
+  //         { headers: { Authorization: token } }
+  //       );
+  //       setUnreadChatCount(result.data.count);
+  //       setChatLoading(false);
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
+  //   if (user && favInitialLoad && token) {
+  //     getChatCount();
+  //   }
+  // }, [user,token,favInitialLoad]);
 
-    useEffect(() => {
-    const getFavList = async () => {
-      setFavLoading(true);
-      const results = await axios.get(
-        `https://dwo94t377z7ed.cloudfront.net/prod/getFavouritesList?email=${
-          encodeURIComponent(user.userId)
-        }&favList=${encodeURIComponent(true)}`,
-        { headers: { Authorization: token } }
-      );
-      setFilterList([...results.data.finalResult]);
-      setFavLoading(false);
-    };
-    if (user && favInitialLoad && token) {
-      getFavList();
-    }
-  }, [user,token,favInitialLoad]);
+  //   useEffect(() => {
+  //   const getFavList = async () => {
+  //     setFavLoading(true);
+  //     const results = await axios.get(
+  //       `https://dwo94t377z7ed.cloudfront.net/prod/getFavouritesList?email=${
+  //         encodeURIComponent(user.userId)
+  //       }&favList=${encodeURIComponent(true)}`,
+  //       { headers: { Authorization: token } }
+  //     );
+  //     setFilterList([...results.data.finalResult]);
+  //     setFavLoading(false);
+  //   };
+  //   if (user && favInitialLoad && token) {
+  //     getFavList();
+  //   }
+  // }, [user,token,favInitialLoad]);
 
 
 
@@ -288,11 +288,45 @@ const { token } = useSessionCheck()
       console.log(err);
     }
   };
-  useEffect(() => {
-    if(favInitialLoad && token && user && limit){
-      loadMoreData();
-    }
-  }, [user,token, favInitialLoad, limit]);
+  // useEffect(() => {
+  //   if(favInitialLoad && token && user && limit){
+  //     loadMoreData();
+  //   }
+  // }, [user,token, favInitialLoad, limit]);
+
+    useEffect(() => {
+  if (user && favInitialLoad && token && limit) {
+    setChatLoading(true);
+    setFavLoading(true);
+    setLoading(true);
+
+    const getChatCount = axios.get(
+      `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,
+      { headers: { Authorization: token } }
+    );
+
+    const getFavList = axios.get(
+      `https://dwo94t377z7ed.cloudfront.net/prod/getFavouritesList?email=${encodeURIComponent(user.userId)}&favList=${encodeURIComponent(true)}`,
+      { headers: { Authorization: token } }
+    );
+
+    const loadMoreDataPromise = loadMoreData();
+
+    Promise.all([getChatCount, getFavList, loadMoreDataPromise])
+      .then(([chatResult, favResult]) => {
+        setUnreadChatCount(chatResult.data.count);
+        setFilterList([...favResult.data.finalResult]);
+      })
+      .catch((err) => {
+        console.error(err);
+      })
+      .finally(() => {
+        setChatLoading(false);
+        setFavLoading(false);
+        setLoading(false);
+      });
+  }
+}, [user, token, favInitialLoad, limit]);
 
   const navigate = useNavigate();
   const handleNavigation = (event) => {

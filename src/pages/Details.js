@@ -101,27 +101,27 @@ const Details = () => {
   };
 const { Text, Link } = Typography;
 const { token } = useSessionCheck()
-  useEffect(() => {
-    const getChatCount = async () => {
-      setChatLoading(true);
-      try {
-        const result = await axios.get(
-          `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${
-            encodeURIComponent(user.userId)
-          }&count=${encodeURIComponent(true)}`,
-          { headers: { Authorization: token } }
-        );
-        setUnreadChatCount(result.data.count);
-        setChatLoading(false);
-        setDetailInitialLoad(false)
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    if (user && detailInitialLoad && token) {
-      getChatCount();
-    }
-  }, [user,token,detailInitialLoad]);
+  // useEffect(() => {
+  //   const getChatCount = async () => {
+  //     setChatLoading(true);
+  //     try {
+  //       const result = await axios.get(
+  //         `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${
+  //           encodeURIComponent(user.userId)
+  //         }&count=${encodeURIComponent(true)}`,
+  //         { headers: { Authorization: token } }
+  //       );
+  //       setUnreadChatCount(result.data.count);
+  //       setChatLoading(false);
+  //       setDetailInitialLoad(false)
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
+  //   if (user && detailInitialLoad && token) {
+  //     getChatCount();
+  //   }
+  // }, [user,token,detailInitialLoad]);
   const items = [
     HomeFilled,
     UploadOutlined,
@@ -157,6 +157,39 @@ const { token } = useSessionCheck()
       getUser()
     },[])
 
+        useEffect(() => {
+  if (user && detailInitialLoad && token) {
+    setChatLoading(true);
+    setLoading(true);
+
+    const getChatCount = axios.get(
+      `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,
+      { headers: { Authorization: token } }
+    );
+
+    const getData = axios.get(
+          `https://dwo94t377z7ed.cloudfront.net/prod/getProductsId?id=${encodeURIComponent(item["item"]["uuid"])}`,
+          { headers: { Authorization: token } }
+    );
+
+
+    Promise.all([getChatCount, getData])
+      .then(([chatResult, result]) => {
+        setUnreadChatCount(chatResult.data.count);
+        setDetailData(result.data)
+      })
+      .catch((err) => {
+        console.error(err);
+        info();
+      })
+      .finally(() => {
+        setChatLoading(false);
+        setLoading(false);
+        setDetailInitialLoad(false)
+      });
+  }
+}, [user, token, detailInitialLoad]);
+
   useEffect(() => {
     const getData = async () => {
       try {
@@ -174,7 +207,7 @@ const { token } = useSessionCheck()
         info();
       }
     };
-    if (item && token) {
+    if (item && token && !detailInitialLoad) {
       getData();
     }
   }, [item, token]);

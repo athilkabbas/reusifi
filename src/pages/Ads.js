@@ -138,26 +138,26 @@ const Ads = () => {
       setLoadedImages((prev) => ({ ...prev, [uuid]: true }));
     };
   const { token } = useSessionCheck()
-  useEffect(() => {
-    const getChatCount = async () => {
-      setChatLoading(true);
-      try {
-        const result = await axios.get(
-          `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${
-            encodeURIComponent(user.userId)
-          }&count=${true}`,
-          { headers: { Authorization: token } }
-        );
-        setUnreadChatCount(result.data.count);
-        setChatLoading(false);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    if (user && adInitialLoad && token) {
-      getChatCount();
-    }
-  }, [user,adInitialLoad,token]);
+  // useEffect(() => {
+  //   const getChatCount = async () => {
+  //     setChatLoading(true);
+  //     try {
+  //       const result = await axios.get(
+  //         `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${
+  //           encodeURIComponent(user.userId)
+  //         }&count=${true}`,
+  //         { headers: { Authorization: token } }
+  //       );
+  //       setUnreadChatCount(result.data.count);
+  //       setChatLoading(false);
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
+  //   if (user && adInitialLoad && token) {
+  //     getChatCount();
+  //   }
+  // }, [user,adInitialLoad,token]);
   const items = [
     HomeFilled,
     UploadOutlined,
@@ -242,10 +242,37 @@ const Ads = () => {
   };
 
   useEffect(() => {
-    if(adInitialLoad && token && user && limit){
-      loadMoreData();
-    }
-  }, [user,token,adInitialLoad,limit]);
+  if (user && adInitialLoad && token && limit) {
+    setChatLoading(true);
+    setLoading(true);
+
+    const getChatCount = axios.get(
+      `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,
+      { headers: { Authorization: token } }
+    );
+
+    const loadMoreDataPromise = loadMoreData()
+
+
+    Promise.all([getChatCount, loadMoreDataPromise])
+      .then(([chatResult]) => {
+        setUnreadChatCount(chatResult.data.count);
+      })
+      .catch((err) => {
+        console.error(err);
+      })
+      .finally(() => {
+        setChatLoading(false);
+        setLoading(false);
+      });
+  }
+}, [user, token, adInitialLoad,limit]);
+
+  // useEffect(() => {
+  //   if(adInitialLoad && token && user && limit){
+  //     loadMoreData();
+  //   }
+  // }, [user,token,adInitialLoad,limit]);
 
   const navigate = useNavigate();
   const handleNavigation = (event) => {

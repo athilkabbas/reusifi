@@ -192,32 +192,31 @@ const { token } = useSessionCheck()
   }
 }, [scrollPosition,chatLoading,favLoading,handleFavLoading,loading,scrollLoadMoreData,data]);
 
-  useEffect(() => {
-    const getChatCount = async () => {
-      try {
-        setChatLoading(true);
-        const result = await axios.get(
-          `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${
-            encodeURIComponent(user.userId)
-          }&count=${encodeURIComponent(true)}`,
-          { headers: { Authorization: token } }
-        );
-        setUnreadChatCount(result.data.count);
-        setChatLoading(false);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    if (user && initialLoad && token) {
-      getChatCount();
-    }
-  }, [user,token, initialLoad]);
+  // useEffect(() => {
+  //   const getChatCount = async () => {
+  //     try {
+  //       setChatLoading(true);
+  //       const result = await axios.get(
+  //         `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${
+  //           encodeURIComponent(user.userId)
+  //         }&count=${encodeURIComponent(true)}`,
+  //         { headers: { Authorization: token } }
+  //       );
+  //       setUnreadChatCount(result.data.count);
+  //       setChatLoading(false);
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
+  //   if (user && initialLoad && token) {
+  //     getChatCount();
+  //   }
+  // }, [user,token, initialLoad]);
 
   const handleChange = (value, type) => {
     setData([]);
     setLastEvaluatedKeys({});
     setExhaustedShards({})
-    setInitialLoad(true);
     if (type === "state") {
       setLocation((prevValue) => {
         return { ...prevValue, [type]: value, district: null };
@@ -229,22 +228,22 @@ const { token } = useSessionCheck()
     }
   };
 
-  useEffect(() => {
-    const getFavList = async () => {
-      setFavLoading(true);
-      const results = await axios.get(
-        `https://dwo94t377z7ed.cloudfront.net/prod/getFavouritesList?email=${
-          encodeURIComponent(user.userId)
-        }&favList=${encodeURIComponent(true)}`,
-        { headers: { Authorization: token } }
-      );
-      setFilterList([...results.data.finalResult]);
-      setFavLoading(false);
-    };
-    if (user && initialLoad && token) {
-      getFavList();
-    }
-  }, [user, token, initialLoad]);
+  // useEffect(() => {
+  //   const getFavList = async () => {
+  //     setFavLoading(true);
+  //     const results = await axios.get(
+  //       `https://dwo94t377z7ed.cloudfront.net/prod/getFavouritesList?email=${
+  //         encodeURIComponent(user.userId)
+  //       }&favList=${encodeURIComponent(true)}`,
+  //       { headers: { Authorization: token } }
+  //     );
+  //     setFilterList([...results.data.finalResult]);
+  //     setFavLoading(false);
+  //   };
+  //   if (user && initialLoad && token) {
+  //     getFavList();
+  //   }
+  // }, [user, token, initialLoad]);
 
   const handleFav = async (id, favourite) => {
     setScrollPosition(scrollableDivRef.current.scrollTop);
@@ -321,23 +320,19 @@ const { token } = useSessionCheck()
       console.log(err);
     }
   };
-  useEffect(() => {
+
+    useEffect(() => {
     // Clear the previous timeout if search changes
     if (timer.current) {
       clearTimeout(timer.current);
     }
 
     // Set a new timeout
-    if(token && initialLoad && limit && (search || Object.values(location).some((value) => value) || priceFilter)){
+    if(token && limit && !initialLoad){
       setLoading(true)
       timer.current = setTimeout(() => {
       loadMoreData();
       }, 1500);
-    }
-    else{
-      if(initialLoad && token && limit){
-        loadMoreData()
-      }
     }
     // Cleanup function to clear the timeout on component unmount or before next effect
     return () => {
@@ -346,6 +341,41 @@ const { token } = useSessionCheck()
       }
     };
   }, [search, location, priceFilter,token,limit]);
+
+  useEffect(() => {
+  if (user && initialLoad && token && limit) {
+    setChatLoading(true);
+    setFavLoading(true);
+    setLoading(true);
+
+    const getChatCount = axios.get(
+      `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,
+      { headers: { Authorization: token } }
+    );
+
+    const getFavList = axios.get(
+      `https://dwo94t377z7ed.cloudfront.net/prod/getFavouritesList?email=${encodeURIComponent(user.userId)}&favList=${encodeURIComponent(true)}`,
+      { headers: { Authorization: token } }
+    );
+
+    const loadMoreDataPromise = loadMoreData();
+
+    Promise.all([getChatCount, getFavList, loadMoreDataPromise])
+      .then(([chatResult, favResult]) => {
+        setUnreadChatCount(chatResult.data.count);
+        setFilterList([...favResult.data.finalResult]);
+      })
+      .catch((err) => {
+        console.error(err);
+      })
+      .finally(() => {
+        setChatLoading(false);
+        setFavLoading(false);
+        setLoading(false);
+      });
+  }
+}, [user, token, initialLoad, limit]);
+
 
   const navigate = useNavigate();
   const isMobile = useIsMobile()
@@ -380,7 +410,6 @@ const { token } = useSessionCheck()
     setLastEvaluatedKeys({});
     setExhaustedShards({})
     setData([]);
-    setInitialLoad(true);
     setPriceFilter(event.target.value === 'true' ? 'LOWTOHIGH' : 'HIGHTOLOW');
   };
   return (
@@ -413,8 +442,12 @@ const { token } = useSessionCheck()
               setLastEvaluatedKeys({});
               setExhaustedShards({})
               setData([]);
-              setInitialLoad(true);
               setSearch(event.target.value);
+              if(!event.target.value){
+                setLocation({ state: null, district: null})
+                setPriceFilter(null)
+                setDistricts([])
+              }
             }}
             placeholder="Search"
             style={{ width: !isMobile ? "30vw" : "60vw" ,height: 'fit-content', boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)", borderRadius: "7px"}}
