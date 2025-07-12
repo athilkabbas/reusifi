@@ -262,17 +262,17 @@ const Chat = () => {
       const scrollPosition = scrollableDivRef.current.scrollTop;
       setLoading(true);
       let result;
+      let readRes
       if (recipient && recipient["item"]["email"]) {
-        result = await axios.get(
+        [result, readRes] = await Promise.all([axios.get(
           `https://dwo94t377z7ed.cloudfront.net/prod/getChatsConversation?userId1=${encodeURIComponent(user.userId)}&userId2=${encodeURIComponent(recipient["item"]["email"])}&productId=${encodeURIComponent(recipient["item"]["uuid"])}&lastEvaluatedKey=${encodeURIComponent(lastEvaluatedKey)}&limit=${encodeURIComponent(limit)}`,
           { headers: { Authorization: token } }
-        );
-        await axios.get(
+        ),axios.get(
           `https://dwo94t377z7ed.cloudfront.net/prod/getChatsRead?userId1=${
             encodeURIComponent(user.userId)
           }&userId2=${encodeURIComponent(recipient["item"]["email"])}&productId=${encodeURIComponent(recipient["item"]["uuid"])}&read=${encodeURIComponent(true)}`,
           { headers: { Authorization: token } }
-        );
+        )])
         setChatData((chatData) => {
           return chatData.map((item) => {
             let conversationId = [user.userId, recipient["item"]["email"]]
@@ -294,16 +294,15 @@ const Chat = () => {
             break;
           }
         }
-        result = await axios.get(
+        [result, readRes] = await Promise.all([axios.get(
           `https://dwo94t377z7ed.cloudfront.net/prod/getChatsConversation?userId1=${encodeURIComponent(user.userId)}&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(productId)}&lastEvaluatedKey=${encodeURIComponent(lastEvaluatedKey)}&limit=${encodeURIComponent(limit)}`,
           { headers: { Authorization: token } }
-        );
-        await axios.get(
+        ),axios.get(
           `https://dwo94t377z7ed.cloudfront.net/prod/getChatsRead?userId1=${
             encodeURIComponent(user.userId)
           }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(productId)}&read=${encodeURIComponent(true)}`,
           { headers: { Authorization: token } }
-        );
+        )])
         setChatData((chatData) => {
           return chatData.map((item) => {
             let conversationId = [user.userId, userId2].sort().join(`#${productId}#`);
