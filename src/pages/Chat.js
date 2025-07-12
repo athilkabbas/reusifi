@@ -3,7 +3,7 @@ import { Col, message, Row, Spin } from "antd";
 import { Input } from "antd";
 import { useNavigate } from "react-router-dom";
 import { Select, Badge } from "antd";
-import { Breadcrumb, Layout, Menu, theme } from "antd";
+import { Breadcrumb, Layout, Menu, theme , Modal} from "antd";
 import { states, districts, districtMap } from "../helpers/locations";
 import { PlusOutlined } from "@ant-design/icons";
 import { Image, Upload } from "antd";
@@ -103,6 +103,21 @@ const Chat = () => {
   } = useContext(Context);
   const [chatLoading, setChatLoading] = useState(false);
   const { token } = useSessionCheck()
+   
+     const errorSessionConfig = {
+  title: 'Session has expired.',
+  content: 'Please login again.',
+  okButtonProps: { style: { display: 'none' } },
+  closable: false,
+  maskClosable: false,
+}
+         const errorConfig = {
+  title: 'An error has occurred.',
+  content: 'Please try again later.',
+  okButtonProps: { style: { display: 'none' } },
+  closable: false,
+  maskClosable: false,
+}
 
    const calculateLimit = () => {
                   const viewportHeight = window.innerHeight;
@@ -138,27 +153,6 @@ const Chat = () => {
                   window.addEventListener("resize",handleResize);
                   return () => window.removeEventListener("resize", handleResize);
                 }, [hasMore]);
-
-  // useEffect(() => {
-  //   const getChatCount = async () => {
-  //     try {
-  //       setChatLoading(true);
-  //       const result = await axios.get(
-  //         `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${
-  //           encodeURIComponent(user.userId)
-  //         }&count=${encodeURIComponent(true)}`,
-  //         { headers: { Authorization: token } }
-  //       );
-  //       setUnreadChatCount(result.data.count);
-  //       setChatLoading(false);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   };
-  //   if (user && iChatInitialLoad && token) {
-  //     getChatCount();
-  //   }
-  // }, [user,token,iChatInitialLoad]);
 
  useEffect(() => {
   if(!chatLoading){
@@ -239,8 +233,15 @@ const Chat = () => {
         socket.onclose = () => {
           console.log("Disconnected from WebSocket");
         };
-      } catch (error) {
-        console.log("Error fetching user", error);
+      } catch (err) {
+        // message.error("An Error has occurred")
+         if(err?.status === 401){
+        Modal.error(errorSessionConfig)
+      }
+      else{
+        Modal.error(errorConfig)
+      }
+        console.log("Error fetching user", err);
       }
     };
     if(token){
@@ -324,6 +325,12 @@ const Chat = () => {
       setIChatInitialLoad(false)
     } catch (err) {
       setLoading(false);
+       if(err?.status === 401){
+        Modal.error(errorSessionConfig)
+      }
+      else{
+        Modal.error(errorConfig)
+      }
       console.log(err);
     }
   };
@@ -336,13 +343,10 @@ const Chat = () => {
     }
   }, []);
 
-  // useEffect(() => {
-  //   setHomeInitialLoad(false);
-  // }, []);
-
   useEffect(() => {
   if (user && user.userId && token && limit && iChatInitialLoad && ((recipient && recipient["item"]["email"]) || conversationId)) {
-    setChatLoading(true);
+    try{
+          setChatLoading(true);
     setLoading(true);
 
     const getChatCount = axios.get(
@@ -358,12 +362,27 @@ const Chat = () => {
         setUnreadChatCount(chatResult.data.count);
       })
       .catch((err) => {
+           if(err?.status === 401){
+                Modal.error(errorSessionConfig)
+              }
+              else{
+                Modal.error(errorConfig)
+              }
         console.error(err);
       })
       .finally(() => {
         setChatLoading(false);
         setLoading(false);
       });
+    }
+    catch(err){
+       if(err?.status === 401){
+        Modal.error(errorSessionConfig)
+      }
+      else{
+        Modal.error(errorConfig)
+      }
+    }
   }
 }, [user, token, iChatInitialLoad,limit,conversationId,recipient]);
 
@@ -512,6 +531,7 @@ function formatChatTimestamp(timestamp) {
 
   return (
     <Layout style={{ height: "100vh", overflow: "hidden", background: "#F9FAFB", }}>
+      
          {!isMobile && <Header style={{ display: 'flex', alignItems: 'center', padding: '0px' }}>
                     <Menu
                       onClick={(event) => handleNavigation(event)}

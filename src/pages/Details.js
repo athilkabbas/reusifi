@@ -4,7 +4,7 @@ import { Input } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { Select, Badge } from "antd";
-import { Breadcrumb, Layout, Menu, theme, message } from "antd";
+import { Breadcrumb, Layout, Menu, theme, message, Modal,Popconfirm } from "antd";
 import { states, districts, districtMap } from "../helpers/locations";
 import { PlusOutlined } from "@ant-design/icons";
 import { Image, Upload, Space } from "antd";
@@ -38,7 +38,7 @@ const { TextArea } = Input;
 const { Header, Content, Footer } = Layout;
 const Details = () => {
   const location = useLocation();
-  const [messageApi, contextHolder] = message.useMessage();
+  
   const [loading, setLoading] = useState(false);
   const { item, ad } = location.state || "";
   const [user, setUser] = useState(null);
@@ -96,32 +96,33 @@ const Details = () => {
     unreadChatCount,
     setUnreadChatCount
   } = useContext(Context);
-  const info = () => {
-    messageApi.info("No longer available");
-  };
+    const errorSessionConfig = {
+  title: 'Session has expired.',
+  content: 'Please login again.',
+  okButtonProps: { style: { display: 'none' } },
+  closable: false,
+  maskClosable: false,
+}
+    const errorConfig = {
+  title: 'An error has occurred.',
+  content: 'Please try again later.',
+  okButtonProps: { style: { display: 'none' } },
+  closable: false,
+  maskClosable: false,
+}
+
+const infoConfig = {
+  title: 'Ad no longer available',
+  content: '',
+  okText: 'Go back',
+  closable: false,
+  maskClosable: false,
+  onOk: () => {
+    navigate(-1)
+  }
+}
 const { Text, Link } = Typography;
 const { token } = useSessionCheck()
-  // useEffect(() => {
-  //   const getChatCount = async () => {
-  //     setChatLoading(true);
-  //     try {
-  //       const result = await axios.get(
-  //         `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${
-  //           encodeURIComponent(user.userId)
-  //         }&count=${encodeURIComponent(true)}`,
-  //         { headers: { Authorization: token } }
-  //       );
-  //       setUnreadChatCount(result.data.count);
-  //       setChatLoading(false);
-  //       setDetailInitialLoad(false)
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   };
-  //   if (user && detailInitialLoad && token) {
-  //     getChatCount();
-  //   }
-  // }, [user,token,detailInitialLoad]);
   const items = [
     HomeFilled,
     UploadOutlined,
@@ -157,38 +158,52 @@ const { token } = useSessionCheck()
       getUser()
     },[])
 
-        useEffect(() => {
-  if (user && detailInitialLoad && token) {
-    setChatLoading(true);
-    setLoading(true);
+//   useEffect(() => {
+//   if (user && detailInitialLoad && token) {
+//     try{
+//       setChatLoading(true);
+//       setLoading(true);
 
-    const getChatCount = axios.get(
-      `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,
-      { headers: { Authorization: token } }
-    );
+//     const getChatCount = axios.get(
+//       `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,
+//       { headers: { Authorization: token } }
+//     );
 
-    const getData = axios.get(
-          `https://dwo94t377z7ed.cloudfront.net/prod/getProductsId?id=${encodeURIComponent(item["item"]["uuid"])}`,
-          { headers: { Authorization: token } }
-    );
+//     const getData = axios.get(
+//           `https://dwo94t377z7ed.cloudfront.net/prod/getProductsId?id=${encodeURIComponent(item["item"]["uuid"])}`,
+//           { headers: { Authorization: token } }
+//     );
 
 
-    Promise.all([getChatCount, getData])
-      .then(([chatResult, result]) => {
-        setUnreadChatCount(chatResult.data.count);
-        setDetailData(result.data)
-      })
-      .catch((err) => {
-        console.error(err);
-        info();
-      })
-      .finally(() => {
-        setChatLoading(false);
-        setLoading(false);
-        setDetailInitialLoad(false)
-      });
-  }
-}, [user, token, detailInitialLoad]);
+//     Promise.all([getChatCount, getData])
+//       .then(([chatResult, result]) => {
+//         setUnreadChatCount(chatResult.data.count);
+//         setDetailData(result.data)
+//       })
+//       .catch((err) => {
+//            if(err?.status === 401){
+//                 Modal.error(errorSessionConfig)
+//               }
+//               else{
+//                 Modal.error(errorConfig)
+//               }
+//         console.error(err);
+//       })
+//       .finally(() => {
+//         setChatLoading(false);
+//         setLoading(false);
+//         setDetailInitialLoad(false)
+//       });
+//     }catch(err){
+//     if(err?.status === 401){
+//           Modal.error(errorSessionConfig)
+//         }
+//         else{
+//           Modal.error(errorConfig)
+//         }
+//     }
+//   }
+// }, [user, token, detailInitialLoad]);
 
   useEffect(() => {
     const getData = async () => {
@@ -199,15 +214,22 @@ const { token } = useSessionCheck()
           { headers: { Authorization: token } }
         );
         setLoading(false);
-        // setImages(result?.data[0]?.hiResImg);
         setDetailData(result.data)
+        if(result.data.length === 0){
+          Modal.info(infoConfig)
+        }
       } catch (err) {
         setLoading(false);
+         if(err?.status === 401){
+          Modal.error(errorSessionConfig)
+        }
+        else{
+          Modal.error(errorConfig)
+        }
         console.log(err);
-        info();
       }
     };
-    if (item && token && !detailInitialLoad) {
+    if (item && token) {
       getData();
     }
   }, [item, token]);
@@ -226,20 +248,34 @@ const { token } = useSessionCheck()
         { headers: { Authorization: token } }
       );
       setLoading(false);
+      message.success("Ad deleted")
       navigate("/");
     } catch (err) {
       setLoading(false);
+      if(err?.status === 401){
+        Modal.error(errorSessionConfig)
+      }
+      else{
+        message.error("An Error has occurred")
+      }
       console.log(err);
     }
   };
   const isMobile = useIsMobile()
-  const [loadedImages, setLoadedImages] = useState({});
+  const [loadedImages, setLoadedImages] = useState([]);
+   const [previewVisible, setPreviewVisible] = useState(false);
+  const [previewIndex, setPreviewIndex] = useState(0);
 
-  const handleLoad = (index) => {
-    setLoadedImages((prev) => ({ ...prev, [index]: true }));
+    const handleLoad = (index) => {
+    setLoadedImages((prev) => {
+      const copy = [...prev];
+      copy[index] = true;
+      return copy;
+    });
   };
   return (
     <Layout style={{ height: "100vh", overflow: "hidden",background:"#F9FAFB" }}>
+      
        {!isMobile && <Header style={{ display: 'flex', alignItems: 'center', padding: '0px' }}>
               <Menu
                 onClick={(event) => handleNavigation(event)}
@@ -262,7 +298,6 @@ const { token } = useSessionCheck()
             paddingBottom: "60px",
           }}
         >
-          {contextHolder}
           {!loading && !chatLoading && detailData.length > 0 && (
             <>
             <Space
@@ -280,51 +315,67 @@ const { token } = useSessionCheck()
                 display: "flex"
               }}
             >
-                  <Carousel
-      arrows
-      autoplay
-      autoplaySpeed={3000}
-      style={{
-        boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-        width: "300px",
-        height: "400px",
+     <Image.PreviewGroup
+      preview={{
+        visible: previewVisible,
+        current: previewIndex,
+        onVisibleChange: (visible) => setPreviewVisible(visible),
+        onChange: (current) => setPreviewIndex(current)
       }}
     >
-      {detailData[0]["hiResImg"].map((image, index) => (
-        <div key={index} style={{ width: "100%", height: "100%" }}>
-          {!loadedImages[index] && (
-            <div
+      {/* Hidden images for preview */}
+      {detailData[0].hiResImg.map((img, i) => (
+        <Image key={`hidden-${i}`} src={img} style={{ display: "none" }} />
+      ))}
+
+      <Carousel
+        arrows
+        style={{
+          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+          width: 300,
+          height: 400,
+        }}
+      >
+        {detailData[0].hiResImg.map((img, i) => (
+          <div
+            key={i}
+            style={{ width: "100%", height: "100%", cursor: "pointer" }}
+            onClick={() => {
+              setPreviewIndex(i);
+              setPreviewVisible(true);
+            }}
+          >
+            {!loadedImages[i] && (
+              <div
+                style={{
+                  width: "100%",
+                  height: "400px",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundColor: "#f0f0f0",
+                }}
+              >
+                <Spin indicator={<LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />} />
+              </div>
+            )}
+            <Image
+              preview={false} // Disable built-in preview to avoid duplicates
+              src={img}
               style={{
+                display: loadedImages[i] ? "block" : "none",
                 width: "100%",
                 height: "400px",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                backgroundColor: "#f0f0f0",
+                objectFit: "cover",
               }}
-            >
-              <Spin
-                indicator={
-                  <LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />
-                }
-              />
-            </div>
-          )}
-          <Image
-            src={image}
-            preview={true}
-            style={{
-              display: loadedImages[index] ? "block" : "none",
-              width: "100%",
-              height: "400px",
-              objectFit: "cover",
-            }}
-            onLoad={() => handleLoad(index)}
-            onError={() => handleLoad(index)}
-          />
-        </div>
-      ))}
-    </Carousel>
+              onLoad={() => handleLoad(i)}
+              onError={() => handleLoad(i)}
+            />
+          </div>
+        ))}
+      </Carousel>
+    </Image.PreviewGroup>
+
             </Space.Compact>
             {Object.values(loadedImages).some((item) => item) && <Space
                 size="large"  
@@ -380,9 +431,17 @@ const { token } = useSessionCheck()
                 marginTop: '30px'
               }}
             >
-                  <Button danger onClick={handleDelete} type="primary">
-                      Delete
-                    </Button>
+              <Popconfirm
+              title="Are you sure?"
+              onConfirm={handleDelete}
+              onCancel={() => {}}
+              okText="Yes"
+              cancelText="No"
+>
+                <Button danger type="primary">
+                  Delete
+                </Button>
+            </Popconfirm>
             </Space.Compact>
               )}
               {!ad && (

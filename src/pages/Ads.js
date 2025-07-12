@@ -7,7 +7,7 @@ import React, {
   useContext,
 } from "react";
 import { useNavigate } from "react-router-dom";
-import { Breadcrumb, Layout, Menu, Spin, theme } from "antd";
+import { Breadcrumb, Layout, Menu, Spin, theme, message, Modal } from "antd";
 import {
   HomeFilled,
   UploadOutlined,
@@ -94,6 +94,21 @@ const Ads = () => {
     setUnreadChatCount,
     unreadChatCount
   } = useContext(Context);
+    
+      const errorSessionConfig = {
+  title: 'Session has expired.',
+  content: 'Please login again.',
+  okButtonProps: { style: { display: 'none' } },
+  closable: false,
+  maskClosable: false,
+}
+       const errorConfig = {
+  title: 'An error has occurred.',
+  content: 'Please try again later.',
+  okButtonProps: { style: { display: 'none' } },
+  closable: false,
+  maskClosable: false,
+}
       const [loadedImages, setLoadedImages] = useState({});
 
             const calculateLimit = () => {
@@ -138,26 +153,6 @@ const Ads = () => {
       setLoadedImages((prev) => ({ ...prev, [uuid]: true }));
     };
   const { token } = useSessionCheck()
-  // useEffect(() => {
-  //   const getChatCount = async () => {
-  //     setChatLoading(true);
-  //     try {
-  //       const result = await axios.get(
-  //         `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${
-  //           encodeURIComponent(user.userId)
-  //         }&count=${true}`,
-  //         { headers: { Authorization: token } }
-  //       );
-  //       setUnreadChatCount(result.data.count);
-  //       setChatLoading(false);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   };
-  //   if (user && adInitialLoad && token) {
-  //     getChatCount();
-  //   }
-  // }, [user,adInitialLoad,token]);
   const items = [
     HomeFilled,
     UploadOutlined,
@@ -237,13 +232,21 @@ const Ads = () => {
       setAdInitialLoad(false)
     } catch (err) {
       setLoading(false);
+      // message.error("An Error has occurred")
+       if(err?.status === 401){
+        Modal.error(errorSessionConfig)
+      }
+      else{
+        Modal.error(errorConfig)
+      }
       console.log(err);
     }
   };
 
   useEffect(() => {
   if (user && adInitialLoad && token && limit) {
-    setChatLoading(true);
+    try{
+          setChatLoading(true);
     setLoading(true);
 
     const getChatCount = axios.get(
@@ -259,20 +262,30 @@ const Ads = () => {
         setUnreadChatCount(chatResult.data.count);
       })
       .catch((err) => {
+           if(err?.status === 401){
+                Modal.error(errorSessionConfig)
+              }
+              else{
+                Modal.error(errorConfig)
+              }
         console.error(err);
       })
       .finally(() => {
         setChatLoading(false);
         setLoading(false);
       });
+    }
+    catch(err){
+      // message.error("An Error has occurred")
+       if(err?.status === 401){
+        Modal.error(errorSessionConfig)
+      }
+      else{
+        Modal.error(errorConfig)
+      }
+    }
   }
 }, [user, token, adInitialLoad,limit]);
-
-  // useEffect(() => {
-  //   if(adInitialLoad && token && user && limit){
-  //     loadMoreData();
-  //   }
-  // }, [user,token,adInitialLoad,limit]);
 
   const navigate = useNavigate();
   const handleNavigation = (event) => {
@@ -309,6 +322,7 @@ const Ads = () => {
   const isMobile = useIsMobile()
   return (
     <Layout style={{ height: "100vh", overflow: "hidden",  background: "#F9FAFB", }}>
+      
          {!isMobile && <Header style={{ display: 'flex', alignItems: 'center', padding: '0px', padding: '0px' }}>
                     <Menu
                       onClick={(event) => handleNavigation(event)}

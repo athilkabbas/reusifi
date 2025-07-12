@@ -7,7 +7,7 @@ import React, {
   useContext,
 } from "react";
 import { useNavigate } from "react-router-dom";
-import { Badge, Breadcrumb, Layout, Menu, Spin, theme, Image } from "antd";
+import { Badge, Breadcrumb, Layout, Menu, Spin, theme, Image,message, Modal } from "antd";
 import {
   HomeFilled,
   UploadOutlined,
@@ -46,7 +46,7 @@ const capitalize = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
 const { Header, Content, Footer } = Layout;
-const App = () => {
+const Home = () => {
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
   const timer = useRef(null);
@@ -144,6 +144,20 @@ const getColumnCount = () => {
   return 8; // xxl
 };
 
+const errorSessionConfig = {
+  title: 'Session has expired.',
+  content: 'Please login again.',
+  okButtonProps: { style: { display: 'none' } },
+  closable: false,
+  maskClosable: false,
+}
+const errorConfig = {
+  title: 'An error has occurred.',
+  content: 'Please try again later.',
+  okButtonProps: { style: { display: 'none' } },
+  closable: false,
+  maskClosable: false,
+}
 const [limit, setLimit] = useState(0); // default
 
   useEffect(() => {
@@ -192,27 +206,6 @@ const { token } = useSessionCheck()
   }
 }, [scrollPosition,chatLoading,favLoading,handleFavLoading,loading,scrollLoadMoreData,data]);
 
-  // useEffect(() => {
-  //   const getChatCount = async () => {
-  //     try {
-  //       setChatLoading(true);
-  //       const result = await axios.get(
-  //         `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${
-  //           encodeURIComponent(user.userId)
-  //         }&count=${encodeURIComponent(true)}`,
-  //         { headers: { Authorization: token } }
-  //       );
-  //       setUnreadChatCount(result.data.count);
-  //       setChatLoading(false);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   };
-  //   if (user && initialLoad && token) {
-  //     getChatCount();
-  //   }
-  // }, [user,token, initialLoad]);
-
   const handleChange = (value, type) => {
     setData([]);
     setLastEvaluatedKeys({});
@@ -229,24 +222,9 @@ const { token } = useSessionCheck()
     }
   };
 
-  // useEffect(() => {
-  //   const getFavList = async () => {
-  //     setFavLoading(true);
-  //     const results = await axios.get(
-  //       `https://dwo94t377z7ed.cloudfront.net/prod/getFavouritesList?email=${
-  //         encodeURIComponent(user.userId)
-  //       }&favList=${encodeURIComponent(true)}`,
-  //       { headers: { Authorization: token } }
-  //     );
-  //     setFilterList([...results.data.finalResult]);
-  //     setFavLoading(false);
-  //   };
-  //   if (user && initialLoad && token) {
-  //     getFavList();
-  //   }
-  // }, [user, token, initialLoad]);
 
   const handleFav = async (selectedItem, favourite) => {
+    try{
     setScrollPosition(scrollableDivRef.current.scrollTop);
     // setFavInitialLoad(true);
     setHandleFavLoading(true);
@@ -278,6 +256,15 @@ const { token } = useSessionCheck()
       setFavData((prevValue) => [...prevValue,selectedItem])
     }
     setHandleFavLoading(false);
+    }
+    catch(err){
+      if(err?.status === 401){
+        Modal.error(errorSessionConfig)
+      }
+      else{
+        message.error("An Error has occurred")
+      }
+    }
   };
 
   const loadMoreData = async () => {
@@ -330,24 +317,26 @@ const { token } = useSessionCheck()
       setInitialLoad(false);
     } catch (err) {
       setLoading(false);
-      console.log(err);
+       if(err?.status === 401){
+        Modal.error(errorSessionConfig)
+      }
+      else{
+        Modal.error(errorConfig)
+      }
     }
   };
 
     useEffect(() => {
-    // Clear the previous timeout if search changes
     if (timer.current) {
       clearTimeout(timer.current);
     }
 
-    // Set a new timeout
     if(token && limit && initialLoad && (search || Object.values(location).some((value) => value) || priceFilter)){
       setLoading(true)
       timer.current = setTimeout(() => {
       loadMoreData();
       }, 300);
     }
-    // Cleanup function to clear the timeout on component unmount or before next effect
     return () => {
       if (timer.current) {
         clearTimeout(timer.current);
@@ -357,6 +346,7 @@ const { token } = useSessionCheck()
 
   useEffect(() => {
   if (user && initialLoad && token && limit && !search) {
+    try{
     setChatLoading(true);
     setFavLoading(true);
     setLoading(true);
@@ -365,7 +355,6 @@ const { token } = useSessionCheck()
       `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,
       { headers: { Authorization: token } }
     );
-
     const loadMoreDataPromise =  loadMoreData();
 
     Promise.all([getChatCount, loadMoreDataPromise])
@@ -373,13 +362,28 @@ const { token } = useSessionCheck()
         setUnreadChatCount(chatResult.data.count);
       })
       .catch((err) => {
-        console.error(err);
+         if(err?.status === 401){
+        Modal.error(errorSessionConfig)
+      }
+      else{
+        Modal.error(errorConfig)
+      }
+        console.log(err);
       })
       .finally(() => {
         setChatLoading(false);
         setFavLoading(false);
         setLoading(false);
       });
+    }
+    catch(err){
+       if(err?.status === 401){
+        Modal.error(errorSessionConfig)
+      }
+      else{
+        Modal.error(errorConfig)
+      }
+    }
   }
 }, [user, token, initialLoad, limit, search]);
 
@@ -422,6 +426,7 @@ const { token } = useSessionCheck()
   };
   return (
     <Layout style={{ height: "100vh", overflow: "hidden", background:"#F9FAFB" }}>
+      
          {!isMobile && <Header style={{ display: 'flex', alignItems: 'center', padding: '0px'  }}>
         <Menu
           onClick={(event) => handleNavigation(event)}
@@ -717,4 +722,4 @@ const { token } = useSessionCheck()
     </Layout>
   );
 };
-export default App;
+export default Home;

@@ -3,7 +3,7 @@ import { Col, Row, Skeleton, Space, Spin } from "antd";
 import { Input } from "antd";
 import { useNavigate } from "react-router-dom";
 import { Select } from "antd";
-import { Breadcrumb, Layout, Menu, theme } from "antd";
+import { Breadcrumb, Layout, Menu, theme, Modal } from "antd";
 import { states, districts, districtMap } from "../helpers/locations";
 import { PlusOutlined } from "@ant-design/icons";
 import { Image, Upload, Typography, message } from "antd";
@@ -46,7 +46,6 @@ const getBase64 = (file) =>
 
 const AddDress = () => {
   const [user, setUser] = useState(null);
-  const [messageApi, contextHolder] = message.useMessage();
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -85,8 +84,23 @@ const AddDress = () => {
     unreadChatCount,
     setUnreadChatCount
   } = useContext(Context);
+  
+    const errorSessionConfig = {
+  title: 'Session has expired.',
+  content: 'Please login again.',
+  okButtonProps: { style: { display: 'none' } },
+  closable: false,
+  maskClosable: false,
+}
+   const errorConfig = {
+  title: 'An error has occurred.',
+  content: 'Please try again later.',
+  okButtonProps: { style: { display: 'none' } },
+  closable: false,
+  maskClosable: false,
+}
 
-      const { token } = useSessionCheck()
+    const { token } = useSessionCheck()
     useEffect(() => {
       const getUser = async () => {
           let currentUser = await getCurrentUser();
@@ -100,7 +114,8 @@ const AddDress = () => {
 
       useEffect(() => {
   if (user && addProductInitialLoad && token) {
-    setChatLoading(true);
+    try{
+          setChatLoading(true);
     setLoading(true);
 
     const getChatCount = axios.get(
@@ -122,6 +137,12 @@ const AddDress = () => {
         setCount(adResult.data.count);
       })
       .catch((err) => {
+           if(err?.status === 401){
+        Modal.error(errorSessionConfig)
+      }
+      else{
+        Modal.error(errorConfig)
+      }
         console.error(err);
       })
       .finally(() => {
@@ -129,31 +150,17 @@ const AddDress = () => {
         setLoading(false);
         setAddProductInitialLoad(false)
       });
+    }
+    catch(err){
+       if(err?.status === 401){
+        Modal.error(errorSessionConfig)
+      }
+      else{
+        Modal.error(errorConfig)
+      }
+    }
   }
 }, [user, token, addProductInitialLoad]);
-
-  // useEffect(() => {
-  //   const getAdCount = async () => {
-  //     try {
-  //       setLoading(true);
-  //       let result;
-  //       result = await axios.get(
-  //         `https://dwo94t377z7ed.cloudfront.net/prod/getProductsCount?count=${true}&email=${
-  //           encodeURIComponent(user.userId)
-  //         }`,
-  //         { headers: { Authorization: token } }
-  //       );
-  //       setCount(result.data.count);
-  //       setLoading(false);
-  //     } catch (err) {
-  //       setLoading(false);
-  //       console.log(err);
-  //     }
-  //   };
-  //   if(user && token && !addProductInitialLoad){
-  //     getAdCount();
-  //   }
-  // }, [user, token]);
 
   const [districts, setDistricts] = useState([]);
   const handleChange = (value, type) => {
@@ -168,27 +175,6 @@ const AddDress = () => {
     });
   };
 
-  // useEffect(() => {
-  //   const getChatCount = async () => {
-  //     setChatLoading(true);
-  //     try {
-  //       const result = await axios.get(
-  //         `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${
-  //           encodeURIComponent(user.userId)
-  //         }&count=${true}`,
-  //         { headers: { Authorization: token } }
-  //       );
-  //       setUnreadChatCount(result.data.count);
-  //       setChatLoading(false);
-  //       setAddProductInitialLoad(false)
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   };
-  //   if (user && addProductInitialLoad && token) {
-  //     getChatCount();
-  //   }
-  // }, [user,token,addProductInitialLoad]);
   const items = [
     HomeFilled,
     UploadOutlined,
@@ -255,7 +241,7 @@ const AddDress = () => {
   };
   const handleChangeImage = (file) => {
     if (file.file.size / 1024 / 1024 > 30) {
-      info();
+      message.info("Max size 30MB per image")
       return;
     }
     let newFileList = file.fileList.filter(
@@ -285,7 +271,7 @@ const handleSubmit = async () => {
   };
 
   if (!isValid()) {
-    infoAllFieldsMandatory();
+    message.info("All fields are mandatory")
     return;
   }
 
@@ -383,10 +369,18 @@ const handleSubmit = async () => {
     setCount((prevValue) => prevValue + 1)
     setAdInitialLoad(true);
     setLoading(false);
+    message.success("Ad submitted")
     navigate("/");
-  } catch (error) {
+  } catch (err) {
+    console.log(err,'athil')
     setLoading(false);
-    console.error("Error during submission:", error);
+     if(err?.status === 401){
+        Modal.error(errorSessionConfig)
+      }
+      else{
+        message.error("An Error has occurred")
+      }
+    console.error("Error during submission:", err);
     // Optionally, handle error UI here
   }
 };
@@ -414,15 +408,10 @@ const handleSubmit = async () => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
-  const info = () => {
-    messageApi.info("Max size 30MB per image");
-  };
-  const infoAllFieldsMandatory = () => {
-    messageApi.info("All fields are mandatory");
-  };
   const isMobile = useIsMobile()
   return (
     <Layout style={{ height: "100vh", overflow: "hidden",background:"#F9FAFB" }}>
+      
          {!isMobile && <Header style={{ display: 'flex', alignItems: 'center', padding: '0px' }}>
                     <Menu
                       onClick={(event) => handleNavigation(event)}
@@ -444,7 +433,6 @@ const handleSubmit = async () => {
             paddingBottom: "60px",
           }}
         >
-          {contextHolder}
           {!loading && !chatLoading && user && (
             <>
                <Space   

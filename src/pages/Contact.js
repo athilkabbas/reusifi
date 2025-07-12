@@ -3,7 +3,7 @@ import { Input, Spin } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { Badge } from "antd";
-import { Layout, Menu, theme, Space, Skeleton, Typography } from "antd";
+import { Layout, Menu, theme, Space, Skeleton, Typography,message, Modal } from "antd";
 import axios from "axios";
 import {
   HomeFilled,
@@ -33,6 +33,21 @@ const { Text, Link } = Typography;
 const Contact = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  
+    const errorSessionConfig = {
+  title: 'Session has expired.',
+  content: 'Please login again.',
+  okButtonProps: { style: { display: 'none' } },
+  closable: false,
+  maskClosable: false,
+}
+    const errorConfig = {
+  title: 'An error has occurred.',
+  content: 'Please try again later.',
+  okButtonProps: { style: { display: 'none' } },
+  closable: false,
+  maskClosable: false,
+}
   const [loading, setLoading] = useState(false);
   const handleNavigation = (event) => {
     switch (event.key) {
@@ -102,6 +117,13 @@ const Contact = () => {
         setLoading(false);
         setContactInitialLoad(false)
       } catch (err) {
+        // message.error("An Error has occurred")
+         if(err?.status === 401){
+        Modal.error(errorSessionConfig)
+      }
+      else{
+        Modal.error(errorConfig)
+      }
         console.log(err);
       }
     };
@@ -142,6 +164,7 @@ const Contact = () => {
   } = theme.useToken();
   return (
     <Layout style={{ height: "100vh", overflow: "hidden" }}>
+      
        {!isMobile && <Header style={{ display: 'flex', alignItems: 'center', padding: '0px' }}>
               <Menu
                 onClick={(event) => handleNavigation(event)}

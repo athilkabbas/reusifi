@@ -3,7 +3,7 @@ import { Col, message, Row, Spin } from "antd";
 import { Input } from "antd";
 import { useNavigate } from "react-router-dom";
 import { Select, Badge } from "antd";
-import { Breadcrumb, Layout, Menu, theme } from "antd";
+import { Breadcrumb, Layout, Menu, theme, Modal } from "antd";
 import { states, districts, districtMap } from "../helpers/locations";
 import { PlusOutlined } from "@ant-design/icons";
 import { Image, Upload } from "antd";
@@ -75,7 +75,7 @@ const ChatPage = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [messageApi, contextHolder] = message.useMessage();
+  
   const scrollableDivRef = useRef(null);
   const handleNavigation = (event) => {
     setChatScrollPosition(scrollableDivRef.current.scrollTop);
@@ -196,27 +196,6 @@ const ChatPage = () => {
       }
     }, [chatScrollPosition,loading,scrollLoadMoreData,chatData,chatLoading]);
 
-  // useEffect(() => {
-  //   const getChatCount = async () => {
-  //     setChatLoading(true);
-  //     try {
-  //       const result = await axios.get(
-  //         `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${
-  //           encodeURIComponent(user.userId)
-  //         }&count=${encodeURIComponent(true)}`,
-  //         { headers: { Authorization: token } }
-  //       );
-  //       setUnreadChatCount(result.data.count);
-  //       setChatLoading(false);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   };
-  //   if (user && chatInitialLoad && token) {
-  //     getChatCount();
-  //   }
-  // }, [user,chatInitialLoad, token]);
-
   const items = [
     HomeFilled,
     UploadOutlined,
@@ -252,9 +231,20 @@ const ChatPage = () => {
     }
   }, []);
 
-  const info = () => {
-    messageApi.info("You have blocked this user");
-  };
+    const errorSessionConfig = {
+  title: 'Session has expired.',
+  content: 'Please login again.',
+  okButtonProps: { style: { display: 'none' } },
+  closable: false,
+  maskClosable: false,
+}
+      const errorConfig = {
+  title: 'An error has occurred.',
+  content: 'Please try again later.',
+  okButtonProps: { style: { display: 'none' } },
+  closable: false,
+  maskClosable: false,
+}
 
   const handleMenuClick = async (e, index) => {
     try {
@@ -306,6 +296,12 @@ const ChatPage = () => {
       setLoading(false);
     } catch (err) {
       setLoading(false);
+       if(err?.status === 401){
+              Modal.error(errorSessionConfig)
+        }
+        else{
+          message.error("An Error has occurred")
+        }
       console.log(err);
     }
   };
@@ -316,7 +312,6 @@ const ChatPage = () => {
       setLoading(true);
       e.domEvent.preventDefault();
       e.domEvent.stopPropagation();
-      // This will give you the key of the clicked item
       const clickedItemKey = e.key;
       let userIds = chatData[index].conversationId.split("#");
       let userId2;
@@ -360,10 +355,15 @@ const ChatPage = () => {
       setLoading(false);
     } catch (err) {
       setLoading(false);
+       if(err?.status === 401){
+              Modal.error(errorSessionConfig)
+        }
+        else{
+          message.error("An Error has occurred")
+        }
       console.log(err);
     }
   };
-  // Create a Menu component from menuItems
   const menu = (index) => {
     return (
       <Menu
@@ -456,6 +456,13 @@ const ChatPage = () => {
       setChatInitialLoad(false)
     } catch (err) {
       setLoading(false);
+      // message.error("An Error has occurred")
+       if(err?.status === 401){
+        Modal.error(errorSessionConfig)
+      }
+      else{
+        Modal.error(errorConfig)
+      }
       console.log(err);
     }
   };
@@ -469,6 +476,7 @@ const ChatPage = () => {
 
 useEffect(() => {
   if (user && user.userId && chatInitialLoad && token && limit) {
+    try{
     setChatLoading(true);
     setLoading(true);
 
@@ -485,23 +493,35 @@ useEffect(() => {
         setUnreadChatCount(chatResult.data.count);
       })
       .catch((err) => {
+           if(err?.status === 401){
+                Modal.error(errorSessionConfig)
+              }
+              else{
+                Modal.error(errorConfig)
+              }
         console.error(err);
       })
       .finally(() => {
         setChatLoading(false);
         setLoading(false);
       });
+    }
+    catch(err){
+      // message.error("An Error has occurred")
+       if(err?.status === 401){
+        Modal.error(errorSessionConfig)
+      }
+      else{
+        Modal.error(errorConfig)
+      }
+    }
   }
 }, [user, token, chatInitialLoad,limit]);
 
-  // useEffect(() => {
-  //   if (user && user.userId && chatInitialLoad && token && limit) {
-  //     getChats();
-  //   }
-  // }, [user,token,limit]);
   const isMobile = useIsMobile()
   return (
     <Layout style={{ height: "100vh", overflow: "hidden" }}>
+      
        {!isMobile && <Header style={{ display: 'flex', alignItems: 'center', padding: '0px' }}>
               <Menu
                 onClick={(event) => handleNavigation(event)}
@@ -513,7 +533,6 @@ useEffect(() => {
               />
             </Header>}
       <Content style={{ padding: "0 15px" }}>
-        {contextHolder}
         <div
          className="hide-scrollbar overflow-auto"
           id="scrollableDiv"
@@ -566,7 +585,7 @@ useEffect(() => {
                           }}
                           onClick={() => {
                             if (item.blocked) {
-                              info();
+                              message.info("You have blocked this user")
                             } else {
                               setChatScrollPosition(
                                 scrollableDivRef.current.scrollTop

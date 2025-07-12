@@ -7,7 +7,7 @@ import React, {
   useContext,
 } from "react";
 import { useNavigate } from "react-router-dom";
-import { Badge, Breadcrumb, Layout, Menu, Spin, theme } from "antd";
+import { Badge, Breadcrumb, Layout, Menu, Spin, theme,message, Modal } from "antd";
 import {
   HomeFilled,
   UploadOutlined,
@@ -115,8 +115,22 @@ const Favourites = () => {
       label: IconText[index],
     };
   });
+  const errorSessionConfig = {
+  title: 'Session has expired.',
+  content: 'Please login again.',
+  okButtonProps: { style: { display: 'none' } },
+  closable: false,
+  maskClosable: false,
+}
+  const errorConfig = {
+  title: 'An error has occurred.',
+  content: 'Please try again later.',
+  okButtonProps: { style: { display: 'none' } },
+  closable: false,
+  maskClosable: false,
+}
     const [loadedImages, setLoadedImages] = useState({});
-
+        
       const calculateLimit = () => {
       const viewportHeight = window.innerHeight;
       const itemHeight = 300; // adjust if needed
@@ -186,49 +200,11 @@ const { token } = useSessionCheck()
     }
   }, [favScrollPosition,loading,favData,handleFavLoading]);
 
-  //   useEffect(() => {
-  //   const getChatCount = async () => {
-  //     try {
-  //       setChatLoading(true);
-  //       const result = await axios.get(
-  //         `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${
-  //           encodeURIComponent(user.userId)
-  //         }&count=${encodeURIComponent(true)}`,
-  //         { headers: { Authorization: token } }
-  //       );
-  //       setUnreadChatCount(result.data.count);
-  //       setChatLoading(false);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   };
-  //   if (user && favInitialLoad && token) {
-  //     getChatCount();
-  //   }
-  // }, [user,token,favInitialLoad]);
-
-  //   useEffect(() => {
-  //   const getFavList = async () => {
-  //     setFavLoading(true);
-  //     const results = await axios.get(
-  //       `https://dwo94t377z7ed.cloudfront.net/prod/getFavouritesList?email=${
-  //         encodeURIComponent(user.userId)
-  //       }&favList=${encodeURIComponent(true)}`,
-  //       { headers: { Authorization: token } }
-  //     );
-  //     setFilterList([...results.data.finalResult]);
-  //     setFavLoading(false);
-  //   };
-  //   if (user && favInitialLoad && token) {
-  //     getFavList();
-  //   }
-  // }, [user,token,favInitialLoad]);
-
-
 
   const isMobile = useIsMobile()
   const handleFav = async (id, favourite) => {
-    setFavScrollPosition(scrollableDivRef.current.scrollTop);
+    try{
+          setFavScrollPosition(scrollableDivRef.current.scrollTop);
     setHandleFavLoading(true);
     if(favourite){
         const results = await axios.get(
@@ -257,6 +233,16 @@ const { token } = useSessionCheck()
       setFilterList([...filterList, id]);
     }
     setHandleFavLoading(false);
+    }
+    catch(err){
+      if(err?.status === 401){
+        Modal.error(errorSessionConfig)
+      }
+      else{
+        message.error("An Error has occurred")
+        // Modal.error(errorConfig)
+      }
+    }
   };
 
   const loadMoreData = async () => {
@@ -292,18 +278,21 @@ const { token } = useSessionCheck()
       setFavInitialLoad(false)
     } catch (err) {
       setLoading(false);
+      // message.error("An Error has occurred")
+       if(err?.status === 401){
+        Modal.error(errorSessionConfig)
+      }
+      else{
+        Modal.error(errorConfig)
+      }
       console.log(err);
     }
   };
-  // useEffect(() => {
-  //   if(favInitialLoad && token && user && limit){
-  //     loadMoreData();
-  //   }
-  // }, [user,token, favInitialLoad, limit]);
 
     useEffect(() => {
   if (user && favInitialLoad && token && limit) {
-    setChatLoading(true);
+    try{
+          setChatLoading(true);
     setFavLoading(true);
     setLoading(true);
 
@@ -312,11 +301,6 @@ const { token } = useSessionCheck()
       { headers: { Authorization: token } }
     );
 
-    // const getFavList = axios.get(
-    //   `https://dwo94t377z7ed.cloudfront.net/prod/getFavouritesList?email=${encodeURIComponent(user.userId)}&favList=${encodeURIComponent(true)}`,
-    //   { headers: { Authorization: token } }
-    // );
-
     const loadMoreDataPromise = loadMoreData();
 
     Promise.all([getChatCount,loadMoreDataPromise])
@@ -324,6 +308,12 @@ const { token } = useSessionCheck()
         setUnreadChatCount(chatResult.data.count);
       })
       .catch((err) => {
+           if(err?.status === 401){
+                Modal.error(errorSessionConfig)
+              }
+              else{
+                Modal.error(errorConfig)
+              }
         console.error(err);
       })
       .finally(() => {
@@ -331,6 +321,15 @@ const { token } = useSessionCheck()
         setFavLoading(false);
         setLoading(false);
       });
+    }
+    catch(err){
+         if(err?.status === 401){
+        Modal.error(errorSessionConfig)
+      }
+      else{
+        Modal.error(errorConfig)
+      }
+    }
   }
 }, [user, token, favInitialLoad, limit]);
 
@@ -366,6 +365,7 @@ const { token } = useSessionCheck()
 
   return (
     <Layout style={{ height: "100vh", overflow: "hidden" }}>
+      
        {!isMobile && <Header style={{ display: 'flex', alignItems: 'center', padding: '0px' }}>
               <Menu
                 onClick={(event) => handleNavigation(event)}
