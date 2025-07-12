@@ -264,7 +264,7 @@ const ChatPage = () => {
       }
       if (clickedItemKey === "1") {
         const result = await axios.get(
-          `https://dwo94t377z7ed.cloudfront.net/prod/blockUser?block=${true}&userId1=${
+          `https://dwo94t377z7ed.cloudfront.net/prod/blockUserNew?block=${true}&userId1=${
             encodeURIComponent(user.userId)
           }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(chatData[index].productId)}`,
           { headers: { Authorization: token } }
@@ -279,7 +279,7 @@ const ChatPage = () => {
         })
       } else {
         const result = await axios.get(
-          `https://dwo94t377z7ed.cloudfront.net/prod/blockUser?deleteChat=${true}&userId1=${
+          `https://dwo94t377z7ed.cloudfront.net/prod/deleteChat?deleteChat=${true}&userId1=${
             encodeURIComponent(user.userId)
           }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(chatData[index].productId)}`,
           { headers: { Authorization: token } }
@@ -323,7 +323,7 @@ const ChatPage = () => {
       }
       if (clickedItemKey === "1") {
         const result = await axios.get(
-          `https://dwo94t377z7ed.cloudfront.net/prod/blockUser?unBlock=${true}&userId1=${
+          `https://dwo94t377z7ed.cloudfront.net/prod/unBlockUser?unBlock=${true}&userId1=${
             encodeURIComponent(user.userId)
           }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(chatData[index].productId)}`,
           { headers: { Authorization: token } }
@@ -338,7 +338,7 @@ const ChatPage = () => {
         })
       } else {
         const result = await axios.get(
-          `https://dwo94t377z7ed.cloudfront.net/prod/blockUser?deleteChat=${true}&userId1=${
+          `https://dwo94t377z7ed.cloudfront.net/prod/deleteChat?deleteChat=${true}&userId1=${
             encodeURIComponent(user.userId)
           }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(chatData[index].productId)}`,
           { headers: { Authorization: token } }
