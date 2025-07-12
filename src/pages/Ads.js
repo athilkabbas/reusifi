@@ -424,6 +424,7 @@ const Ads = () => {
                               )}
                               <img
                                 src={item["images"][0]}
+                                alt={item["item"]["description"]}
                                 style={{
                                   display: loadedImages[item["item"]["uuid"]] ? "block" : "none",
                                   width: "100%",

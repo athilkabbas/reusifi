@@ -325,7 +325,7 @@ const { token } = useSessionCheck()
     >
       {/* Hidden images for preview */}
       {detailData[0].hiResImg.map((img, i) => (
-        <Image key={`hidden-${i}`} src={img} style={{ display: "none" }} />
+        <Image alt={detailData[0]["item"]["description"]} key={`hidden-${i}`} src={img} style={{ display: "none" }} />
       ))}
 
       <Carousel
@@ -362,6 +362,7 @@ const { token } = useSessionCheck()
             <Image
               preview={false} // Disable built-in preview to avoid duplicates
               src={img}
+              alt={detailData[0]["item"]["description"]}
               style={{
                 display: loadedImages[i] ? "block" : "none",
                 width: "100%",
