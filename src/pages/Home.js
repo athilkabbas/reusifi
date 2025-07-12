@@ -332,7 +332,7 @@ const { token } = useSessionCheck()
       setLoading(true)
       timer.current = setTimeout(() => {
       loadMoreData();
-      }, 1500);
+      }, 300);
     }
     // Cleanup function to clear the timeout on component unmount or before next effect
     return () => {
