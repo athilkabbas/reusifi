@@ -168,7 +168,9 @@ const ChatPage = () => {
                   updateLimit(); // on mount
                   const handleResize = () => {
                     if (chatHasMore) {
-                      setChatInitialLoad(false)
+                      setChatData([])
+                      setChatLastEvaluatedKey(null)
+                      setChatInitialLoad(true)
                       updateLimit();
                     }
                   };
@@ -556,15 +558,6 @@ useEffect(() => {
               getChats();
             }}
             hasMore={chatHasMore}
-            loader={
-              <Skeleton
-                paragraph={{
-                  rows: 4,
-                }}
-                active
-              />
-            }
-            endMessage={chatData.length > 0 ? <Divider plain>It is all, nothing more</Divider> : ''}
             scrollableTarget="scrollableDiv"
           >
             {!loading &&
@@ -658,7 +651,7 @@ useEffect(() => {
             {(loading || chatLoading) && 
             <Skeleton
               paragraph={{
-                rows: 8,
+                rows: 4,
               }}
               active
             />

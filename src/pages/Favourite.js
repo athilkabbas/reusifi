@@ -159,7 +159,9 @@ const Favourites = () => {
       updateLimit(); // on mount
       const handleResize = () => {
         if (favHasMore) {
-          setFavInitialLoad(false)
+          setFavData([])
+          setFavLastEvaluatedKey(null)
+          setFavInitialLoad(true)
           updateLimit();
         }
       };
@@ -399,15 +401,6 @@ const { token } = useSessionCheck()
               loadMoreData();
             }}
             hasMore={favHasMore}
-            loader={
-              <Skeleton
-                paragraph={{
-                  rows: 4,
-                }}
-                active
-              />
-            }
-            endMessage={favData.length > 0 ? <Divider plain>It is all, nothing more</Divider> : ''}
             scrollableTarget="scrollableDiv"
           >
             {user && !loading && !chatLoading && !favLoading && (
@@ -534,7 +527,7 @@ const { token } = useSessionCheck()
             {(loading || chatLoading || favLoading) && (
               <Skeleton
                 paragraph={{
-                  rows: 8,
+                  rows: 4,
                 }}
                 active
               />

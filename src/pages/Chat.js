@@ -147,6 +147,9 @@ const Chat = () => {
                   updateLimit(); // on mount
                   const handleResize = () => {
                     if (hasMore) {
+                      setIChatData([])
+                      setLastEvaluatedKey(null)
+                      setIChatInitialLoad(true)
                       updateLimit();
                     }
                   };
@@ -574,19 +577,6 @@ function formatChatTimestamp(timestamp) {
             }}
             hasMore={hasMore}
             inverse
-            loader={
-              <Skeleton
-                paragraph={{
-                  rows: 4,
-                }}
-                active
-              />
-            }
-            endMessage={
-              <>
-                <Divider plain>It is all, nothing more</Divider>
-              </>
-            }
             scrollableTarget="scrollableDiv"
           >
             {!loading && !chatLoading && user && (
@@ -685,7 +675,7 @@ function formatChatTimestamp(timestamp) {
             {(loading || chatLoading) && 
              <Skeleton
                 paragraph={{
-                  rows: 8,
+                  rows: 4,
                 }}
                 active
               />

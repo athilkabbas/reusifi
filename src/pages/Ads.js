@@ -139,7 +139,9 @@ const Ads = () => {
             updateLimit(); // on mount
             const handleResize = () => {
               if (adHasMore) {
-                setAdInitialLoad(false)
+                setAdData([])
+                setAdLastEvaluatedKey(null)
+                setAdInitialLoad(true)
                 updateLimit();
               }
             };
@@ -365,15 +367,6 @@ const Ads = () => {
               loadMoreData();
             }}
             hasMore={adHasMore}
-            loader={
-              <Skeleton
-                paragraph={{
-                  rows: 4,
-                }}
-                active
-              />
-            }
-            endMessage={adData.length > 0 ? <Divider plain>It is all, nothing more</Divider> : ''}
             scrollableTarget="scrollableDiv"
           >
             {user && !loading && !chatLoading && (
@@ -477,7 +470,7 @@ const Ads = () => {
             {(loading || chatLoading) &&
              <Skeleton
                 paragraph={{
-                  rows: 8,
+                  rows: 4,
                 }}
                 active
               />

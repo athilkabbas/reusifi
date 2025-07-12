@@ -168,7 +168,10 @@ const [limit, setLimit] = useState(0); // default
     updateLimit(); // on mount
     const handleResize = () => {
       if (hasMore) {
-        setInitialLoad(false)
+         setData([]);
+        setLastEvaluatedKeys({});
+        setExhaustedShards({})
+        setInitialLoad(true)
         updateLimit();
       }
     };
@@ -545,15 +548,6 @@ const { token } = useSessionCheck()
               loadMoreData();
             }}
             hasMore={hasMore}
-            loader={
-              <Skeleton
-                paragraph={{
-                  rows: 4,
-                }}
-                active
-              />
-            }
-            endMessage={data.length > 0 ? <Divider plain>It is all, nothing more</Divider> : ''}
             scrollableTarget="scrollableDiv"
           >
             {user && !loading && !chatLoading && !favLoading && (
@@ -687,7 +681,7 @@ const { token } = useSessionCheck()
             {(loading || chatLoading || favLoading) && (
              <Skeleton
                 paragraph={{
-                  rows: 8,
+                  rows: 4,
                 }}
                 active
               />
