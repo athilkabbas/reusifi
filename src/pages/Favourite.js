@@ -463,7 +463,7 @@ const { token } = useSessionCheck()
                               )}
                               <img
                                 src={item["images"][0]}
-                                alt={item["item"]["description"]}
+                                alt={item["item"]["title"]}
                                 style={{
                                   display: loadedImages[item["item"]["uuid"]] ? "block" : "none",
                                   width: "100%",
