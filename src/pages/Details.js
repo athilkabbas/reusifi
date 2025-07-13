@@ -282,7 +282,7 @@ const { token } = useSessionCheck()
     });
   };
   return (
-    <Layout style={{ height: "100vh", overflow: "hidden",background:"#F9FAFB" }}>
+    <Layout style={{ height: "100dvh", overflow: "hidden",background:"#F9FAFB" }}>
       
        {!isMobile && <Header style={{ display: 'flex', alignItems: 'center', padding: '0px', height: '50px' }}>
               <Menu

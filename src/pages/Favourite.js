@@ -374,7 +374,7 @@ const { token } = useSessionCheck()
   } = theme.useToken();
 
   return (
-    <Layout style={{ height: "100vh", overflow: "hidden" }}>
+    <Layout style={{ height: "100dvh", overflow: "hidden" }}>
       
        {!isMobile && <Header style={{ display: 'flex', alignItems: 'center', padding: '0px', height: '50px' }}>
               <Menu
