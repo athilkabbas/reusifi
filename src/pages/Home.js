@@ -31,8 +31,7 @@ import debounce from "lodash/debounce";
 import { states, districts, districtMap } from "../helpers/locations";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
-import { useSessionCheck } from "../hooks/sessionCheck";
-import { signInWithRedirect } from "@aws-amplify/auth";
+import { useTokenRefresh } from "../hooks/refreshToken";
 const IconText = [
   "Home",
   "Upload",
@@ -160,7 +159,7 @@ const errorSessionConfig = {
   maskClosable: false,
   okText: 'Login',
   onOk: () => {
-    signInWithRedirect()
+    signOut()
   }
 }
 const errorConfig = {
@@ -197,7 +196,7 @@ const [limit, setLimit] = useState(0); // default
 const handleImageLoad = (uuid) => {
   setLoadedImages((prev) => ({ ...prev, [uuid]: true }));
 };
-const { token } = useSessionCheck()
+const token = useTokenRefresh()
 // useEffect(() => {
 //   if (scrollableDivRef.current && !chatLoading && !favLoading && !handleFavLoading && !loading) {
 //     const el = scrollableDivRef.current;

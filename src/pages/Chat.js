@@ -12,7 +12,6 @@ import axios from "axios";
 import { getCurrentUser, signOut } from "@aws-amplify/auth";
 import { Divider, List, Typography } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { signInWithRedirect } from "@aws-amplify/auth";
 import { Skeleton, Space } from "antd";
 import { Context } from "../context/provider";
 import { Empty } from "antd";
@@ -31,7 +30,7 @@ import {
 import { useLocation } from "react-router-dom";
 import testSpeed from "../helpers/internetSpeed";
 import { useIsMobile } from "../hooks/windowSize";
-import { useSessionCheck } from "../hooks/sessionCheck";
+import { useTokenRefresh } from "../hooks/refreshToken";
 const { TextArea } = Input;
 const IconText = [
   "Home",
@@ -105,7 +104,7 @@ const Chat = () => {
     setUnreadChatCount
   } = useContext(Context);
   const [chatLoading, setChatLoading] = useState(false);
-  const { token } = useSessionCheck()
+  const token = useTokenRefresh()
    
      const errorSessionConfig = {
        title: 'Session has expired.',
@@ -114,7 +113,7 @@ const Chat = () => {
        maskClosable: false,
        okText: 'Login',
        onOk: () => {
-         signInWithRedirect()
+         signOut()
        }
      }
          const errorConfig = {

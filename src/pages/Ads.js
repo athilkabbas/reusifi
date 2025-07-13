@@ -8,7 +8,6 @@ import React, {
 } from "react";
 import { useNavigate } from "react-router-dom";
 import { Breadcrumb, Layout, Menu, Spin, theme, message, Modal } from "antd";
-import { signInWithRedirect } from "@aws-amplify/auth";
 import {
   HomeFilled,
   UploadOutlined,
@@ -31,7 +30,7 @@ import debounce from "lodash/debounce";
 import { states, districts, districtMap } from "../helpers/locations";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
-import { useSessionCheck } from "../hooks/sessionCheck";
+import { useTokenRefresh } from "../hooks/refreshToken";
 const IconText = [
   "Home",
   "Upload",
@@ -104,7 +103,7 @@ const Ads = () => {
        maskClosable: false,
        okText: 'Login',
        onOk: () => {
-         signInWithRedirect()
+         signOut()
        }
      }
        const errorConfig = {
@@ -162,7 +161,7 @@ const Ads = () => {
     const handleImageLoad = (uuid) => {
       setLoadedImages((prev) => ({ ...prev, [uuid]: true }));
     };
-  const { token } = useSessionCheck()
+  const token = useTokenRefresh()
 
     const items = [
     HomeFilled,

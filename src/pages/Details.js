@@ -11,7 +11,6 @@ import { Image, Upload, Space } from "antd";
 import { Button ,Typography} from "antd";
 import axios from "axios";
 import { Carousel } from "antd";
-import { signInWithRedirect } from "@aws-amplify/auth";
 import {
   HomeFilled,
   UploadOutlined,
@@ -27,7 +26,7 @@ import {
 import { getCurrentUser, signOut } from "@aws-amplify/auth";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
-import { useSessionCheck } from "../hooks/sessionCheck";
+import { useTokenRefresh } from "../hooks/refreshToken";
 const IconText = [
   "Home",
   "Upload",
@@ -106,7 +105,7 @@ const Details = () => {
       maskClosable: false,
       okText: 'Login',
       onOk: () => {
-        signInWithRedirect()
+        signOut()
       }
     }
     const errorConfig = {
@@ -130,7 +129,7 @@ const infoConfig = {
   }
 }
 const { Text, Link } = Typography;
-const { token } = useSessionCheck()
+const token = useTokenRefresh()
 
     const items = [
     HomeFilled,

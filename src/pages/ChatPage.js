@@ -9,14 +9,13 @@ import { PlusOutlined } from "@ant-design/icons";
 import { Image, Upload } from "antd";
 import { Button } from "antd";
 import axios from "axios";
-import { getCurrentUser, signOut } from "@aws-amplify/auth";
+import { getCurrentUser, signIn, signOut } from "@aws-amplify/auth";
 import { Divider, List, Typography } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { hashString } from "react-hash-string";
 import { Card, Skeleton } from "antd";
 import { Dropdown, Space } from "antd";
 import { DownOutlined, SmileOutlined } from "@ant-design/icons";
-import { signInWithRedirect } from "@aws-amplify/auth";
 import { Context } from "../context/provider";
 import { Empty } from "antd";
 import {
@@ -34,7 +33,7 @@ import {
 } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
 import { useIsMobile } from "../hooks/windowSize";
-import { useSessionCheck } from "../hooks/sessionCheck";
+import { useTokenRefresh } from "../hooks/refreshToken";
 const { TextArea } = Input;
 const IconText = [
   "Home",
@@ -141,7 +140,7 @@ const ChatPage = () => {
     setUnreadChatCount
   } = useContext(Context);
 
-    const { token } = useSessionCheck()
+    const token = useTokenRefresh()
 
           const calculateLimit = () => {
                 const viewportHeight = window.innerHeight;
@@ -249,7 +248,7 @@ const ChatPage = () => {
       maskClosable: false,
       okText: 'Login',
       onOk: () => {
-        signInWithRedirect()
+        signIn()
       }
     }
       const errorConfig = {

@@ -11,7 +11,6 @@ import { Button, Badge } from "antd";
 import axios from "axios";
 import { getCurrentUser, signOut } from "@aws-amplify/auth";
 import imageCompression from "browser-image-compression";
-import { signInWithRedirect } from "@aws-amplify/auth";
 import {
   HomeFilled,
   UploadOutlined,
@@ -26,7 +25,7 @@ import {
 } from "@ant-design/icons";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
-import { useSessionCheck } from "../hooks/sessionCheck";
+import { useTokenRefresh } from "../hooks/refreshToken";
 const { Text, Link } = Typography;
 const { TextArea } = Input;
 const IconText = [
@@ -95,7 +94,7 @@ const AddDress = () => {
       maskClosable: false,
       okText: 'Login',
       onOk: () => {
-        signInWithRedirect()
+        signOut()
       }
     }
    const errorConfig = {
@@ -109,7 +108,7 @@ const AddDress = () => {
   }
 }
 
-    const { token } = useSessionCheck()
+    const token = useTokenRefresh()
     useEffect(() => {
       const getUser = async () => {
           let currentUser = await getCurrentUser();

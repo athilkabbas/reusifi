@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { Badge } from "antd";
 import { Layout, Menu, theme, Space, Skeleton, Typography,message, Modal } from "antd";
-import { signInWithRedirect } from "@aws-amplify/auth";
 import axios from "axios";
 import {
   HomeFilled,
@@ -21,7 +20,7 @@ import {
 import { getCurrentUser, signOut } from "@aws-amplify/auth";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
-import { useSessionCheck } from "../hooks/sessionCheck";
+import { useTokenRefresh } from "../hooks/refreshToken";
 const IconText = [
   "Home",
   "Upload",
@@ -44,7 +43,7 @@ const Contact = () => {
      maskClosable: false,
      okText: 'Login',
      onOk: () => {
-       signInWithRedirect()
+       signOut()
      }
    }
     const errorConfig = {
@@ -110,7 +109,7 @@ const Contact = () => {
     setUnreadChatCount
   } = useContext(Context);
 
-  const { token } = useSessionCheck()
+  const token = useTokenRefresh()
   useEffect(() => {
     const getChatCount = async () => {
       try {
