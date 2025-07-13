@@ -196,6 +196,7 @@ const [limit, setLimit] = useState(0); // default
 const handleImageLoad = (uuid) => {
   setLoadedImages((prev) => ({ ...prev, [uuid]: true }));
 };
+
 const token = useTokenRefresh()
 // useEffect(() => {
 //   if (scrollableDivRef.current && !chatLoading && !favLoading && !handleFavLoading && !loading) {
