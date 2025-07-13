@@ -18,7 +18,7 @@ export function useTokenRefresh(intervalMs = 60000) {
     const interval = setInterval(async () => {
       const now = Date.now();
       const minutesSinceActivity = (now - lastActivityRef.current) / 60000;
-      if (minutesSinceActivity < 15) {
+      if (minutesSinceActivity < 60) {
         try {
           const session = await fetchAuthSession();
           const token = session.tokens?.accessToken?.toString() || null;

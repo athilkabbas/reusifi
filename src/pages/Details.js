@@ -144,7 +144,7 @@ const token = useTokenRefresh()
       return {
         key: String(index + 1),
         icon: (
-          <Badge overflowCount={999} count={unreadChatCount}>
+          <Badge dot={unreadChatCount}>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: 10 }}>
               <span style={{ fontSize: '16px', marginTop: '0px' }}>{React.createElement(icon)}</span>
               <span style={{ fontSize: '10px', marginTop: '5px' }}>{IconText[index]}</span>
