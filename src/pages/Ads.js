@@ -17,6 +17,7 @@ import {
   HeartOutlined,
   ProductFilled,
   LoadingOutlined,
+  MailFilled,
   HeartFilled
 } from "@ant-design/icons";
 import { Button, Input, Select, Space } from "antd";
@@ -34,7 +35,7 @@ const IconText = [
   "Home",
   "Upload",
   "Chats",
-  "Ads",
+  "My Ads",
   "Contact",
   "Favourites",
   "SignOut",
@@ -155,13 +156,14 @@ const Ads = () => {
       setLoadedImages((prev) => ({ ...prev, [uuid]: true }));
     };
   const { token } = useSessionCheck()
-  const items = [
+
+    const items = [
     HomeFilled,
     UploadOutlined,
     MessageFilled,
     ProductFilled,
-    MailOutlined,
-    HeartOutlined,
+    MailFilled,
+    HeartFilled,
     LogoutOutlined,
   ].map((icon, index) => {
     if (index === 2) {
@@ -169,20 +171,26 @@ const Ads = () => {
         key: String(index + 1),
         icon: (
           <Badge overflowCount={999} count={unreadChatCount}>
-            {React.createElement(icon)}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: 10 }}>
+              <span style={{ fontSize: '16px', marginTop: '0px' }}>{React.createElement(icon)}</span>
+              <span style={{ fontSize: '10px', marginTop: '5px' }}>{IconText[index]}</span>
+            </div>
           </Badge>
-        ),
-        label: IconText[index],
+        )
       };
     }
-    return {
+     return {
       key: String(index + 1),
-      icon: React.createElement(icon),
-      label: IconText[index],
+      icon: (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: 10 }}>
+        <span style={{ fontSize: '16px', marginTop: '0px' }}>{React.createElement(icon)}</span>
+        <span style={{ fontSize: '10px', marginTop: '5px' }}>{IconText[index]}</span>
+      </div>
+    )
     };
-  });
-
-    useEffect(() => {
+  });  
+  
+  useEffect(() => {
       const getUser = async () => {
         const currentUser = await getCurrentUser();
         setUser(currentUser);
@@ -325,14 +333,15 @@ const Ads = () => {
   return (
     <Layout style={{ height: "100vh", overflow: "hidden",  background: "#F9FAFB", }}>
       
-         {!isMobile && <Header style={{ display: 'flex', alignItems: 'center', padding: '0px', padding: '0px' }}>
+         {!isMobile && <Header style={{ display: 'flex', alignItems: 'center', padding: '0px', padding: '0px', height: '50px' }}>
                     <Menu
                       onClick={(event) => handleNavigation(event)}
                       theme="dark"
                       mode="horizontal"
                       defaultSelectedKeys={["4"]}
                       items={items}
-                      style={{ minWidth: 0, flex: "auto",background: "#6366F1" }}
+                      style={{ minWidth: 0,justifyContent: 'space-around',
+            flex: 1,background: "#6366F1" }}
                     />
                   </Header>}
       <div
@@ -487,6 +496,7 @@ const Ads = () => {
           display: "flex",
           alignItems: "center",
           padding: "0px",
+          height: '50px'
         }}
       >
         <Menu
@@ -495,7 +505,8 @@ const Ads = () => {
           mode="horizontal"
           defaultSelectedKeys={["4"]}
           items={items}
-          style={{ minWidth: 0, flex: "auto",background: "#6366F1" }}
+          style={{ minWidth: 0, justifyContent: 'space-around',
+            flex: 1,background: "#6366F1" }}
         />
       </Footer>}
     </Layout>

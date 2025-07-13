@@ -18,6 +18,8 @@ import {
   LogoutOutlined,
   MailOutlined,
   HeartOutlined,
+  MailFilled,
+  HeartFilled,
   ProductFilled,
   LoadingOutlined
 } from "@ant-design/icons";
@@ -29,7 +31,7 @@ const IconText = [
   "Home",
   "Upload",
   "Chats",
-  "Ads",
+  "My Ads",
   "Contact",
   "Favourites",
   "SignOut",
@@ -123,13 +125,14 @@ const infoConfig = {
 }
 const { Text, Link } = Typography;
 const { token } = useSessionCheck()
-  const items = [
+
+    const items = [
     HomeFilled,
     UploadOutlined,
     MessageFilled,
     ProductFilled,
-    MailOutlined,
-    HeartOutlined,
+    MailFilled,
+    HeartFilled,
     LogoutOutlined,
   ].map((icon, index) => {
     if (index === 2) {
@@ -137,19 +140,24 @@ const { token } = useSessionCheck()
         key: String(index + 1),
         icon: (
           <Badge overflowCount={999} count={unreadChatCount}>
-            {React.createElement(icon)}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: 10 }}>
+              <span style={{ fontSize: '16px', marginTop: '0px' }}>{React.createElement(icon)}</span>
+              <span style={{ fontSize: '10px', marginTop: '5px' }}>{IconText[index]}</span>
+            </div>
           </Badge>
-        ),
-        label: IconText[index],
+        )
       };
     }
-    return {
+     return {
       key: String(index + 1),
-      icon: React.createElement(icon),
-      label: IconText[index],
+      icon: (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: 10 }}>
+        <span style={{ fontSize: '16px', marginTop: '0px' }}>{React.createElement(icon)}</span>
+        <span style={{ fontSize: '10px', marginTop: '5px' }}>{IconText[index]}</span>
+      </div>
+    )
     };
   });
-
     useEffect(() => {
       const getUser = async () => {
         const currentUser = await getCurrentUser();
@@ -276,14 +284,15 @@ const { token } = useSessionCheck()
   return (
     <Layout style={{ height: "100vh", overflow: "hidden",background:"#F9FAFB" }}>
       
-       {!isMobile && <Header style={{ display: 'flex', alignItems: 'center', padding: '0px' }}>
+       {!isMobile && <Header style={{ display: 'flex', alignItems: 'center', padding: '0px', height: '50px' }}>
               <Menu
                 onClick={(event) => handleNavigation(event)}
                 theme="dark"
                 mode="horizontal"
                 defaultSelectedKeys={["0"]}
                 items={items}
-                style={{ minWidth: 0, flex: "auto",background: "#6366F1" }}
+                style={{ minWidth: 0, justifyContent: 'space-around',
+            flex: 1,background: "#6366F1" }}
               />
             </Header>}
       <Content style={{ padding: "0 15px" }}>
@@ -487,6 +496,7 @@ const { token } = useSessionCheck()
           display: "flex",
           alignItems: "center",
           padding: "0px",
+          height: '50px'
         }}
       >
         <div className="demo-logo" />
@@ -497,7 +507,8 @@ const { token } = useSessionCheck()
           defaultSelectedKeys={["0"]}
           items={items}
           style={{
-            flex: "auto",
+            justifyContent: 'space-around',
+            flex: 1,
             minWidth: 0,background: "#6366F1"
           }}
         />

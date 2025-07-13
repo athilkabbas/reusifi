@@ -24,8 +24,10 @@ import {
   MessageFilled,
   LogoutOutlined,
   MenuOutlined,
-  MailOutlined,
+  MailFilled,
+  HeartFilled,
   HeartOutlined,
+  MailOutlined,
   ProductFilled,
   LoadingOutlined
 } from "@ant-design/icons";
@@ -37,7 +39,7 @@ const IconText = [
   "Home",
   "Upload",
   "Chats",
-  "Ads",
+  "My Ads",
   "Contact",
   "Favourites",
   "SignOut",
@@ -203,8 +205,8 @@ const ChatPage = () => {
     UploadOutlined,
     MessageFilled,
     ProductFilled,
-    MailOutlined,
-    HeartOutlined,
+    MailFilled,
+    HeartFilled,
     LogoutOutlined,
   ].map((icon, index) => {
     if (index === 2) {
@@ -212,16 +214,22 @@ const ChatPage = () => {
         key: String(index + 1),
         icon: (
           <Badge overflowCount={999} count={unreadChatCount}>
-            {React.createElement(icon)}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: 10 }}>
+              <span style={{ fontSize: '16px', marginTop: '0px' }}>{React.createElement(icon)}</span>
+              <span style={{ fontSize: '10px', marginTop: '5px' }}>{IconText[index]}</span>
+            </div>
           </Badge>
-        ),
-        label: IconText[index],
+        )
       };
     }
-    return {
+     return {
       key: String(index + 1),
-      icon: React.createElement(icon),
-      label: IconText[index],
+      icon: (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: 10 }}>
+        <span style={{ fontSize: '16px', marginTop: '0px' }}>{React.createElement(icon)}</span>
+        <span style={{ fontSize: '10px', marginTop: '5px' }}>{IconText[index]}</span>
+      </div>
+    )
     };
   });
 
@@ -524,14 +532,15 @@ useEffect(() => {
   return (
     <Layout style={{ height: "100vh", overflow: "hidden" }}>
       
-       {!isMobile && <Header style={{ display: 'flex', alignItems: 'center', padding: '0px' }}>
+       {!isMobile && <Header style={{ display: 'flex', alignItems: 'center', padding: '0px', height: '50px' }}>
               <Menu
                 onClick={(event) => handleNavigation(event)}
                 theme="dark"
                 mode="horizontal"
                 defaultSelectedKeys={["3"]}
                 items={items}
-                style={{ minWidth: 0, flex: "auto",background: "#6366F1" }}
+                style={{ minWidth: 0, justifyContent: 'space-around',
+            flex: 1,background: "#6366F1" }}
               />
             </Header>}
       <Content style={{ padding: "0 15px" }}>
@@ -680,6 +689,7 @@ useEffect(() => {
           width: "100vw",
           display: "flex",
           alignItems: "center",
+          height: '50px',
           padding: "0px",
         }}
       >
@@ -691,8 +701,9 @@ useEffect(() => {
           defaultSelectedKeys={["3"]}
           items={items}
           style={{
-            flex: "auto",
-            minWidth: 0,background: "#6366F1"
+            minWidth: 0,background: "#6366F1",
+            justifyContent: 'space-around',
+            flex: 1
           }}
         />
       </Footer>}

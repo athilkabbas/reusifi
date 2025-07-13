@@ -41,6 +41,24 @@
   border-color: #E5E7EB !important;
 }
 
+.ant-menu-horizontal > .ant-menu-item {
+  flex: 1;
+  text-align: center;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ant-menu-item {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  padding: 0 !important;
+  height: 50px;
+  margin: 0 8px !important;
+}
+
 /* Menu background already set inline */
 .ant-menu-dark, 
 .ant-menu-dark .ant-menu-item, 
