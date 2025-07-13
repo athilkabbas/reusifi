@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { Badge } from "antd";
 import { Layout, Menu, theme, Space, Skeleton, Typography,message, Modal } from "antd";
+import { signInWithRedirect } from "@aws-amplify/auth";
 import axios from "axios";
 import {
   HomeFilled,
@@ -36,19 +37,25 @@ const Contact = () => {
   const location = useLocation();
   const navigate = useNavigate();
   
-    const errorSessionConfig = {
-  title: 'Session has expired.',
-  content: 'Please login again.',
-  okButtonProps: { style: { display: 'none' } },
-  closable: false,
-  maskClosable: false,
-}
+   const errorSessionConfig = {
+     title: 'Session has expired.',
+     content: 'Please login again.',
+     closable: false,
+     maskClosable: false,
+     okText: 'Login',
+     onOk: () => {
+       signInWithRedirect()
+     }
+   }
     const errorConfig = {
   title: 'An error has occurred.',
   content: 'Please try again later.',
-  okButtonProps: { style: { display: 'none' } },
   closable: false,
   maskClosable: false,
+  okText: 'Close',
+  onOk: () => {
+    navigate('/')
+  }
 }
   const [loading, setLoading] = useState(false);
   const handleNavigation = (event) => {

@@ -32,6 +32,7 @@ import { states, districts, districtMap } from "../helpers/locations";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
 import { useSessionCheck } from "../hooks/sessionCheck";
+import { signInWithRedirect } from "@aws-amplify/auth";
 const IconText = [
   "Home",
   "Upload",
@@ -155,16 +156,22 @@ const getColumnCount = () => {
 const errorSessionConfig = {
   title: 'Session has expired.',
   content: 'Please login again.',
-  okButtonProps: { style: { display: 'none' } },
   closable: false,
   maskClosable: false,
+  okText: 'Login',
+  onOk: () => {
+    signInWithRedirect()
+  }
 }
 const errorConfig = {
   title: 'An error has occurred.',
   content: 'Please try again later.',
-  okButtonProps: { style: { display: 'none' } },
   closable: false,
   maskClosable: false,
+  okText: 'Close',
+  onOk: () => {
+    navigate('/')
+  }
 }
 const [limit, setLimit] = useState(0); // default
 

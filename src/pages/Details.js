@@ -11,6 +11,7 @@ import { Image, Upload, Space } from "antd";
 import { Button ,Typography} from "antd";
 import axios from "axios";
 import { Carousel } from "antd";
+import { signInWithRedirect } from "@aws-amplify/auth";
 import {
   HomeFilled,
   UploadOutlined,
@@ -99,20 +100,25 @@ const Details = () => {
     setUnreadChatCount
   } = useContext(Context);
     const errorSessionConfig = {
-  title: 'Session has expired.',
-  content: 'Please login again.',
-  okButtonProps: { style: { display: 'none' } },
-  closable: false,
-  maskClosable: false,
-}
+      title: 'Session has expired.',
+      content: 'Please login again.',
+      closable: false,
+      maskClosable: false,
+      okText: 'Login',
+      onOk: () => {
+        signInWithRedirect()
+      }
+    }
     const errorConfig = {
   title: 'An error has occurred.',
   content: 'Please try again later.',
-  okButtonProps: { style: { display: 'none' } },
   closable: false,
   maskClosable: false,
+  okText: 'Close',
+  onOk: () => {
+    navigate('/')
+  }
 }
-
 const infoConfig = {
   title: 'Ad no longer available',
   content: '',

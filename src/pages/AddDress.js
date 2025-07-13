@@ -11,6 +11,7 @@ import { Button, Badge } from "antd";
 import axios from "axios";
 import { getCurrentUser, signOut } from "@aws-amplify/auth";
 import imageCompression from "browser-image-compression";
+import { signInWithRedirect } from "@aws-amplify/auth";
 import {
   HomeFilled,
   UploadOutlined,
@@ -88,18 +89,24 @@ const AddDress = () => {
   } = useContext(Context);
   
     const errorSessionConfig = {
-  title: 'Session has expired.',
-  content: 'Please login again.',
-  okButtonProps: { style: { display: 'none' } },
-  closable: false,
-  maskClosable: false,
-}
+      title: 'Session has expired.',
+      content: 'Please login again.',
+      closable: false,
+      maskClosable: false,
+      okText: 'Login',
+      onOk: () => {
+        signInWithRedirect()
+      }
+    }
    const errorConfig = {
   title: 'An error has occurred.',
   content: 'Please try again later.',
-  okButtonProps: { style: { display: 'none' } },
   closable: false,
   maskClosable: false,
+  okText: 'Close',
+  onOk: () => {
+    navigate('/')
+  }
 }
 
     const { token } = useSessionCheck()

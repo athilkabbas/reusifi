@@ -7,6 +7,7 @@ import React, {
   useContext,
 } from "react";
 import { useNavigate } from "react-router-dom";
+import { signInWithRedirect } from "@aws-amplify/auth";
 import { Badge, Breadcrumb, Layout, Menu, Spin, theme,message, Modal } from "antd";
 import {
   HomeFilled,
@@ -124,18 +125,24 @@ const Favourites = () => {
     };
   });
   const errorSessionConfig = {
-  title: 'Session has expired.',
-  content: 'Please login again.',
-  okButtonProps: { style: { display: 'none' } },
-  closable: false,
-  maskClosable: false,
-}
+    title: 'Session has expired.',
+    content: 'Please login again.',
+    closable: false,
+    maskClosable: false,
+    okText: 'Login',
+    onOk: () => {
+      signInWithRedirect()
+    }
+  }
   const errorConfig = {
   title: 'An error has occurred.',
   content: 'Please try again later.',
-  okButtonProps: { style: { display: 'none' } },
   closable: false,
   maskClosable: false,
+  okText: 'Close',
+  onOk: () => {
+    navigate('/')
+  }
 }
     const [loadedImages, setLoadedImages] = useState({});
         

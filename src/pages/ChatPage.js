@@ -16,6 +16,7 @@ import { hashString } from "react-hash-string";
 import { Card, Skeleton } from "antd";
 import { Dropdown, Space } from "antd";
 import { DownOutlined, SmileOutlined } from "@ant-design/icons";
+import { signInWithRedirect } from "@aws-amplify/auth";
 import { Context } from "../context/provider";
 import { Empty } from "antd";
 import {
@@ -242,18 +243,24 @@ const ChatPage = () => {
   }, []);
 
     const errorSessionConfig = {
-  title: 'Session has expired.',
-  content: 'Please login again.',
-  okButtonProps: { style: { display: 'none' } },
-  closable: false,
-  maskClosable: false,
-}
+      title: 'Session has expired.',
+      content: 'Please login again.',
+      closable: false,
+      maskClosable: false,
+      okText: 'Login',
+      onOk: () => {
+        signInWithRedirect()
+      }
+    }
       const errorConfig = {
   title: 'An error has occurred.',
   content: 'Please try again later.',
-  okButtonProps: { style: { display: 'none' } },
   closable: false,
   maskClosable: false,
+  okText: 'Close',
+  onOk: () => {
+    navigate('/')
+  }
 }
 
   const handleMenuClick = async (e, index) => {

@@ -12,6 +12,7 @@ import axios from "axios";
 import { getCurrentUser, signOut } from "@aws-amplify/auth";
 import { Divider, List, Typography } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { signInWithRedirect } from "@aws-amplify/auth";
 import { Skeleton, Space } from "antd";
 import { Context } from "../context/provider";
 import { Empty } from "antd";
@@ -107,18 +108,24 @@ const Chat = () => {
   const { token } = useSessionCheck()
    
      const errorSessionConfig = {
-  title: 'Session has expired.',
-  content: 'Please login again.',
-  okButtonProps: { style: { display: 'none' } },
-  closable: false,
-  maskClosable: false,
-}
+       title: 'Session has expired.',
+       content: 'Please login again.',
+       closable: false,
+       maskClosable: false,
+       okText: 'Login',
+       onOk: () => {
+         signInWithRedirect()
+       }
+     }
          const errorConfig = {
   title: 'An error has occurred.',
   content: 'Please try again later.',
-  okButtonProps: { style: { display: 'none' } },
   closable: false,
   maskClosable: false,
+  okText: 'Close',
+  onOk: () => {
+    navigate('/')
+  }
 }
 
    const calculateLimit = () => {
