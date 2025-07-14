@@ -441,7 +441,7 @@ const token = useTokenRefresh()
     setExhaustedShards({})
     setData([]);
     setInitialLoad(true);
-    setPriceFilter(event.target.value === 'true' ? 'LOWTOHIGH' : 'HIGHTOLOW');
+    setPriceFilter(event.target.value);
   };
   return (
     <Layout style={{ height: "100dvh", overflow: "hidden", background:"#F9FAFB" }}>
@@ -537,8 +537,8 @@ const token = useTokenRefresh()
           <Text strong>Price</Text>
           &nbsp; &nbsp;
           <Radio.Group  disabled={!search} style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" }} buttonStyle="solid" onChange={onChangePriceFilter} value={priceFilter}>
-            <Radio.Button value={"true"}>Low to High</Radio.Button>
-            <Radio.Button value={"false"}>High to Low</Radio.Button>
+            <Radio.Button value={"LOWTOHIGH"}>Low to High</Radio.Button>
+            <Radio.Button value={"HIGHTOLOW"}>High to Low</Radio.Button>
           </Radio.Group>
         </Space.Compact>
       </div>
