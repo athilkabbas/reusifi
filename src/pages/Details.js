@@ -40,7 +40,7 @@ const { TextArea } = Input;
 const { Header, Content, Footer } = Layout;
 const Details = () => {
   const location = useLocation();
-  
+    const isMobile = useIsMobile()
   const [loading, setLoading] = useState(false);
   const { item, ad } = location.state || "";
   const [user, setUser] = useState(null);
@@ -93,6 +93,8 @@ const Details = () => {
     setChatLastEvaluatedKey,
     detailInitialLoad,
     setDetailInitialLoad,
+    setAdData,
+    setCount,
     detailData,
     setDetailData,
     unreadChatCount,
@@ -140,27 +142,32 @@ const token = useTokenRefresh()
     HeartFilled,
     LogoutOutlined,
   ].map((icon, index) => {
+    let divHtml
+    if(isMobile){
+      divHtml =  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: 10 }}>
+              <span style={{ fontSize: '16px', marginTop: '0px' }}>{React.createElement(icon)}</span>
+              <span style={{ fontSize: '10px', marginTop: '5px' }}>{IconText[index]}</span>
+            </div>
+    }
+    else{
+      divHtml = <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', fontSize: 10 }}>
+        <span style={{ fontSize: '20px', marginTop: '0px' }}>{React.createElement(icon)}</span>
+        <span style={{ fontSize: '15px', marginTop: '5px', marginLeft: '5px' }}>{IconText[index]}</span>
+      </div>
+    }
     if (index === 2) {
       return {
         key: String(index + 1),
         icon: (
           <Badge dot={unreadChatCount}>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: 10 }}>
-              <span style={{ fontSize: '16px', marginTop: '0px' }}>{React.createElement(icon)}</span>
-              <span style={{ fontSize: '10px', marginTop: '5px' }}>{IconText[index]}</span>
-            </div>
+            {divHtml}
           </Badge>
         )
       };
     }
-     return {
+      return {
       key: String(index + 1),
-      icon: (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: 10 }}>
-        <span style={{ fontSize: '16px', marginTop: '0px' }}>{React.createElement(icon)}</span>
-        <span style={{ fontSize: '10px', marginTop: '5px' }}>{IconText[index]}</span>
-      </div>
-    )
+      icon: divHtml
     };
   });
     useEffect(() => {
@@ -260,9 +267,15 @@ const token = useTokenRefresh()
         }&thumbnailS3Keys=${encodeURIComponent(JSON.stringify(detailData[0]["item"]["thumbnailS3Keys"]))}&viewingS3Keys=${encodeURIComponent(JSON.stringify(detailData[0]["item"]["viewingS3Keys"]))}`,
         { headers: { Authorization: token } }
       );
+      setCount((prevCount) => prevCount - 1)
+      setAdData((prevValue) => {
+        return prevValue.filter((value) => {
+          return value["item"]["uuid"] !== item["item"]["uuid"]
+        })
+      })
       setLoading(false);
       message.success("Ad deleted")
-      navigate("/");
+      navigate("/ads");
     } catch (err) {
       setLoading(false);
       if(err?.status === 401){
@@ -274,7 +287,6 @@ const token = useTokenRefresh()
       console.log(err);
     }
   };
-  const isMobile = useIsMobile()
   const [loadedImages, setLoadedImages] = useState([]);
    const [previewVisible, setPreviewVisible] = useState(false);
   const [previewIndex, setPreviewIndex] = useState(0);

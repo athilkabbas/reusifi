@@ -100,6 +100,8 @@ const Home = () => {
   } = useContext(Context);
   const [handleFavLoading, setHandleFavLoading] = useState(false);
 
+    const isMobile = useIsMobile()
+
     const items = [
     HomeFilled,
     UploadOutlined,
@@ -109,27 +111,32 @@ const Home = () => {
     HeartFilled,
     LogoutOutlined,
   ].map((icon, index) => {
+    let divHtml
+    if(isMobile){
+      divHtml =  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: 10 }}>
+              <span style={{ fontSize: '16px', marginTop: '0px' }}>{React.createElement(icon)}</span>
+              <span style={{ fontSize: '10px', marginTop: '5px' }}>{IconText[index]}</span>
+            </div>
+    }
+    else{
+      divHtml = <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', fontSize: 10 }}>
+        <span style={{ fontSize: '20px', marginTop: '0px' }}>{React.createElement(icon)}</span>
+        <span style={{ fontSize: '15px', marginTop: '5px', marginLeft: '5px' }}>{IconText[index]}</span>
+      </div>
+    }
     if (index === 2) {
       return {
         key: String(index + 1),
         icon: (
           <Badge dot={unreadChatCount}>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: 10 }}>
-              <span style={{ fontSize: '16px', marginTop: '0px' }}>{React.createElement(icon)}</span>
-              <span style={{ fontSize: '10px', marginTop: '5px' }}>{IconText[index]}</span>
-            </div>
+            {divHtml}
           </Badge>
         )
       };
     }
-     return {
+      return {
       key: String(index + 1),
-      icon: (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: 10 }}>
-        <span style={{ fontSize: '16px', marginTop: '0px' }}>{React.createElement(icon)}</span>
-        <span style={{ fontSize: '10px', marginTop: '5px' }}>{IconText[index]}</span>
-      </div>
-    )
+      icon: divHtml
     };
   });
   const [loadedImages, setLoadedImages] = useState({});
@@ -408,7 +415,6 @@ const token = useTokenRefresh()
 
 
   const navigate = useNavigate();
-  const isMobile = useIsMobile()
   const handleNavigation = (event) => {
     setScrollPosition(scrollableDivRef.current.scrollTop);
     switch (event.key) {

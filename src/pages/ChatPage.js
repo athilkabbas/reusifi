@@ -140,6 +140,8 @@ const ChatPage = () => {
     setUnreadChatCount
   } = useContext(Context);
 
+    const isMobile = useIsMobile()
+
     const token = useTokenRefresh()
 
           const calculateLimit = () => {
@@ -200,7 +202,7 @@ const ChatPage = () => {
       }
     }, [chatScrollPosition,loading,scrollLoadMoreData,chatData,chatLoading]);
 
-  const items = [
+    const items = [
     HomeFilled,
     UploadOutlined,
     MessageFilled,
@@ -209,27 +211,32 @@ const ChatPage = () => {
     HeartFilled,
     LogoutOutlined,
   ].map((icon, index) => {
+    let divHtml
+    if(isMobile){
+      divHtml =  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: 10 }}>
+              <span style={{ fontSize: '16px', marginTop: '0px' }}>{React.createElement(icon)}</span>
+              <span style={{ fontSize: '10px', marginTop: '5px' }}>{IconText[index]}</span>
+            </div>
+    }
+    else{
+      divHtml = <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', fontSize: 10 }}>
+        <span style={{ fontSize: '20px', marginTop: '0px' }}>{React.createElement(icon)}</span>
+        <span style={{ fontSize: '15px', marginTop: '5px', marginLeft: '5px' }}>{IconText[index]}</span>
+      </div>
+    }
     if (index === 2) {
       return {
         key: String(index + 1),
         icon: (
           <Badge dot={unreadChatCount}>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: 10 }}>
-              <span style={{ fontSize: '16px', marginTop: '0px' }}>{React.createElement(icon)}</span>
-              <span style={{ fontSize: '10px', marginTop: '5px' }}>{IconText[index]}</span>
-            </div>
+            {divHtml}
           </Badge>
         )
       };
     }
-     return {
+      return {
       key: String(index + 1),
-      icon: (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: 10 }}>
-        <span style={{ fontSize: '16px', marginTop: '0px' }}>{React.createElement(icon)}</span>
-        <span style={{ fontSize: '10px', marginTop: '5px' }}>{IconText[index]}</span>
-      </div>
-    )
+      icon: divHtml
     };
   });
 
@@ -534,7 +541,6 @@ useEffect(() => {
   }
 }, [user, token, chatInitialLoad,limit]);
 
-  const isMobile = useIsMobile()
   return (
     <Layout style={{ height: "100dvh", overflow: "hidden" }}>
       

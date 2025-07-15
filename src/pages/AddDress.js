@@ -86,6 +86,7 @@ const AddDress = () => {
     unreadChatCount,
     setUnreadChatCount
   } = useContext(Context);
+      const isMobile = useIsMobile()
   
     const errorSessionConfig = {
       title: 'Session has expired.',
@@ -192,27 +193,32 @@ const AddDress = () => {
     HeartFilled,
     LogoutOutlined,
   ].map((icon, index) => {
+    let divHtml
+    if(isMobile){
+      divHtml =  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: 10 }}>
+              <span style={{ fontSize: '16px', marginTop: '0px' }}>{React.createElement(icon)}</span>
+              <span style={{ fontSize: '10px', marginTop: '5px' }}>{IconText[index]}</span>
+            </div>
+    }
+    else{
+      divHtml = <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', fontSize: 10 }}>
+        <span style={{ fontSize: '20px', marginTop: '0px' }}>{React.createElement(icon)}</span>
+        <span style={{ fontSize: '15px', marginTop: '5px', marginLeft: '5px' }}>{IconText[index]}</span>
+      </div>
+    }
     if (index === 2) {
       return {
         key: String(index + 1),
         icon: (
           <Badge dot={unreadChatCount}>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: 10 }}>
-              <span style={{ fontSize: '16px', marginTop: '0px' }}>{React.createElement(icon)}</span>
-              <span style={{ fontSize: '10px', marginTop: '5px' }}>{IconText[index]}</span>
-            </div>
+            {divHtml}
           </Badge>
         )
       };
     }
-     return {
+      return {
       key: String(index + 1),
-      icon: (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: 10 }}>
-        <span style={{ fontSize: '16px', marginTop: '0px' }}>{React.createElement(icon)}</span>
-        <span style={{ fontSize: '10px', marginTop: '5px' }}>{IconText[index]}</span>
-      </div>
-    )
+      icon: divHtml
     };
   });
   const navigate = useNavigate();
@@ -293,17 +299,17 @@ const handleSubmit = async () => {
 
   const thumbnailOptions = {
     maxSizeMB: 0.15,
-    maxWidthOrHeight: 250,
+    maxWidthOrHeight: 500,
     useWebWorker: true,
-    initialQuality: 0.75,
+    initialQuality: 0.7,
     fileType: "image/webp",
   };
 
   const viewingOptions = {
-    maxSizeMB: 0.3,
+    maxSizeMB: 0.5,
     maxWidthOrHeight: 1200,
     useWebWorker: true,
-    initialQuality: 0.75,
+    initialQuality: 0.8,
     fileType: "image/webp",
   };
 
@@ -419,7 +425,6 @@ const handleSubmit = async () => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
-  const isMobile = useIsMobile()
   return (
     <Layout style={{ height: "100dvh", overflow: "hidden",background:"#F9FAFB" }}>
       

@@ -126,7 +126,7 @@ const Chat = () => {
     navigate('/')
   }
 }
-
+  const isMobile = useIsMobile()
    const calculateLimit = () => {
                   const viewportHeight = window.innerHeight;
                   const itemHeight = 70; // adjust if needed
@@ -174,27 +174,32 @@ const Chat = () => {
     HeartFilled,
     LogoutOutlined,
   ].map((icon, index) => {
+    let divHtml
+    if(isMobile){
+      divHtml =  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: 10 }}>
+              <span style={{ fontSize: '16px', marginTop: '0px' }}>{React.createElement(icon)}</span>
+              <span style={{ fontSize: '10px', marginTop: '5px' }}>{IconText[index]}</span>
+            </div>
+    }
+    else{
+      divHtml = <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', fontSize: 10 }}>
+        <span style={{ fontSize: '20px', marginTop: '0px' }}>{React.createElement(icon)}</span>
+        <span style={{ fontSize: '15px', marginTop: '5px', marginLeft: '5px' }}>{IconText[index]}</span>
+      </div>
+    }
     if (index === 2) {
       return {
         key: String(index + 1),
         icon: (
           <Badge dot={unreadChatCount}>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: 10 }}>
-              <span style={{ fontSize: '16px', marginTop: '0px' }}>{React.createElement(icon)}</span>
-              <span style={{ fontSize: '10px', marginTop: '5px' }}>{IconText[index]}</span>
-            </div>
+            {divHtml}
           </Badge>
         )
       };
     }
-     return {
+      return {
       key: String(index + 1),
-      icon: (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: 10 }}>
-        <span style={{ fontSize: '16px', marginTop: '0px' }}>{React.createElement(icon)}</span>
-        <span style={{ fontSize: '10px', marginTop: '5px' }}>{IconText[index]}</span>
-      </div>
-    )
+      icon: divHtml
     };
   });
   
@@ -488,7 +493,6 @@ const Chat = () => {
     setMessageValue("");
   };
 
-  const isMobile = useIsMobile()
 
   const formatTimeStamp = (timestamp) => {
     const date = new Date(timestamp);
