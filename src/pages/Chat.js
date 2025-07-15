@@ -164,14 +164,6 @@ const Chat = () => {
                   window.addEventListener("resize",handleResize);
                   return () => window.removeEventListener("resize", handleResize);
                 }, [hasMore]);
-
- useEffect(() => {
-  if(!chatLoading){
-    setUnreadChatCount((prevValue) => Math.max(prevValue - 1, 0))
-  }
-
- },[chatLoading]) 
-
   
     const items = [
     HomeFilled,
@@ -221,12 +213,16 @@ const Chat = () => {
         const currentUser = await getCurrentUser();
         setUser(currentUser);
         socket = new WebSocket(
-          `wss://d33iiy9qcb0yoj.cloudfront.net/production?userId=${currentUser.userId}&productId=${productId || recipient["item"]["uuid"]}`
+          `wss://d33iiy9qcb0yoj.cloudfront.net/production?userId=${currentUser.userId}&productId=${productId || recipient["item"]["uuid"]}&token=${token}`
         );
         setWs(socket);
         socket.onopen = () => {
           console.log("Connected to the WebSocket");
         };
+
+        socket.onerror = (err) => {
+           Modal.error(errorConfig)
+        }
 
         socket.onmessage = async (event) => {
           console.log("Message from server:", event);
@@ -362,36 +358,20 @@ const Chat = () => {
   }, []);
 
   useEffect(() => {
-  if (user && user.userId && token && limit && iChatInitialLoad && ((recipient && recipient["item"]["email"]) || conversationId)) {
+  const getChatsAndCount = async () => {
     try{
-          setChatLoading(true);
-    setLoading(true);
+        setChatLoading(true);
+        setLoading(true);
+        
+        await getChats()
 
-    const getChatCount = axios.get(
-      `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,
-      { headers: { Authorization: token } }
-    );
-
-    const getChat = getChats()
-
-
-    Promise.all([getChatCount, getChat])
-      .then(([chatResult]) => {
-        setUnreadChatCount(chatResult.data.count);
-      })
-      .catch((err) => {
-           if(err?.status === 401){
-                Modal.error(errorSessionConfig)
-              }
-              else{
-                Modal.error(errorConfig)
-              }
-        console.error(err);
-      })
-      .finally(() => {
+        const getChatCount = await axios.get(
+          `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,
+          { headers: { Authorization: token } }
+        );
+        setUnreadChatCount(getChatCount.data.count);
         setChatLoading(false);
         setLoading(false);
-      });
     }
     catch(err){
        if(err?.status === 401){
@@ -401,18 +381,21 @@ const Chat = () => {
         Modal.error(errorConfig)
       }
     }
-  }
-}, [user, token, iChatInitialLoad,limit,conversationId,recipient]);
-
-  useEffect(() => {
-    if (
-      token && user && limit &&
-      user.userId &&
-      ((recipient && recipient["item"]["email"]) || conversationId) && !iChatInitialLoad
-    ) {
-      getChats();
     }
-  }, [user, recipient, conversationId,token,limit]);
+    if (user && user.userId && token && limit && ((recipient && recipient["item"]["email"]) || conversationId)) {
+        getChatsAndCount()
+    }
+}, [user, token,limit,conversationId,recipient]);
+
+  // useEffect(() => {
+  //   if (
+  //     token && user && limit &&
+  //     user.userId &&
+  //     ((recipient && recipient["item"]["email"]) || conversationId) && !iChatInitialLoad
+  //   ) {
+  //     getChats();
+  //   }
+  // }, [user, recipient, conversationId,token,limit]);
 
   const handleNavigation = (event) => {
     switch (event.key) {
