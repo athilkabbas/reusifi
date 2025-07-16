@@ -298,7 +298,6 @@ const token = useTokenRefresh()
       setLoading(true);
       let results;
       if (search) {
-        console.log(JSON.stringify(lastEvaluatedKeys))
         results = await axios.get(
           `https://dwo94t377z7ed.cloudfront.net/prod/getProductsSearch?limit=${encodeURIComponent(limit)}&lastEvaluatedKeys=${encodeURIComponent(JSON.stringify(
             lastEvaluatedKeys
@@ -309,7 +308,6 @@ const token = useTokenRefresh()
         );
         setLastEvaluatedKeys(results.data.lastEvaluatedKeys);
         setExhaustedShards(results.data.exhaustedShards)
-        // console.log(results.data)
         if (results.data.hasMore) {
           setHasMore(true);
         } else {
@@ -331,7 +329,16 @@ const token = useTokenRefresh()
         }
       }
       const notUserData = results.data.finalResult.filter((item) => user.userId !== item["item"]["email"])
-      setData([...data, ...notUserData]);
+      const allItems = [...data, ...notUserData]
+      const seenUuids = new Set();
+      const dedupedItems = [];
+      for (const item of allItems) {
+        if (!seenUuids.has(item["item"]["uuid"])) {
+          seenUuids.add(item["item"]["uuid"]);
+          dedupedItems.push(item);
+        }
+      }
+      setData([...dedupedItems]);
       const favList = notUserData.map((item) => item["item"]["uuid"])
       const favResult = await axios.get(
       `https://dwo94t377z7ed.cloudfront.net/prod/getFavouritesList?email=${encodeURIComponent(user.userId)}&favList=${encodeURIComponent(JSON.stringify(favList))}`,
