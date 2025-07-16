@@ -329,16 +329,7 @@ const token = useTokenRefresh()
         }
       }
       const notUserData = results.data.finalResult.filter((item) => user.userId !== item["item"]["email"])
-      const allItems = [...data, ...notUserData]
-      const seenUuids = new Set();
-      const dedupedItems = [];
-      for (const item of allItems) {
-        if (!seenUuids.has(item["item"]["uuid"])) {
-          seenUuids.add(item["item"]["uuid"]);
-          dedupedItems.push(item);
-        }
-      }
-      setData([...dedupedItems]);
+      setData([...data, ...notUserData]);
       const favList = notUserData.map((item) => item["item"]["uuid"])
       const favResult = await axios.get(
       `https://dwo94t377z7ed.cloudfront.net/prod/getFavouritesList?email=${encodeURIComponent(user.userId)}&favList=${encodeURIComponent(JSON.stringify(favList))}`,
