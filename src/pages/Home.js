@@ -335,7 +335,7 @@ const token = useTokenRefresh()
       `https://dwo94t377z7ed.cloudfront.net/prod/getFavouritesList?email=${encodeURIComponent(user.userId)}&favList=${encodeURIComponent(JSON.stringify(favList))}`,
       { headers: { Authorization: token } }
       );
-      setFilterList([...favResult.data.finalResult]);
+      setFilterList([...filterList, ...favResult.data.finalResult]);
       setLoading(false);
       setScrollPosition(scrollPosition);
       setInitialLoad(false);

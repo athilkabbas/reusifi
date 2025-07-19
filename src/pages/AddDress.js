@@ -320,50 +320,30 @@ const handleSubmit = async () => {
       form.images.map((image) => imageCompression(image, viewingOptions))
     );
 
-    // Get upload URLs for thumbnails
-    const thumbnailUploadUrlPromises = compressedThumbnails.map((img) =>
-      axios.get(
-        `https://dwo94t377z7ed.cloudfront.net/prod/getUrlNew?email=${encodeURIComponent(
-          form.email
-        )}&contentType=${encodeURIComponent(img.type)}`,
-        { headers: { Authorization: token } }
-      )
+    const allCompressed = [...compressedThumbnails, ...compressedViewings];
+
+    const urlRes = await axios.get(
+      `https://dwo94t377z7ed.cloudfront.net/prod/getUrlNew?email=${encodeURIComponent(
+        form.email
+      )}&contentType=${encodeURIComponent('image/webp')}&count=${allCompressed.length}`
     );
 
-    // Get upload URLs for viewing images
-    const viewingUploadUrlPromises = compressedViewings.map((img) =>
-      axios.get(
-        `https://dwo94t377z7ed.cloudfront.net/prod/getUrlNew?email=${encodeURIComponent(
-          form.email
-        )}&contentType=${encodeURIComponent(img.type)}`,
-        { headers: { Authorization: token } }
-      )
-    );
+    const uploadURLs = urlRes.data.uploadURLs;
+    const s3Keys = urlRes.data.s3Keys;
 
-    const thumbnailUploadUrls = await Promise.all(thumbnailUploadUrlPromises);
-    const viewingUploadUrls = await Promise.all(viewingUploadUrlPromises);
-
-    // Upload thumbnails
     await Promise.all(
-      compressedThumbnails.map((img, idx) =>
-        axios.put(thumbnailUploadUrls[idx].data.uploadURL, img, {
-          headers: { "Content-Type": img.type, "Cache-Control": "public, max-age=2592000" },
+      allCompressed.map((img, idx) =>
+        axios.put(uploadURLs[idx], img, {
+          headers: {
+            'Content-Type': 'image/webp',
+            'Cache-Control': 'public, max-age=2592000',
+          },
         })
       )
     );
 
-    // Upload viewing images
-    await Promise.all(
-      compressedViewings.map((img, idx) =>
-        axios.put(viewingUploadUrls[idx].data.uploadURL, img, {
-          headers: { "Content-Type": img.type, "Cache-Control": "public, max-age=2592000" },
-        })
-      )
-    );
-
-    // Extract s3 keys separately
-    const thumbnailS3Keys = thumbnailUploadUrls.map((res) => res.data.s3Key);
-    const viewingS3Keys = viewingUploadUrls.map((res) => res.data.s3Key);
+    const thumbnailS3Keys = [s3Keys[0]];
+    const viewingS3Keys = s3Keys.slice(1);
 
     // Prepare form data with separate keys for thumbnails and viewings
     const data = {
