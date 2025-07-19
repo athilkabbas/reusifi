@@ -278,6 +278,7 @@ const ChatPage = () => {
       setLoading(true);
       const clickedItemKey = e.key;
       let userIds = chatData[index].conversationId.split("#");
+      userIds.splice(1,1)
       let userId2;
       for (let userId of userIds) {
         if (user.userId !== userId) {
@@ -337,6 +338,7 @@ const ChatPage = () => {
       e.domEvent.stopPropagation();
       const clickedItemKey = e.key;
       let userIds = chatData[index].conversationId.split("#");
+      userIds.splice(1,1)
       let userId2;
       for (let userId of userIds) {
         if (user.userId !== userId) {
@@ -594,6 +596,7 @@ useEffect(() => {
                       <Badge dot={item.read === "false" ? true : false}>
                         <Card
                           style={{
+                            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                             height: "150px",
                             width: !isMobile ? "50vw" : "calc(100vw - 50px)",
                           }}

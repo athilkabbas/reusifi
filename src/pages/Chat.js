@@ -83,6 +83,7 @@ const Chat = () => {
     data,
     chatData,
     setChatInitialLoad,
+    chatInitialLoad,
     setHomeInitialLoad,
     setAdInitialLoad,
     adData,
@@ -454,17 +455,17 @@ const Chat = () => {
     if (messageValue) {
       if (recipient && recipient["item"]["email"]) {
         sendMessage(messageValue, recipient["item"]["email"], user.userId,recipient["item"]["uuid"]);
-        setChatData((chatData) => {
-          return chatData.map((item) => {
-            let conversationId = [user.userId, recipient["item"]["email"]]
-              .sort()
-              .join(`#${recipient["item"]["uuid"]}#`);
-            if (item.conversationId === conversationId) {
-              return { ...item, message: messageValue };
-            }
-            return item;
-          });
-        });
+        // setChatData((chatData) => {
+        //   return chatData.map((item) => {
+        //     let conversationId = [user.userId, recipient["item"]["email"]]
+        //       .sort()
+        //       .join(`#${recipient["item"]["uuid"]}#`);
+        //     if (item.conversationId === conversationId) {
+        //       return { ...item, message: messageValue };
+        //     }
+        //     return item;
+        //   });
+        // });
       } else if (conversationId) {
         let userIds = conversationId.split("#");
         userIds.splice(1,1)
@@ -476,19 +477,24 @@ const Chat = () => {
           }
         }
         sendMessage(messageValue, userId2, user.userId, productId);
-        setChatData((chatData) => {
-          return chatData.map((item) => {
-            if (item.conversationId === conversationId) {
-              return { ...item, message: messageValue };
-            }
-            return item;
-          });
-        });
+        // setChatData((chatData) => {
+        //   return chatData.map((item) => {
+        //     if (item.conversationId === conversationId) {
+        //       return { ...item, message: messageValue };
+        //     }
+        //     return item;
+        //   });
+        // });
       }
       setIChatData((prevValue) => [
         { message: messageValue, timestamp: Date.now(), senderId: user.userId, productId: productId },
         ...prevValue,
       ]);
+      if(!chatInitialLoad){
+          setChatData([])
+          setChatLastEvaluatedKey(null)
+          setChatInitialLoad(true)
+      }
     }
     setMessageValue("");
   };
