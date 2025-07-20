@@ -102,10 +102,11 @@ const Chat = () => {
     iChatInitialLoad,
     setIChatInitialLoad,
     unreadChatCount,
-    setUnreadChatCount
+    setUnreadChatCount,
+    token
   } = useContext(Context);
   const [chatLoading, setChatLoading] = useState(false);
-  const token = useTokenRefresh()
+  useTokenRefresh()
    
      const errorSessionConfig = {
        title: 'Session has expired.',

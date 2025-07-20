@@ -137,12 +137,13 @@ const ChatPage = () => {
     setIChatInitialLoad,
     setAddProductInitialLoad,
     unreadChatCount,
-    setUnreadChatCount
+    setUnreadChatCount,
+    token
   } = useContext(Context);
 
     const isMobile = useIsMobile()
 
-    const token = useTokenRefresh()
+    useTokenRefresh()
 
           const calculateLimit = () => {
                 const viewportHeight = window.innerHeight;

@@ -89,7 +89,8 @@ const Favourites = () => {
     setIChatInitialLoad,
     setAddProductInitialLoad,
     unreadChatCount,
-    setUnreadChatCount
+    setUnreadChatCount,
+    token
   } = useContext(Context);
 
     const items = [
@@ -194,7 +195,7 @@ const Favourites = () => {
   const handleImageLoad = (uuid) => {
     setLoadedImages((prev) => ({ ...prev, [uuid]: true }));
   };
-const token = useTokenRefresh()
+useTokenRefresh()
 
     useEffect(() => {
       const getUser = async () => {

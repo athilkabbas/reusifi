@@ -96,7 +96,8 @@ const Home = () => {
     setAddProductInitialLoad,
     unreadChatCount,
     setUnreadChatCount,
-    exhaustedShards
+    exhaustedShards,
+    token
   } = useContext(Context);
   const [handleFavLoading, setHandleFavLoading] = useState(false);
 
@@ -204,7 +205,7 @@ const handleImageLoad = (uuid) => {
   setLoadedImages((prev) => ({ ...prev, [uuid]: true }));
 };
 
-const token = useTokenRefresh()
+useTokenRefresh()
 // useEffect(() => {
 //   if (scrollableDivRef.current && !chatLoading && !favLoading && !handleFavLoading && !loading) {
 //     const el = scrollableDivRef.current;

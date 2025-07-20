@@ -93,7 +93,8 @@ const Ads = () => {
     setIChatInitialLoad,
     setAddProductInitialLoad,
     setUnreadChatCount,
-    unreadChatCount
+    unreadChatCount,
+    token
   } = useContext(Context);
     
      const errorSessionConfig = {
@@ -162,7 +163,7 @@ const Ads = () => {
     const handleImageLoad = (uuid) => {
       setLoadedImages((prev) => ({ ...prev, [uuid]: true }));
     };
-  const token = useTokenRefresh()
+  useTokenRefresh()
 
     const items = [
     HomeFilled,

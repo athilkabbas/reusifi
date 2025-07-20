@@ -98,7 +98,8 @@ const Details = () => {
     detailData,
     setDetailData,
     unreadChatCount,
-    setUnreadChatCount
+    setUnreadChatCount,
+    token
   } = useContext(Context);
     const errorSessionConfig = {
       title: 'Session has expired.',
@@ -131,7 +132,7 @@ const infoConfig = {
   }
 }
 const { Text, Link } = Typography;
-const token = useTokenRefresh()
+useTokenRefresh()
 
     const items = [
     HomeFilled,

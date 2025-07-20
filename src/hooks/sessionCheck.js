@@ -1,11 +1,14 @@
 // hooks/sessionCheck.js
-import { useState, useEffect } from "react";
-import { fetchAuthSession, signInWithRedirect } from "@aws-amplify/auth";
+import { useState, useEffect, useContext } from "react";
+import { fetchAuthSession, signInWithRedirect, signOut } from "@aws-amplify/auth";
 import axios from "axios";
+import { Context } from "../context/provider";
 
 export function useSessionCheck() {
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [checked, setChecked] = useState(false);
+  const [sessionExpired, setSessionExpired] = useState(false)
+  const { setToken } = useContext(Context)
 
   useEffect(() => {
     const checkSession = async () => {
@@ -14,6 +17,7 @@ export function useSessionCheck() {
         const tokens = session.tokens;
         if(tokens?.idToken){
           setIsSignedIn(true);
+          setToken(tokens?.idToken)
           await axios.get(`https://dwo94t377z7ed.cloudfront.net/prod/setSession`,
           { headers: { Authorization: tokens.idToken },withCredentials: true });
         }
@@ -21,6 +25,7 @@ export function useSessionCheck() {
            setIsSignedIn(false);
         }
       } catch {
+        setSessionExpired(true)
         setIsSignedIn(false);
       } finally {
         setChecked(true);
@@ -31,10 +36,16 @@ export function useSessionCheck() {
   }, []);
 
   useEffect(() => {
-    if (checked && !isSignedIn) {
-      signInWithRedirect();
+    const completeCheck = async () => {
+      if (checked && !isSignedIn && !sessionExpired) {
+        await signInWithRedirect();
+      }
+      else if(checked && !isSignedIn && sessionExpired){
+        await signOut()
+      }
     }
-  }, [checked, isSignedIn]);
+  completeCheck()
+  }, [checked, isSignedIn, sessionExpired]);
 
   return { isSignedIn, checked };
 }

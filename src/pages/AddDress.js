@@ -84,7 +84,8 @@ const AddDress = () => {
     setIChatInitialLoad,
     setAddProductInitialLoad,
     unreadChatCount,
-    setUnreadChatCount
+    setUnreadChatCount,
+    token
   } = useContext(Context);
       const isMobile = useIsMobile()
   
@@ -109,7 +110,7 @@ const AddDress = () => {
   }
 }
 
-    const token = useTokenRefresh()
+    useTokenRefresh()
     useEffect(() => {
       const getUser = async () => {
           let currentUser = await getCurrentUser();

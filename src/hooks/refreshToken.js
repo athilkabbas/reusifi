@@ -1,11 +1,12 @@
 // hooks/useTokenRefresh.js
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { fetchAuthSession, signOut } from "@aws-amplify/auth";
 import axios from "axios";
+import { Context } from "../context/provider";
 
 export function useTokenRefresh(intervalMs = 60000) {
   const lastActivityRef = useRef(Date.now());
-  const [token, setToken] = useState(null);
+    const { setToken } = useContext(Context)
 
   useEffect(() => {
     const updateActivity = () => {
@@ -26,6 +27,7 @@ export function useTokenRefresh(intervalMs = 60000) {
           { headers: { Authorization: session.tokens?.idToken },withCredentials: true });
           setToken(session.tokens?.idToken);
         } catch (err) {
+          await signOut()
           console.error("Token refresh error:", err);
         }
       }
@@ -36,13 +38,6 @@ export function useTokenRefresh(intervalMs = 60000) {
       }
     }, intervalMs);
 
-    // initial fetch
-    fetchAuthSession()
-      .then((session) =>
-        setToken(session.tokens?.idToken)
-      )
-      .catch(() => setToken(null));
-
     return () => {
       clearInterval(interval);
       window.removeEventListener("mousemove", updateActivity);
@@ -50,6 +45,4 @@ export function useTokenRefresh(intervalMs = 60000) {
       window.removeEventListener("touchstart", updateActivity);
     };
   }, [intervalMs]);
-
-  return token;
 }

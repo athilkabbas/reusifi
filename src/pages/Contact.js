@@ -106,10 +106,11 @@ const Contact = () => {
     setAddProductInitialLoad,
     setContactInitialLoad,
     unreadChatCount,
-    setUnreadChatCount
+    setUnreadChatCount,
+    token
   } = useContext(Context);
 
-  const token = useTokenRefresh()
+  useTokenRefresh()
   useEffect(() => {
     const getChatCount = async () => {
       try {
