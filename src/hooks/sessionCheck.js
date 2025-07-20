@@ -16,10 +16,10 @@ export function useSessionCheck() {
         const session = await fetchAuthSession();
         const tokens = session.tokens;
         if(tokens?.idToken){
-          setIsSignedIn(true);
-          setToken(tokens?.idToken)
           await axios.get(`https://dwo94t377z7ed.cloudfront.net/prod/setSession`,
           { headers: { Authorization: tokens.idToken },withCredentials: true });
+          setIsSignedIn(true);
+          setToken(tokens?.idToken)
         }
         else{
            setIsSignedIn(false);
