@@ -1,6 +1,7 @@
 // hooks/sessionCheck.js
 import { useState, useEffect } from "react";
 import { fetchAuthSession, signInWithRedirect } from "@aws-amplify/auth";
+import axios from "axios";
 
 export function useSessionCheck() {
   const [isSignedIn, setIsSignedIn] = useState(false);
@@ -11,7 +12,14 @@ export function useSessionCheck() {
       try {
         const session = await fetchAuthSession();
         const tokens = session.tokens;
-        setIsSignedIn(!!tokens?.idToken);
+        if(tokens?.idToken){
+          setIsSignedIn(true);
+          await axios.get(`https://dwo94t377z7ed.cloudfront.net/prod/setSession`,
+          { headers: { Authorization: tokens.idToken },withCredentials: true });
+        }
+        else{
+           setIsSignedIn(false);
+        }
       } catch {
         setIsSignedIn(false);
       } finally {

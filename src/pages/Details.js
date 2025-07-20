@@ -186,12 +186,12 @@ const token = useTokenRefresh()
 
 //     const getChatCount = axios.get(
 //       `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,
-//       { headers: { Authorization: token } }
+//       { withCredentials: true }
 //     );
 
 //     const getData = axios.get(
 //           `https://dwo94t377z7ed.cloudfront.net/prod/getProductsId?id=${encodeURIComponent(item["item"]["uuid"])}`,
-//           { headers: { Authorization: token } }
+//           { withCredentials: true }
 //     );
 
 
@@ -231,7 +231,7 @@ const token = useTokenRefresh()
         setLoading(true);
         const result = await axios.get(
           `https://dwo94t377z7ed.cloudfront.net/prod/getProductsId?id=${encodeURIComponent(item["item"]["uuid"])}`,
-          { headers: { Authorization: token } }
+          { withCredentials: true }
         );
         setLoading(false);
         setDetailData(result.data)
@@ -265,7 +265,7 @@ const token = useTokenRefresh()
         `https://dwo94t377z7ed.cloudfront.net/prod/deleteAdNew?id=${
           encodeURIComponent(item["item"]["uuid"])
         }&thumbnailS3Keys=${encodeURIComponent(JSON.stringify(detailData[0]["item"]["thumbnailS3Keys"]))}&viewingS3Keys=${encodeURIComponent(JSON.stringify(detailData[0]["item"]["viewingS3Keys"]))}`,
-        { headers: { Authorization: token } }
+        { withCredentials: true }
       );
       setCount((prevCount) => prevCount - 1)
       setAdData((prevValue) => {

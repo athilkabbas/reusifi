@@ -247,7 +247,7 @@ const Chat = () => {
             `https://dwo94t377z7ed.cloudfront.net/prod/getChatsRead?userId1=${
               encodeURIComponent(data.recipientUserId)
             }&userId2=${encodeURIComponent(data.senderUserId)}&read=${encodeURIComponent(true)}`,
-            { headers: { Authorization: token } }
+            { withCredentials: true }
           );
         };
         // To close the connection
@@ -284,12 +284,12 @@ const Chat = () => {
       if (recipient && recipient["item"]["email"]) {
         [result, readRes] = await Promise.all([axios.get(
           `https://dwo94t377z7ed.cloudfront.net/prod/getChatsConversation?userId1=${encodeURIComponent(user.userId)}&userId2=${encodeURIComponent(recipient["item"]["email"])}&productId=${encodeURIComponent(recipient["item"]["uuid"])}&lastEvaluatedKey=${encodeURIComponent(lastEvaluatedKey)}&limit=${encodeURIComponent(limit)}`,
-          { headers: { Authorization: token } }
+          { withCredentials: true }
         ),axios.get(
           `https://dwo94t377z7ed.cloudfront.net/prod/getChatsRead?userId1=${
             encodeURIComponent(user.userId)
           }&userId2=${encodeURIComponent(recipient["item"]["email"])}&productId=${encodeURIComponent(recipient["item"]["uuid"])}&read=${encodeURIComponent(true)}`,
-          { headers: { Authorization: token } }
+          { withCredentials: true }
         )])
         setChatData((chatData) => {
           return chatData.map((item) => {
@@ -314,12 +314,12 @@ const Chat = () => {
         }
         [result, readRes] = await Promise.all([axios.get(
           `https://dwo94t377z7ed.cloudfront.net/prod/getChatsConversation?userId1=${encodeURIComponent(user.userId)}&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(productId)}&lastEvaluatedKey=${encodeURIComponent(lastEvaluatedKey)}&limit=${encodeURIComponent(limit)}`,
-          { headers: { Authorization: token } }
+          { withCredentials: true }
         ),axios.get(
           `https://dwo94t377z7ed.cloudfront.net/prod/getChatsRead?userId1=${
             encodeURIComponent(user.userId)
           }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(productId)}&read=${encodeURIComponent(true)}`,
-          { headers: { Authorization: token } }
+          { withCredentials: true }
         )])
         setChatData((chatData) => {
           return chatData.map((item) => {
@@ -373,7 +373,7 @@ const Chat = () => {
 
         const getChatCount = await axios.get(
           `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,
-          { headers: { Authorization: token } }
+          { withCredentials: true }
         );
         setUnreadChatCount(getChatCount.data.count);
         setChatLoading(false);

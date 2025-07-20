@@ -1,10 +1,11 @@
 // hooks/useTokenRefresh.js
 import { useEffect, useRef, useState } from "react";
 import { fetchAuthSession, signOut } from "@aws-amplify/auth";
+import axios from "axios";
 
 export function useTokenRefresh(intervalMs = 60000) {
   const lastActivityRef = useRef(Date.now());
-  const [accessToken, setAccessToken] = useState(null);
+  const [token, setToken] = useState(null);
 
   useEffect(() => {
     const updateActivity = () => {
@@ -21,8 +22,9 @@ export function useTokenRefresh(intervalMs = 60000) {
       if (minutesSinceActivity < 60) {
         try {
           const session = await fetchAuthSession();
-          const token = session.tokens?.accessToken?.toString() || null;
-          setAccessToken(token);
+          await axios.get(`https://dwo94t377z7ed.cloudfront.net/prod/setSession`,
+          { headers: { Authorization: session.tokens?.idToken },withCredentials: true });
+          setToken(session.tokens?.idToken);
         } catch (err) {
           console.error("Token refresh error:", err);
         }
@@ -37,9 +39,9 @@ export function useTokenRefresh(intervalMs = 60000) {
     // initial fetch
     fetchAuthSession()
       .then((session) =>
-        setAccessToken(session.tokens?.accessToken?.toString() || null)
+        setToken(session.tokens?.idToken)
       )
-      .catch(() => setAccessToken(null));
+      .catch(() => setToken(null));
 
     return () => {
       clearInterval(interval);
@@ -49,5 +51,5 @@ export function useTokenRefresh(intervalMs = 60000) {
     };
   }, [intervalMs]);
 
-  return accessToken;
+  return token;
 }

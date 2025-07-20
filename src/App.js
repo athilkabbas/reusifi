@@ -28,45 +28,57 @@ import { useSessionCheck } from "./hooks/sessionCheck";
 Amplify.configure(awsconfig);
 
 function App() {
-
-  const { isSignedIn, checked } = useSessionCheck();
-
-  if(!checked){
-    return <Spin fullscreen indicator={<LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />} />
-  }
-
-  if (!isSignedIn) {
   return (
-    <div style={{
-      display: "flex",
-      height: "100dvh",
-      justifyContent: "center",
-      alignItems: "center",
-      fontSize: "1.5rem",
-      color: "#6366F1",
-      fontWeight: "600",
-      backgroundColor: "#F5F7FF"
-    }}>
-      Redirecting to sign in...
-    </div>
+    <BrowserRouter>
+      <AppWithSession />
+    </BrowserRouter>
   );
 }
 
+function AppWithSession() {
+  const { isSignedIn, checked } = useSessionCheck();
+
+  if (!checked) {
+    return (
+      <Spin
+        fullscreen
+        indicator={<LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />}
+      />
+    );
+  }
+
+  if (!isSignedIn) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          height: "100dvh",
+          justifyContent: "center",
+          alignItems: "center",
+          fontSize: "1.5rem",
+          color: "#6366F1",
+          fontWeight: "600",
+          backgroundColor: "#F5F7FF",
+        }}
+      >
+        Redirecting to sign in...
+      </div>
+    );
+  }
+
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="addProduct" element={<AddDress />} />
-          <Route path="details" element={<Details />} />
-          <Route path="chat" element={<Chat />} />
-          <Route path="chatPage" element={<ChatPage />} />
-          <Route path="ads" element={<Ads />} />
-          <Route path="contact" element={<Contact />} />
-          <Route path="favourite" element={<Favourites />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route index element={<Home />} />
+        <Route path="addProduct" element={<AddDress />} />
+        <Route path="details" element={<Details />} />
+        <Route path="chat" element={<Chat />} />
+        <Route path="chatPage" element={<ChatPage />} />
+        <Route path="ads" element={<Ads />} />
+        <Route path="contact" element={<Contact />} />
+        <Route path="favourite" element={<Favourites />} />
+      </Route>
+    </Routes>
   );
 }
 

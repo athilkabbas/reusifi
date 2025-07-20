@@ -9,7 +9,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import { Image, Upload } from "antd";
 import { Button } from "antd";
 import axios from "axios";
-import { getCurrentUser, signIn, signOut } from "@aws-amplify/auth";
+import { getCurrentUser, signInWithRedirect, signOut } from "@aws-amplify/auth";
 import { Divider, List, Typography } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { hashString } from "react-hash-string";
@@ -255,7 +255,7 @@ const ChatPage = () => {
       maskClosable: false,
       okText: 'Login',
       onOk: () => {
-        signIn()
+        signInWithRedirect()
       }
     }
       const errorConfig = {
@@ -291,7 +291,7 @@ const ChatPage = () => {
           `https://dwo94t377z7ed.cloudfront.net/prod/blockUserNew?block=${true}&userId1=${
             encodeURIComponent(user.userId)
           }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(chatData[index].productId)}`,
-          { headers: { Authorization: token } }
+          { withCredentials: true }
         );
         setChatData((prevValue) => {
           return prevValue.map((item) => {
@@ -306,7 +306,7 @@ const ChatPage = () => {
           `https://dwo94t377z7ed.cloudfront.net/prod/deleteChat?deleteChat=${true}&userId1=${
             encodeURIComponent(user.userId)
           }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(chatData[index].productId)}`,
-          { headers: { Authorization: token } }
+          { withCredentials: true }
         );
         setChatData((prevValue) => {
           return prevValue.map((item) => {
@@ -351,7 +351,7 @@ const ChatPage = () => {
           `https://dwo94t377z7ed.cloudfront.net/prod/unBlockUser?unBlock=${true}&userId1=${
             encodeURIComponent(user.userId)
           }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(chatData[index].productId)}`,
-          { headers: { Authorization: token } }
+          { withCredentials: true }
         );
         setChatData((prevValue) => {
           return prevValue.map((item) => {
@@ -366,7 +366,7 @@ const ChatPage = () => {
           `https://dwo94t377z7ed.cloudfront.net/prod/deleteChat?deleteChat=${true}&userId1=${
             encodeURIComponent(user.userId)
           }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(chatData[index].productId)}`,
-          { headers: { Authorization: token } }
+          { withCredentials: true }
         );
         setChatData((prevValue) => {
           return prevValue.map((item) => {
@@ -466,7 +466,7 @@ const ChatPage = () => {
       setLoading(true);
       const result = await axios.get(
         `https://dwo94t377z7ed.cloudfront.net/prod/getChatsNew?userId1=${encodeURIComponent(user.userId)}&lastEvaluatedKey=${encodeURIComponent(chatLastEvaluatedKey)}&limit=${encodeURIComponent(limit)}`,
-        { headers: { Authorization: token } }
+        { withCredentials: true }
       );
       setChatData([...chatData, ...result.data.items]);
       setChatLastEvaluatedKey(result.data.lastEvaluatedKey);
@@ -507,7 +507,7 @@ useEffect(() => {
 
     const getChatCount = axios.get(
       `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,
-      { headers: { Authorization: token } }
+      { withCredentials: true }
     );
 
     const getChatsPromise = getChats()

@@ -239,7 +239,7 @@ const Ads = () => {
         `https://dwo94t377z7ed.cloudfront.net/prod/getProductsEmail?limit=${encodeURIComponent(limit)}&lastEvaluatedKey=${encodeURIComponent(JSON.stringify(
           adLastEvaluatedKey
         ))}&email=${encodeURIComponent(user.userId)}`,
-        { headers: { Authorization: token } }
+        { withCredentials: true }
       );
       setAdLastEvaluatedKey(results.data.lastEvaluatedKey);
       if (!results.data.lastEvaluatedKey) {
@@ -273,7 +273,7 @@ const Ads = () => {
 
     const getChatCount = axios.get(
       `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,
-      { headers: { Authorization: token } }
+      { withCredentials: true }
     );
 
     const loadMoreDataPromise = loadMoreData()

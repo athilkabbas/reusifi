@@ -229,13 +229,13 @@ const token = useTokenRefresh()
     if(favourite){
         const results = await axios.get(
       `https://dwo94t377z7ed.cloudfront.net/prod/getFavouritesAdd?id=${encodeURIComponent(id)}&favourite=${encodeURIComponent(favourite)}&email=${encodeURIComponent(user.userId)}`,
-      { headers: { Authorization: token } }
+      { withCredentials: true }
     );
     }
     else{
           const results = await axios.get(
       `https://dwo94t377z7ed.cloudfront.net/prod/getFavouritesRemove?id=${encodeURIComponent(id)}&favourite=${encodeURIComponent(favourite)}&email=${encodeURIComponent(user.userId)}`,
-      { headers: { Authorization: token } }
+      { withCredentials: true }
     );
     }
     if (!favourite) {
@@ -277,7 +277,7 @@ const token = useTokenRefresh()
         }&limit=${encodeURIComponent(limit)}&lastEvaluatedKey=${encodeURIComponent(JSON.stringify(
           favLastEvaluatedKey
         ))}`,
-        { headers: { Authorization: token } }
+        { withCredentials: true }
       );
       setFavLastEvaluatedKey(results.data.lastEvaluatedKey);
       if (!results.data.lastEvaluatedKey) {
@@ -318,7 +318,7 @@ const token = useTokenRefresh()
 
     const getChatCount = axios.get(
       `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,
-      { headers: { Authorization: token } }
+      { withCredentials: true }
     );
 
     const loadMoreDataPromise = loadMoreData();

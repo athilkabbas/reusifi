@@ -256,13 +256,13 @@ const token = useTokenRefresh()
     if(favourite){
        const results = await axios.get(
       `https://dwo94t377z7ed.cloudfront.net/prod/getFavouritesAdd?id=${encodeURIComponent(selectedItem["item"]["uuid"])}&favourite=${encodeURIComponent(favourite)}&email=${encodeURIComponent(user.userId)}`,
-      { headers: { Authorization: token } }
+      { withCredentials: true }
     );
     }
     else{
           const results = await axios.get(
       `https://dwo94t377z7ed.cloudfront.net/prod/getFavouritesRemove?id=${encodeURIComponent(selectedItem["item"]["uuid"])}&favourite=${encodeURIComponent(favourite)}&email=${encodeURIComponent(user.userId)}`,
-      { headers: { Authorization: token } }
+      { withCredentials: true }
     );
     }
     if (!favourite) {
@@ -304,7 +304,7 @@ const token = useTokenRefresh()
           ))}&exhaustedShards=${encodeURIComponent(JSON.stringify(exhaustedShards))}&search=${encodeURIComponent(search.trim())}&location=${encodeURIComponent(JSON.stringify(
             location
           ))}&priceFilter=${encodeURIComponent(priceFilter)}`,
-          { headers: { Authorization: token } }
+          { withCredentials: true }
         );
         setLastEvaluatedKeys(results.data.lastEvaluatedKeys);
         setExhaustedShards(results.data.exhaustedShards)
@@ -318,7 +318,7 @@ const token = useTokenRefresh()
           `https://dwo94t377z7ed.cloudfront.net/prod/getProducts?limit=${encodeURIComponent(limit)}&lastEvaluatedKeys=${encodeURIComponent(JSON.stringify(
             lastEvaluatedKeys
           ))}&location=${encodeURIComponent(JSON.stringify(location))}&exhaustedShards=${encodeURIComponent(JSON.stringify(exhaustedShards))}&priceFilter=${encodeURIComponent(priceFilter)}`,
-          { headers: { Authorization: token } }
+          { withCredentials: true }
         );
         setLastEvaluatedKeys(results.data.lastEvaluatedKeys);
         setExhaustedShards(results.data.exhaustedShards)
@@ -333,7 +333,7 @@ const token = useTokenRefresh()
       const favList = notUserData.map((item) => item["item"]["uuid"])
       const favResult = await axios.get(
       `https://dwo94t377z7ed.cloudfront.net/prod/getFavouritesList?email=${encodeURIComponent(user.userId)}&favList=${encodeURIComponent(JSON.stringify(favList))}`,
-      { headers: { Authorization: token } }
+      { withCredentials: true }
       );
       setFilterList([...filterList, ...favResult.data.finalResult]);
       setLoading(false);
@@ -377,7 +377,7 @@ const token = useTokenRefresh()
 
     const getChatCount = axios.get(
       `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,
-      { headers: { Authorization: token } }
+      { withCredentials: true }
     );
     const loadMoreDataPromise =  loadMoreData();
 

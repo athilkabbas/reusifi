@@ -129,14 +129,14 @@ const AddDress = () => {
 
     const getChatCount = axios.get(
       `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,
-      { headers: { Authorization: token } }
+      { withCredentials: true }
     );
 
     const getAdCount = axios.get(
           `https://dwo94t377z7ed.cloudfront.net/prod/getProductsCount?count=${true}&email=${
             encodeURIComponent(user.userId)
           }`,
-          { headers: { Authorization: token } }
+          { withCredentials: true }
         );
 
 
@@ -360,7 +360,7 @@ const handleSubmit = async () => {
     await axios.post(
       "https://dwo94t377z7ed.cloudfront.net/prod/addProduct",
       data,
-      { headers: { Authorization: token } }
+      { withCredentials: true }
     );
     setCount((prevValue) => prevValue + 1)
     setAdData([])

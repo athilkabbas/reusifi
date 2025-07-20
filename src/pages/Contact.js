@@ -119,7 +119,7 @@ const Contact = () => {
           `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${
             encodeURIComponent(currentUser.userId)
           }&count=${encodeURIComponent(true)}`,
-          { headers: { Authorization: token } }
+          { withCredentials: true }
         );
         setUnreadChatCount(result.data.count);
         setLoading(false);
