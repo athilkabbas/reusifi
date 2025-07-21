@@ -489,7 +489,7 @@ useTokenRefresh()
               }
             }}
             placeholder="Search"
-            style={{ width: !isMobile ? "30vw" : "60vw" , background: "#9CA3AF", height: 'fit-content', boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)", borderRadius: "7px"}}
+            style={{ width: !isMobile ? "30vw" : "60vw" , height: 'fit-content', boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)", borderRadius: "7px"}}
           />
           <Space.Compact size="large" style={{ display: "flex", flexDirection: !isMobile ? 'row' : "column" }}>
                       <Select
