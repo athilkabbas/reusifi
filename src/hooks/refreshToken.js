@@ -20,7 +20,7 @@ export function useTokenRefresh(intervalMs = 60000) {
     const interval = setInterval(async () => {
       const now = Date.now();
       const minutesSinceActivity = (now - lastActivityRef.current) / 60000;
-      if (minutesSinceActivity < 60) {
+      if (minutesSinceActivity < 300) {
         try {
           const session = await fetchAuthSession();
           await axios.get(`https://api.reusifi.com/prod/setSession`,

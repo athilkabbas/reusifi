@@ -442,7 +442,7 @@ useTokenRefresh()
                         <Card
                         hoverable
                         bodyStyle={{ padding: '15px 0px 0px 0px' }}
-                        style={{   boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)", padding: '10px'}}
+                        style={{ borderRadius: '12px',  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)", padding: '10px'}}
                           onClick={() => {
                             setFavScrollPosition(
                               scrollableDivRef.current.scrollTop
@@ -482,6 +482,7 @@ useTokenRefresh()
                                   width: "100%",
                                   height: "200px",
                                   objectFit: "cover",
+                                  borderRadius: '5px'
                                 }}
                                   onLoad={() => handleImageLoad(item["item"]["uuid"])}
                                   onError={() => handleImageLoad(item["item"]["uuid"])}
@@ -496,7 +497,7 @@ useTokenRefresh()
                               overflow: "hidden",
                             }}
                           >
-                            <b>{item["item"]["title"]}</b>
+                             <b style={{ fontSize: "16px", color: "#111827" }}>{item["item"]["title"]}</b>
                           </div>
                           <div
                             style={{
@@ -505,7 +506,7 @@ useTokenRefresh()
                               overflow: "hidden",
                             }}
                           >
-                            <b>₹{item["item"]["price"]}</b>
+                            <b style={{ fontSize: "15px", color: "#4B5563" }}>₹{item["item"]["price"]}</b>
                           </div>
                           {item["item"]["email"] !== user.userId && (
                             <div

@@ -489,7 +489,7 @@ useTokenRefresh()
               }
             }}
             placeholder="Search"
-            style={{ width: !isMobile ? "30vw" : "60vw" ,height: 'fit-content', boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)", borderRadius: "7px"}}
+            style={{ width: !isMobile ? "30vw" : "60vw" , background: "#9CA3AF", height: 'fit-content', boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)", borderRadius: "7px"}}
           />
           <Space.Compact size="large" style={{ display: "flex", flexDirection: !isMobile ? 'row' : "column" }}>
                       <Select
@@ -588,7 +588,7 @@ useTokenRefresh()
                   return (
                     <>
                       <List.Item key={item["item"]["uuid"]}>
-                        <Card hoverable bodyStyle={{ padding: '15px 0px 0px 0px' }} style={{   boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)", padding: '10px' }}
+                        <Card hoverable bodyStyle={{ padding: '15px 0px 0px 0px' }} style={{  borderRadius: '12px',  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)", padding: '10px' }}
                           onClick={() => {
                             setScrollPosition(
                               scrollableDivRef.current.scrollTop
@@ -628,6 +628,7 @@ useTokenRefresh()
                                   width: "100%",
                                   height: "200px",
                                   objectFit: "cover",
+                                  borderRadius: '5px'
                                 }}
                                   onLoad={() => handleImageLoad(item["item"]["uuid"])}
                                   onError={() => handleImageLoad(item["item"]["uuid"])}
@@ -642,7 +643,7 @@ useTokenRefresh()
                               overflow: "hidden",
                             }}
                           >
-                            <b>{item["item"]["title"]}</b>
+                            <b style={{ fontSize: "16px", color: "#111827" }}>{item["item"]["title"]}</b>
                           </div>
                           <div
                             style={{
@@ -651,7 +652,7 @@ useTokenRefresh()
                               overflow: "hidden",
                             }}
                           >
-                            <b>₹{item["item"]["price"]}</b>
+                            <b style={{ fontSize: "15px", color: "#4B5563" }}>₹{item["item"]["price"]}</b>
                           </div>
                           {item["item"]["email"] !== user.userId && (
                             <div
@@ -673,7 +674,7 @@ useTokenRefresh()
                                 <HeartFilled style={{ color: '#10B981' }} ></HeartFilled>
                               )}
                               {!filterList.includes(item["item"]["uuid"]) && (
-                                <HeartOutlined></HeartOutlined>
+                                <HeartFilled style={{ color: '#9CA3AF' }}></HeartFilled>
                               )}
                             </div>
                           )}

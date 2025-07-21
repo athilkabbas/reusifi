@@ -358,6 +358,7 @@ useTokenRefresh()
       <Carousel
         arrows
         style={{
+          borderRadius: '12px',
           boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
           width: 300,
           height: 400,
@@ -391,6 +392,7 @@ useTokenRefresh()
               src={img}
               alt={detailData[0]["item"]["title"]}
               style={{
+                borderRadius: '12px',
                 display: loadedImages[i] ? "block" : "none",
                 width: "100%",
                 height: "400px",
