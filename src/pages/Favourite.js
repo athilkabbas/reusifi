@@ -229,13 +229,13 @@ useTokenRefresh()
     setHandleFavLoading(true);
     if(favourite){
         const results = await axios.get(
-      `https://dwo94t377z7ed.cloudfront.net/prod/getFavouritesAdd?id=${encodeURIComponent(id)}&favourite=${encodeURIComponent(favourite)}&email=${encodeURIComponent(user.userId)}`,
+      `https://api.reusifi.com/prod/getFavouritesAdd?id=${encodeURIComponent(id)}&favourite=${encodeURIComponent(favourite)}&email=${encodeURIComponent(user.userId)}`,
       { withCredentials: true }
     );
     }
     else{
           const results = await axios.get(
-      `https://dwo94t377z7ed.cloudfront.net/prod/getFavouritesRemove?id=${encodeURIComponent(id)}&favourite=${encodeURIComponent(favourite)}&email=${encodeURIComponent(user.userId)}`,
+      `https://api.reusifi.com/prod/getFavouritesRemove?id=${encodeURIComponent(id)}&favourite=${encodeURIComponent(favourite)}&email=${encodeURIComponent(user.userId)}`,
       { withCredentials: true }
     );
     }
@@ -273,7 +273,7 @@ useTokenRefresh()
       let results;
 
       results = await axios.get(
-        `https://dwo94t377z7ed.cloudfront.net/prod/getFavouritesEmail?email=${
+        `https://api.reusifi.com/prod/getFavouritesEmail?email=${
           encodeURIComponent(user.userId)
         }&limit=${encodeURIComponent(limit)}&lastEvaluatedKey=${encodeURIComponent(JSON.stringify(
           favLastEvaluatedKey
@@ -318,7 +318,7 @@ useTokenRefresh()
     setLoading(true);
 
     const getChatCount = axios.get(
-      `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,
+      `https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,
       { withCredentials: true }
     );
 

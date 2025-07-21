@@ -256,13 +256,13 @@ useTokenRefresh()
     setHandleFavLoading(true);
     if(favourite){
        const results = await axios.get(
-      `https://dwo94t377z7ed.cloudfront.net/prod/getFavouritesAdd?id=${encodeURIComponent(selectedItem["item"]["uuid"])}&favourite=${encodeURIComponent(favourite)}&email=${encodeURIComponent(user.userId)}`,
+      `https://api.reusifi.com/prod/getFavouritesAdd?id=${encodeURIComponent(selectedItem["item"]["uuid"])}&favourite=${encodeURIComponent(favourite)}&email=${encodeURIComponent(user.userId)}`,
       { withCredentials: true }
     );
     }
     else{
           const results = await axios.get(
-      `https://dwo94t377z7ed.cloudfront.net/prod/getFavouritesRemove?id=${encodeURIComponent(selectedItem["item"]["uuid"])}&favourite=${encodeURIComponent(favourite)}&email=${encodeURIComponent(user.userId)}`,
+      `https://api.reusifi.com/prod/getFavouritesRemove?id=${encodeURIComponent(selectedItem["item"]["uuid"])}&favourite=${encodeURIComponent(favourite)}&email=${encodeURIComponent(user.userId)}`,
       { withCredentials: true }
     );
     }
@@ -300,7 +300,7 @@ useTokenRefresh()
       let results;
       if (search) {
         results = await axios.get(
-          `https://dwo94t377z7ed.cloudfront.net/prod/getProductsSearch?limit=${encodeURIComponent(limit)}&lastEvaluatedKeys=${encodeURIComponent(JSON.stringify(
+          `https://api.reusifi.com/prod/getProductsSearch?limit=${encodeURIComponent(limit)}&lastEvaluatedKeys=${encodeURIComponent(JSON.stringify(
             lastEvaluatedKeys
           ))}&exhaustedShards=${encodeURIComponent(JSON.stringify(exhaustedShards))}&search=${encodeURIComponent(search.trim())}&location=${encodeURIComponent(JSON.stringify(
             location
@@ -316,7 +316,7 @@ useTokenRefresh()
         }
       } else {
         results = await axios.get(
-          `https://dwo94t377z7ed.cloudfront.net/prod/getProducts?limit=${encodeURIComponent(limit)}&lastEvaluatedKeys=${encodeURIComponent(JSON.stringify(
+          `https://api.reusifi.com/prod/getProducts?limit=${encodeURIComponent(limit)}&lastEvaluatedKeys=${encodeURIComponent(JSON.stringify(
             lastEvaluatedKeys
           ))}&location=${encodeURIComponent(JSON.stringify(location))}&exhaustedShards=${encodeURIComponent(JSON.stringify(exhaustedShards))}&priceFilter=${encodeURIComponent(priceFilter)}`,
           { withCredentials: true }
@@ -333,7 +333,7 @@ useTokenRefresh()
       setData([...data, ...notUserData]);
       const favList = notUserData.map((item) => item["item"]["uuid"])
       const favResult = await axios.get(
-      `https://dwo94t377z7ed.cloudfront.net/prod/getFavouritesList?email=${encodeURIComponent(user.userId)}&favList=${encodeURIComponent(JSON.stringify(favList))}`,
+      `https://api.reusifi.com/prod/getFavouritesList?email=${encodeURIComponent(user.userId)}&favList=${encodeURIComponent(JSON.stringify(favList))}`,
       { withCredentials: true }
       );
       setFilterList([...filterList, ...favResult.data.finalResult]);
@@ -377,7 +377,7 @@ useTokenRefresh()
     setLoading(true);
 
     const getChatCount = axios.get(
-      `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,
+      `https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,
       { withCredentials: true }
     );
     const loadMoreDataPromise =  loadMoreData();

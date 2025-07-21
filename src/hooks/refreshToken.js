@@ -23,7 +23,7 @@ export function useTokenRefresh(intervalMs = 60000) {
       if (minutesSinceActivity < 60) {
         try {
           const session = await fetchAuthSession();
-          await axios.get(`https://dwo94t377z7ed.cloudfront.net/prod/setSession`,
+          await axios.get(`https://api.reusifi.com/prod/setSession`,
           { headers: { Authorization: session.tokens?.idToken },withCredentials: true });
           setToken(session.tokens?.idToken);
         } catch (err) {

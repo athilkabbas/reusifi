@@ -129,12 +129,12 @@ const AddDress = () => {
     setLoading(true);
 
     const getChatCount = axios.get(
-      `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,
+      `https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,
       { withCredentials: true }
     );
 
     const getAdCount = axios.get(
-          `https://dwo94t377z7ed.cloudfront.net/prod/getProductsCount?count=${true}&email=${
+          `https://api.reusifi.com/prod/getProductsCount?count=${true}&email=${
             encodeURIComponent(user.userId)
           }`,
           { withCredentials: true }
@@ -324,7 +324,7 @@ const handleSubmit = async () => {
     const allCompressed = [...compressedThumbnails, ...compressedViewings];
 
     const urlRes = await axios.get(
-      `https://dwo94t377z7ed.cloudfront.net/prod/getUrlNew?email=${encodeURIComponent(
+      `https://api.reusifi.com/prod/getUrlNew?email=${encodeURIComponent(
         form.email
       )}&contentType=${encodeURIComponent('image/webp')}&count=${allCompressed.length}`
     );
@@ -359,7 +359,7 @@ const handleSubmit = async () => {
     };
 
     await axios.post(
-      "https://dwo94t377z7ed.cloudfront.net/prod/addProduct",
+      "https://api.reusifi.com/prod/addProduct",
       data,
       { withCredentials: true }
     );

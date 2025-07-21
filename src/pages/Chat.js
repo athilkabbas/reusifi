@@ -220,7 +220,7 @@ const Chat = () => {
         const currentUser = await getCurrentUser();
         setUser(currentUser);
         socket = new WebSocket(
-          `wss://d33iiy9qcb0yoj.cloudfront.net/production?userId=${currentUser.userId}&productId=${productId || recipient["item"]["uuid"]}&token=${token}`
+          `wss://apichat.reusifi.com/production?userId=${currentUser.userId}&productId=${productId || recipient["item"]["uuid"]}&token=${token}`
         );
         setWs(socket);
         socket.onopen = () => {
@@ -245,7 +245,7 @@ const Chat = () => {
             ...prevValue,
           ]);
           await axios.get(
-            `https://dwo94t377z7ed.cloudfront.net/prod/getChatsRead?userId1=${
+            `https://api.reusifi.com/prod/getChatsRead?userId1=${
               encodeURIComponent(data.recipientUserId)
             }&userId2=${encodeURIComponent(data.senderUserId)}&read=${encodeURIComponent(true)}`,
             { withCredentials: true }
@@ -284,10 +284,10 @@ const Chat = () => {
       let readRes
       if (recipient && recipient["item"]["email"]) {
         [result, readRes] = await Promise.all([axios.get(
-          `https://dwo94t377z7ed.cloudfront.net/prod/getChatsConversation?userId1=${encodeURIComponent(user.userId)}&userId2=${encodeURIComponent(recipient["item"]["email"])}&productId=${encodeURIComponent(recipient["item"]["uuid"])}&lastEvaluatedKey=${encodeURIComponent(lastEvaluatedKey)}&limit=${encodeURIComponent(limit)}`,
+          `https://api.reusifi.com/prod/getChatsConversation?userId1=${encodeURIComponent(user.userId)}&userId2=${encodeURIComponent(recipient["item"]["email"])}&productId=${encodeURIComponent(recipient["item"]["uuid"])}&lastEvaluatedKey=${encodeURIComponent(lastEvaluatedKey)}&limit=${encodeURIComponent(limit)}`,
           { withCredentials: true }
         ),axios.get(
-          `https://dwo94t377z7ed.cloudfront.net/prod/getChatsRead?userId1=${
+          `https://api.reusifi.com/prod/getChatsRead?userId1=${
             encodeURIComponent(user.userId)
           }&userId2=${encodeURIComponent(recipient["item"]["email"])}&productId=${encodeURIComponent(recipient["item"]["uuid"])}&read=${encodeURIComponent(true)}`,
           { withCredentials: true }
@@ -314,10 +314,10 @@ const Chat = () => {
           }
         }
         [result, readRes] = await Promise.all([axios.get(
-          `https://dwo94t377z7ed.cloudfront.net/prod/getChatsConversation?userId1=${encodeURIComponent(user.userId)}&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(productId)}&lastEvaluatedKey=${encodeURIComponent(lastEvaluatedKey)}&limit=${encodeURIComponent(limit)}`,
+          `https://api.reusifi.com/prod/getChatsConversation?userId1=${encodeURIComponent(user.userId)}&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(productId)}&lastEvaluatedKey=${encodeURIComponent(lastEvaluatedKey)}&limit=${encodeURIComponent(limit)}`,
           { withCredentials: true }
         ),axios.get(
-          `https://dwo94t377z7ed.cloudfront.net/prod/getChatsRead?userId1=${
+          `https://api.reusifi.com/prod/getChatsRead?userId1=${
             encodeURIComponent(user.userId)
           }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(productId)}&read=${encodeURIComponent(true)}`,
           { withCredentials: true }
@@ -373,7 +373,7 @@ const Chat = () => {
         await getChats()
 
         const getChatCount = await axios.get(
-          `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,
+          `https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,
           { withCredentials: true }
         );
         setUnreadChatCount(getChatCount.data.count);

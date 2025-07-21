@@ -289,7 +289,7 @@ const ChatPage = () => {
       }
       if (clickedItemKey === "1") {
         const result = await axios.get(
-          `https://dwo94t377z7ed.cloudfront.net/prod/blockUserNew?block=${true}&userId1=${
+          `https://api.reusifi.com/prod/blockUserNew?block=${true}&userId1=${
             encodeURIComponent(user.userId)
           }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(chatData[index].productId)}`,
           { withCredentials: true }
@@ -304,7 +304,7 @@ const ChatPage = () => {
         })
       } else {
         const result = await axios.get(
-          `https://dwo94t377z7ed.cloudfront.net/prod/deleteChat?deleteChat=${true}&userId1=${
+          `https://api.reusifi.com/prod/deleteChat?deleteChat=${true}&userId1=${
             encodeURIComponent(user.userId)
           }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(chatData[index].productId)}`,
           { withCredentials: true }
@@ -349,7 +349,7 @@ const ChatPage = () => {
       }
       if (clickedItemKey === "1") {
         const result = await axios.get(
-          `https://dwo94t377z7ed.cloudfront.net/prod/unBlockUser?unBlock=${true}&userId1=${
+          `https://api.reusifi.com/prod/unBlockUser?unBlock=${true}&userId1=${
             encodeURIComponent(user.userId)
           }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(chatData[index].productId)}`,
           { withCredentials: true }
@@ -364,7 +364,7 @@ const ChatPage = () => {
         })
       } else {
         const result = await axios.get(
-          `https://dwo94t377z7ed.cloudfront.net/prod/deleteChat?deleteChat=${true}&userId1=${
+          `https://api.reusifi.com/prod/deleteChat?deleteChat=${true}&userId1=${
             encodeURIComponent(user.userId)
           }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(chatData[index].productId)}`,
           { withCredentials: true }
@@ -466,7 +466,7 @@ const ChatPage = () => {
       const scrollPosition = scrollableDivRef.current.scrollTop;
       setLoading(true);
       const result = await axios.get(
-        `https://dwo94t377z7ed.cloudfront.net/prod/getChatsNew?userId1=${encodeURIComponent(user.userId)}&lastEvaluatedKey=${encodeURIComponent(chatLastEvaluatedKey)}&limit=${encodeURIComponent(limit)}`,
+        `https://api.reusifi.com/prod/getChatsNew?userId1=${encodeURIComponent(user.userId)}&lastEvaluatedKey=${encodeURIComponent(chatLastEvaluatedKey)}&limit=${encodeURIComponent(limit)}`,
         { withCredentials: true }
       );
       setChatData([...chatData, ...result.data.items]);
@@ -507,7 +507,7 @@ useEffect(() => {
     setLoading(true);
 
     const getChatCount = axios.get(
-      `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,
+      `https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,
       { withCredentials: true }
     );
 

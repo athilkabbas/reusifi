@@ -186,12 +186,12 @@ useTokenRefresh()
 //       setLoading(true);
 
 //     const getChatCount = axios.get(
-//       `https://dwo94t377z7ed.cloudfront.net/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,
+//       `https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,
 //       { withCredentials: true }
 //     );
 
 //     const getData = axios.get(
-//           `https://dwo94t377z7ed.cloudfront.net/prod/getProductsId?id=${encodeURIComponent(item["item"]["uuid"])}`,
+//           `https://api.reusifi.com/prod/getProductsId?id=${encodeURIComponent(item["item"]["uuid"])}`,
 //           { withCredentials: true }
 //     );
 
@@ -231,7 +231,7 @@ useTokenRefresh()
       try {
         setLoading(true);
         const result = await axios.get(
-          `https://dwo94t377z7ed.cloudfront.net/prod/getProductsId?id=${encodeURIComponent(item["item"]["uuid"])}`,
+          `https://api.reusifi.com/prod/getProductsId?id=${encodeURIComponent(item["item"]["uuid"])}`,
           { withCredentials: true }
         );
         setLoading(false);
@@ -263,7 +263,7 @@ useTokenRefresh()
       setExhaustedShards({})
       setLoading(true);
       let results = await axios.get(
-        `https://dwo94t377z7ed.cloudfront.net/prod/deleteAdNew?id=${
+        `https://api.reusifi.com/prod/deleteAdNew?id=${
           encodeURIComponent(item["item"]["uuid"])
         }&thumbnailS3Keys=${encodeURIComponent(JSON.stringify(detailData[0]["item"]["thumbnailS3Keys"]))}&viewingS3Keys=${encodeURIComponent(JSON.stringify(detailData[0]["item"]["viewingS3Keys"]))}`,
         { withCredentials: true }
