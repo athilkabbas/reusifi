@@ -1,4 +1,4 @@
-import { fetchAuthSession, signOut } from "aws-amplify/auth";
+import { fetchAuthSession } from "aws-amplify/auth";
 import axios from "axios";
 
 export const callApi = async (url, method,skipRefresh = false,data) => {
@@ -16,10 +16,24 @@ export const callApi = async (url, method,skipRefresh = false,data) => {
         }
       );
     } else {
-      await signOut()
+      const error =  new Error('Session expired')
+      error.status = 401
+      throw error
     }
     }catch(err){
-        await signOut()
+      if (err?.name === "NotAuthorizedException" && err?.message?.includes("Refresh Token has expired")) {
+        const error =  new Error('Session expired')
+        error.status = 401
+        throw error
+      } 
+      else if(err?.status === 401){
+        throw err
+      }
+      else {
+          const error =  new Error('An error occurred')
+          error.status = 500
+          throw error
+      }
     }
 
   }
@@ -31,7 +45,5 @@ export const callApi = async (url, method,skipRefresh = false,data) => {
       return await axios.get(url, config);
     } else if (method === "POST") {
       return await axios.post(url, data, config);
-    } else {
-      throw new Error(`Unsupported method: ${method}`);
     }
 };

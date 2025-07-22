@@ -9,7 +9,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import { Image, Upload } from "antd";
 import { Button } from "antd";
 import axios from "axios";
-import { fetchAuthSession, getCurrentUser, signOut } from "@aws-amplify/auth";
+import { fetchAuthSession, getCurrentUser, signInWithRedirect, signOut } from "@aws-amplify/auth";
 import { Divider, List, Typography } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Skeleton, Space } from "antd";
@@ -113,7 +113,7 @@ const Chat = () => {
        maskClosable: false,
        okText: 'Login',
        onOk: async () => {
-         await signOut()
+         await signInWithRedirect()
        }
      }
          const errorConfig = {
@@ -215,18 +215,16 @@ const Chat = () => {
     let socket;
     const fetchUser = async () => {
       let token = ''
-      try {
         const session = await fetchAuthSession();
         const tokens = session.tokens;
 
         if (tokens?.idToken) {
           token = tokens.idToken
         } else {
-          await signOut()
+          const error = new Error('Session expired')
+          error.status = 401
+          throw error
         }
-      }catch(err){
-          await signOut()
-      }
       try {
 
         const currentUser = await getCurrentUser();
@@ -266,14 +264,15 @@ const Chat = () => {
           console.log("Disconnected from WebSocket");
         };
       } catch (err) {
-        // message.error("An Error has occurred")
-         if(err?.status === 401){
-        Modal.error(errorSessionConfig)
-      }
-      else{
-        Modal.error(errorConfig)
-      }
-        console.log("Error fetching user", err);
+           if (err?.name === "NotAuthorizedException" && err?.message?.includes("Refresh Token has expired")) {
+            Modal.error(errorSessionConfig)
+          } 
+          else if(err?.status === 401){
+            Modal.error(errorSessionConfig)
+          }
+          else {
+            Modal.error(errorConfig)
+          }
       }
     };
     fetchUser();

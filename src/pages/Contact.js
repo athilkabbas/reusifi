@@ -17,7 +17,7 @@ import {
   HeartFilled,
   LoadingOutlined
 } from "@ant-design/icons";
-import { getCurrentUser, signOut } from "@aws-amplify/auth";
+import { getCurrentUser, signInWithRedirect, signOut } from "@aws-amplify/auth";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
 import { callApi } from "../helpers/api";
@@ -43,7 +43,7 @@ const Contact = () => {
      maskClosable: false,
      okText: 'Login',
      onOk: async () => {
-       await signOut()
+       await signInWithRedirect()
      }
    }
     const errorConfig = {

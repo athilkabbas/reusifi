@@ -25,7 +25,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { Avatar, Divider, List, Skeleton, Empty } from "antd";
 import { Card, Badge } from "antd";
 import axios from "axios";
-import { getCurrentUser, signOut } from "@aws-amplify/auth";
+import { getCurrentUser, signInWithRedirect, signOut } from "@aws-amplify/auth";
 import debounce from "lodash/debounce";
 import { states, districts, districtMap } from "../helpers/locations";
 import { Context } from "../context/provider";
@@ -104,7 +104,7 @@ const Ads = () => {
        maskClosable: false,
        okText: 'Login',
        onOk: async () => {
-         await signOut()
+         await signInWithRedirect()
        }
      }
        const errorConfig = {

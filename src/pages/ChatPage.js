@@ -255,7 +255,7 @@ const ChatPage = () => {
       maskClosable: false,
       okText: 'Login',
       onOk: async () => {
-        await signOut()
+        await signInWithRedirect()
       }
     }
       const errorConfig = {

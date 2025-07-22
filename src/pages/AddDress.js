@@ -9,7 +9,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import { Image, Upload, Typography, message } from "antd";
 import { Button, Badge } from "antd";
 import axios from "axios";
-import { getCurrentUser, signOut } from "@aws-amplify/auth";
+import { getCurrentUser, signInWithRedirect, signOut } from "@aws-amplify/auth";
 import imageCompression from "browser-image-compression";
 import {
   HomeFilled,
@@ -96,7 +96,7 @@ const AddDress = () => {
       maskClosable: false,
       okText: 'Login',
       onOk: async () => {
-        await signOut()
+        await signInWithRedirect()
       }
     }
    const errorConfig = {
