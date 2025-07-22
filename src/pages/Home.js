@@ -469,7 +469,7 @@ const handleImageLoad = (uuid) => {
               }
             }}
             placeholder="Search"
-            style={{ width: !isMobile ? "30vw" : "60vw" , height: 'fit-content', boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)", borderRadius: "7px"}}
+            style={{ width: search ? "60vw": "90vw" , height: 'fit-content', boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)", borderRadius: "7px"}}
           />
           <Space.Compact size="large" style={{ display: "flex", flexDirection: !isMobile ? 'row' : "column" }}>
                       <Select
@@ -482,9 +482,9 @@ const handleImageLoad = (uuid) => {
             style={{
               width: !isMobile ? "20vw" : "35vw",
               boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-              borderRadius: "7px"
+              borderRadius: "7px",
+              visibility: !search ? 'hidden' : 'visible'
             }}
-            disabled={!search}
             value={location.state}
             placeholder="State"
             optionFilterProp="label"
@@ -503,8 +503,8 @@ const handleImageLoad = (uuid) => {
               showSearch
               style={{
                 width: !isMobile ? "20vw" : "35vw",
+                visibility: !search ? 'hidden' : 'visible'
               }}
-              disabled={!search}
               value={location.district}
               placeholder="District"
               optionFilterProp="label"
@@ -518,10 +518,10 @@ const handleImageLoad = (uuid) => {
           )}
           </Space.Compact>
         </Space.Compact>
-        <Space.Compact size="large" style={{ padding: "10px",display: "flex", alignItems: "center" }}>
+        <Space.Compact size="large" style={{ padding: "10px",display: "flex", alignItems: "center", visibility: !search ? 'hidden' : 'visible' }}>
           <Text strong>Price</Text>
           &nbsp; &nbsp;
-          <Radio.Group  disabled={!search} style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" }} buttonStyle="solid" onChange={onChangePriceFilter} value={priceFilter}>
+          <Radio.Group  style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" }} buttonStyle="solid" onChange={onChangePriceFilter} value={priceFilter}>
             <Radio.Button value={"LOWTOHIGH"}>Low to High</Radio.Button>
             <Radio.Button value={"HIGHTOLOW"}>High to Low</Radio.Button>
           </Radio.Group>
