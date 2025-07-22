@@ -607,7 +607,7 @@ const handleImageLoad = (uuid) => {
                                   display: loadedImages[item["item"]["uuid"]] ? "block" : "none",
                                   width: "100%",
                                   height: "200px",
-                                  objectFit: "cover",
+                                  objectFit: "contain",
                                   borderRadius: '5px'
                                 }}
                                   onLoad={() => handleImageLoad(item["item"]["uuid"])}
