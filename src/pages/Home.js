@@ -340,7 +340,7 @@ const handleImageLoad = (uuid) => {
       clearTimeout(timer.current);
     }
 
-    if(limit && initialLoad && (search || Object.values(location).some((value) => value) || priceFilter)){
+    if(limit && initialLoad && ((search &&  !/^\s*$/.test(search)) || Object.values(location).some((value) => value) || priceFilter)){
       setLoading(true)
       timer.current = setTimeout(() => {
       loadMoreData();
@@ -457,19 +457,21 @@ const handleImageLoad = (uuid) => {
             addonBefore={<SearchOutlined />}
             value={search}
             onChange={(event) => {
-              setLastEvaluatedKeys({});
-              setExhaustedShards({})
-              setData([]);
-              setInitialLoad(true);
               setSearch(event.target.value);
               if(!event.target.value){
                 setLocation({ state: null, district: null})
                 setPriceFilter(null)
                 setDistricts([])
               }
+              else if(!/^\s*$/.test(search) && event.target.value !== search){
+                setLastEvaluatedKeys({});
+                setExhaustedShards({})
+                setData([]);
+                setInitialLoad(true);
+              }
             }}
             placeholder="Search"
-            style={{ width: search ? "60vw": "90vw" , height: 'fit-content', boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)", borderRadius: "7px"}}
+            style={{ width: (search && ! /^\s*$/.test(search)) ? "60vw": "90vw" , height: 'fit-content', boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)", borderRadius: "7px"}}
           />
           <Space.Compact size="large" style={{ display: "flex", flexDirection: !isMobile ? 'row' : "column" }}>
                       <Select
@@ -483,7 +485,7 @@ const handleImageLoad = (uuid) => {
               width: !isMobile ? "20vw" : "35vw",
               boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
               borderRadius: "7px",
-              visibility: !search ? 'hidden' : 'visible'
+              visibility: (!search ||  /^\s*$/.test(search)) ? 'hidden' : 'visible'
             }}
             value={location.state}
             placeholder="State"
@@ -503,7 +505,7 @@ const handleImageLoad = (uuid) => {
               showSearch
               style={{
                 width: !isMobile ? "20vw" : "35vw",
-                visibility: !search ? 'hidden' : 'visible'
+                visibility: (!search ||  /^\s*$/.test(search)) ? 'hidden' : 'visible'
               }}
               value={location.district}
               placeholder="District"
@@ -518,7 +520,7 @@ const handleImageLoad = (uuid) => {
           )}
           </Space.Compact>
         </Space.Compact>
-        <Space.Compact size="large" style={{ padding: "10px",display: "flex", alignItems: "center", visibility: !search ? 'hidden' : 'visible' }}>
+        <Space.Compact size="large" style={{ padding: "10px",display: "flex", alignItems: "center", visibility: (!search ||  /^\s*$/.test(search)) ? 'hidden' : 'visible' }}>
           <Text strong>Price</Text>
           &nbsp; &nbsp;
           <Radio.Group  style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" }} buttonStyle="solid" onChange={onChangePriceFilter} value={priceFilter}>
