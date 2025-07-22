@@ -343,8 +343,46 @@ const { Text, Link } = Typography;
       {detailData[0].hiResImg.map((img, i) => (
         <Image alt={detailData[0]["item"]["title"]} key={`hidden-${i}`} src={img} style={{ display: "none" }} />
       ))}
-
-      <Carousel
+      {
+        detailData[0].hiResImg.length === 1 ? (detailData[0].hiResImg.map((img, i) => (
+          <div
+            key={i}
+            style={{ width: "100%", height: "100%", cursor: "pointer" }}
+            onClick={() => {
+              setPreviewIndex(i);
+              setPreviewVisible(true);
+            }}
+          >
+            {!loadedImages[i] && (
+              <div
+                style={{
+                  width: "100%",
+                  height: "400px",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundColor: "#f0f0f0",
+                }}
+              >
+                <Spin indicator={<LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />} />
+              </div>
+            )}
+            <Image
+              preview={false} // Disable built-in preview to avoid duplicates
+              src={img}
+              alt={detailData[0]["item"]["title"]}
+              style={{
+                borderRadius: '12px',
+                display: loadedImages[i] ? "block" : "none",
+                width: "100%",
+                height: "400px",
+                objectFit: "contain",
+              }}
+              onLoad={() => handleLoad(i)}
+              onError={() => handleLoad(i)}
+            />
+          </div>
+        ))): (      <Carousel
         arrows
         style={{
           borderRadius: '12px',
@@ -392,7 +430,9 @@ const { Text, Link } = Typography;
             />
           </div>
         ))}
-      </Carousel>
+      </Carousel>)
+      }
+
     </Image.PreviewGroup>
 
             </Space.Compact>

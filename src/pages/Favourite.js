@@ -440,7 +440,7 @@ const Favourites = () => {
                             });
                           }}
                           cover={
-                              <div key={item["item"]["uuid"]} style={{ width: "100%", height: "100%" }}>
+                              <div key={item["item"]["uuid"]} style={{ width: "100%", height: "100%",display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                               {!loadedImages[item["item"]["uuid"]] && (
                                 <div
                                   style={{
@@ -464,9 +464,8 @@ const Favourites = () => {
                                 alt={item["item"]["title"]}
                                 style={{
                                   display: loadedImages[item["item"]["uuid"]] ? "block" : "none",
-                                  width: "100%",
                                   height: "200px",
-                                  objectFit: "cover",
+                                  objectFit: "contain",
                                   borderRadius: '5px'
                                 }}
                                   onLoad={() => handleImageLoad(item["item"]["uuid"])}
