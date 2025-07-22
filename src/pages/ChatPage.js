@@ -149,7 +149,7 @@ const ChatPage = () => {
                 const itemHeight = 170; // adjust if needed
                 const rowsVisible = Math.ceil(viewportHeight / itemHeight);
                 const columns = getColumnCount(); // depending on screen size (see below)
-                return rowsVisible * 2;
+                return rowsVisible * 8;
               };
               
               const getColumnCount = () => {

@@ -147,7 +147,7 @@ const Home = () => {
   const itemHeight = 300; // adjust if needed
   const rowsVisible = Math.ceil(viewportHeight / itemHeight);
   const columns = getColumnCount(); // depending on screen size (see below)
-  return rowsVisible * columns * 2;
+  return rowsVisible * columns * 8;
 };
 
 const getColumnCount = () => {
