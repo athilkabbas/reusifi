@@ -31,7 +31,7 @@ import debounce from "lodash/debounce";
 import { states, districts, districtMap } from "../helpers/locations";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
-import { useTokenRefresh } from "../hooks/refreshToken";
+import { callApi } from "../helpers/api";
 const IconText = [
   "Home",
   "Upload",
@@ -136,8 +136,8 @@ const Favourites = () => {
     closable: false,
     maskClosable: false,
     okText: 'Login',
-    onOk: () => {
-      signOut()
+    onOk: async () => {
+      await signOut()
     }
   }
   const errorConfig = {
@@ -195,7 +195,6 @@ const Favourites = () => {
   const handleImageLoad = (uuid) => {
     setLoadedImages((prev) => ({ ...prev, [uuid]: true }));
   };
-useTokenRefresh()
 
     useEffect(() => {
       const getUser = async () => {
@@ -228,16 +227,10 @@ useTokenRefresh()
           setFavScrollPosition(scrollableDivRef.current.scrollTop);
     setHandleFavLoading(true);
     if(favourite){
-        const results = await axios.get(
-      `https://api.reusifi.com/prod/getFavouritesAdd?id=${encodeURIComponent(id)}&favourite=${encodeURIComponent(favourite)}&email=${encodeURIComponent(user.userId)}`,
-      { withCredentials: true }
-    );
+      const results = await callApi( `https://api.reusifi.com/prod/getFavouritesAdd?id=${encodeURIComponent(id)}&favourite=${encodeURIComponent(favourite)}&email=${encodeURIComponent(user.userId)}`,'GET')
     }
     else{
-          const results = await axios.get(
-      `https://api.reusifi.com/prod/getFavouritesRemove?id=${encodeURIComponent(id)}&favourite=${encodeURIComponent(favourite)}&email=${encodeURIComponent(user.userId)}`,
-      { withCredentials: true }
-    );
+      const results = await callApi( `https://api.reusifi.com/prod/getFavouritesRemove?id=${encodeURIComponent(id)}&favourite=${encodeURIComponent(favourite)}&email=${encodeURIComponent(user.userId)}`,'GET')
     }
     if (!favourite) {
       setFilterList((prevValue) => {
@@ -271,15 +264,11 @@ useTokenRefresh()
       const scrollPosition = scrollableDivRef.current.scrollTop;
       setLoading(true);
       let results;
-
-      results = await axios.get(
-        `https://api.reusifi.com/prod/getFavouritesEmail?email=${
+      results = await callApi( `https://api.reusifi.com/prod/getFavouritesEmail?email=${
           encodeURIComponent(user.userId)
         }&limit=${encodeURIComponent(limit)}&lastEvaluatedKey=${encodeURIComponent(JSON.stringify(
           favLastEvaluatedKey
-        ))}`,
-        { withCredentials: true }
-      );
+        ))}`,'GET')
       setFavLastEvaluatedKey(results.data.lastEvaluatedKey);
       if (!results.data.lastEvaluatedKey) {
         setFavHasMore(false);
@@ -311,16 +300,12 @@ useTokenRefresh()
   };
 
     useEffect(() => {
-  if (user && favInitialLoad && token && limit) {
+  if (user && favInitialLoad && limit) {
     try{
           setChatLoading(true);
     setFavLoading(true);
     setLoading(true);
-
-    const getChatCount = axios.get(
-      `https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,
-      { withCredentials: true }
-    );
+    const getChatCount = callApi( `https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,'GET')
 
     const loadMoreDataPromise = loadMoreData();
 
@@ -352,10 +337,10 @@ useTokenRefresh()
       }
     }
   }
-}, [user, token, favInitialLoad, limit]);
+}, [user, favInitialLoad, limit]);
 
   const navigate = useNavigate();
-  const handleNavigation = (event) => {
+  const handleNavigation = async (event) => {
     switch (event.key) {
       case "1":
         navigate("/");
@@ -376,7 +361,7 @@ useTokenRefresh()
         navigate("/favourite");
         break;
       case "7":
-        signOut();
+        await signOut();
         break;
     }
   };

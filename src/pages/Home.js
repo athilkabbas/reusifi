@@ -31,7 +31,7 @@ import debounce from "lodash/debounce";
 import { states, districts, districtMap } from "../helpers/locations";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
-import { useTokenRefresh } from "../hooks/refreshToken";
+import { callApi } from "../helpers/api";
 const IconText = [
   "Home",
   "Upload",
@@ -166,8 +166,8 @@ const errorSessionConfig = {
   closable: false,
   maskClosable: false,
   okText: 'Login',
-  onOk: () => {
-    signOut()
+  onOk: async () => {
+    await signOut()
   }
 }
 const errorConfig = {
@@ -205,7 +205,6 @@ const handleImageLoad = (uuid) => {
   setLoadedImages((prev) => ({ ...prev, [uuid]: true }));
 };
 
-useTokenRefresh()
 // useEffect(() => {
 //   if (scrollableDivRef.current && !chatLoading && !favLoading && !handleFavLoading && !loading) {
 //     const el = scrollableDivRef.current;
@@ -255,16 +254,10 @@ useTokenRefresh()
     // setFavInitialLoad(true);
     setHandleFavLoading(true);
     if(favourite){
-       const results = await axios.get(
-      `https://api.reusifi.com/prod/getFavouritesAdd?id=${encodeURIComponent(selectedItem["item"]["uuid"])}&favourite=${encodeURIComponent(favourite)}&email=${encodeURIComponent(user.userId)}`,
-      { withCredentials: true }
-    );
+      const results = await callApi( `https://api.reusifi.com/prod/getFavouritesAdd?id=${encodeURIComponent(selectedItem["item"]["uuid"])}&favourite=${encodeURIComponent(favourite)}&email=${encodeURIComponent(user.userId)}`,'GET')
     }
     else{
-          const results = await axios.get(
-      `https://api.reusifi.com/prod/getFavouritesRemove?id=${encodeURIComponent(selectedItem["item"]["uuid"])}&favourite=${encodeURIComponent(favourite)}&email=${encodeURIComponent(user.userId)}`,
-      { withCredentials: true }
-    );
+      const results = await callApi( `https://api.reusifi.com/prod/getFavouritesRemove?id=${encodeURIComponent(selectedItem["item"]["uuid"])}&favourite=${encodeURIComponent(favourite)}&email=${encodeURIComponent(user.userId)}`,'GET')
     }
     if (!favourite) {
       setFilterList((prevValue) => {
@@ -299,14 +292,11 @@ useTokenRefresh()
       setLoading(true);
       let results;
       if (search) {
-        results = await axios.get(
-          `https://api.reusifi.com/prod/getProductsSearch?limit=${encodeURIComponent(limit)}&lastEvaluatedKeys=${encodeURIComponent(JSON.stringify(
+        results = await callApi(`https://api.reusifi.com/prod/getProductsSearch?limit=${encodeURIComponent(limit)}&lastEvaluatedKeys=${encodeURIComponent(JSON.stringify(
             lastEvaluatedKeys
           ))}&exhaustedShards=${encodeURIComponent(JSON.stringify(exhaustedShards))}&search=${encodeURIComponent(search.trim())}&location=${encodeURIComponent(JSON.stringify(
             location
-          ))}&priceFilter=${encodeURIComponent(priceFilter)}`,
-          { withCredentials: true }
-        );
+          ))}&priceFilter=${encodeURIComponent(priceFilter)}`,'GET')
         setLastEvaluatedKeys(results.data.lastEvaluatedKeys);
         setExhaustedShards(results.data.exhaustedShards)
         if (results.data.hasMore) {
@@ -315,12 +305,9 @@ useTokenRefresh()
           setHasMore(false);
         }
       } else {
-        results = await axios.get(
-          `https://api.reusifi.com/prod/getProducts?limit=${encodeURIComponent(limit)}&lastEvaluatedKeys=${encodeURIComponent(JSON.stringify(
+        results = await callApi(`https://api.reusifi.com/prod/getProducts?limit=${encodeURIComponent(limit)}&lastEvaluatedKeys=${encodeURIComponent(JSON.stringify(
             lastEvaluatedKeys
-          ))}&location=${encodeURIComponent(JSON.stringify(location))}&exhaustedShards=${encodeURIComponent(JSON.stringify(exhaustedShards))}&priceFilter=${encodeURIComponent(priceFilter)}`,
-          { withCredentials: true }
-        );
+          ))}&location=${encodeURIComponent(JSON.stringify(location))}&exhaustedShards=${encodeURIComponent(JSON.stringify(exhaustedShards))}&priceFilter=${encodeURIComponent(priceFilter)}`,'GET')
         setLastEvaluatedKeys(results.data.lastEvaluatedKeys);
         setExhaustedShards(results.data.exhaustedShards)
         if (results.data.hasMore) {
@@ -332,10 +319,7 @@ useTokenRefresh()
       const notUserData = results.data.finalResult.filter((item) => user.userId !== item["item"]["email"])
       setData([...data, ...notUserData]);
       const favList = notUserData.map((item) => item["item"]["uuid"])
-      const favResult = await axios.get(
-      `https://api.reusifi.com/prod/getFavouritesList?email=${encodeURIComponent(user.userId)}&favList=${encodeURIComponent(JSON.stringify(favList))}`,
-      { withCredentials: true }
-      );
+      const favResult = await callApi(`https://api.reusifi.com/prod/getFavouritesList?email=${encodeURIComponent(user.userId)}&favList=${encodeURIComponent(JSON.stringify(favList))}`, 'GET',true)
       setFilterList([...filterList, ...favResult.data.finalResult]);
       setLoading(false);
       setScrollPosition(scrollPosition);
@@ -356,7 +340,7 @@ useTokenRefresh()
       clearTimeout(timer.current);
     }
 
-    if(token && limit && initialLoad && (search || Object.values(location).some((value) => value) || priceFilter)){
+    if(limit && initialLoad && (search || Object.values(location).some((value) => value) || priceFilter)){
       setLoading(true)
       timer.current = setTimeout(() => {
       loadMoreData();
@@ -367,19 +351,15 @@ useTokenRefresh()
         clearTimeout(timer.current);
       }
     };
-  }, [search, location, priceFilter,token,limit]);
+  }, [search, location, priceFilter,limit]);
 
   useEffect(() => {
-  if (user && initialLoad && token && limit && !search) {
+  if (user && initialLoad && limit && !search) {
     try{
     setChatLoading(true);
     setFavLoading(true);
     setLoading(true);
-
-    const getChatCount = axios.get(
-      `https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,
-      { withCredentials: true }
-    );
+      const getChatCount = callApi(`https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,'GET')
     const loadMoreDataPromise =  loadMoreData();
 
     Promise.all([getChatCount, loadMoreDataPromise])
@@ -410,11 +390,11 @@ useTokenRefresh()
       }
     }
   }
-}, [user, token, initialLoad, limit, search]);
+}, [user, initialLoad, limit, search]);
 
 
   const navigate = useNavigate();
-  const handleNavigation = (event) => {
+  const handleNavigation = async (event) => {
     setScrollPosition(scrollableDivRef.current.scrollTop);
     switch (event.key) {
       case "1":
@@ -436,7 +416,7 @@ useTokenRefresh()
         navigate("/favourite");
         break;
       case "7":
-        signOut();
+        await signOut();
         break;
     }
   };

@@ -9,7 +9,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import { Image, Upload } from "antd";
 import { Button } from "antd";
 import axios from "axios";
-import { getCurrentUser, signOut } from "@aws-amplify/auth";
+import { fetchAuthSession, getCurrentUser, signOut } from "@aws-amplify/auth";
 import { Divider, List, Typography } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Skeleton, Space } from "antd";
@@ -28,9 +28,8 @@ import {
   LoadingOutlined
 } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
-import testSpeed from "../helpers/internetSpeed";
 import { useIsMobile } from "../hooks/windowSize";
-import { useTokenRefresh } from "../hooks/refreshToken";
+import { callApi } from "../helpers/api";
 const { TextArea } = Input;
 const IconText = [
   "Home",
@@ -106,7 +105,6 @@ const Chat = () => {
     token
   } = useContext(Context);
   const [chatLoading, setChatLoading] = useState(false);
-  useTokenRefresh()
    
      const errorSessionConfig = {
        title: 'Session has expired.',
@@ -114,8 +112,8 @@ const Chat = () => {
        closable: false,
        maskClosable: false,
        okText: 'Login',
-       onOk: () => {
-         signOut()
+       onOk: async () => {
+         await signOut()
        }
      }
          const errorConfig = {
@@ -216,9 +214,24 @@ const Chat = () => {
   useEffect(() => {
     let socket;
     const fetchUser = async () => {
+      let token = ''
       try {
+        const session = await fetchAuthSession();
+        const tokens = session.tokens;
+
+        if (tokens?.idToken) {
+          token = tokens.idToken
+        } else {
+          await signOut()
+        }
+      }catch(err){
+          await signOut()
+      }
+      try {
+
         const currentUser = await getCurrentUser();
         setUser(currentUser);
+
         socket = new WebSocket(
           `wss://apichat.reusifi.com/production?userId=${currentUser.userId}&productId=${productId || recipient["item"]["uuid"]}&token=${token}`
         );
@@ -244,12 +257,9 @@ const Chat = () => {
             },
             ...prevValue,
           ]);
-          await axios.get(
-            `https://api.reusifi.com/prod/getChatsRead?userId1=${
+          await callApi(`https://api.reusifi.com/prod/getChatsRead?userId1=${
               encodeURIComponent(data.recipientUserId)
-            }&userId2=${encodeURIComponent(data.senderUserId)}&read=${encodeURIComponent(true)}`,
-            { withCredentials: true }
-          );
+            }&userId2=${encodeURIComponent(data.senderUserId)}&read=${encodeURIComponent(true)}`,'GET')
         };
         // To close the connection
         socket.onclose = () => {
@@ -266,15 +276,13 @@ const Chat = () => {
         console.log("Error fetching user", err);
       }
     };
-    if(token){
-      fetchUser();
-    }
+    fetchUser();
     return () => {
       if(socket){
         socket.close();
       }
     };
-  }, [reconnect,token]);
+  }, [reconnect]);
 
   const getChats = async () => {
     try {
@@ -283,14 +291,12 @@ const Chat = () => {
       let result;
       let readRes
       if (recipient && recipient["item"]["email"]) {
-        [result, readRes] = await Promise.all([axios.get(
-          `https://api.reusifi.com/prod/getChatsConversation?userId1=${encodeURIComponent(user.userId)}&userId2=${encodeURIComponent(recipient["item"]["email"])}&productId=${encodeURIComponent(recipient["item"]["uuid"])}&lastEvaluatedKey=${encodeURIComponent(lastEvaluatedKey)}&limit=${encodeURIComponent(limit)}`,
-          { withCredentials: true }
-        ),axios.get(
+        [result, readRes] = await Promise.all([callApi(
+          `https://api.reusifi.com/prod/getChatsConversation?userId1=${encodeURIComponent(user.userId)}&userId2=${encodeURIComponent(recipient["item"]["email"])}&productId=${encodeURIComponent(recipient["item"]["uuid"])}&lastEvaluatedKey=${encodeURIComponent(lastEvaluatedKey)}&limit=${encodeURIComponent(limit)}`,'GET'
+        ),callApi(
           `https://api.reusifi.com/prod/getChatsRead?userId1=${
             encodeURIComponent(user.userId)
-          }&userId2=${encodeURIComponent(recipient["item"]["email"])}&productId=${encodeURIComponent(recipient["item"]["uuid"])}&read=${encodeURIComponent(true)}`,
-          { withCredentials: true }
+          }&userId2=${encodeURIComponent(recipient["item"]["email"])}&productId=${encodeURIComponent(recipient["item"]["uuid"])}&read=${encodeURIComponent(true)}`,'GET'
         )])
         setChatData((chatData) => {
           return chatData.map((item) => {
@@ -313,14 +319,12 @@ const Chat = () => {
             break;
           }
         }
-        [result, readRes] = await Promise.all([axios.get(
-          `https://api.reusifi.com/prod/getChatsConversation?userId1=${encodeURIComponent(user.userId)}&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(productId)}&lastEvaluatedKey=${encodeURIComponent(lastEvaluatedKey)}&limit=${encodeURIComponent(limit)}`,
-          { withCredentials: true }
-        ),axios.get(
+        [result, readRes] = await Promise.all([callApi(
+          `https://api.reusifi.com/prod/getChatsConversation?userId1=${encodeURIComponent(user.userId)}&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(productId)}&lastEvaluatedKey=${encodeURIComponent(lastEvaluatedKey)}&limit=${encodeURIComponent(limit)}`,'GET'
+        ),callApi(
           `https://api.reusifi.com/prod/getChatsRead?userId1=${
             encodeURIComponent(user.userId)
-          }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(productId)}&read=${encodeURIComponent(true)}`,
-          { withCredentials: true }
+          }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(productId)}&read=${encodeURIComponent(true)}`,'GET'
         )])
         setChatData((chatData) => {
           return chatData.map((item) => {
@@ -371,11 +375,7 @@ const Chat = () => {
         setLoading(true);
         
         await getChats()
-
-        const getChatCount = await axios.get(
-          `https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,
-          { withCredentials: true }
-        );
+        const getChatCount = await callApi(`https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,'GET')
         setUnreadChatCount(getChatCount.data.count);
         setChatLoading(false);
         setLoading(false);
@@ -389,10 +389,10 @@ const Chat = () => {
       }
     }
     }
-    if (user && user.userId && token && limit && ((recipient && recipient["item"]["email"]) || conversationId)) {
+    if (user && user.userId && limit && ((recipient && recipient["item"]["email"]) || conversationId)) {
         getChatsAndCount()
     }
-}, [user, token,limit,conversationId,recipient]);
+}, [user,limit,conversationId,recipient]);
 
   // useEffect(() => {
   //   if (
@@ -404,7 +404,7 @@ const Chat = () => {
   //   }
   // }, [user, recipient, conversationId,token,limit]);
 
-  const handleNavigation = (event) => {
+  const handleNavigation = async (event) => {
     switch (event.key) {
       case "1":
         navigate("/");
@@ -425,7 +425,7 @@ const Chat = () => {
         navigate("/favourite");
         break;
       case "7":
-        signOut();
+        await signOut();
         break;
     }
   };

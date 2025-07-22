@@ -33,7 +33,7 @@ import {
 } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
 import { useIsMobile } from "../hooks/windowSize";
-import { useTokenRefresh } from "../hooks/refreshToken";
+import { callApi } from "../helpers/api";
 const { TextArea } = Input;
 const IconText = [
   "Home",
@@ -79,7 +79,7 @@ const ChatPage = () => {
   const [loading, setLoading] = useState(false);
   
   const scrollableDivRef = useRef(null);
-  const handleNavigation = (event) => {
+  const handleNavigation = async (event) => {
     setChatScrollPosition(scrollableDivRef.current.scrollTop);
     switch (event.key) {
       case "1":
@@ -101,7 +101,7 @@ const ChatPage = () => {
         navigate("/favourite");
         break;
       case "7":
-        signOut();
+        await signOut();
         break;
     }
   };
@@ -143,7 +143,6 @@ const ChatPage = () => {
 
     const isMobile = useIsMobile()
 
-    useTokenRefresh()
 
           const calculateLimit = () => {
                 const viewportHeight = window.innerHeight;
@@ -255,8 +254,8 @@ const ChatPage = () => {
       closable: false,
       maskClosable: false,
       okText: 'Login',
-      onOk: () => {
-        signInWithRedirect()
+      onOk: async () => {
+        await signOut()
       }
     }
       const errorConfig = {
@@ -288,12 +287,9 @@ const ChatPage = () => {
         }
       }
       if (clickedItemKey === "1") {
-        const result = await axios.get(
-          `https://api.reusifi.com/prod/blockUserNew?block=${true}&userId1=${
+        const result = await callApi(`https://api.reusifi.com/prod/blockUserNew?block=${true}&userId1=${
             encodeURIComponent(user.userId)
-          }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(chatData[index].productId)}`,
-          { withCredentials: true }
-        );
+          }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(chatData[index].productId)}`,'GET')
         setChatData((prevValue) => {
           return prevValue.map((item) => {
               if(item.conversationId === chatData[index].conversationId){
@@ -303,12 +299,9 @@ const ChatPage = () => {
           })
         })
       } else {
-        const result = await axios.get(
-          `https://api.reusifi.com/prod/deleteChat?deleteChat=${true}&userId1=${
+        const result = await callApi(`https://api.reusifi.com/prod/deleteChat?deleteChat=${true}&userId1=${
             encodeURIComponent(user.userId)
-          }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(chatData[index].productId)}`,
-          { withCredentials: true }
-        );
+          }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(chatData[index].productId)}`,'GET')
         setChatData((prevValue) => {
           return prevValue.map((item) => {
               if(item.conversationId === chatData[index].conversationId){
@@ -348,12 +341,9 @@ const ChatPage = () => {
         }
       }
       if (clickedItemKey === "1") {
-        const result = await axios.get(
-          `https://api.reusifi.com/prod/unBlockUser?unBlock=${true}&userId1=${
+        const result = await callApi(`https://api.reusifi.com/prod/unBlockUser?unBlock=${true}&userId1=${
             encodeURIComponent(user.userId)
-          }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(chatData[index].productId)}`,
-          { withCredentials: true }
-        );
+          }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(chatData[index].productId)}`,'GET')
         setChatData((prevValue) => {
           return prevValue.map((item) => {
               if(item.conversationId === chatData[index].conversationId){
@@ -363,12 +353,9 @@ const ChatPage = () => {
           })
         })
       } else {
-        const result = await axios.get(
-          `https://api.reusifi.com/prod/deleteChat?deleteChat=${true}&userId1=${
+        const result = await callApi(`https://api.reusifi.com/prod/deleteChat?deleteChat=${true}&userId1=${
             encodeURIComponent(user.userId)
-          }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(chatData[index].productId)}`,
-          { withCredentials: true }
-        );
+          }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(chatData[index].productId)}`,'GET')
         setChatData((prevValue) => {
           return prevValue.map((item) => {
               if(item.conversationId === chatData[index].conversationId){
@@ -465,10 +452,7 @@ const ChatPage = () => {
     try {
       const scrollPosition = scrollableDivRef.current.scrollTop;
       setLoading(true);
-      const result = await axios.get(
-        `https://api.reusifi.com/prod/getChatsNew?userId1=${encodeURIComponent(user.userId)}&lastEvaluatedKey=${encodeURIComponent(chatLastEvaluatedKey)}&limit=${encodeURIComponent(limit)}`,
-        { withCredentials: true }
-      );
+      const result = await callApi(`https://api.reusifi.com/prod/getChatsNew?userId1=${encodeURIComponent(user.userId)}&lastEvaluatedKey=${encodeURIComponent(chatLastEvaluatedKey)}&limit=${encodeURIComponent(limit)}`,'GET')
       setChatData([...chatData, ...result.data.items]);
       setChatLastEvaluatedKey(result.data.lastEvaluatedKey);
       // If no more data to load, set hasMore to false
@@ -501,15 +485,11 @@ const ChatPage = () => {
   }, []);
 
 useEffect(() => {
-  if (user && user.userId && chatInitialLoad && token && limit) {
+  if (user && user.userId && chatInitialLoad && limit) {
     try{
     setChatLoading(true);
     setLoading(true);
-
-    const getChatCount = axios.get(
-      `https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,
-      { withCredentials: true }
-    );
+      const getChatCount = callApi(`https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,'GET')
 
     const getChatsPromise = getChats()
 
@@ -542,7 +522,7 @@ useEffect(() => {
       }
     }
   }
-}, [user, token, chatInitialLoad,limit]);
+}, [user, chatInitialLoad,limit]);
 
   return (
     <Layout style={{ height: "100dvh", overflow: "hidden" }}>

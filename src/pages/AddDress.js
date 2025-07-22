@@ -25,7 +25,7 @@ import {
 } from "@ant-design/icons";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
-import { useTokenRefresh } from "../hooks/refreshToken";
+import { callApi } from "../helpers/api";
 const { Text, Link } = Typography;
 const { TextArea } = Input;
 const IconText = [
@@ -95,8 +95,8 @@ const AddDress = () => {
       closable: false,
       maskClosable: false,
       okText: 'Login',
-      onOk: () => {
-        signOut()
+      onOk: async () => {
+        await signOut()
       }
     }
    const errorConfig = {
@@ -110,7 +110,6 @@ const AddDress = () => {
   }
 }
 
-    useTokenRefresh()
     useEffect(() => {
       const getUser = async () => {
           let currentUser = await getCurrentUser();
@@ -123,22 +122,15 @@ const AddDress = () => {
     },[])
 
       useEffect(() => {
-  if (user && addProductInitialLoad && token) {
+  if (user && addProductInitialLoad) {
     try{
           setChatLoading(true);
     setLoading(true);
+      const getChatCount = callApi(`https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,'GET')
 
-    const getChatCount = axios.get(
-      `https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,
-      { withCredentials: true }
-    );
-
-    const getAdCount = axios.get(
-          `https://api.reusifi.com/prod/getProductsCount?count=${true}&email=${
+      const getAdCount = callApi( `https://api.reusifi.com/prod/getProductsCount?count=${true}&email=${
             encodeURIComponent(user.userId)
-          }`,
-          { withCredentials: true }
-        );
+          }`,'GET')
 
 
     Promise.all([getChatCount, getAdCount])
@@ -170,7 +162,7 @@ const AddDress = () => {
       }
     }
   }
-}, [user, token, addProductInitialLoad]);
+}, [user, addProductInitialLoad]);
 
   const [districts, setDistricts] = useState([]);
   const handleChange = (value, type) => {
@@ -223,7 +215,7 @@ const AddDress = () => {
     };
   });
   const navigate = useNavigate();
-  const handleNavigation = (event) => {
+  const handleNavigation = async (event) => {
     switch (event.key) {
       case "1":
         navigate("/");
@@ -244,7 +236,7 @@ const AddDress = () => {
         navigate("/favourite");
         break;
       case "7":
-        signOut();
+        await signOut();
         break;
     }
   };
@@ -322,13 +314,9 @@ const handleSubmit = async () => {
     );
 
     const allCompressed = [...compressedThumbnails, ...compressedViewings];
-
-    const urlRes = await axios.get(
-      `https://api.reusifi.com/prod/getUrlNew?email=${encodeURIComponent(
+    const urlRes = await callApi(`https://api.reusifi.com/prod/getUrlNew?email=${encodeURIComponent(
         form.email
-      )}&contentType=${encodeURIComponent('image/webp')}&count=${allCompressed.length}`
-    );
-
+      )}&contentType=${encodeURIComponent('image/webp')}&count=${allCompressed.length}`,'GET')
     const uploadURLs = urlRes.data.uploadURLs;
     const s3Keys = urlRes.data.s3Keys;
 
@@ -357,12 +345,7 @@ const handleSubmit = async () => {
       thumbnailS3Keys,
       viewingS3Keys,
     };
-
-    await axios.post(
-      "https://api.reusifi.com/prod/addProduct",
-      data,
-      { withCredentials: true }
-    );
+    await callApi("https://api.reusifi.com/prod/addProduct",'POST',false,data)
     setCount((prevValue) => prevValue + 1)
     setAdData([])
     setAdLastEvaluatedKey(null)

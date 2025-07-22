@@ -26,7 +26,7 @@ import {
 import { getCurrentUser, signOut } from "@aws-amplify/auth";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
-import { useTokenRefresh } from "../hooks/refreshToken";
+import { callApi } from "../helpers/api";
 const IconText = [
   "Home",
   "Upload",
@@ -48,7 +48,7 @@ const Details = () => {
   const [chatLoading, setChatLoading] = useState(false);
   const [imageLoad, setImageLoad] = useState(false)
   const navigate = useNavigate();
-  const handleNavigation = (event) => {
+  const handleNavigation = async (event) => {
     switch (event.key) {
       case "1":
         navigate("/");
@@ -69,7 +69,7 @@ const Details = () => {
         navigate("/favourite");
         break;
       case "7":
-        signOut();
+        await signOut();
         break;
     }
   };
@@ -107,8 +107,8 @@ const Details = () => {
       closable: false,
       maskClosable: false,
       okText: 'Login',
-      onOk: () => {
-        signOut()
+      onOk: async () => {
+        await signOut()
       }
     }
     const errorConfig = {
@@ -132,7 +132,6 @@ const infoConfig = {
   }
 }
 const { Text, Link } = Typography;
-useTokenRefresh()
 
     const items = [
     HomeFilled,
@@ -230,10 +229,7 @@ useTokenRefresh()
     const getData = async () => {
       try {
         setLoading(true);
-        const result = await axios.get(
-          `https://api.reusifi.com/prod/getProductsId?id=${encodeURIComponent(item["item"]["uuid"])}`,
-          { withCredentials: true }
-        );
+        const result = await callApi(`https://api.reusifi.com/prod/getProductsId?id=${encodeURIComponent(item["item"]["uuid"])}`,'GET')
         setLoading(false);
         setDetailData(result.data)
         if(result.data.length === 0){
@@ -250,24 +246,17 @@ useTokenRefresh()
         console.log(err);
       }
     };
-    if (item && token) {
+    if (item) {
       getData();
     }
-  }, [item, token]);
+  }, [item]);
 
   const handleDelete = async () => {
     try {
-      setData([]);
-      setInitialLoad(true);
-      setLastEvaluatedKeys({});
-      setExhaustedShards({})
       setLoading(true);
-      let results = await axios.get(
-        `https://api.reusifi.com/prod/deleteAdNew?id=${
+      let result = await callApi(`https://api.reusifi.com/prod/deleteAdNew?id=${
           encodeURIComponent(item["item"]["uuid"])
-        }&thumbnailS3Keys=${encodeURIComponent(JSON.stringify(detailData[0]["item"]["thumbnailS3Keys"]))}&viewingS3Keys=${encodeURIComponent(JSON.stringify(detailData[0]["item"]["viewingS3Keys"]))}`,
-        { withCredentials: true }
-      );
+        }&thumbnailS3Keys=${encodeURIComponent(JSON.stringify(detailData[0]["item"]["thumbnailS3Keys"]))}&viewingS3Keys=${encodeURIComponent(JSON.stringify(detailData[0]["item"]["viewingS3Keys"]))}`,'GET')
       setCount((prevCount) => prevCount - 1)
       setAdData((prevValue) => {
         return prevValue.filter((value) => {

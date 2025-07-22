@@ -20,7 +20,7 @@ import {
 import { getCurrentUser, signOut } from "@aws-amplify/auth";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
-import { useTokenRefresh } from "../hooks/refreshToken";
+import { callApi } from "../helpers/api";
 const IconText = [
   "Home",
   "Upload",
@@ -42,8 +42,8 @@ const Contact = () => {
      closable: false,
      maskClosable: false,
      okText: 'Login',
-     onOk: () => {
-       signOut()
+     onOk: async () => {
+       await signOut()
      }
    }
     const errorConfig = {
@@ -57,7 +57,7 @@ const Contact = () => {
   }
 }
   const [loading, setLoading] = useState(false);
-  const handleNavigation = (event) => {
+  const handleNavigation = async (event) => {
     switch (event.key) {
       case "1":
         navigate("/");
@@ -78,7 +78,7 @@ const Contact = () => {
         navigate("/favourite");
         break;
       case "7":
-        signOut();
+        await signOut();
         break;
     }
   };
@@ -110,18 +110,14 @@ const Contact = () => {
     token
   } = useContext(Context);
 
-  useTokenRefresh()
   useEffect(() => {
     const getChatCount = async () => {
       try {
         setLoading(true);
         const currentUser = await getCurrentUser();
-        const result = await axios.get(
-          `https://api.reusifi.com/prod/getChatsCount?userId1=${
+        const result = await callApi(`https://api.reusifi.com/prod/getChatsCount?userId1=${
             encodeURIComponent(currentUser.userId)
-          }&count=${encodeURIComponent(true)}`,
-          { withCredentials: true }
-        );
+          }&count=${encodeURIComponent(true)}`,'GET')
         setUnreadChatCount(result.data.count);
         setLoading(false);
         setContactInitialLoad(false)
@@ -136,10 +132,10 @@ const Contact = () => {
         console.log(err);
       }
     };
-    if(contactInitialLoad && token){
+    if(contactInitialLoad){
         getChatCount();
     }
-  }, [contactInitialLoad, token]);
+  }, [contactInitialLoad]);
 
     const items = [
     HomeFilled,

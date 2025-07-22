@@ -30,7 +30,7 @@ import debounce from "lodash/debounce";
 import { states, districts, districtMap } from "../helpers/locations";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
-import { useTokenRefresh } from "../hooks/refreshToken";
+import { callApi } from "../helpers/api";
 const IconText = [
   "Home",
   "Upload",
@@ -103,8 +103,8 @@ const Ads = () => {
        closable: false,
        maskClosable: false,
        okText: 'Login',
-       onOk: () => {
-         signOut()
+       onOk: async () => {
+         await signOut()
        }
      }
        const errorConfig = {
@@ -163,7 +163,6 @@ const Ads = () => {
     const handleImageLoad = (uuid) => {
       setLoadedImages((prev) => ({ ...prev, [uuid]: true }));
     };
-  useTokenRefresh()
 
     const items = [
     HomeFilled,
@@ -236,12 +235,9 @@ const Ads = () => {
     try {
       setLoading(true);
       let results;
-      results = await axios.get(
-        `https://api.reusifi.com/prod/getProductsEmail?limit=${encodeURIComponent(limit)}&lastEvaluatedKey=${encodeURIComponent(JSON.stringify(
+      results = await callApi(`https://api.reusifi.com/prod/getProductsEmail?limit=${encodeURIComponent(limit)}&lastEvaluatedKey=${encodeURIComponent(JSON.stringify(
           adLastEvaluatedKey
-        ))}&email=${encodeURIComponent(user.userId)}`,
-        { withCredentials: true }
-      );
+        ))}&email=${encodeURIComponent(user.userId)}`,'GET')
       setAdLastEvaluatedKey(results.data.lastEvaluatedKey);
       if (!results.data.lastEvaluatedKey) {
         setAdHasMore(false);
@@ -267,15 +263,11 @@ const Ads = () => {
   };
 
   useEffect(() => {
-  if (user && adInitialLoad && token && limit) {
+  if (user && adInitialLoad && limit) {
     try{
           setChatLoading(true);
     setLoading(true);
-
-    const getChatCount = axios.get(
-      `https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,
-      { withCredentials: true }
-    );
+      const getChatCount = callApi(`https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,'GET')
 
     const loadMoreDataPromise = loadMoreData()
 
@@ -308,10 +300,10 @@ const Ads = () => {
       }
     }
   }
-}, [user, token, adInitialLoad,limit]);
+}, [user, adInitialLoad,limit]);
 
   const navigate = useNavigate();
-  const handleNavigation = (event) => {
+  const handleNavigation = async (event) => {
     switch (event.key) {
       case "1":
         navigate("/");
@@ -332,7 +324,7 @@ const Ads = () => {
         navigate("/favourite");
         break;
       case "7":
-        signOut();
+        await signOut();
         break;
     }
   };
