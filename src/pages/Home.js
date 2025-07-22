@@ -581,7 +581,7 @@ const handleImageLoad = (uuid) => {
                             });
                           }}
                           cover={
-                              <div key={item["item"]["uuid"]} style={{ width: "100%", height: "100%" }}>
+                              <div key={item["item"]["uuid"]} style={{ width: "100%", height: "100%", display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                               {!loadedImages[item["item"]["uuid"]] && (
                                 <div
                                   style={{
@@ -605,7 +605,6 @@ const handleImageLoad = (uuid) => {
                                 alt={item["item"]["title"]}
                                 style={{
                                   display: loadedImages[item["item"]["uuid"]] ? "block" : "none",
-                                  width: "100%",
                                   height: "200px",
                                   objectFit: "contain",
                                   borderRadius: '5px'

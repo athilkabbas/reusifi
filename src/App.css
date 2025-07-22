@@ -102,3 +102,12 @@
 .hide-scrollbar::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera */
 }
+
+/* Make each slide take only needed width */
+.ant-carousel .slick-slide {
+  flex: 0 0 auto !important;  /* prevent stretching */
+  width: 300px !important;    /* fixed width per slide */
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+}
