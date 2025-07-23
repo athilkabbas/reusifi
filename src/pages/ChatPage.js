@@ -165,13 +165,16 @@ const ChatPage = () => {
               const [limit, setLimit] = useState(0); // default
               
                 useEffect(() => {
+                  let prevWidth = window.innerWidth;
                   const updateLimit = () => {
                     const newLimit = calculateLimit();
                     setLimit(newLimit);
                   };
                   updateLimit(); // on mount
                   const handleResize = () => {
-                    if (chatHasMore) {
+                     const currentWidth = window.innerWidth;
+                    if (chatHasMore && currentWidth !== prevWidth) {
+                         prevWidth = currentWidth;
                       setChatData([])
                       setChatLastEvaluatedKey(null)
                       setChatInitialLoad(true)

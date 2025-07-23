@@ -173,13 +173,16 @@ const Favourites = () => {
     const [limit, setLimit] = useState(0); // default
     
     useEffect(() => {
+      let prevWidth = window.innerWidth;
       const updateLimit = () => {
         const newLimit = calculateLimit();
         setLimit(newLimit);
       };
       updateLimit(); // on mount
       const handleResize = () => {
-        if (favHasMore) {
+        const currentWidth = window.innerWidth;
+        if (favHasMore &&  currentWidth !== prevWidth) {
+          prevWidth = currentWidth;
           setFavData([])
           setFavLastEvaluatedKey(null)
           setFavInitialLoad(true)

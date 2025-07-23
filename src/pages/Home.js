@@ -183,13 +183,16 @@ const errorConfig = {
 const [limit, setLimit] = useState(0); // default
 
   useEffect(() => {
+    let prevWidth = window.innerWidth;
     const updateLimit = () => {
       const newLimit = calculateLimit();
       setLimit(newLimit);
     };
     updateLimit(); // on mount
     const handleResize = () => {
-      if (hasMore) {
+       const currentWidth = window.innerWidth;
+      if (hasMore && currentWidth !== prevWidth) {
+        prevWidth = currentWidth;
          setData([]);
         setLastEvaluatedKeys({});
         setExhaustedShards({})

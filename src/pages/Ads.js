@@ -141,13 +141,16 @@ const Ads = () => {
           const [limit, setLimit] = useState(0); // default
           
           useEffect(() => {
+             let prevWidth = window.innerWidth;
             const updateLimit = () => {
               const newLimit = calculateLimit();
               setLimit(newLimit);
             };
             updateLimit(); // on mount
             const handleResize = () => {
-              if (adHasMore) {
+               const currentWidth = window.innerWidth;
+              if (adHasMore && currentWidth !== prevWidth) {
+                 prevWidth = currentWidth;
                 setAdData([])
                 setAdLastEvaluatedKey(null)
                 setAdInitialLoad(true)
