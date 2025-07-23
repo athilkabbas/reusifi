@@ -462,8 +462,12 @@ const handleImageLoad = (uuid) => {
                 setLocation({ state: null, district: null})
                 setPriceFilter(null)
                 setDistricts([])
+                setLastEvaluatedKeys({});
+                setExhaustedShards({})
+                setData([]);
+                setInitialLoad(true);
               }
-              else if(!/^\s*$/.test(search) && event.target.value !== search){
+              else if(!/^\s*$/.test(event.target.value)){
                 setLastEvaluatedKeys({});
                 setExhaustedShards({})
                 setData([]);
