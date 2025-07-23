@@ -35,23 +35,26 @@ export function useSessionCheck() {
         const tokens = session.tokens;
         if(tokens?.idToken){
           setIsSignedIn(true);
-          setChecked(true);
         }
         else{
-           const error = new Error('Session Expired')
-           error.status = 401
-           throw error
+          //  const error = new Error('Session Expired')
+          //  error.status = 401
+          //  throw error
+          setIsSignedIn(false);
         }
       } catch(err) {
-          if (err?.name === "NotAuthorizedException" && err?.message?.includes("Refresh Token has expired")) {
-            Modal.error(errorSessionConfig)
-          } 
-          else if(err?.status === 401){
-            Modal.error(errorSessionConfig)
-          }
-          else {
-            Modal.error(errorConfig)
-          }
+          // if (err?.name === "NotAuthorizedException" && err?.message?.includes("Refresh Token has expired")) {
+          //   Modal.error(errorSessionConfig)
+          // } 
+          // else if(err?.status === 401){
+          //   Modal.error(errorSessionConfig)
+          // }
+          // else {
+          //   Modal.error(errorConfig)
+          // }
+          setIsSignedIn(false);
+      }finally{
+        setChecked(true);
       }
     };
 
