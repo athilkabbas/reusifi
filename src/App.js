@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import {
   LoadingOutlined
@@ -9,6 +9,7 @@ import {
   signInWithRedirect,
   fetchAuthSession,
   signOut,
+  getCurrentUser
 } from "@aws-amplify/auth";
 
 import AddDress from "./pages/AddDress";
@@ -20,7 +21,8 @@ import ChatPage from "./pages/ChatPage";
 import Ads from "./pages/Ads";
 import Contact from "./pages/Contact";
 import Favourites from "./pages/Favourite";
-import { Spin  } from "antd";
+import { Spin, Modal  } from "antd";
+import { Context } from "./context/provider";
 
 import "./App.css";
 import { useSessionCheck } from "./hooks/sessionCheck";
@@ -35,8 +37,77 @@ function App() {
   );
 }
 
+     const errorSessionConfig = {
+       title: 'Session has expired.',
+       content: 'Please login again.',
+       closable: false,
+       maskClosable: false,
+       okText: 'Login',
+       onOk: async () => {
+         await signInWithRedirect()
+       }
+     }
+         const errorConfig = {
+  title: 'An error has occurred.',
+  content: 'Please login again.',
+  closable: false,
+  maskClosable: false,
+  okText: 'Close',
+  onOk: () => {
+    signInWithRedirect()
+  }
+}
+
 function AppWithSession() {
   const { isSignedIn, checked } = useSessionCheck();
+  const { setUnreadChatCount, token } = useContext(Context)
+    useEffect(() => {
+    let socket;
+    const fetchNotifications = async () => {
+      try {
+
+        const currentUser = await getCurrentUser();
+
+        socket = new WebSocket(
+          `wss://apichat.reusifi.com/production?userId=${currentUser.userId}&token=${token}`
+        );
+        socket.onopen = () => {
+          console.log("Connected to the WebSocket");
+        };
+
+        socket.onerror = (err) => {
+           Modal.error(errorConfig)
+        }
+
+        socket.onmessage = async (event) => {
+          setUnreadChatCount(1)
+        };
+        // To close the connection
+        socket.onclose = () => {
+          console.log("Disconnected from WebSocket");
+        };
+      } catch (err) {
+           if (err?.name === "NotAuthorizedException" && err?.message?.includes("Refresh Token has expired")) {
+            Modal.error(errorSessionConfig)
+          } 
+          else if(err?.status === 401){
+            Modal.error(errorSessionConfig)
+          }
+          else {
+            Modal.error(errorConfig)
+          }
+      }
+    };
+    if(token){
+      fetchNotifications();
+    }
+    return () => {
+      if(socket){
+        socket.close();
+      }
+    };
+  }, [token]);
+  
 
   if (!checked) {
     return (

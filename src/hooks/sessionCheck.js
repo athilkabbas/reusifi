@@ -1,11 +1,12 @@
 // hooks/sessionCheck.js
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { fetchAuthSession, signInWithRedirect } from "@aws-amplify/auth";
-import { Modal } from "antd";
+import { Context } from "../context/provider";
 
 export function useSessionCheck() {
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [checked, setChecked] = useState(false);
+  const { setToken } = useContext(Context)
 
   const errorSessionConfig = {
     title: 'Session has expired.',
@@ -35,23 +36,12 @@ export function useSessionCheck() {
         const tokens = session.tokens;
         if(tokens?.idToken){
           setIsSignedIn(true);
+          setToken(tokens.idToken)
         }
         else{
-          //  const error = new Error('Session Expired')
-          //  error.status = 401
-          //  throw error
           setIsSignedIn(false);
         }
       } catch(err) {
-          // if (err?.name === "NotAuthorizedException" && err?.message?.includes("Refresh Token has expired")) {
-          //   Modal.error(errorSessionConfig)
-          // } 
-          // else if(err?.status === 401){
-          //   Modal.error(errorSessionConfig)
-          // }
-          // else {
-          //   Modal.error(errorConfig)
-          // }
           setIsSignedIn(false);
       }finally{
         setChecked(true);
