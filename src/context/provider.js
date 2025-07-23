@@ -12,7 +12,7 @@ const Provider = ({ children }) => {
   const [chatHasMore, setChatHasMore] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
   const [location, setLocation] = useState({ state: null, district: null });
-  const [search, setSearch] = useState(null);
+  const [search, setSearch] = useState('');
   const [filterList, setFilterList] = useState([]);
   const [lastEvaluatedKeys, setLastEvaluatedKeys] = useState({});
   const [exhaustedShards, setExhaustedShards] = useState({})

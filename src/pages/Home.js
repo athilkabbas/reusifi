@@ -294,7 +294,7 @@ const handleImageLoad = (uuid) => {
       const scrollPosition = scrollableDivRef.current.scrollTop;
       setLoading(true);
       let results;
-      if (search) {
+      if (search.trim()) {
         results = await callApi(`https://api.reusifi.com/prod/getProductsSearch?limit=${encodeURIComponent(limit)}&lastEvaluatedKeys=${encodeURIComponent(JSON.stringify(
             lastEvaluatedKeys
           ))}&exhaustedShards=${encodeURIComponent(JSON.stringify(exhaustedShards))}&search=${encodeURIComponent(search.trim())}&location=${encodeURIComponent(JSON.stringify(
@@ -342,8 +342,7 @@ const handleImageLoad = (uuid) => {
     if (timer.current) {
       clearTimeout(timer.current);
     }
-
-    if(limit && initialLoad && ((search &&  !/^\s*$/.test(search)) || Object.values(location).some((value) => value) || priceFilter)){
+    if(limit && initialLoad && (search.trim() || Object.values(location).some((value) => value) || priceFilter)){
       setLoading(true)
       timer.current = setTimeout(() => {
       loadMoreData();
@@ -357,7 +356,7 @@ const handleImageLoad = (uuid) => {
   }, [search, location, priceFilter,limit]);
 
   useEffect(() => {
-  if (user && initialLoad && limit && !search) {
+  if (user && initialLoad && limit && !search.trim()) {
     try{
     setChatLoading(true);
     setFavLoading(true);
@@ -461,24 +460,18 @@ const handleImageLoad = (uuid) => {
             value={search}
             onChange={(event) => {
               setSearch(event.target.value);
-              if(!event.target.value){
+              setLastEvaluatedKeys({});
+              setExhaustedShards({})
+              setData([]);
+              setInitialLoad(true);
+              if(!event.target.value.trim()){
                 setLocation({ state: null, district: null})
                 setPriceFilter(null)
                 setDistricts([])
-                setLastEvaluatedKeys({});
-                setExhaustedShards({})
-                setData([]);
-                setInitialLoad(true);
-              }
-              else if(!/^\s*$/.test(event.target.value)){
-                setLastEvaluatedKeys({});
-                setExhaustedShards({})
-                setData([]);
-                setInitialLoad(true);
               }
             }}
             placeholder="Search"
-            style={{ width: (search && ! /^\s*$/.test(search)) ? "60vw": "90vw" , height: 'fit-content', boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)", borderRadius: "7px"}}
+            style={{ width:  search.trim() ? "60vw": "90vw" , height: 'fit-content', boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)", borderRadius: "7px"}}
           />
           <Space.Compact size="large" style={{ display: "flex", flexDirection: !isMobile ? 'row' : "column" }}>
                       <Select
@@ -492,7 +485,7 @@ const handleImageLoad = (uuid) => {
               width: !isMobile ? "20vw" : "35vw",
               boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
               borderRadius: "7px",
-              visibility: (!search ||  /^\s*$/.test(search)) ? 'hidden' : 'visible'
+              visibility: !search.trim() ? 'hidden' : 'visible'
             }}
             value={location.state}
             placeholder="State"
@@ -512,7 +505,7 @@ const handleImageLoad = (uuid) => {
               showSearch
               style={{
                 width: !isMobile ? "20vw" : "35vw",
-                visibility: (!search ||  /^\s*$/.test(search)) ? 'hidden' : 'visible'
+                visibility: !search.trim() ? 'hidden' : 'visible'
               }}
               value={location.district}
               placeholder="District"
@@ -527,7 +520,7 @@ const handleImageLoad = (uuid) => {
           )}
           </Space.Compact>
         </Space.Compact>
-        <Space.Compact size="large" style={{ padding: "10px",display: "flex", alignItems: "center", visibility: (!search ||  /^\s*$/.test(search)) ? 'hidden' : 'visible' }}>
+        <Space.Compact size="large" style={{ padding: "10px",display: "flex", alignItems: "center", visibility: !search.trim() ? 'hidden' : 'visible' }}>
           <Text strong>Price</Text>
           &nbsp; &nbsp;
           <Radio.Group  style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" }} buttonStyle="solid" onChange={onChangePriceFilter} value={priceFilter}>
