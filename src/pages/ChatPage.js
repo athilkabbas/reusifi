@@ -707,7 +707,7 @@ useEffect(() => {
                             {formatChatTimestamp(item.timestamp)}{" "}
                           </div>
                           </div>
-                            <div>
+                            <div style={{  width: "50px", height: "60px", display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                             {!loadedImages[item.productId] && (
                               <div
                                 style={{
