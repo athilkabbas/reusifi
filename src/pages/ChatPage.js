@@ -700,11 +700,6 @@ useEffect(() => {
             />
             }
             {
-              menuLoading && (
-                              <Spin fullscreen indicator={<LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />} />
-                            )
-            }
-            {
               chatData.length === 0 && !loading && !chatLoading && 
               (<div
                   style={{
@@ -746,6 +741,11 @@ useEffect(() => {
           }}
         />
       </Footer>}
+                  {
+              menuLoading && (
+                              <Spin fullscreen indicator={<LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />} />
+                            )
+            }
     </Layout>
   );
 };

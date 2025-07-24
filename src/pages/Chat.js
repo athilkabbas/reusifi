@@ -105,6 +105,7 @@ const Chat = () => {
     token
   } = useContext(Context);
   const [chatLoading, setChatLoading] = useState(false);
+  const [socketLoading, setSocketLoading] = useState(false)
    
      const errorSessionConfig = {
        title: 'Session has expired.',
@@ -217,7 +218,9 @@ const Chat = () => {
   useEffect(() => {
     let socket;
     const fetchUser = async () => {
-      let token = ''
+      try {
+        setSocketLoading(true)
+        let token = ''
         const session = await fetchAuthSession();
         const tokens = session.tokens;
 
@@ -228,7 +231,6 @@ const Chat = () => {
           error.status = 401
           throw error
         }
-      try {
 
         const currentUser = await getCurrentUser();
         setUser(currentUser);
@@ -239,9 +241,11 @@ const Chat = () => {
         setWs(socket);
         socket.onopen = () => {
           console.log("Connected to the WebSocket");
+          setSocketLoading(false)
         };
 
         socket.onerror = (err) => {
+          setSocketLoading(false)
            Modal.error(errorConfig)
         }
 
@@ -270,6 +274,7 @@ const Chat = () => {
           console.log("Disconnected from WebSocket");
         };
       } catch (err) {
+        setSocketLoading(false)
            if (err?.name === "NotAuthorizedException" && err?.message?.includes("Refresh Token has expired")) {
             Modal.error(errorSessionConfig)
           } 
@@ -746,6 +751,11 @@ function formatChatTimestamp(timestamp) {
           }}
         />
       </Footer>}
+        {
+          socketLoading && (
+                          <Spin fullscreen indicator={<LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />} />
+                        )
+        }
     </Layout>
   );
 };

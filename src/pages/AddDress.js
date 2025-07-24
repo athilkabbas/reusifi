@@ -589,11 +589,6 @@ const handleSubmit = async () => {
               active
             />
           }
-          {
-            submitLoading && (
-                                          <Spin fullscreen indicator={<LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />} />
-                                        )
-          }
         </div>
       </Content>
       {isMobile && <Footer
@@ -622,6 +617,11 @@ const handleSubmit = async () => {
           }}
         />
       </Footer>}
+                {
+            submitLoading && (
+                                          <Spin fullscreen indicator={<LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />} />
+                                        )
+          }
     </Layout>
   );
 };

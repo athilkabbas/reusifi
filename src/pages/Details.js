@@ -571,11 +571,6 @@ const { Text, Link } = Typography;
             active
           />
           }
-          {
-            (unblockLoading || deleteLoading) && (
-                            <Spin fullscreen indicator={<LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />} />
-                          )
-          }
         </div>
       </Content>
       {isMobile && <Footer
@@ -604,6 +599,11 @@ const { Text, Link } = Typography;
           }}
         />
       </Footer>}
+                {
+            (unblockLoading || deleteLoading) && (
+                            <Spin fullscreen indicator={<LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />} />
+                          )
+          }
     </Layout>
   );
 };

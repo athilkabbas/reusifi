@@ -544,11 +544,6 @@ const Favourites = () => {
                 active
               />
             )}
-              {
-                handleFavLoading && (
-                  <Spin fullscreen indicator={<LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />} />
-                )
-              }
           </InfiniteScroll>
         </div>
       </Content>
@@ -574,6 +569,11 @@ const Favourites = () => {
             flex: 1,background: "#6366F1" }}
         />
       </Footer>}
+                    {
+                handleFavLoading && (
+                  <Spin fullscreen indicator={<LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />} />
+                )
+              }
     </Layout>
   );
 };

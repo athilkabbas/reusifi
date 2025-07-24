@@ -694,11 +694,6 @@ const handleImageLoad = (uuid) => {
                 active
               />
             )}
-            {
-              handleFavLoading && (
-                <Spin fullscreen indicator={<LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />} />
-              )
-            }
           </InfiniteScroll>
         </div>
       </Content>
@@ -724,6 +719,11 @@ const handleImageLoad = (uuid) => {
             flex: 1,background: "#6366F1" }}
         />
       </Footer>}
+                  {
+              handleFavLoading && (
+                <Spin fullscreen indicator={<LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />} />
+              )
+            }
     </Layout>
   );
 };

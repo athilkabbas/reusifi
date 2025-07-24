@@ -52,7 +52,7 @@ function App() {
   content: 'Please login again.',
   closable: false,
   maskClosable: false,
-  okText: 'Close',
+  okText: 'Login',
   onOk: () => {
     signInWithRedirect()
   }
@@ -61,12 +61,13 @@ function App() {
 function AppWithSession() {
   const { isSignedIn, checked } = useSessionCheck();
   const { setUnreadChatCount, token, setChatInitialLoad, setChatData, setChatLastEvaluatedKey } = useContext(Context)
+  const [socketLoading, setSocketLoading] = useState(false)
   const location = useLocation()
     useEffect(() => {
     let socket;
     const fetchNotifications = async () => {
       try {
-
+        setSocketLoading(true)
         const currentUser = await getCurrentUser();
 
         socket = new WebSocket(
@@ -74,9 +75,11 @@ function AppWithSession() {
         );
         socket.onopen = () => {
           console.log("Connected to the WebSocket");
+          setSocketLoading(false)
         };
 
         socket.onerror = (err) => {
+           setSocketLoading(false)
            Modal.error(errorConfig)
         }
 
@@ -91,6 +94,7 @@ function AppWithSession() {
           console.log("Disconnected from WebSocket");
         };
       } catch (err) {
+        setSocketLoading(false)
            if (err?.name === "NotAuthorizedException" && err?.message?.includes("Refresh Token has expired")) {
             Modal.error(errorSessionConfig)
           } 
@@ -111,6 +115,15 @@ function AppWithSession() {
       }
     };
   }, [token]);
+
+  if(socketLoading){
+     return (
+      <Spin
+        fullscreen
+        indicator={<LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />}
+      />
+    );
+  }
   
 
   if (!checked) {
