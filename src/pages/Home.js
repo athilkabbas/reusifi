@@ -19,7 +19,8 @@ import {
   MailFilled,
   HeartOutlined,
   HeartFilled,
-  LoadingOutlined
+  LoadingOutlined,
+  MenuOutlined
 } from "@ant-design/icons";
 import { Button, Input, Select, Space, Empty } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -37,9 +38,8 @@ const IconText = [
   "Upload",
   "Chats",
   "My Ads",
-  "Contact",
   "Favourites",
-  "SignOut",
+  "",
 ];
 const { Meta } = Card;
 const { Text, Link } = Typography;
@@ -108,9 +108,8 @@ const Home = () => {
     UploadOutlined,
     MessageFilled,
     ProductFilled,
-    MailFilled,
     HeartFilled,
-    LogoutOutlined,
+    MenuOutlined,
   ].map((icon, index) => {
     let divHtml
     if(isMobile){
@@ -134,6 +133,24 @@ const Home = () => {
           </Badge>
         )
       };
+    }
+    else if(index === 5){
+      return{
+        key: String(index + 1),
+        icon: divHtml,
+            children: [
+      {
+        key: '6-1',
+        label: 'Contact',
+        icon: React.createElement(MailFilled)
+      },
+      {
+        key: '6-2',
+        label: 'Sign out',
+        icon: React.createElement(LogoutOutlined)
+      },
+    ],
+      }
     }
       return {
       key: String(index + 1),
@@ -416,12 +433,12 @@ const handleImageLoad = (uuid) => {
         navigate("/ads");
         break;
       case "5":
-        navigate("/contact");
-        break;
-      case "6":
         navigate("/favourite");
         break;
-      case "7":
+      case "6-1":
+        navigate("/contact");
+        break;
+      case "6-2":
         await signOut();
         break;
     }

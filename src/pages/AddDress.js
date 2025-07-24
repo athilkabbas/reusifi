@@ -21,7 +21,8 @@ import {
   ProductFilled,
   MailFilled,
   HeartFilled,
-  LoadingOutlined
+  LoadingOutlined,
+  MenuOutlined
 } from "@ant-design/icons";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
@@ -33,9 +34,8 @@ const IconText = [
   "Upload",
   "Chats",
   "My Ads",
-  "Contact",
   "Favourites",
-  "SignOut",
+  "",
 ];
 const { Header, Content, Footer } = Layout;
 const getBase64 = (file) =>
@@ -182,9 +182,8 @@ const AddDress = () => {
     UploadOutlined,
     MessageFilled,
     ProductFilled,
-    MailFilled,
     HeartFilled,
-    LogoutOutlined,
+    MenuOutlined,
   ].map((icon, index) => {
     let divHtml
     if(isMobile){
@@ -209,6 +208,24 @@ const AddDress = () => {
         )
       };
     }
+    else if(index === 5){
+      return{
+        key: String(index + 1),
+        icon: divHtml,
+            children: [
+      {
+        key: '6-1',
+        label: 'Contact',
+        icon: React.createElement(MailFilled)
+      },
+      {
+        key: '6-2',
+        label: 'Sign out',
+        icon: React.createElement(LogoutOutlined)
+      },
+    ],
+      }
+    }
       return {
       key: String(index + 1),
       icon: divHtml
@@ -230,12 +247,12 @@ const AddDress = () => {
         navigate("/ads");
         break;
       case "5":
-        navigate("/contact");
-        break;
-      case "6":
         navigate("/favourite");
         break;
-      case "7":
+      case "6-1":
+        navigate("/contact");
+        break;
+      case "6-2":
         await signOut();
         break;
     }

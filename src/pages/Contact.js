@@ -15,7 +15,8 @@ import {
   ProductFilled,
   MailFilled,
   HeartFilled,
-  LoadingOutlined
+  LoadingOutlined,
+  MenuOutlined
 } from "@ant-design/icons";
 import { getCurrentUser, signInWithRedirect, signOut } from "@aws-amplify/auth";
 import { Context } from "../context/provider";
@@ -26,9 +27,8 @@ const IconText = [
   "Upload",
   "Chats",
   "My Ads",
-  "Contact",
   "Favourites",
-  "SignOut",
+  "",
 ];
 const { Content, Footer, Header } = Layout;
 const { Text, Link } = Typography;
@@ -72,12 +72,12 @@ const Contact = () => {
         navigate("/ads");
         break;
       case "5":
-        navigate("/contact");
-        break;
-      case "6":
         navigate("/favourite");
         break;
-      case "7":
+      case "6-1":
+        navigate("/contact");
+        break;
+      case "6-2":
         await signOut();
         break;
     }
@@ -137,14 +137,13 @@ const Contact = () => {
     }
   }, [contactInitialLoad]);
 
-    const items = [
+     const items = [
     HomeFilled,
     UploadOutlined,
     MessageFilled,
     ProductFilled,
-    MailFilled,
     HeartFilled,
-    LogoutOutlined,
+    MenuOutlined,
   ].map((icon, index) => {
     let divHtml
     if(isMobile){
@@ -168,6 +167,24 @@ const Contact = () => {
           </Badge>
         )
       };
+    }
+    else if(index === 5){
+      return{
+        key: String(index + 1),
+        icon: divHtml,
+            children: [
+      {
+        key: '6-1',
+        label: 'Contact',
+        icon: React.createElement(MailFilled)
+      },
+      {
+        key: '6-2',
+        label: 'Sign out',
+        icon: React.createElement(LogoutOutlined)
+      },
+    ],
+      }
     }
       return {
       key: String(index + 1),
@@ -239,7 +256,7 @@ const Contact = () => {
           onClick={(event) => handleNavigation(event)}
           theme="dark"
           mode="horizontal"
-          defaultSelectedKeys={["5"]}
+          defaultSelectedKeys={["6-1"]}
           items={items}
           style={{
             justifyContent: 'space-around',

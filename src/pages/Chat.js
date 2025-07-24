@@ -25,7 +25,8 @@ import {
   MailFilled,
   HeartFilled,
   LogoutOutlined,
-  LoadingOutlined
+  LoadingOutlined,
+  MenuOutlined
 } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
 import { useIsMobile } from "../hooks/windowSize";
@@ -36,9 +37,8 @@ const IconText = [
   "Upload",
   "Chats",
   "My Ads",
-  "Contact",
   "Favourites",
-  "SignOut",
+  "",
 ];
 const { Header, Content, Footer } = Layout;
 const Chat = () => {
@@ -174,9 +174,8 @@ const Chat = () => {
     UploadOutlined,
     MessageFilled,
     ProductFilled,
-    MailFilled,
     HeartFilled,
-    LogoutOutlined,
+    MenuOutlined,
   ].map((icon, index) => {
     let divHtml
     if(isMobile){
@@ -200,6 +199,24 @@ const Chat = () => {
           </Badge>
         )
       };
+    }
+    else if(index === 5){
+      return{
+        key: String(index + 1),
+        icon: divHtml,
+            children: [
+      {
+        key: '6-1',
+        label: 'Contact',
+        icon: React.createElement(MailFilled)
+      },
+      {
+        key: '6-2',
+        label: 'Sign out',
+        icon: React.createElement(LogoutOutlined)
+      },
+    ],
+      }
     }
       return {
       key: String(index + 1),
@@ -433,12 +450,12 @@ const Chat = () => {
         navigate("/ads");
         break;
       case "5":
-        navigate("/contact");
-        break;
-      case "6":
         navigate("/favourite");
         break;
-      case "7":
+      case "6-1":
+        navigate("/contact");
+        break;
+      case "6-2":
         await signOut();
         break;
     }
