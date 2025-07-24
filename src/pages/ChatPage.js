@@ -243,13 +243,13 @@ const ChatPage = () => {
     };
   });
 
-  useEffect(() => {
-    if (data.length > 0) {
-      setInitialLoad(false);
-    } else {
-      setInitialLoad(true);
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (data.length > 0) {
+  //     setInitialLoad(false);
+  //   } else {
+  //     setInitialLoad(true);
+  //   }
+  // }, []);
 
     const errorSessionConfig = {
       title: 'Session has expired.',
@@ -301,6 +301,7 @@ const ChatPage = () => {
               return item
           })
         })
+        message.success("User blocked")
       } else {
         const result = await callApi(`https://api.reusifi.com/prod/deleteChat?deleteChat=${true}&userId1=${
             encodeURIComponent(user.userId)
@@ -313,6 +314,7 @@ const ChatPage = () => {
               return item
           })
         })
+         message.success("Chat deleted")
       }
       setLoading(false);
     } catch (err) {
@@ -355,6 +357,7 @@ const ChatPage = () => {
               return item
           })
         })
+         message.success("User unblocked")
       } else {
         const result = await callApi(`https://api.reusifi.com/prod/deleteChat?deleteChat=${true}&userId1=${
             encodeURIComponent(user.userId)
@@ -367,6 +370,7 @@ const ChatPage = () => {
               return item
           })
         })
+         message.success("Chat deleted")
       }
       setLoading(false);
     } catch (err) {
@@ -587,7 +591,7 @@ useEffect(() => {
                           }}
                           onClick={() => {
                             if (item.blocked) {
-                              message.info("You have blocked this user")
+                              message.info("You have blocked this user, unblock to chat")
                             } else {
                               setChatScrollPosition(
                                 scrollableDivRef.current.scrollTop

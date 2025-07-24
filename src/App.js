@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import {
   LoadingOutlined
 } from "@ant-design/icons";
@@ -60,7 +60,8 @@ function App() {
 
 function AppWithSession() {
   const { isSignedIn, checked } = useSessionCheck();
-  const { setUnreadChatCount, token } = useContext(Context)
+  const { setUnreadChatCount, token, setChatInitialLoad, setChatData, setChatLastEvaluatedKey } = useContext(Context)
+  const location = useLocation()
     useEffect(() => {
     let socket;
     const fetchNotifications = async () => {
@@ -80,7 +81,13 @@ function AppWithSession() {
         }
 
         socket.onmessage = async (event) => {
+          setChatData([])
+          setChatLastEvaluatedKey(null)
+          setChatInitialLoad(true)
           setUnreadChatCount(1)
+          // if(location.pathname === '/chatPage'){
+
+          // }
         };
         // To close the connection
         socket.onclose = () => {

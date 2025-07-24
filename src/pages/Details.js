@@ -46,7 +46,9 @@ const Details = () => {
   const [user, setUser] = useState(null);
   const [images, setImages] = useState([]);
   const [chatLoading, setChatLoading] = useState(false);
+  const [chatProductLoading, setChatProductLoading] = useState(false)
   const [imageLoad, setImageLoad] = useState(false)
+  const [chatProduct, setChatProduct] = useState(false)
   const navigate = useNavigate();
   const handleNavigation = async (event) => {
     switch (event.key) {
@@ -178,78 +180,80 @@ const { Text, Link } = Typography;
       getUser()
     },[])
 
-//   useEffect(() => {
-//   if (user && detailInitialLoad && token) {
-//     try{
-//       setChatLoading(true);
-//       setLoading(true);
-
-//     const getChatCount = axios.get(
-//       `https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,
-//       { withCredentials: true }
-//     );
-
-//     const getData = axios.get(
-//           `https://api.reusifi.com/prod/getProductsId?id=${encodeURIComponent(item["item"]["uuid"])}`,
-//           { withCredentials: true }
-//     );
-
-
-//     Promise.all([getChatCount, getData])
-//       .then(([chatResult, result]) => {
-//         setUnreadChatCount(chatResult.data.count);
-//         setDetailData(result.data)
-//       })
-//       .catch((err) => {
-//            if(err?.status === 401){
-//                 Modal.error(errorSessionConfig)
-//               }
-//               else{
-//                 Modal.error(errorConfig)
-//               }
-//         console.error(err);
-//       })
-//       .finally(() => {
-//         setChatLoading(false);
-//         setLoading(false);
-//         setDetailInitialLoad(false)
-//       });
-//     }catch(err){
-//     if(err?.status === 401){
-//           Modal.error(errorSessionConfig)
-//         }
-//         else{
-//           Modal.error(errorConfig)
-//         }
-//     }
-//   }
-// }, [user, token, detailInitialLoad]);
-
   useEffect(() => {
-    const getData = async () => {
-      try {
-        setLoading(true);
-        const result = await callApi(`https://api.reusifi.com/prod/getProductsId?id=${encodeURIComponent(item["item"]["uuid"])}`,'GET')
-        setLoading(false);
+  if (user && item) {
+    try{
+      setChatLoading(true);
+      setLoading(true);
+      setChatProductLoading(true)
+    const getChatCount = callApi(
+      `https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,'GET'
+    );
+
+    const getData = callApi(`https://api.reusifi.com/prod/getProductsId?id=${encodeURIComponent(item["item"]["uuid"])}`,'GET')
+    const getChatProduct = callApi(`https://api.reusifi.com/prod/getChatProduct?userId1=${encodeURIComponent(user.userId)}&productId=${encodeURIComponent(item["item"]["uuid"])}`,'GET')
+    Promise.all([getChatCount, getData,getChatProduct])
+      .then(([chatResult, result,chatProductResult]) => {
+        setUnreadChatCount(chatResult.data.count);
         setDetailData(result.data)
-        if(result.data.length === 0){
-          Modal.info(infoConfig)
-        }
-      } catch (err) {
-        setLoading(false);
+        setChatProduct(chatProductResult.data)
+      })
+      .catch((err) => {
          if(err?.status === 401){
           Modal.error(errorSessionConfig)
         }
         else{
           Modal.error(errorConfig)
         }
-        console.log(err);
-      }
-    };
-    if (item) {
-      getData();
+      })
+      .finally(() => {
+        setChatLoading(false);
+        setChatProductLoading(false)
+        setLoading(false);
+      });
+    }catch(err){
+    if(err?.status === 401){
+          Modal.error(errorSessionConfig)
+        }
+        else{
+          Modal.error(errorConfig)
+        }
     }
-  }, [item]);
+  }
+}, [user, item]);
+
+  // useEffect(() => {
+  //   const getData = async () => {
+  //     try {
+  //       setLoading(true);
+  //       const result = await callApi(`https://api.reusifi.com/prod/getProductsId?id=${encodeURIComponent(item["item"]["uuid"])}`,'GET')
+  //       setLoading(false);
+  //       setDetailData(result.data)
+  //       if(result.data.length === 0){
+  //         Modal.info(infoConfig)
+  //       }
+  //     } catch (err) {
+  //       setLoading(false);
+  //        if(err?.status === 401){
+  //         Modal.error(errorSessionConfig)
+  //       }
+  //       else{
+  //         Modal.error(errorConfig)
+  //       }
+  //       console.log(err);
+  //     }
+  //   };
+  //   if (item) {
+  //     getData();
+  //   }
+  // }, [item]);
+
+  const handleChat = async () => {
+    await callApi(`https://api.reusifi.com/prod/unBlockUser?unBlock=${true}&userId1=${
+                encodeURIComponent(user.userId)
+              }&userId2=${encodeURIComponent(chatProduct.userId2)}&productId=${encodeURIComponent(item["item"]["uuid"])}`,'GET')
+    navigate("/chat", { state: { recipient: item } });
+  }
 
   const handleDelete = async () => {
     try {
@@ -314,7 +318,7 @@ const { Text, Link } = Typography;
             paddingBottom: "60px",
           }}
         >
-          {!loading && !chatLoading && detailData.length > 0 && (
+          {!loading && !chatLoading && !chatProductLoading && detailData.length > 0 && (
             <>
             <Space
                 size="large"  
@@ -511,14 +515,24 @@ const { Text, Link } = Typography;
                 marginTop: '30px'
               }}
             >
-                    <Button style={{ background: '#10B981' }}
+              {chatProduct.blocked ? <Popconfirm
+              title="You have blocked this user, do you want to unblock?"
+              onConfirm={handleChat}
+              onCancel={() => {}}
+              okText="Yes"
+              cancelText="No"
+>
+                <Button style={{ background: '#10B981' }} type="primary">
+                  Chat
+                </Button>
+            </Popconfirm> : <Button style={{ background: '#10B981' }}
                       onClick={() => {
                         navigate("/chat", { state: { recipient: item } });
                       }}
                       type="primary"
                     >
                       Chat
-                    </Button>
+                    </Button>}
             </Space.Compact>
               )}
               </>
@@ -526,7 +540,7 @@ const { Text, Link } = Typography;
             </Space>
             </>
           )}
-          {(loading || chatLoading) && 
+          {(loading || chatLoading || chatProductLoading) && 
           <Skeleton
             paragraph={{
               rows: 8,

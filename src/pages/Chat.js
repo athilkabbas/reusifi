@@ -260,7 +260,10 @@ const Chat = () => {
           ]);
           await callApi(`https://api.reusifi.com/prod/getChatsRead?userId1=${
               encodeURIComponent(data.recipientUserId)
-            }&userId2=${encodeURIComponent(data.senderUserId)}&read=${encodeURIComponent(true)}`,'GET')
+            }&userId2=${encodeURIComponent(data.senderUserId)}&productId=${productId}&read=${encodeURIComponent(true)}`,'GET')
+          setChatData([])
+          setChatLastEvaluatedKey(null)
+          setChatInitialLoad(true)
         };
         // To close the connection
         socket.onclose = () => {
@@ -362,13 +365,13 @@ const Chat = () => {
     }
   };
 
-  useEffect(() => {
-    if (chatData.length > 0) {
-      setChatInitialLoad(false);
-    } else {
-      setChatInitialLoad(true);
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (chatData.length > 0) {
+  //     setChatInitialLoad(false);
+  //   } else {
+  //     setChatInitialLoad(true);
+  //   }
+  // }, []);
 
   useEffect(() => {
   const getChatsAndCount = async () => {
@@ -493,11 +496,9 @@ const Chat = () => {
         { message: messageValue, timestamp: Date.now(), senderId: user.userId, productId: productId },
         ...prevValue,
       ]);
-      if(!chatInitialLoad){
-          setChatData([])
-          setChatLastEvaluatedKey(null)
-          setChatInitialLoad(true)
-      }
+      setChatData([])
+      setChatLastEvaluatedKey(null)
+      setChatInitialLoad(true)
     }
     setMessageValue("");
   };
