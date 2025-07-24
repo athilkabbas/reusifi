@@ -316,11 +316,13 @@ const ChatPage = () => {
         })
          message.success("Chat deleted")
       }
-             await callApi(`https://api.reusifi.com/prod/getChatsRead?userId1=${
+      const getChatsReadPromise = callApi(`https://api.reusifi.com/prod/getChatsRead?userId1=${
                     encodeURIComponent(user.userId)
-                  }&userId2=${encodeURIComponent(userId2)}&productId=${chatData[index].productId}&read=${encodeURIComponent(true)}`,'GET')
-                  const getChatCount = await  callApi(`https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,'GET')
-                  setUnreadChatCount(getChatCount.data.count)
+                  }&userId2=${encodeURIComponent(userId2)}&productId=${chatData[index].productId}&read=${encodeURIComponent(true)}`,'GET',true)
+      const getChatCountPromise = callApi(`https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,'GET',true)
+      
+       const [chatCount] = await  Promise.all([getChatCountPromise, getChatsReadPromise])
+       setUnreadChatCount(chatCount.data.count)
         setChatData((chatData) => {
           return chatData.map((item) => {
             let conversationId = [user.userId, userId2].sort().join(`#${chatData[index].productId}#`);

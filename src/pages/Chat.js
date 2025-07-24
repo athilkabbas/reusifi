@@ -206,13 +206,13 @@ const Chat = () => {
     };
   });
   
-  useEffect(() => {
-    if (data.length > 0) {
-      setInitialLoad(false);
-    } else {
-      setInitialLoad(true);
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (data.length > 0) {
+  //     setInitialLoad(false);
+  //   } else {
+  //     setInitialLoad(true);
+  //   }
+  // }, []);
 
   useEffect(() => {
     let socket;
@@ -382,12 +382,14 @@ const Chat = () => {
         setLoading(true);
         
         await getChats()
-        const getChatCount = await callApi(`https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,'GET')
+        const getChatCount = await callApi(`https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,'GET',true)
         setUnreadChatCount(getChatCount.data.count);
         setChatLoading(false);
         setLoading(false);
     }
     catch(err){
+        setChatLoading(false);
+        setLoading(false);
        if(err?.status === 401){
         Modal.error(errorSessionConfig)
       }
