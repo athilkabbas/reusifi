@@ -60,7 +60,7 @@ const Chat = () => {
   const [speed, setSpeed] = useState(0);
   const { Text, Link } = Typography;
   const [scrollLoadMoreData, setScrollLoadMoreData] = useState(false);
-  const sendMessage = (message, recipientUserId, senderUserId,productId) => {
+  const sendMessage = (message, recipientUserId, senderUserId,productId,title,image) => {
     try {
       if (ws) {
         ws.send(
@@ -70,6 +70,8 @@ const Chat = () => {
             senderUserId: senderUserId,
             productId: productId,
             message: message,
+            title: title,
+            image: image
           })
         );
       }
@@ -486,7 +488,7 @@ const Chat = () => {
   const handleSubmit = () => {
     if (messageValue) {
       if (recipient && recipient["item"]["email"]) {
-        sendMessage(messageValue, recipient["item"]["email"], user.userId,recipient["item"]["uuid"]);
+        sendMessage(messageValue, recipient["item"]["email"], user.userId,recipient["item"]["uuid"],recipient["item"]["title"],recipient["images"][0]);
         // setChatData((chatData) => {
         //   return chatData.map((item) => {
         //     let conversationId = [user.userId, recipient["item"]["email"]]

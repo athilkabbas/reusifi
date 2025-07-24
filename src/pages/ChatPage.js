@@ -139,6 +139,10 @@ const ChatPage = () => {
     setUnreadChatCount,
     token
   } = useContext(Context);
+  const [loadedImages, setLoadedImages] = useState({});
+  const handleImageLoad = (uuid) => {
+  setLoadedImages((prev) => ({ ...prev, [uuid]: true }));
+};
 
     const isMobile = useIsMobile()
 
@@ -647,13 +651,11 @@ useEffect(() => {
                               });
                             }
                           }}
-                          key={hashString(item.conversationId)}
+                          key={item.conversationId}
                           title={
                             <Row>
                               <Col span={22}>
-                                {hashString(item.conversationId)
-                                  .toString()
-                                  .slice(1)}
+                                {item.title}
                               </Col>
                               <Col>
                                 {!item.blocked && (
@@ -689,17 +691,58 @@ useEffect(() => {
                           }
                           bordered
                         >
+                          <div style={{ display:'flex', justifyContent: 'space-between' }}  onClick={(e) => e.stopPropagation()}>
+                           <div>
                           <div
                             style={{
                               whiteSpace: "nowrap",
                               textOverflow: "ellipsis",
                               overflow: "hidden",
+                              maxWidth: isMobile ? '60dvw' : '40dvw'
                             }}
                           >
                             {item.message}
                           </div>
                           <div style={{ fontSize: "10px" }}>
                             {formatChatTimestamp(item.timestamp)}{" "}
+                          </div>
+                          </div>
+                            <div>
+                            {!loadedImages[item.productId] && (
+                              <div
+                                style={{
+                                  width: "50px",
+                                  height: "60px",
+                                  display: "flex",
+                                  justifyContent: "center",
+                                  alignItems: "center",
+                                  backgroundColor: "#f0f0f0",
+                                }}
+                              >
+                                <Spin
+                                  indicator={
+                                    <LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />
+                                  }
+                                />
+                              </div>
+                            )}
+                            <Image
+                            preview={true}
+                              src={item.image}
+                              alt={item.title}
+                              style={{
+                                display: loadedImages[item.productId] ? "block" : "none",
+                                height: "60px",
+                                objectFit: "contain",
+                                borderRadius: '5px'
+                              }}
+                               onClick={(e) => {
+                                e.stopPropagation();
+                                }}
+                                onLoad={() => handleImageLoad(item.productId)}
+                                onError={() => handleImageLoad(item.productId)}
+                            />
+                          </div>
                           </div>
                         </Card>
                       </Badge>
