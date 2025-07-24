@@ -77,7 +77,7 @@ const ChatPage = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
-  
+  const [menuLoading, setMenuLoading] = useState(false)
   const scrollableDivRef = useRef(null);
   const handleNavigation = async (event) => {
     setChatScrollPosition(scrollableDivRef.current.scrollTop);
@@ -278,7 +278,7 @@ const ChatPage = () => {
       e.domEvent.preventDefault();
       e.domEvent.stopPropagation();
       // This will give you the key of the clicked item
-      setLoading(true);
+      setMenuLoading(true);
       const clickedItemKey = e.key;
       let userIds = chatData[index].conversationId.split("#");
       userIds.splice(1,1)
@@ -316,9 +316,23 @@ const ChatPage = () => {
         })
          message.success("Chat deleted")
       }
-      setLoading(false);
+             await callApi(`https://api.reusifi.com/prod/getChatsRead?userId1=${
+                    encodeURIComponent(user.userId)
+                  }&userId2=${encodeURIComponent(userId2)}&productId=${chatData[index].productId}&read=${encodeURIComponent(true)}`,'GET')
+                  const getChatCount = await  callApi(`https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,'GET')
+                  setUnreadChatCount(getChatCount.data.count)
+        setChatData((chatData) => {
+          return chatData.map((item) => {
+            let conversationId = [user.userId, userId2].sort().join(`#${chatData[index].productId}#`);
+            if (item.conversationId === conversationId) {
+              return { ...item, read: "true" };
+            }
+            return item;
+          });
+        });
+      setMenuLoading(false);
     } catch (err) {
-      setLoading(false);
+      setMenuLoading(false);
        if(err?.status === 401){
               Modal.error(errorSessionConfig)
         }
@@ -332,7 +346,7 @@ const ChatPage = () => {
   const handleMenuClickUnblock = async (e, index) => {
     try {
       setChatScrollPosition(scrollableDivRef.current.scrollTop);
-      setLoading(true);
+      setMenuLoading(true);
       e.domEvent.preventDefault();
       e.domEvent.stopPropagation();
       const clickedItemKey = e.key;
@@ -372,9 +386,23 @@ const ChatPage = () => {
         })
          message.success("Chat deleted")
       }
-      setLoading(false);
+      //  await callApi(`https://api.reusifi.com/prod/getChatsRead?userId1=${
+      //               encodeURIComponent(user.userId)
+      //             }&userId2=${encodeURIComponent(userId2)}&productId=${chatData[index].productId}&read=${encodeURIComponent(true)}`,'GET')
+      //              const getChatCount = await  callApi(`https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,'GET')
+      //             setUnreadChatCount(getChatCount.data.count)
+      // setChatData((chatData) => {
+      //     return chatData.map((item) => {
+      //       let conversationId = [user.userId, userId2].sort().join(`#${chatData[index].productId}#`);
+      //       if (item.conversationId === conversationId) {
+      //         return { ...item, read: "true" };
+      //       }
+      //       return item;
+      //     });
+      //   });
+      setMenuLoading(false);
     } catch (err) {
-      setLoading(false);
+      setMenuLoading(false);
        if(err?.status === 401){
               Modal.error(errorSessionConfig)
         }
@@ -668,6 +696,11 @@ useEffect(() => {
               }}
               active
             />
+            }
+            {
+              menuLoading && (
+                              <Spin fullscreen indicator={<LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />} />
+                            )
             }
             {
               chatData.length === 0 && !loading && !chatLoading && 

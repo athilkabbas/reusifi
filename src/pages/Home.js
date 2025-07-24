@@ -280,6 +280,7 @@ const handleImageLoad = (uuid) => {
     setHandleFavLoading(false);
     }
     catch(err){
+      setHandleFavLoading(false);
       if(err?.status === 401){
         Modal.error(errorSessionConfig)
       }
@@ -384,6 +385,9 @@ const handleImageLoad = (uuid) => {
       });
     }
     catch(err){
+        setChatLoading(false);
+        setFavLoading(false);
+        setLoading(false);
        if(err?.status === 401){
         Modal.error(errorSessionConfig)
       }

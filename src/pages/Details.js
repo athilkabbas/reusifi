@@ -49,6 +49,8 @@ const Details = () => {
   const [chatProductLoading, setChatProductLoading] = useState(false)
   const [imageLoad, setImageLoad] = useState(false)
   const [chatProduct, setChatProduct] = useState(false)
+  const [unblockLoading, setUnblockLoading] = useState(false)
+  const [deleteLoading, setDeleteLoading] = useState(false)
   const navigate = useNavigate();
   const handleNavigation = async (event) => {
     switch (event.key) {
@@ -212,6 +214,9 @@ const { Text, Link } = Typography;
         setLoading(false);
       });
     }catch(err){
+       setChatLoading(false);
+        setChatProductLoading(false)
+        setLoading(false);
     if(err?.status === 401){
           Modal.error(errorSessionConfig)
         }
@@ -249,15 +254,33 @@ const { Text, Link } = Typography;
   // }, [item]);
 
   const handleChat = async () => {
-    await callApi(`https://api.reusifi.com/prod/unBlockUser?unBlock=${true}&userId1=${
-                encodeURIComponent(user.userId)
-              }&userId2=${encodeURIComponent(chatProduct.userId2)}&productId=${encodeURIComponent(item["item"]["uuid"])}`,'GET')
-    navigate("/chat", { state: { recipient: item } });
+    try{
+      setUnblockLoading(true)
+      await callApi(`https://api.reusifi.com/prod/unBlockUser?unBlock=${true}&userId1=${
+                  encodeURIComponent(user.userId)
+                }&userId2=${encodeURIComponent(chatProduct.userId2)}&productId=${encodeURIComponent(item["item"]["uuid"])}`,'GET')
+      setChatData([])
+      setChatLastEvaluatedKey(null)
+      setChatInitialLoad(true);
+      setUnblockLoading(false)
+      message.success("User unblocked")
+      navigate("/chat", { state: { recipient: item } });
+    }
+    catch(err){
+       setUnblockLoading(false);
+      if(err?.status === 401){
+        Modal.error(errorSessionConfig)
+      }
+      else{
+        message.error("An Error has occurred")
+      }
+      console.log(err);
+    }
   }
 
   const handleDelete = async () => {
     try {
-      setLoading(true);
+      setDeleteLoading(true);
       let result = await callApi(`https://api.reusifi.com/prod/deleteAdNew?id=${
           encodeURIComponent(item["item"]["uuid"])
         }&thumbnailS3Keys=${encodeURIComponent(JSON.stringify(detailData[0]["item"]["thumbnailS3Keys"]))}&viewingS3Keys=${encodeURIComponent(JSON.stringify(detailData[0]["item"]["viewingS3Keys"]))}`,'GET')
@@ -267,11 +290,11 @@ const { Text, Link } = Typography;
           return value["item"]["uuid"] !== item["item"]["uuid"]
         })
       })
-      setLoading(false);
+      setDeleteLoading(false);
       message.success("Ad deleted")
       navigate("/ads");
     } catch (err) {
-      setLoading(false);
+      setDeleteLoading(false);
       if(err?.status === 401){
         Modal.error(errorSessionConfig)
       }
@@ -495,7 +518,7 @@ const { Text, Link } = Typography;
               }}
             >
               <Popconfirm
-              title="Are you sure?"
+              title="Do you want to delete this Ad?"
               onConfirm={handleDelete}
               onCancel={() => {}}
               okText="Yes"
@@ -547,6 +570,11 @@ const { Text, Link } = Typography;
             }}
             active
           />
+          }
+          {
+            (unblockLoading || deleteLoading) && (
+                            <Spin fullscreen indicator={<LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />} />
+                          )
           }
         </div>
       </Content>

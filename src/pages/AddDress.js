@@ -244,6 +244,7 @@ const AddDress = () => {
   const [previewImage, setPreviewImage] = useState("");
   const [fileList, setFileList] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [submitLoading, setSubmitLoading] = useState(false)
   const [chatLoading, setChatLoading] = useState(false);
   const handlePreview = async (file) => {
     if (!file.url && !file.preview) {
@@ -288,7 +289,7 @@ const handleSubmit = async () => {
     return;
   }
 
-  setLoading(true);
+  setSubmitLoading(true);
 
   const thumbnailOptions = {
     maxSizeMB: 0.15,
@@ -350,11 +351,11 @@ const handleSubmit = async () => {
     setAdData([])
     setAdLastEvaluatedKey(null)
     setAdInitialLoad(true)
-    setLoading(false);
+    setSubmitLoading(false);
     message.success("Ad submitted")
     navigate("/ads");
   } catch (err) {
-    setLoading(false);
+    setSubmitLoading(false);
      if(err?.status === 401){
         Modal.error(errorSessionConfig)
       }
@@ -587,6 +588,11 @@ const handleSubmit = async () => {
               }}
               active
             />
+          }
+          {
+            submitLoading && (
+                                          <Spin fullscreen indicator={<LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />} />
+                                        )
           }
         </div>
       </Content>

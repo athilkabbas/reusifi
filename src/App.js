@@ -85,9 +85,6 @@ function AppWithSession() {
           setChatLastEvaluatedKey(null)
           setChatInitialLoad(true)
           setUnreadChatCount(1)
-          // if(location.pathname === '/chatPage'){
-
-          // }
         };
         // To close the connection
         socket.onclose = () => {
