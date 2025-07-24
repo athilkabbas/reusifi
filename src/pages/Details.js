@@ -400,7 +400,7 @@ const { Text, Link } = Typography;
             {!loadedImages[i] && (
               <div
                 style={{
-                  width: "100%",
+                  width: "300px",
                   height: "400px",
                   display: "flex",
                   justifyContent: "center",
@@ -447,7 +447,7 @@ const { Text, Link } = Typography;
             {!loadedImages[i] && (
               <div
                 style={{
-                  width: "100%",
+                  width: "300px",
                   height: "400px",
                   display: "flex",
                   justifyContent: "center",
