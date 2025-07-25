@@ -35,7 +35,7 @@ import { useIsMobile } from "../hooks/windowSize";
 import { callApi } from "../helpers/api";
 const IconText = [
   "Home",
-  "Upload",
+  "Sell",
   "Chats",
   "My Ads",
   "Favourites",
@@ -673,7 +673,7 @@ const handleImageLoad = (uuid) => {
                               }}
                             >
                               {filterList.includes(item["item"]["uuid"]) && (
-                                <HeartFilled style={{ color: '#10B981' }} ></HeartFilled>
+                                <HeartFilled style={{ color: '#E0245E' }} ></HeartFilled>
                               )}
                               {!filterList.includes(item["item"]["uuid"]) && (
                                 <HeartFilled style={{ color: '#9CA3AF' }}></HeartFilled>
@@ -683,7 +683,7 @@ const handleImageLoad = (uuid) => {
                           {
                             item["item"]["email"] === user.userId && (
                               <div style={{ display: 'flex', visibility: 'hidden' }}>
-                                <HeartFilled style={{ color: '#10B981' }} ></HeartFilled>
+                                <HeartFilled style={{ color: '#E0245E' }} ></HeartFilled>
                               </div>
                             )
                           }

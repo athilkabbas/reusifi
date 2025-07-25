@@ -34,7 +34,7 @@ import { callApi } from "../helpers/api";
 const { TextArea } = Input;
 const IconText = [
   "Home",
-  "Upload",
+  "Sell",
   "Chats",
   "My Ads",
   "Favourites",

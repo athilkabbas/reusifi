@@ -31,7 +31,7 @@ const { Text, Link } = Typography;
 const { TextArea } = Input;
 const IconText = [
   "Home",
-  "Upload",
+  "Sell",
   "Chats",
   "My Ads",
   "Favourites",

@@ -37,7 +37,7 @@ import { callApi } from "../helpers/api";
 const { TextArea } = Input;
 const IconText = [
   "Home",
-  "Upload",
+  "Sell",
   "Chats",
   "My Ads",
   "Favourites",
@@ -604,15 +604,16 @@ useEffect(() => {
           id="scrollableDiv"
           ref={scrollableDivRef}
           style={{
-            background: "#F9FAFB",
-            borderRadius: "0px",
-            overflow: "scroll",
+            padding: 5,
             height: "100%",
+            background: "#F9FAFB",
+            borderRadius: '0px',
+            overflowY: "scroll",
+            overflowX: "hidden",
             paddingBottom: "60px",
           }}
         >
           <InfiniteScroll
-           className="hide-scrollbar overflow-auto"
             style={{
               overflowX: "hidden",
               background: "#F9FAFB",
@@ -627,16 +628,23 @@ useEffect(() => {
           >
             {!loading &&
               !chatLoading &&
-              user &&
-              chatData.map((item, index) => {
-                if(item.deleted){
-                  return null
-                }
-                return (
-                  <Row key={item.timestamp} style={{ padding: "10px" }}>
-                    <Col span={24}>
-                      <Badge dot={item.read === "false" ? true : false}>
-                        <Card
+              user && chatData.length > 0 && (<List
+                grid={{
+                  xs: 1,
+                  sm: 1,
+                  md: 1,
+                  lg: 1,
+                  xl: 1,
+                  xxl: 1,
+                  gutter: 10,
+                }}
+                dataSource={chatData}
+                renderItem={(item,index) => {
+                  return (
+                    <>
+                    <List.Item key={item.timestamp}>
+                         <Badge dot={item.read === "false" ? true : false}>
+                         <Card
                           style={{
                             borderRadius: '12px',
                             boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
@@ -668,7 +676,7 @@ useEffect(() => {
                               </Col>
                               <Col>
                                 {!item.blocked && (
-                                  <Dropdown overlay={menu(index)} trigger={['click']}>
+                                  <Dropdown overlay={menu(index)} trigger={['click']} placement="bottomRight">
                                     <a
                                       onClick={(e) => {
                                         e.preventDefault();
@@ -682,7 +690,7 @@ useEffect(() => {
                                   </Dropdown>
                                 )}
                                 {item.blocked && (
-                                  <Dropdown overlay={menuBlocked(index)} trigger={['click']}>
+                                  <Dropdown overlay={menuBlocked(index)} trigger={['click']} placement="bottomRight">
                                     <a
                                       onClick={(e) => {
                                         e.preventDefault();
@@ -755,10 +763,12 @@ useEffect(() => {
                           </div>
                         </Card>
                       </Badge>
-                    </Col>
-                  </Row>
-                );
-              })}
+                    </List.Item>
+                    </>
+                  )
+                }}
+              />)
+            }
             {(loading || chatLoading) && 
             <Skeleton
               paragraph={{

@@ -30,7 +30,7 @@ import { useIsMobile } from "../hooks/windowSize";
 import { callApi } from "../helpers/api";
 const IconText = [
   "Home",
-  "Upload",
+  "Sell",
   "Chats",
   "My Ads",
   "Favourites",

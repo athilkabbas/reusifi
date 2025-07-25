@@ -35,7 +35,7 @@ import { useIsMobile } from "../hooks/windowSize";
 import { callApi } from "../helpers/api";
 const IconText = [
   "Home",
-  "Upload",
+  "Sell",
   "Chats",
   "My Ads",
   "Favourites",
@@ -531,7 +531,7 @@ const Favourites = () => {
                               style={{ display: "flex", justifyContent: "end" }}
                             >
                               {filterList.includes(item["item"]["uuid"]) && (
-                                <HeartFilled style={{ color: '#10B981' }}></HeartFilled>
+                                <HeartFilled style={{ color: '#E0245E' }}></HeartFilled>
                               )}
                               {!filterList.includes(item["item"]["uuid"]) && (
                                 <HeartOutlined></HeartOutlined>
