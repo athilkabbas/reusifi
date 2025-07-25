@@ -309,8 +309,13 @@ const Chat = () => {
         fetchUser();
     }
     return () => {
-      if(socket){
+      if(socket && socket.readyState === WebSocket.OPEN){
         socket.close();
+      }
+      else if(socket && socket.readyState === WebSocket.CONNECTING){
+        socket.onopen = () => {
+          socket.close()
+        }
       }
     };
   }, [reconnect,productId,recipient]);

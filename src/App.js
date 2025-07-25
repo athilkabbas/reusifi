@@ -110,8 +110,13 @@ function AppWithSession() {
       fetchNotifications();
     }
     return () => {
-      if(socket){
+      if(socket && socket.readyState === WebSocket.OPEN){
         socket.close();
+      }
+      else if(socket && socket.readyState === WebSocket.CONNECTING){
+        socket.onopen = () => {
+          socket.close()
+        }
       }
     };
   }, [token]);
