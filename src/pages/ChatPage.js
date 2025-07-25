@@ -643,13 +643,13 @@ useEffect(() => {
                   return (
                     <>
                     <List.Item key={item.timestamp}>
-                         <Badge dot={item.read === "false" ? true : false}>
                          <Card
                           style={{
                             borderRadius: '12px',
                             boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                             height: "150px",
                             width: !isMobile ? "50vw" : "calc(100vw - 50px)",
+                            backgroundColor: item.read === "false" ? "#e0e7ff" : "#ffffff"
                           }}
                           onClick={() => {
                             if (item.blocked) {
@@ -710,15 +710,30 @@ useEffect(() => {
                         >
                           <div style={{ display:'flex', justifyContent: 'space-between' }}>
                            <div>
-                          <div
+                         <div
                             style={{
                               whiteSpace: "nowrap",
                               textOverflow: "ellipsis",
                               overflow: "hidden",
-                              maxWidth: isMobile ? '50dvw' : '30dvw'
+                              maxWidth: isMobile ? '50dvw' : '30dvw',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '6px',
                             }}
                           >
-                            {item.message}
+                            {item.read === "false" && (
+                              <span
+                                style={{
+                                  width: 8,
+                                  height: 8,
+                                  borderRadius: '50%',
+                                  backgroundColor: '#ff4d4f',
+                                  display: 'inline-block',
+                                  flexShrink: 0,
+                                }}
+                              />
+                            )}
+                            <span>{item.message}</span>
                           </div>
                           <div style={{ fontSize: "10px" }}>
                             {formatChatTimestamp(item.timestamp)}{" "}
@@ -762,7 +777,6 @@ useEffect(() => {
                           </div>
                           </div>
                         </Card>
-                      </Badge>
                     </List.Item>
                     </>
                   )
