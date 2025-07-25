@@ -609,6 +609,7 @@ useEffect(() => {
           }}
         >
           <InfiniteScroll
+           className="hide-scrollbar overflow-auto"
             style={{
               overflowX: "hidden",
               background: "#F9FAFB",
@@ -654,7 +655,12 @@ useEffect(() => {
                           key={item.conversationId}
                           title={
                             <Row>
-                              <Col span={22}>
+                              <Col span={22}  style={{
+                              whiteSpace: "nowrap",
+                              textOverflow: "ellipsis",
+                              overflow: "hidden",
+                              paddingRight: '10px'
+                            }}>
                                 {item.title}
                               </Col>
                               <Col>
@@ -691,7 +697,7 @@ useEffect(() => {
                           }
                           bordered
                         >
-                          <div style={{ display:'flex', justifyContent: 'space-between' }}  onClick={(e) => e.stopPropagation()}>
+                          <div style={{ display:'flex', justifyContent: 'space-between' }}>
                            <div>
                           <div
                             style={{
@@ -707,7 +713,7 @@ useEffect(() => {
                             {formatChatTimestamp(item.timestamp)}{" "}
                           </div>
                           </div>
-                            <div style={{  width: "50px", height: "60px", display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <div onClick={(e) => e.stopPropagation()} style={{  width: "50px", height: "60px", display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                             {!loadedImages[item.productId] && (
                               <div
                                 style={{

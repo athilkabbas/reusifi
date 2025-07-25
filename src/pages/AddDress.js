@@ -528,7 +528,7 @@ const handleSubmit = async () => {
                   onChange={(value) => handleChange(value, "price")}
                   placeholder="Price"
                   value={form.price}
-                  maxLength={100}
+                  maxLength={15}
                 />
               </Space.Compact>
               <Space.Compact

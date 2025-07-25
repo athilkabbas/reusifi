@@ -493,35 +493,35 @@ const { Text, Link } = Typography;
                 style={{ display: "flex", alignItems: "center" }}
               >
               <Text strong style={{  width: !isMobile ? '10vw' : '25vw'}}>Title</Text>
-              <Input readOnly style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",pointerEvents: 'none'  , width: !isMobile ? '35vw' : '60vw' }} value={detailData[0]["item"]["title"]} />
+              <Input readOnly style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)"  , width: !isMobile ? '35vw' : '60vw' }} value={detailData[0]["item"]["title"]} />
               </Space.Compact>
                 <Space.Compact
                 size="large"
                 style={{ display: "flex", alignItems: "center" }}
               >
               <Text strong style={{  width: !isMobile ? '10vw' : '25vw'}}>Description</Text>
-              <TextArea  readOnly autoSize={{ minRows: 2, maxRows: 5 }} style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",pointerEvents: 'none' ,width: !isMobile ? '35vw' : '60vw' }} value={detailData[0]["item"]["description"]} />
+              <TextArea  readOnly autoSize={{ minRows: 2, maxRows: 5 }} style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" ,width: !isMobile ? '35vw' : '60vw' }} value={detailData[0]["item"]["description"]} />
               </Space.Compact>
                 <Space.Compact
                 size="large"
                 style={{ display: "flex", alignItems: "center" }}
               >
               <Text strong style={{  width: !isMobile ? '10vw' : '25vw'}}>State</Text>
-              <Input readOnly style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",pointerEvents: 'none' ,width: !isMobile ? '35vw' : '60vw' }} value={detailData[0]["item"]["state"]} />
+              <Input readOnly style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" ,width: !isMobile ? '35vw' : '60vw' }} value={detailData[0]["item"]["state"]} />
               </Space.Compact>
                  <Space.Compact
                 size="large"
                 style={{display: "flex", alignItems: "center" }}
               >
               <Text strong style={{  width: !isMobile ? '10vw' : '25vw'}}>District</Text>
-              <Input readOnly style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",pointerEvents: 'none' ,width: !isMobile ? '35vw' : '60vw' }} value={detailData[0]["item"]["district"]} />
+              <Input readOnly style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" ,width: !isMobile ? '35vw' : '60vw' }} value={detailData[0]["item"]["district"]} />
               </Space.Compact>
                 <Space.Compact
                 size="large"
                 style={{ display: "flex", alignItems: "center" }}
               >
               <Text strong style={{  width: !isMobile ? '10vw' : '25vw'}}>Price</Text>
-              <Input readOnly style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",pointerEvents: 'none' ,width: !isMobile ? '35vw' : '60vw' }}  prefix="₹" value={detailData[0]["item"]["price"]} />
+              <Input readOnly style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" ,width: !isMobile ? '35vw' : '60vw' }}  prefix="₹" value={detailData[0]["item"]["price"]} />
               </Space.Compact>
             </Space>}
             {
