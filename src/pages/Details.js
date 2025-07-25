@@ -52,6 +52,9 @@ const Details = () => {
   const [unblockLoading, setUnblockLoading] = useState(false)
   const [deleteLoading, setDeleteLoading] = useState(false)
   const navigate = useNavigate();
+  const capitalize = (str) => {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
   const handleNavigation = async (event) => {
     switch (event.key) {
       case "1":
@@ -493,14 +496,14 @@ const { Text, Link } = Typography;
                 style={{ display: "flex", alignItems: "center" }}
               >
               <Text strong style={{  width: !isMobile ? '10vw' : '25vw'}}>Title</Text>
-              <Input readOnly style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)"  , width: !isMobile ? '35vw' : '60vw' }} value={detailData[0]["item"]["title"]} />
+              <Input readOnly style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)"  , width: !isMobile ? '35vw' : '60vw' }} value={capitalize(detailData[0]["item"]["title"])} />
               </Space.Compact>
                 <Space.Compact
                 size="large"
                 style={{ display: "flex", alignItems: "center" }}
               >
               <Text strong style={{  width: !isMobile ? '10vw' : '25vw'}}>Description</Text>
-              <TextArea  readOnly autoSize={{ minRows: 2, maxRows: 5 }} style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" ,width: !isMobile ? '35vw' : '60vw' }} value={detailData[0]["item"]["description"]} />
+              <TextArea  readOnly autoSize={{ minRows: 2, maxRows: 5 }} style={{  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" ,width: !isMobile ? '35vw' : '60vw' }} value={capitalize(detailData[0]["item"]["description"])} />
               </Space.Compact>
                 <Space.Compact
                 size="large"

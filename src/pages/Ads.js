@@ -470,7 +470,7 @@ const Ads = () => {
                               overflow: "hidden",
                             }}
                           >
-                            <b style={{ fontSize: "16px", color: "#111827" }}>{item["item"]["title"]}</b>
+                            <span style={{ fontSize: "16px", color: "#111827" }}>{capitalize(item["item"]["title"])}</span>
                           </div>
                           <div
                             style={{
@@ -479,7 +479,7 @@ const Ads = () => {
                               overflow: "hidden",
                             }}
                           >
-                            <b style={{ fontSize: "15px", color: "#4B5563" }}>₹{item["item"]["price"]}</b>
+                            <span style={{ fontSize: "15px", color: "#4B5563" }}>₹{item["item"]["price"]}</span>
                           </div>
                             <div style={{ display: 'flex', visibility: 'hidden' }}>
                               <HeartFilled style={{ color: '#10B981' }} ></HeartFilled>

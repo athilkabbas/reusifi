@@ -143,6 +143,9 @@ const ChatPage = () => {
   const handleImageLoad = (uuid) => {
   setLoadedImages((prev) => ({ ...prev, [uuid]: true }));
 };
+const capitalize = (str) => {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
 
     const isMobile = useIsMobile()
 
@@ -659,9 +662,9 @@ useEffect(() => {
                               whiteSpace: "nowrap",
                               textOverflow: "ellipsis",
                               overflow: "hidden",
-                              paddingRight: '10px'
+                              paddingRight: '70px'
                             }}>
-                                {item.title}
+                               <span>{capitalize(item.title)}</span>
                               </Col>
                               <Col>
                                 {!item.blocked && (
@@ -704,7 +707,7 @@ useEffect(() => {
                               whiteSpace: "nowrap",
                               textOverflow: "ellipsis",
                               overflow: "hidden",
-                              maxWidth: isMobile ? '60dvw' : '40dvw'
+                              maxWidth: isMobile ? '50dvw' : '30dvw'
                             }}
                           >
                             {item.message}

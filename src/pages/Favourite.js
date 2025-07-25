@@ -506,7 +506,7 @@ const Favourites = () => {
                               overflow: "hidden",
                             }}
                           >
-                             <b style={{ fontSize: "16px", color: "#111827" }}>{item["item"]["title"]}</b>
+                             <span style={{ fontSize: "16px", color: "#111827" }}>{capitalize(item["item"]["title"])}</span>
                           </div>
                           <div
                             style={{
@@ -515,7 +515,7 @@ const Favourites = () => {
                               overflow: "hidden",
                             }}
                           >
-                            <b style={{ fontSize: "15px", color: "#4B5563" }}>₹{item["item"]["price"]}</b>
+                            <span style={{ fontSize: "15px", color: "#4B5563" }}>₹{item["item"]["price"]}</span>
                           </div>
                           {item["item"]["email"] !== user.userId && (
                             <div
