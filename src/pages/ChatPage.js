@@ -585,7 +585,7 @@ useEffect(() => {
 }, [user, chatInitialLoad,limit]);
 
   return (
-    <Layout style={{ height: "100dvh", overflow: "hidden" }}>
+    <Layout style={{ height: "100dvh", overflow: "hidden", background:"#F9FAFB" }}>
       
        {!isMobile && <Header style={{ display: 'flex', alignItems: 'center', padding: '0px', height: '50px' }}>
               <Menu
@@ -604,7 +604,7 @@ useEffect(() => {
           id="scrollableDiv"
           ref={scrollableDivRef}
           style={{
-            padding: 5,
+            padding: "15px 5px",
             height: "100%",
             background: "#F9FAFB",
             borderRadius: '0px',

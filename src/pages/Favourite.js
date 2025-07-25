@@ -365,7 +365,7 @@ const Favourites = () => {
 
   const navigate = useNavigate();
   const handleNavigation = async (event) => {
-    setScrollPosition(scrollableDivRef.current.scrollTop);
+    setFavScrollPosition(scrollableDivRef.current.scrollTop);
     switch (event.key) {
       case "1":
         navigate("/");
@@ -395,7 +395,7 @@ const Favourites = () => {
   } = theme.useToken();
 
   return (
-    <Layout style={{ height: "100dvh", overflow: "hidden" }}>
+    <Layout style={{ height: "100dvh", overflow: "hidden",background:"#F9FAFB" }}>
       
        {!isMobile && <Header style={{ display: 'flex', alignItems: 'center', padding: '0px', height: '50px' }}>
               <Menu
@@ -408,13 +408,13 @@ const Favourites = () => {
             flex: 1,background: "#6366F1" }}
               />
             </Header>}
-      <Content style={{ padding: "0 15px", marginTop: '30px' }}>
+      <Content style={{ padding: "0 15px" }}>
         <div
          className="hide-scrollbar overflow-auto"
           id="scrollableDiv"
           ref={scrollableDivRef}
           style={{
-            padding: 5,
+            padding: "15px 5px",
             height: "100%",
             background: "#F9FAFB",
             borderRadius: "0px",
