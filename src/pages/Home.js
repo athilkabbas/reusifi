@@ -307,40 +307,36 @@ const handleImageLoad = (uuid) => {
     }
   };
 
+  const encodeCursor = (obj) => {
+    const jsonStr = JSON.stringify(obj);
+    return btoa(unescape(encodeURIComponent(jsonStr))); // handles UTF-8 safely
+  };
+
   const loadMoreData = async () => {
     try {
       const scrollPosition = scrollableDivRef.current.scrollTop;
       setLoading(true);
       let results;
+      const paginationState = { lastEvaluatedKeys, search, exhaustedShards, location, priceFilter, limit };
+      const cursor = encodeCursor(paginationState)
       if (search.trim()) {
-        results = await callApi(`https://api.reusifi.com/prod/getProductsSearch?limit=${encodeURIComponent(limit)}&lastEvaluatedKeys=${encodeURIComponent(JSON.stringify(
-            lastEvaluatedKeys
-          ))}&exhaustedShards=${encodeURIComponent(JSON.stringify(exhaustedShards))}&search=${encodeURIComponent(search.trim())}&location=${encodeURIComponent(JSON.stringify(
-            location
-          ))}&priceFilter=${encodeURIComponent(priceFilter)}`,'GET')
-        setLastEvaluatedKeys(results.data.lastEvaluatedKeys);
-        setExhaustedShards(results.data.exhaustedShards)
-        if (results.data.hasMore) {
-          setHasMore(true);
-        } else {
-          setHasMore(false);
-        }
+        results = await callApi(`https://api.reusifi.com/prod/getProductsSearch`,'POST',false, { cursor })
       } else {
-        results = await callApi(`https://api.reusifi.com/prod/getProducts?limit=${encodeURIComponent(limit)}&lastEvaluatedKeys=${encodeURIComponent(JSON.stringify(
-            lastEvaluatedKeys
-          ))}&location=${encodeURIComponent(JSON.stringify(location))}&exhaustedShards=${encodeURIComponent(JSON.stringify(exhaustedShards))}&priceFilter=${encodeURIComponent(priceFilter)}`,'GET')
-        setLastEvaluatedKeys(results.data.lastEvaluatedKeys);
-        setExhaustedShards(results.data.exhaustedShards)
-        if (results.data.hasMore) {
-          setHasMore(true);
-        } else {
-          setHasMore(false);
-        }
+        results = await callApi(`https://api.reusifi.com/prod/getProducts`,'POST',false, { cursor })
+      }
+      setLastEvaluatedKeys(results.data.lastEvaluatedKeys);
+      setExhaustedShards(results.data.exhaustedShards)
+      if (results.data.hasMore) {
+        setHasMore(true);
+      } else {
+        setHasMore(false);
       }
       const notUserData = results.data.finalResult.filter((item) => user.userId !== item["item"]["email"])
       setData([...data, ...notUserData]);
       const favList = notUserData.map((item) => item["item"]["uuid"])
-      const favResult = await callApi(`https://api.reusifi.com/prod/getFavouritesList?email=${encodeURIComponent(user.userId)}&favList=${encodeURIComponent(JSON.stringify(favList))}`, 'GET',true)
+      const favState = { email: user.userId, favList }
+      const cursorFav = encodeCursor(favState)
+      const favResult = await callApi(`https://api.reusifi.com/prod/getFavouritesList`, 'POST',true,{ cursorFav })
       setFilterList([...filterList, ...favResult.data.finalResult]);
       setLoading(false);
       setScrollPosition(scrollPosition);

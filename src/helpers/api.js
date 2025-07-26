@@ -37,8 +37,11 @@ export const callApi = async (url, method,skipRefresh = false,data) => {
     }
 
   }
-    const config = {
+     const config = {
       withCredentials: true,
+       ...(method === "POST" && {
+          headers: { "Content-Type": "application/json" },
+      }),
     };
 
     if (method === "GET") {
