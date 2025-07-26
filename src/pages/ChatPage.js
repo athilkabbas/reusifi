@@ -640,6 +640,9 @@ useEffect(() => {
                 }}
                 dataSource={chatData}
                 renderItem={(item,index) => {
+                  if(item.deleted){
+                    return null
+                  }
                   return (
                     <>
                     <List.Item key={item.timestamp}>
