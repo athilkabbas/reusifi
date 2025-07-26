@@ -744,6 +744,16 @@ function formatChatTimestamp(timestamp) {
           onChange={(value) => handleChange(value)}
           placeholder="Enter message"
           value={messageValue}
+          onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            if (e.shiftKey) {
+              return;
+          } else {
+              e.preventDefault();
+              handleSubmit()
+          }
+          }
+        }}
         />
         <Button style={{ background: '#10B981' }} type="primary" onClick={() => handleSubmit()}>
           send
