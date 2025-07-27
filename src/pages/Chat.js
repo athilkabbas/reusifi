@@ -151,25 +151,38 @@ const Chat = () => {
                 const [limit, setLimit] = useState(0); // default
                 
                 useEffect(() => {
-                   let prevWidth = window.innerWidth;
-                  const updateLimit = () => {
-                    const newLimit = calculateLimit();
-                    setLimit(newLimit);
-                  };
-                  updateLimit(); // on mount
-                  const handleResize = () => {
-                     const currentWidth = window.innerWidth;
-                    if (hasMore && currentWidth !== prevWidth) {
-                       prevWidth = currentWidth;
-                      setIChatData([])
-                      setLastEvaluatedKey(null)
-                      setIChatInitialLoad(true)
-                      updateLimit();
-                    }
-                  };
-                  window.addEventListener("resize",handleResize);
-                  return () => window.removeEventListener("resize", handleResize);
-                }, [hasMore]);
+        let prevWidth = window.innerWidth;
+        let prevHeight = document.body.scrollHeight;
+
+        const updateLimit = () => {
+          const newLimit = calculateLimit();
+          setLimit(newLimit);
+        };
+
+          updateLimit();
+
+      const handleResize = () => {
+        const currentWidth = window.innerWidth;
+        const currentHeight = document.body.scrollHeight;
+
+        if (hasMore && currentWidth !== prevWidth) {
+          prevWidth = currentWidth;
+          setIChatData([]);
+          setLastEvaluatedKey(null);
+          setIChatInitialLoad(true);
+          updateLimit();
+        }
+
+        if (currentHeight !== prevHeight) {
+          prevHeight = currentHeight;
+          window.scrollTo(0, document.body.scrollHeight);
+        }
+      };
+
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
+    }, [hasMore]);
+
   
     const items = [
     HomeFilled,
@@ -746,7 +759,7 @@ function formatChatTimestamp(timestamp) {
           value={messageValue}
           onKeyDown={(e) => {
           if (e.key === 'Enter') {
-            if (e.shiftKey) {
+            if (e.shiftKey || isMobile) {
               return;
           } else {
               e.preventDefault();
