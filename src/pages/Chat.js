@@ -153,7 +153,7 @@ const Chat = () => {
                 useEffect(() => {
         let prevWidth = window.innerWidth;
         let prevHeight = window.innerHeight;
-
+         let resizeTimeout;
         const updateLimit = () => {
           const newLimit = calculateLimit();
           setLimit(newLimit);
@@ -175,14 +175,21 @@ const Chat = () => {
 
         if (currentHeight !== prevHeight) {
             prevHeight = currentHeight;
-             setTimeout(() => {
+            if (resizeTimeout) 
+              {
+                clearTimeout(resizeTimeout);
+              }
+            resizeTimeout = setTimeout(() => {
               window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight);
-            }, 300);
-        }
+            }, 150); // debounce to avoid multiple triggers
+              }
       };
 
       window.addEventListener("resize", handleResize);
-      return () => window.removeEventListener("resize", handleResize);
+       return () => {
+        window.removeEventListener("resize", handleResize);
+        if (resizeTimeout) clearTimeout(resizeTimeout);
+      };
     }, [hasMore]);
 
   
