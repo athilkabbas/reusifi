@@ -173,12 +173,12 @@ const Chat = () => {
           updateLimit();
         }
 
-        if (currentHeight !== prevHeight) {
-          prevHeight = currentHeight;
+        if (currentHeight < prevHeight) {
           setTimeout(() => {
             scrollableDivRef.current.scrollTo(0, scrollableDivRef.current.scrollHeight);
           },100)
         }
+        prevHeight = currentHeight;
       };
 
       window.addEventListener("resize", handleResize);
