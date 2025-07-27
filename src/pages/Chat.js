@@ -154,10 +154,10 @@ const Chat = () => {
         setIChatInitialLoad(true);
         updateLimit();
       }
-      if (currentHeight !== prevHeight) {
-        prevHeight = currentHeight;
+      if (currentHeight > prevHeight + 100) {
         textAreaRef.current.blur();
       }
+      prevHeight = currentHeight;
     };
 
     window.addEventListener("resize", handleResize);
