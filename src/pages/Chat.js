@@ -128,7 +128,9 @@ const Chat = () => {
   const [limit, setLimit] = useState(0); // default
 
   const scrollToBottom = () => {
-    bottomRef.current?.scrollIntoView();
+    setTimeout(() => {
+      bottomRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
+    }, 300);
   };
 
   useEffect(() => {
@@ -706,7 +708,6 @@ const Chat = () => {
           >
             {!loading && !chatLoading && user && (
               <>
-                <div ref={bottomRef} />
                 {ichatData.map((item) => {
                   if (item.senderId === user.userId) {
                     return (
@@ -883,6 +884,7 @@ const Chat = () => {
           />
         </Footer>
       )}
+      <div ref={bottomRef} />
       {socketLoading && (
         <Spin
           fullscreen
