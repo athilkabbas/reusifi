@@ -22,7 +22,8 @@ export const callApi = async (url, method, skipRefresh = false, data) => {
     const isRefreshExpired =
       err?.name === "NotAuthorizedException" &&
       err?.message?.includes("Refresh Token has expired");
-    const isUnauthorized = err?.response?.status === 401 || err?.response?.status === 403;
+    const isUnauthorized =
+      err?.response?.status === 401 || err?.response?.status === 403;
 
     if (!skipRefresh && (isRefreshExpired || isUnauthorized)) {
       try {

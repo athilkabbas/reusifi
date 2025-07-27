@@ -38,7 +38,7 @@
 }
 
 * {
-  border-color: #E5E7EB !important;
+  border-color: #e5e7eb !important;
 }
 
 .ant-menu-horizontal > .ant-menu-item {
@@ -60,8 +60,8 @@
 }
 
 /* Menu background already set inline */
-.ant-menu-dark, 
-.ant-menu-dark .ant-menu-item, 
+.ant-menu-dark,
+.ant-menu-dark .ant-menu-item,
 .ant-menu-dark .ant-menu-submenu-title {
   color: white; /* unselected item text color */
 }
@@ -77,11 +77,11 @@
 }
 
 .ant-upload-list {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1)
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .ant-menu-overflow-item-rest.ant-menu-submenu {
-  background: #6366F1 !important;
+  background: #6366f1 !important;
 }
 
 .ant-menu-overflow-item-rest.ant-menu-submenu:hover {
@@ -133,11 +133,9 @@
   color: white !important;
 }
 
-
-
 .ant-radio-button-wrapper-checked {
   /* your styles for the checked radio button */
-  background: #6366F1 !important;
+  background: #6366f1 !important;
 }
 
 /* For most browsers */
@@ -152,8 +150,8 @@
 
 /* Make each slide take only needed width */
 .ant-carousel .slick-slide {
-  flex: 0 0 auto !important;  /* prevent stretching */
-  width: 300px !important;    /* fixed width per slide */
+  flex: 0 0 auto !important; /* prevent stretching */
+  width: 300px !important; /* fixed width per slide */
   display: flex !important;
   justify-content: center;
   align-items: center;

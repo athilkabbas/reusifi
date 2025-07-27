@@ -6,44 +6,43 @@ import { Context } from "../context/provider";
 export function useSessionCheck() {
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [checked, setChecked] = useState(false);
-  const { setToken } = useContext(Context)
+  const { setToken } = useContext(Context);
 
   const errorSessionConfig = {
-    title: 'Session has expired.',
-    content: 'Please login again.',
+    title: "Session has expired.",
+    content: "Please login again.",
     closable: false,
     maskClosable: false,
-    okText: 'Login',
+    okText: "Login",
     onOk: async () => {
-      await signInWithRedirect()
-    }
-  }
+      await signInWithRedirect();
+    },
+  };
   const errorConfig = {
-    title: 'An error has occurred.',
-    content: 'Please login again',
+    title: "An error has occurred.",
+    content: "Please login again",
     closable: false,
     maskClosable: false,
-    okText: 'Login',
+    okText: "Login",
     onOk: async () => {
-      await signInWithRedirect()
-    }
-  }
+      await signInWithRedirect();
+    },
+  };
 
   useEffect(() => {
     const checkSession = async () => {
       try {
         const session = await fetchAuthSession();
         const tokens = session.tokens;
-        if(tokens?.idToken){
+        if (tokens?.idToken) {
           setIsSignedIn(true);
-          setToken(tokens.idToken)
-        }
-        else{
+          setToken(tokens.idToken);
+        } else {
           setIsSignedIn(false);
         }
-      } catch(err) {
-          setIsSignedIn(false);
-      }finally{
+      } catch (err) {
+        setIsSignedIn(false);
+      } finally {
         setChecked(true);
       }
     };
@@ -56,8 +55,8 @@ export function useSessionCheck() {
       if (checked && !isSignedIn) {
         await signInWithRedirect();
       }
-    }
-  completeCheck()
+    };
+    completeCheck();
   }, [checked, isSignedIn]);
 
   return { isSignedIn, checked };

@@ -6,8 +6,10 @@ const awsmobile = {
   oauth: {
     domain: "auth.reusifi.com",
     scope: ["openid", "email", "profile"],
-    redirectSignIn: "https://www.reusifi.com/,https://reusifi.com/,http://localhost:3000/",
-    redirectSignOut: "https://www.reusifi.com/,https://reusifi.com/,http://localhost:3000/",
+    redirectSignIn:
+      "https://www.reusifi.com/,https://reusifi.com/,http://localhost:3000/",
+    redirectSignOut:
+      "https://www.reusifi.com/,https://reusifi.com/,http://localhost:3000/",
     responseType: "code",
   },
 };

@@ -12,10 +12,10 @@ const Provider = ({ children }) => {
   const [chatHasMore, setChatHasMore] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
   const [location, setLocation] = useState({ state: null, district: null });
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [filterList, setFilterList] = useState([]);
   const [lastEvaluatedKeys, setLastEvaluatedKeys] = useState({});
-  const [exhaustedShards, setExhaustedShards] = useState({})
+  const [exhaustedShards, setExhaustedShards] = useState({});
   const [lastEvaluatedKey, setLastEvaluatedKey] = useState(null);
   const [adLastEvaluatedKey, setAdLastEvaluatedKey] = useState(null);
   const [favLastEvaluatedKey, setFavLastEvaluatedKey] = useState(null);
@@ -35,12 +35,12 @@ const Provider = ({ children }) => {
   const [adPageInitialLoad, setAdPageInitialLoad] = useState(true);
   const [chatPageInitialLoad, setChatPageInitialLoad] = useState(true);
   const [priceFilter, setPriceFilter] = useState(null);
-  const [detailInitialLoad, setDetailInitialLoad] = useState(true)
-  const [contactInitialLoad, setContactInitialLoad] = useState(true)
-  const [iChatInitialLoad, setIChatInitialLoad] = useState(true)
-  const [detailData, setDetailData] = useState([])
-  const [unreadChatCount, setUnreadChatCount] = useState(0)
-  const [token, setToken] = useState(null)
+  const [detailInitialLoad, setDetailInitialLoad] = useState(true);
+  const [contactInitialLoad, setContactInitialLoad] = useState(true);
+  const [iChatInitialLoad, setIChatInitialLoad] = useState(true);
+  const [detailData, setDetailData] = useState([]);
+  const [unreadChatCount, setUnreadChatCount] = useState(0);
+  const [token, setToken] = useState(null);
   return (
     <Context.Provider
       value={{

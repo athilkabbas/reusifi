@@ -35,14 +35,7 @@ import { useLocation } from "react-router-dom";
 import { useIsMobile } from "../hooks/windowSize";
 import { callApi } from "../helpers/api";
 const { TextArea } = Input;
-const IconText = [
-  "Home",
-  "Sell",
-  "Chats",
-  "My Ads",
-  "Favourites",
-  "",
-];
+const IconText = ["Home", "Sell", "Chats", "My Ads", "Favourites", ""];
 
 const menuItems = [
   {
@@ -76,7 +69,7 @@ const ChatPage = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [menuLoading, setMenuLoading] = useState(false)
+  const [menuLoading, setMenuLoading] = useState(false);
   const scrollableDivRef = useRef(null);
   const handleNavigation = async (event) => {
     setChatScrollPosition(scrollableDivRef.current.scrollTop);
@@ -137,81 +130,78 @@ const ChatPage = () => {
     setAddProductInitialLoad,
     unreadChatCount,
     setUnreadChatCount,
-    token
+    token,
   } = useContext(Context);
   const [loadedImages, setLoadedImages] = useState({});
   const handleImageLoad = (uuid) => {
-  setLoadedImages((prev) => ({ ...prev, [uuid]: true }));
-};
-const capitalize = (str) => {
-  return str.charAt(0).toUpperCase() + str.slice(1);
-};
+    setLoadedImages((prev) => ({ ...prev, [uuid]: true }));
+  };
+  const capitalize = (str) => {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
 
-    const isMobile = useIsMobile()
+  const isMobile = useIsMobile();
 
+  const calculateLimit = () => {
+    const viewportHeight = window.innerHeight;
+    const itemHeight = 170; // adjust if needed
+    const rowsVisible = Math.ceil(viewportHeight / itemHeight);
+    const columns = getColumnCount(); // depending on screen size (see below)
+    return rowsVisible * 8;
+  };
 
-          const calculateLimit = () => {
-                const viewportHeight = window.innerHeight;
-                const itemHeight = 170; // adjust if needed
-                const rowsVisible = Math.ceil(viewportHeight / itemHeight);
-                const columns = getColumnCount(); // depending on screen size (see below)
-                return rowsVisible * 8;
-              };
-              
-              const getColumnCount = () => {
-                const width = window.innerWidth;
-                if (width < 576) return 2; // xs
-                if (width < 768) return 3; // sm
-                if (width < 992) return 4; // md
-                if (width < 1200) return 5; // lg
-                if (width < 1600) return 6; // xl
-                return 8; // xxl
-              };
-              
-              const [limit, setLimit] = useState(0); // default
-              
-                useEffect(() => {
-                  let prevWidth = window.innerWidth;
-                  const updateLimit = () => {
-                    const newLimit = calculateLimit();
-                    setLimit(newLimit);
-                  };
-                  updateLimit(); // on mount
-                  const handleResize = () => {
-                     const currentWidth = window.innerWidth;
-                    if (chatHasMore && currentWidth !== prevWidth) {
-                         prevWidth = currentWidth;
-                      setChatData([])
-                      setChatLastEvaluatedKey(null)
-                      setChatInitialLoad(true)
-                      updateLimit();
-                    }
-                  };
-                  window.addEventListener("resize",handleResize);
-                  return () => window.removeEventListener("resize", handleResize);
-                }, [chatHasMore]);
-              
-              
+  const getColumnCount = () => {
+    const width = window.innerWidth;
+    if (width < 576) return 2; // xs
+    if (width < 768) return 3; // sm
+    if (width < 992) return 4; // md
+    if (width < 1200) return 5; // lg
+    if (width < 1600) return 6; // xl
+    return 8; // xxl
+  };
 
-    //  useEffect(() => {
-    //       if (scrollableDivRef.current  &&  !loading && !chatLoading) {
-    //         const el = scrollableDivRef.current;
-    //         if (el.scrollHeight <= el.clientHeight && chatHasMore && limit) {
-    //           getChats();
-    //         }
-    //       }
-    //     }, [loading,chatData,chatLoading,limit]); 
+  const [limit, setLimit] = useState(0); // default
 
-      useEffect(() => {
-      if (scrollableDivRef.current &&  !loading && !chatLoading) {
-        requestAnimationFrame(() => {
-          scrollableDivRef.current.scrollTo(0, chatScrollPosition);
-          setScrollLoadMoreData(false);
-        });
+  useEffect(() => {
+    let prevWidth = window.innerWidth;
+    const updateLimit = () => {
+      const newLimit = calculateLimit();
+      setLimit(newLimit);
+    };
+    updateLimit(); // on mount
+    const handleResize = () => {
+      const currentWidth = window.innerWidth;
+      if (chatHasMore && currentWidth !== prevWidth) {
+        prevWidth = currentWidth;
+        setChatData([]);
+        setChatLastEvaluatedKey(null);
+        setChatInitialLoad(true);
+        updateLimit();
       }
-    }, [chatScrollPosition,loading,scrollLoadMoreData,chatData,chatLoading]);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [chatHasMore]);
 
-    const items = [
+  //  useEffect(() => {
+  //       if (scrollableDivRef.current  &&  !loading && !chatLoading) {
+  //         const el = scrollableDivRef.current;
+  //         if (el.scrollHeight <= el.clientHeight && chatHasMore && limit) {
+  //           getChats();
+  //         }
+  //       }
+  //     }, [loading,chatData,chatLoading,limit]);
+
+  useEffect(() => {
+    if (scrollableDivRef.current && !loading && !chatLoading) {
+      requestAnimationFrame(() => {
+        scrollableDivRef.current.scrollTo(0, chatScrollPosition);
+        setScrollLoadMoreData(false);
+      });
+    }
+  }, [chatScrollPosition, loading, scrollLoadMoreData, chatData, chatLoading]);
+
+  const items = [
     HomeFilled,
     UploadOutlined,
     MessageFilled,
@@ -219,50 +209,72 @@ const capitalize = (str) => {
     HeartFilled,
     MenuOutlined,
   ].map((icon, index) => {
-    let divHtml
-    if(isMobile){
-      divHtml =  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: 10 }}>
-              <span style={{ fontSize: '16px', marginTop: '0px' }}>{React.createElement(icon)}</span>
-              <span style={{ fontSize: '10px', marginTop: '5px' }}>{IconText[index]}</span>
-            </div>
-    }
-    else{
-      divHtml = <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', fontSize: 10 }}>
-        <span style={{ fontSize: '20px', marginTop: '0px' }}>{React.createElement(icon)}</span>
-        <span style={{ fontSize: '15px', marginTop: '5px', marginLeft: '5px' }}>{IconText[index]}</span>
-      </div>
+    let divHtml;
+    if (isMobile) {
+      divHtml = (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            fontSize: 10,
+          }}
+        >
+          <span style={{ fontSize: "16px", marginTop: "0px" }}>
+            {React.createElement(icon)}
+          </span>
+          <span style={{ fontSize: "10px", marginTop: "5px" }}>
+            {IconText[index]}
+          </span>
+        </div>
+      );
+    } else {
+      divHtml = (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            fontSize: 10,
+          }}
+        >
+          <span style={{ fontSize: "20px", marginTop: "0px" }}>
+            {React.createElement(icon)}
+          </span>
+          <span
+            style={{ fontSize: "15px", marginTop: "5px", marginLeft: "5px" }}
+          >
+            {IconText[index]}
+          </span>
+        </div>
+      );
     }
     if (index === 2) {
       return {
         key: String(index + 1),
-        icon: (
-          <Badge dot={unreadChatCount}>
-            {divHtml}
-          </Badge>
-        )
+        icon: <Badge dot={unreadChatCount}>{divHtml}</Badge>,
       };
-    }
-    else if(index === 5){
-      return{
+    } else if (index === 5) {
+      return {
         key: String(index + 1),
         icon: divHtml,
-            children: [
-      {
-        key: '6-1',
-        label: 'Contact',
-        icon: React.createElement(MailFilled)
-      },
-      {
-        key: '6-2',
-        label: 'Sign out',
-        icon: React.createElement(LogoutOutlined)
-      },
-    ],
-      }
+        children: [
+          {
+            key: "6-1",
+            label: "Contact",
+            icon: React.createElement(MailFilled),
+          },
+          {
+            key: "6-2",
+            label: "Sign out",
+            icon: React.createElement(LogoutOutlined),
+          },
+        ],
+      };
     }
-      return {
+    return {
       key: String(index + 1),
-      icon: divHtml
+      icon: divHtml,
     };
   });
 
@@ -274,26 +286,26 @@ const capitalize = (str) => {
   //   }
   // }, []);
 
-    const errorSessionConfig = {
-      title: 'Session has expired.',
-      content: 'Please login again.',
-      closable: false,
-      maskClosable: false,
-      okText: 'Login',
-      onOk: async () => {
-        await signInWithRedirect()
-      }
-    }
-      const errorConfig = {
-  title: 'An error has occurred.',
-  content: 'Please try again later.',
-  closable: false,
-  maskClosable: false,
-  okText: 'Close',
-  onOk: () => {
-    navigate('/')
-  }
-}
+  const errorSessionConfig = {
+    title: "Session has expired.",
+    content: "Please login again.",
+    closable: false,
+    maskClosable: false,
+    okText: "Login",
+    onOk: async () => {
+      await signInWithRedirect();
+    },
+  };
+  const errorConfig = {
+    title: "An error has occurred.",
+    content: "Please try again later.",
+    closable: false,
+    maskClosable: false,
+    okText: "Close",
+    onOk: () => {
+      navigate("/");
+    },
+  };
 
   const handleMenuClick = async (e, index) => {
     try {
@@ -304,7 +316,7 @@ const capitalize = (str) => {
       setMenuLoading(true);
       const clickedItemKey = e.key;
       let userIds = chatData[index].conversationId.split("#");
-      userIds.splice(1,1)
+      userIds.splice(1, 1);
       let userId2;
       for (let userId of userIds) {
         if (user.userId !== userId) {
@@ -313,57 +325,81 @@ const capitalize = (str) => {
         }
       }
       if (clickedItemKey === "1") {
-        const result = await callApi(`https://api.reusifi.com/prod/blockUserNew?block=${true}&userId1=${
-            encodeURIComponent(user.userId)
-          }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(chatData[index].productId)}`,'GET')
+        const result = await callApi(
+          `https://api.reusifi.com/prod/blockUserNew?block=${true}&userId1=${encodeURIComponent(
+            user.userId
+          )}&userId2=${encodeURIComponent(
+            userId2
+          )}&productId=${encodeURIComponent(chatData[index].productId)}`,
+          "GET"
+        );
         setChatData((prevValue) => {
           return prevValue.map((item) => {
-              if(item.conversationId === chatData[index].conversationId){
-                  return {...item, blocked: true}
-              }
-              return item
-          })
-        })
-        message.success("User blocked")
-      } else {
-        const result = await callApi(`https://api.reusifi.com/prod/deleteChat?deleteChat=${true}&userId1=${
-            encodeURIComponent(user.userId)
-          }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(chatData[index].productId)}`,'GET')
-        setChatData((prevValue) => {
-          return prevValue.map((item) => {
-              if(item.conversationId === chatData[index].conversationId){
-                  return {...item, deleted: true}
-              }
-              return item
-          })
-        })
-         message.success("Chat deleted")
-      }
-      const getChatsReadPromise = callApi(`https://api.reusifi.com/prod/getChatsRead?userId1=${
-                    encodeURIComponent(user.userId)
-                  }&userId2=${encodeURIComponent(userId2)}&productId=${chatData[index].productId}&read=${encodeURIComponent(true)}`,'GET')
-      const getChatCountPromise = callApi(`https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,'GET')
-      
-       const [chatCount] = await  Promise.all([getChatCountPromise, getChatsReadPromise])
-       setUnreadChatCount(chatCount.data.count)
-        setChatData((chatData) => {
-          return chatData.map((item) => {
-            let conversationId = [user.userId, userId2].sort().join(`#${chatData[index].productId}#`);
-            if (item.conversationId === conversationId) {
-              return { ...item, read: "true" };
+            if (item.conversationId === chatData[index].conversationId) {
+              return { ...item, blocked: true };
             }
             return item;
           });
         });
+        message.success("User blocked");
+      } else {
+        const result = await callApi(
+          `https://api.reusifi.com/prod/deleteChat?deleteChat=${true}&userId1=${encodeURIComponent(
+            user.userId
+          )}&userId2=${encodeURIComponent(
+            userId2
+          )}&productId=${encodeURIComponent(chatData[index].productId)}`,
+          "GET"
+        );
+        setChatData((prevValue) => {
+          return prevValue.map((item) => {
+            if (item.conversationId === chatData[index].conversationId) {
+              return { ...item, deleted: true };
+            }
+            return item;
+          });
+        });
+        message.success("Chat deleted");
+      }
+      const getChatsReadPromise = callApi(
+        `https://api.reusifi.com/prod/getChatsRead?userId1=${encodeURIComponent(
+          user.userId
+        )}&userId2=${encodeURIComponent(userId2)}&productId=${
+          chatData[index].productId
+        }&read=${encodeURIComponent(true)}`,
+        "GET"
+      );
+      const getChatCountPromise = callApi(
+        `https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(
+          user.userId
+        )}&count=${encodeURIComponent(true)}`,
+        "GET"
+      );
+
+      const [chatCount] = await Promise.all([
+        getChatCountPromise,
+        getChatsReadPromise,
+      ]);
+      setUnreadChatCount(chatCount.data.count);
+      setChatData((chatData) => {
+        return chatData.map((item) => {
+          let conversationId = [user.userId, userId2]
+            .sort()
+            .join(`#${chatData[index].productId}#`);
+          if (item.conversationId === conversationId) {
+            return { ...item, read: "true" };
+          }
+          return item;
+        });
+      });
       setMenuLoading(false);
     } catch (err) {
       setMenuLoading(false);
-       if(err?.status === 401){
-              Modal.error(errorSessionConfig)
-        }
-        else{
-          message.error("An Error has occurred")
-        }
+      if (err?.status === 401) {
+        Modal.error(errorSessionConfig);
+      } else {
+        message.error("An Error has occurred");
+      }
       console.log(err);
     }
   };
@@ -376,7 +412,7 @@ const capitalize = (str) => {
       e.domEvent.stopPropagation();
       const clickedItemKey = e.key;
       let userIds = chatData[index].conversationId.split("#");
-      userIds.splice(1,1)
+      userIds.splice(1, 1);
       let userId2;
       for (let userId of userIds) {
         if (user.userId !== userId) {
@@ -385,31 +421,41 @@ const capitalize = (str) => {
         }
       }
       if (clickedItemKey === "1") {
-        const result = await callApi(`https://api.reusifi.com/prod/unBlockUser?unBlock=${true}&userId1=${
-            encodeURIComponent(user.userId)
-          }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(chatData[index].productId)}`,'GET')
+        const result = await callApi(
+          `https://api.reusifi.com/prod/unBlockUser?unBlock=${true}&userId1=${encodeURIComponent(
+            user.userId
+          )}&userId2=${encodeURIComponent(
+            userId2
+          )}&productId=${encodeURIComponent(chatData[index].productId)}`,
+          "GET"
+        );
         setChatData((prevValue) => {
           return prevValue.map((item) => {
-              if(item.conversationId === chatData[index].conversationId){
-                  return {...item, blocked: false}
-              }
-              return item
-          })
-        })
-         message.success("User unblocked")
+            if (item.conversationId === chatData[index].conversationId) {
+              return { ...item, blocked: false };
+            }
+            return item;
+          });
+        });
+        message.success("User unblocked");
       } else {
-        const result = await callApi(`https://api.reusifi.com/prod/deleteChat?deleteChat=${true}&userId1=${
-            encodeURIComponent(user.userId)
-          }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(chatData[index].productId)}`,'GET')
+        const result = await callApi(
+          `https://api.reusifi.com/prod/deleteChat?deleteChat=${true}&userId1=${encodeURIComponent(
+            user.userId
+          )}&userId2=${encodeURIComponent(
+            userId2
+          )}&productId=${encodeURIComponent(chatData[index].productId)}`,
+          "GET"
+        );
         setChatData((prevValue) => {
           return prevValue.map((item) => {
-              if(item.conversationId === chatData[index].conversationId){
-                  return {...item, deleted: true}
-              }
-              return item
-          })
-        })
-         message.success("Chat deleted")
+            if (item.conversationId === chatData[index].conversationId) {
+              return { ...item, deleted: true };
+            }
+            return item;
+          });
+        });
+        message.success("Chat deleted");
       }
       //  await callApi(`https://api.reusifi.com/prod/getChatsRead?userId1=${
       //               encodeURIComponent(user.userId)
@@ -428,12 +474,11 @@ const capitalize = (str) => {
       setMenuLoading(false);
     } catch (err) {
       setMenuLoading(false);
-       if(err?.status === 401){
-              Modal.error(errorSessionConfig)
-        }
-        else{
-          message.error("An Error has occurred")
-        }
+      if (err?.status === 401) {
+        Modal.error(errorSessionConfig);
+      } else {
+        message.error("An Error has occurred");
+      }
       console.log(err);
     }
   };
@@ -468,30 +513,29 @@ const capitalize = (str) => {
   };
 
   function formatChatTimestamp(timestamp) {
-  const date = new Date(timestamp);
-  const now = new Date();
+    const date = new Date(timestamp);
+    const now = new Date();
 
-  const isToday = date.toDateString() === now.toDateString();
+    const isToday = date.toDateString() === now.toDateString();
 
-  const yesterday = new Date();
-  yesterday.setDate(now.getDate() - 1);
-  const isYesterday = date.toDateString() === yesterday.toDateString();
+    const yesterday = new Date();
+    yesterday.setDate(now.getDate() - 1);
+    const isYesterday = date.toDateString() === yesterday.toDateString();
 
-  const day = String(date.getDate()).padStart(2, "0");
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const year = date.getFullYear();
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
 
-  const timeString = date.toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+    const timeString = date.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
 
-  if (isToday) return timeString;
-  if (isYesterday) return `Yesterday ${timeString}`;
+    if (isToday) return timeString;
+    if (isYesterday) return `Yesterday ${timeString}`;
 
-  return `${day}/${month}/${year} ${timeString}`;
-}
-
+    return `${day}/${month}/${year} ${timeString}`;
+  }
 
   const menuBlocked = (index) => {
     return (
@@ -512,7 +556,14 @@ const capitalize = (str) => {
     try {
       const scrollPosition = scrollableDivRef.current.scrollTop;
       setLoading(true);
-      const result = await callApi(`https://api.reusifi.com/prod/getChatsNew?userId1=${encodeURIComponent(user.userId)}&lastEvaluatedKey=${encodeURIComponent(chatLastEvaluatedKey)}&limit=${encodeURIComponent(limit)}`,'GET')
+      const result = await callApi(
+        `https://api.reusifi.com/prod/getChatsNew?userId1=${encodeURIComponent(
+          user.userId
+        )}&lastEvaluatedKey=${encodeURIComponent(
+          chatLastEvaluatedKey
+        )}&limit=${encodeURIComponent(limit)}`,
+        "GET"
+      );
       setChatData([...chatData, ...result.data.items]);
       setChatLastEvaluatedKey(result.data.lastEvaluatedKey);
       // If no more data to load, set hasMore to false
@@ -523,15 +574,14 @@ const capitalize = (str) => {
         setChatHasMore(true);
       }
       setChatScrollPosition(scrollPosition);
-      setChatInitialLoad(false)
+      setChatInitialLoad(false);
     } catch (err) {
       setLoading(false);
       // message.error("An Error has occurred")
-       if(err?.status === 401){
-        Modal.error(errorSessionConfig)
-      }
-      else{
-        Modal.error(errorConfig)
+      if (err?.status === 401) {
+        Modal.error(errorSessionConfig);
+      } else {
+        Modal.error(errorConfig);
       }
       console.log(err);
     }
@@ -544,70 +594,85 @@ const capitalize = (str) => {
     fetchUser();
   }, []);
 
-useEffect(() => {
-  if (user && user.userId && chatInitialLoad && limit) {
-    try{
-    setChatLoading(true);
-    setLoading(true);
-      const getChatCount = callApi(`https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,'GET')
+  useEffect(() => {
+    if (user && user.userId && chatInitialLoad && limit) {
+      try {
+        setChatLoading(true);
+        setLoading(true);
+        const getChatCount = callApi(
+          `https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(
+            user.userId
+          )}&count=${encodeURIComponent(true)}`,
+          "GET"
+        );
 
-    const getChatsPromise = getChats()
+        const getChatsPromise = getChats();
 
-
-    Promise.all([getChatCount, getChatsPromise])
-      .then(([chatResult]) => {
-        setUnreadChatCount(chatResult.data.count);
-      })
-      .catch((err) => {
-           if(err?.status === 401){
-                Modal.error(errorSessionConfig)
-              }
-              else{
-                Modal.error(errorConfig)
-              }
-        console.error(err);
-      })
-      .finally(() => {
-        setChatLoading(false);
-        setLoading(false);
-      });
-    }
-    catch(err){
-      // message.error("An Error has occurred")
-       if(err?.status === 401){
-        Modal.error(errorSessionConfig)
+        Promise.all([getChatCount, getChatsPromise])
+          .then(([chatResult]) => {
+            setUnreadChatCount(chatResult.data.count);
+          })
+          .catch((err) => {
+            if (err?.status === 401) {
+              Modal.error(errorSessionConfig);
+            } else {
+              Modal.error(errorConfig);
+            }
+            console.error(err);
+          })
+          .finally(() => {
+            setChatLoading(false);
+            setLoading(false);
+          });
+      } catch (err) {
+        // message.error("An Error has occurred")
+        if (err?.status === 401) {
+          Modal.error(errorSessionConfig);
+        } else {
+          Modal.error(errorConfig);
+        }
       }
-      else{
-        Modal.error(errorConfig)
-      }
     }
-  }
-}, [user, chatInitialLoad,limit]);
+  }, [user, chatInitialLoad, limit]);
 
   return (
-    <Layout style={{ height: "100dvh", overflow: "hidden", background:"#F9FAFB" }}>
-      
-       {!isMobile && <Header style={{ display: 'flex', alignItems: 'center', padding: '0px', height: '50px' }}>
-              <Menu
-                onClick={(event) => handleNavigation(event)}
-                theme="dark"
-                mode="horizontal"
-                defaultSelectedKeys={["3"]}
-                items={items}
-                style={{ minWidth: 0, justifyContent: 'space-around',
-            flex: 1,background: "#6366F1" }}
-              />
-            </Header>}
+    <Layout
+      style={{ height: "100dvh", overflow: "hidden", background: "#F9FAFB" }}
+    >
+      {!isMobile && (
+        <Header
+          style={{
+            display: "flex",
+            alignItems: "center",
+            padding: "0px",
+            height: "50px",
+          }}
+        >
+          <Menu
+            onClick={(event) => handleNavigation(event)}
+            theme="dark"
+            mode="horizontal"
+            defaultSelectedKeys={["3"]}
+            items={items}
+            style={{
+              minWidth: 0,
+              justifyContent: "space-around",
+              flex: 1,
+              background: "#6366F1",
+            }}
+          />
+        </Header>
+      )}
       <Content style={{ padding: "0 15px" }}>
         <div
-         className="hide-scrollbar overflow-auto"
+          className="hide-scrollbar overflow-auto"
           id="scrollableDiv"
           ref={scrollableDivRef}
           style={{
             padding: "15px 5px",
             height: "100%",
             background: "#F9FAFB",
-            borderRadius: '0px',
+            borderRadius: "0px",
             overflowY: "scroll",
             overflowX: "hidden",
             paddingBottom: "60px",
@@ -626,9 +691,8 @@ useEffect(() => {
             hasMore={chatHasMore}
             scrollableTarget="scrollableDiv"
           >
-            {!loading &&
-              !chatLoading &&
-              user && chatData.length > 0 && (<List
+            {!loading && !chatLoading && user && chatData.length > 0 && (
+              <List
                 grid={{
                   xs: 1,
                   sm: 1,
@@ -639,47 +703,60 @@ useEffect(() => {
                   gutter: 10,
                 }}
                 dataSource={chatData}
-                renderItem={(item,index) => {
-                  if(item.deleted){
-                    return null
+                renderItem={(item, index) => {
+                  if (item.deleted) {
+                    return null;
                   }
                   return (
                     <>
-                    <List.Item key={item.timestamp}>
-                         <Card
+                      <List.Item key={item.timestamp}>
+                        <Card
                           style={{
-                            borderRadius: '12px',
+                            borderRadius: "12px",
                             boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                             height: "150px",
                             width: !isMobile ? "50vw" : "calc(100vw - 50px)",
-                            backgroundColor: item.read === "false" ? "#e0e7ff" : "#ffffff"
+                            backgroundColor:
+                              item.read === "false" ? "#e0e7ff" : "#ffffff",
                           }}
                           onClick={() => {
                             if (item.blocked) {
-                              message.info("You have blocked this user, unblock to chat")
+                              message.info(
+                                "You have blocked this user, unblock to chat"
+                              );
                             } else {
                               setChatScrollPosition(
                                 scrollableDivRef.current.scrollTop
                               );
                               navigate("/chat", {
-                                state: { conversationId: item.conversationId, productId: item.productId },
+                                state: {
+                                  conversationId: item.conversationId,
+                                  productId: item.productId,
+                                },
                               });
                             }
                           }}
                           key={item.conversationId}
                           title={
                             <Row>
-                              <Col span={22}  style={{
-                              whiteSpace: "nowrap",
-                              textOverflow: "ellipsis",
-                              overflow: "hidden",
-                              paddingRight: '70px'
-                            }}>
-                               <span>{capitalize(item.title)}</span>
+                              <Col
+                                span={22}
+                                style={{
+                                  whiteSpace: "nowrap",
+                                  textOverflow: "ellipsis",
+                                  overflow: "hidden",
+                                  paddingRight: "70px",
+                                }}
+                              >
+                                <span>{capitalize(item.title)}</span>
                               </Col>
                               <Col>
                                 {!item.blocked && (
-                                  <Dropdown overlay={menu(index)} trigger={['click']} placement="bottomRight">
+                                  <Dropdown
+                                    overlay={menu(index)}
+                                    trigger={["click"]}
+                                    placement="bottomRight"
+                                  >
                                     <a
                                       onClick={(e) => {
                                         e.preventDefault();
@@ -693,7 +770,11 @@ useEffect(() => {
                                   </Dropdown>
                                 )}
                                 {item.blocked && (
-                                  <Dropdown overlay={menuBlocked(index)} trigger={['click']} placement="bottomRight">
+                                  <Dropdown
+                                    overlay={menuBlocked(index)}
+                                    trigger={["click"]}
+                                    placement="bottomRight"
+                                  >
                                     <a
                                       onClick={(e) => {
                                         e.preventDefault();
@@ -711,136 +792,163 @@ useEffect(() => {
                           }
                           bordered
                         >
-                          <div style={{ display:'flex', justifyContent: 'space-between' }}>
-                           <div>
-                         <div
+                          <div
                             style={{
-                              whiteSpace: "nowrap",
-                              textOverflow: "ellipsis",
-                              overflow: "hidden",
-                              maxWidth: isMobile ? '50dvw' : '30dvw',
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: '6px',
+                              display: "flex",
+                              justifyContent: "space-between",
                             }}
                           >
-                            {item.read === "false" && (
-                              <span
-                                style={{
-                                  width: 8,
-                                  height: 8,
-                                  borderRadius: '50%',
-                                  backgroundColor: '#ff4d4f',
-                                  display: 'inline-block',
-                                  flexShrink: 0,
-                                }}
-                              />
-                            )}
-                            <span>{item.message}</span>
-                          </div>
-                          <div style={{ fontSize: "10px" }}>
-                            {formatChatTimestamp(item.timestamp)}{" "}
-                          </div>
-                          </div>
-                            <div onClick={(e) => e.stopPropagation()} style={{  width: "50px", height: "60px", display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            {!loadedImages[item.productId] && (
+                            <div>
                               <div
                                 style={{
-                                  width: "50px",
-                                  height: "60px",
+                                  whiteSpace: "nowrap",
+                                  textOverflow: "ellipsis",
+                                  overflow: "hidden",
+                                  maxWidth: isMobile ? "50dvw" : "30dvw",
                                   display: "flex",
-                                  justifyContent: "center",
                                   alignItems: "center",
-                                  backgroundColor: "#f0f0f0",
+                                  gap: "6px",
                                 }}
                               >
-                                <Spin
-                                  indicator={
-                                    <LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />
-                                  }
-                                />
+                                {item.read === "false" && (
+                                  <span
+                                    style={{
+                                      width: 8,
+                                      height: 8,
+                                      borderRadius: "50%",
+                                      backgroundColor: "#ff4d4f",
+                                      display: "inline-block",
+                                      flexShrink: 0,
+                                    }}
+                                  />
+                                )}
+                                <span>{item.message}</span>
                               </div>
-                            )}
-                            <Image
-                            preview={true}
-                              src={item.image}
-                              alt={item.title}
+                              <div style={{ fontSize: "10px" }}>
+                                {formatChatTimestamp(item.timestamp)}{" "}
+                              </div>
+                            </div>
+                            <div
+                              onClick={(e) => e.stopPropagation()}
                               style={{
-                                display: loadedImages[item.productId] ? "block" : "none",
+                                width: "50px",
                                 height: "60px",
-                                objectFit: "contain",
-                                borderRadius: '5px'
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
                               }}
-                               onClick={(e) => {
-                                e.stopPropagation();
+                            >
+                              {!loadedImages[item.productId] && (
+                                <div
+                                  style={{
+                                    width: "50px",
+                                    height: "60px",
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    backgroundColor: "#f0f0f0",
+                                  }}
+                                >
+                                  <Spin
+                                    indicator={
+                                      <LoadingOutlined
+                                        style={{
+                                          fontSize: 48,
+                                          color: "#6366F1",
+                                        }}
+                                        spin
+                                      />
+                                    }
+                                  />
+                                </div>
+                              )}
+                              <Image
+                                preview={true}
+                                src={item.image}
+                                alt={item.title}
+                                style={{
+                                  display: loadedImages[item.productId]
+                                    ? "block"
+                                    : "none",
+                                  height: "60px",
+                                  objectFit: "contain",
+                                  borderRadius: "5px",
+                                }}
+                                onClick={(e) => {
+                                  e.stopPropagation();
                                 }}
                                 onLoad={() => handleImageLoad(item.productId)}
                                 onError={() => handleImageLoad(item.productId)}
-                            />
-                          </div>
+                              />
+                            </div>
                           </div>
                         </Card>
-                    </List.Item>
+                      </List.Item>
                     </>
-                  )
+                  );
                 }}
-              />)
-            }
-            {(loading || chatLoading) && 
-            <Skeleton
-              paragraph={{
-                rows: 4,
-              }}
-              active
-            />
-            }
-            {
-              chatData.length === 0 && !loading && !chatLoading && 
-              (<div
-                  style={{
-                    height: "50vh",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Empty description="No items found" />
-                </div>)
-            }
+              />
+            )}
+            {(loading || chatLoading) && (
+              <Skeleton
+                paragraph={{
+                  rows: 4,
+                }}
+                active
+              />
+            )}
+            {chatData.length === 0 && !loading && !chatLoading && (
+              <div
+                style={{
+                  height: "50vh",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Empty description="No items found" />
+              </div>
+            )}
           </InfiniteScroll>
         </div>
       </Content>
-      {isMobile && <Footer
-        style={{
-          position: "fixed",
-          bottom: 0,
-          zIndex: 1,
-          width: "100vw",
-          display: "flex",
-          alignItems: "center",
-          height: '50px',
-          padding: "0px",
-        }}
-      >
-        <div className="demo-logo" />
-        <Menu
-          onClick={(event) => handleNavigation(event)}
-          theme="dark"
-          mode="horizontal"
-          defaultSelectedKeys={["3"]}
-          items={items}
+      {isMobile && (
+        <Footer
           style={{
-            minWidth: 0,background: "#6366F1",
-            justifyContent: 'space-around',
-            flex: 1
+            position: "fixed",
+            bottom: 0,
+            zIndex: 1,
+            width: "100vw",
+            display: "flex",
+            alignItems: "center",
+            height: "50px",
+            padding: "0px",
           }}
+        >
+          <div className="demo-logo" />
+          <Menu
+            onClick={(event) => handleNavigation(event)}
+            theme="dark"
+            mode="horizontal"
+            defaultSelectedKeys={["3"]}
+            items={items}
+            style={{
+              minWidth: 0,
+              background: "#6366F1",
+              justifyContent: "space-around",
+              flex: 1,
+            }}
+          />
+        </Footer>
+      )}
+      {menuLoading && (
+        <Spin
+          fullscreen
+          indicator={
+            <LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />
+          }
         />
-      </Footer>}
-                  {
-              menuLoading && (
-                              <Spin fullscreen indicator={<LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />} />
-                            )
-            }
+      )}
     </Layout>
   );
 };

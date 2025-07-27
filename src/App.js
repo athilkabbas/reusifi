@@ -1,15 +1,13 @@
 import { useContext, useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import {
-  LoadingOutlined
-} from "@ant-design/icons";
+import { LoadingOutlined } from "@ant-design/icons";
 import { Amplify } from "aws-amplify";
 import awsconfig from "./aws-exports";
 import {
   signInWithRedirect,
   fetchAuthSession,
   signOut,
-  getCurrentUser
+  getCurrentUser,
 } from "@aws-amplify/auth";
 
 import AddDress from "./pages/AddDress";
@@ -21,7 +19,7 @@ import ChatPage from "./pages/ChatPage";
 import Ads from "./pages/Ads";
 import Contact from "./pages/Contact";
 import Favourites from "./pages/Favourite";
-import { Spin, Modal  } from "antd";
+import { Spin, Modal } from "antd";
 import { Context } from "./context/provider";
 
 import "./App.css";
@@ -37,37 +35,43 @@ function App() {
   );
 }
 
-     const errorSessionConfig = {
-       title: 'Session has expired.',
-       content: 'Please login again.',
-       closable: false,
-       maskClosable: false,
-       okText: 'Login',
-       onOk: async () => {
-         await signInWithRedirect()
-       }
-     }
-         const errorConfig = {
-  title: 'An error has occurred.',
-  content: 'Please login again.',
+const errorSessionConfig = {
+  title: "Session has expired.",
+  content: "Please login again.",
   closable: false,
   maskClosable: false,
-  okText: 'Login',
+  okText: "Login",
+  onOk: async () => {
+    await signInWithRedirect();
+  },
+};
+const errorConfig = {
+  title: "An error has occurred.",
+  content: "Please login again.",
+  closable: false,
+  maskClosable: false,
+  okText: "Login",
   onOk: () => {
-    signInWithRedirect()
-  }
-}
+    signInWithRedirect();
+  },
+};
 
 function AppWithSession() {
   const { isSignedIn, checked } = useSessionCheck();
-  const { setUnreadChatCount, token, setChatInitialLoad, setChatData, setChatLastEvaluatedKey } = useContext(Context)
-  const [socketLoading, setSocketLoading] = useState(false)
-  const location = useLocation()
-    useEffect(() => {
+  const {
+    setUnreadChatCount,
+    token,
+    setChatInitialLoad,
+    setChatData,
+    setChatLastEvaluatedKey,
+  } = useContext(Context);
+  const [socketLoading, setSocketLoading] = useState(false);
+  const location = useLocation();
+  useEffect(() => {
     let socket;
     const fetchNotifications = async () => {
       try {
-        setSocketLoading(true)
+        setSocketLoading(true);
         const currentUser = await getCurrentUser();
 
         socket = new WebSocket(
@@ -75,67 +79,70 @@ function AppWithSession() {
         );
         socket.onopen = () => {
           console.log("Connected to the WebSocket");
-          setSocketLoading(false)
+          setSocketLoading(false);
         };
 
         socket.onerror = (err) => {
-           setSocketLoading(false)
-           Modal.error(errorConfig)
-        }
+          setSocketLoading(false);
+          Modal.error(errorConfig);
+        };
 
         socket.onmessage = async (event) => {
-          setChatData([])
-          setChatLastEvaluatedKey(null)
-          setChatInitialLoad(true)
-          setUnreadChatCount(1)
+          setChatData([]);
+          setChatLastEvaluatedKey(null);
+          setChatInitialLoad(true);
+          setUnreadChatCount(1);
         };
         // To close the connection
         socket.onclose = () => {
           console.log("Disconnected from WebSocket");
         };
       } catch (err) {
-        setSocketLoading(false)
-           if (err?.name === "NotAuthorizedException" && err?.message?.includes("Refresh Token has expired")) {
-            Modal.error(errorSessionConfig)
-          } 
-          else if(err?.status === 401){
-            Modal.error(errorSessionConfig)
-          }
-          else {
-            Modal.error(errorConfig)
-          }
+        setSocketLoading(false);
+        if (
+          err?.name === "NotAuthorizedException" &&
+          err?.message?.includes("Refresh Token has expired")
+        ) {
+          Modal.error(errorSessionConfig);
+        } else if (err?.status === 401) {
+          Modal.error(errorSessionConfig);
+        } else {
+          Modal.error(errorConfig);
+        }
       }
     };
-    if(token){
+    if (token) {
       fetchNotifications();
     }
     return () => {
-      if(socket && socket.readyState === WebSocket.OPEN){
+      if (socket && socket.readyState === WebSocket.OPEN) {
         socket.close();
-      }
-      else if(socket && socket.readyState === WebSocket.CONNECTING){
+      } else if (socket && socket.readyState === WebSocket.CONNECTING) {
         socket.onopen = () => {
-          socket.close()
-        }
+          socket.close();
+        };
       }
     };
   }, [token]);
 
-  if(socketLoading){
-     return (
+  if (socketLoading) {
+    return (
       <Spin
         fullscreen
-        indicator={<LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />}
+        indicator={
+          <LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />
+        }
       />
     );
   }
-  
 
   if (!checked) {
     return (
       <Spin
         fullscreen
-        indicator={<LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />}
+        indicator={
+          <LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />
+        }
       />
     );
   }

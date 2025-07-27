@@ -129,12 +129,14 @@ const Chat = () => {
 
   const scrollToBottom = () => {
     setTimeout(() => {
+      console.log("athil");
       bottomRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
     }, 300);
   };
 
   useEffect(() => {
     let prevWidth = window.innerWidth;
+    let prevHeight = window.innerHeight;
     const updateLimit = () => {
       const newLimit = calculateLimit();
       setLimit(newLimit);
@@ -144,13 +146,17 @@ const Chat = () => {
 
     const handleResize = () => {
       const currentWidth = window.innerWidth;
-
+      const currentHeight = window.innerHeight;
       if (hasMore && currentWidth !== prevWidth) {
         prevWidth = currentWidth;
         setIChatData([]);
         setLastEvaluatedKey(null);
         setIChatInitialLoad(true);
         updateLimit();
+      }
+      if (currentHeight !== prevHeight) {
+        prevHeight = currentHeight;
+        scrollToBottom();
       }
     };
 
