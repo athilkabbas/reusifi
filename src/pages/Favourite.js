@@ -184,13 +184,13 @@ const Favourites = () => {
     updateLimit(); // on mount
     const handleResize = () => {
       const currentWidth = window.innerWidth;
-      if (favHasMore && currentWidth !== prevWidth) {
-        prevWidth = currentWidth;
+      if (favHasMore && currentWidth > prevWidth) {
         setFavData([]);
         setFavLastEvaluatedKey(null);
         setFavInitialLoad(true);
         updateLimit();
       }
+      prevWidth = currentWidth;
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);

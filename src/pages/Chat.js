@@ -145,8 +145,7 @@ const Chat = () => {
     const handleResize = () => {
       const currentWidth = window.innerWidth;
       const currentHeight = window.innerHeight;
-      if (hasMore && currentWidth !== prevWidth) {
-        prevWidth = currentWidth;
+      if (hasMore && currentWidth > prevWidth) {
         setIChatData([]);
         setLastEvaluatedKey(null);
         setIChatInitialLoad(true);
@@ -155,6 +154,7 @@ const Chat = () => {
       if (currentHeight < prevHeight) {
         scrollToBottom();
       }
+      prevWidth = currentWidth;
       prevHeight = currentHeight;
     };
     window.addEventListener("resize", handleResize);
@@ -547,9 +547,7 @@ const Chat = () => {
   }, [scrollPosition, loading, scrollLoadMoreData, ichatData, chatLoading]);
 
   const handleChange = (value) => {
-    if (value) {
-      setMessageValue(value);
-    }
+    setMessageValue(value);
   };
   const handleSubmit = () => {
     if (messageValue) {

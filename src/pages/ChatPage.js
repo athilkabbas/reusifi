@@ -143,13 +143,13 @@ const ChatPage = () => {
     updateLimit(); // on mount
     const handleResize = () => {
       const currentWidth = window.innerWidth;
-      if (chatHasMore && currentWidth !== prevWidth) {
-        prevWidth = currentWidth;
+      if (chatHasMore && currentWidth > prevWidth) {
         setChatData([]);
         setChatLastEvaluatedKey(null);
         setChatInitialLoad(true);
         updateLimit();
       }
+      prevWidth = currentWidth;
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);

@@ -199,14 +199,14 @@ const Home = () => {
     updateLimit(); // on mount
     const handleResize = () => {
       const currentWidth = window.innerWidth;
-      if (hasMore && currentWidth !== prevWidth) {
-        prevWidth = currentWidth;
+      if (hasMore && currentWidth > prevWidth) {
         setData([]);
         setLastEvaluatedKeys({});
         setExhaustedShards({});
         setInitialLoad(true);
         updateLimit();
       }
+      prevWidth = currentWidth;
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);

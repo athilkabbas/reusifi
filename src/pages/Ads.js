@@ -103,13 +103,13 @@ const Ads = () => {
     updateLimit(); // on mount
     const handleResize = () => {
       const currentWidth = window.innerWidth;
-      if (adHasMore && currentWidth !== prevWidth) {
-        prevWidth = currentWidth;
+      if (adHasMore && currentWidth > prevWidth) {
         setAdData([]);
         setAdLastEvaluatedKey(null);
         setAdInitialLoad(true);
         updateLimit();
       }
+      prevWidth = currentWidth;
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
