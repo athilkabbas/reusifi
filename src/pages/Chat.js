@@ -128,12 +128,10 @@ const Chat = () => {
   const [limit, setLimit] = useState(0); // default
 
   const scrollToBottom = () => {
-    setTimeout(() => {
-      console.log("athil");
-      bottomRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
-    }, 300);
+    console.log("athil");
+    bottomRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
   };
-  const keyboardOpen = useRef(false); // useRef to persist value
+
   useEffect(() => {
     let prevWidth = window.innerWidth;
     let prevHeight = window.innerHeight;
@@ -154,20 +152,11 @@ const Chat = () => {
         setIChatInitialLoad(true);
         updateLimit();
       }
-      // Detect keyboard open (height reduced significantly)
-      if (currentHeight < prevHeight - 100) {
-        keyboardOpen.current = true;
+      if (currentHeight < prevHeight) {
+        scrollToBottom();
       }
-
-      // Detect keyboard close (height increased significantly after being open)
-      if (keyboardOpen.current && currentHeight > prevHeight + 100) {
-        keyboardOpen.current = false;
-        textAreaRef.current?.blur(); // only blur on keyboard close
-      }
-
       prevHeight = currentHeight;
     };
-
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, [hasMore]);
@@ -849,7 +838,6 @@ const Chat = () => {
           autoSize={{ minRows: 1, maxRows: 1 }}
           onChange={(event) => handleChange(event.target.value)}
           placeholder="Enter message"
-          onFocus={scrollToBottom}
           value={messageValue}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
