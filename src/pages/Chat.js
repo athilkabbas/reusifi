@@ -137,6 +137,7 @@ const Chat = () => {
   useEffect(() => {
     let prevWidth = window.innerWidth;
     let prevHeight = window.innerHeight;
+    let keyboardOpen = false;
     const updateLimit = () => {
       const newLimit = calculateLimit();
       setLimit(newLimit);
@@ -154,9 +155,17 @@ const Chat = () => {
         setIChatInitialLoad(true);
         updateLimit();
       }
-      if (currentHeight > prevHeight + 100) {
-        textAreaRef.current.blur();
+      // Detect keyboard open (height reduced significantly)
+      if (currentHeight < prevHeight - 100) {
+        keyboardOpen = true;
       }
+
+      // Detect keyboard close (height increased significantly after being open)
+      if (keyboardOpen && currentHeight > prevHeight + 100) {
+        keyboardOpen = false;
+        textAreaRef.current?.blur(); // only blur on keyboard close
+      }
+
       prevHeight = currentHeight;
     };
 
