@@ -411,7 +411,7 @@ const Chat = () => {
         setLoading(true);
         
         await getChats()
-        const getChatCount = await callApi(`https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,'GET',true)
+        const getChatCount = await callApi(`https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,'GET')
         setUnreadChatCount(getChatCount.data.count);
         setChatLoading(false);
         setLoading(false);

@@ -336,7 +336,7 @@ const handleImageLoad = (uuid) => {
       const favList = notUserData.map((item) => item["item"]["uuid"])
       const favState = { email: user.userId, favList }
       const cursorFav = encodeCursor(favState)
-      const favResult = await callApi(`https://api.reusifi.com/prod/getFavouritesList`, 'POST',true,{ cursorFav })
+      const favResult = await callApi(`https://api.reusifi.com/prod/getFavouritesList`, 'POST',false,{ cursorFav })
       setFilterList([...filterList, ...favResult.data.finalResult]);
       setLoading(false);
       setScrollPosition(scrollPosition);
