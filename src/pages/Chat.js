@@ -149,11 +149,37 @@ const Chat = () => {
                 };
                 
                 const [limit, setLimit] = useState(0); // default
+
+                useEffect(() => {
+  const onFocus = () => {
+    setTimeout(() => {
+      window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight);
+    }, 150);
+  };
+
+  const onBlur = () => {
+    setTimeout(() => {
+      window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight);
+    }, 150);
+  };
+
+  const inputEl = document.querySelector('textarea'); // or your input selector
+  if (inputEl) {
+    inputEl.addEventListener('focus', onFocus);
+    inputEl.addEventListener('blur', onBlur);
+  }
+
+  return () => {
+    if (inputEl) {
+      inputEl.removeEventListener('focus', onFocus);
+      inputEl.removeEventListener('blur', onBlur);
+    }
+  };
+}, []);
                 
                 useEffect(() => {
         let prevWidth = window.innerWidth;
         let prevHeight = window.innerHeight;
-         let resizeTimeout;
         const updateLimit = () => {
           const newLimit = calculateLimit();
           setLimit(newLimit);
@@ -175,21 +201,14 @@ const Chat = () => {
 
         if (currentHeight !== prevHeight) {
             prevHeight = currentHeight;
-            if (resizeTimeout) 
-              {
-                clearTimeout(resizeTimeout);
-              }
-            resizeTimeout = setTimeout(() => {
+            setTimeout(() => {
               window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight);
-            }, 150); // debounce to avoid multiple triggers
-              }
+            },150)
+          }
       };
 
       window.addEventListener("resize", handleResize);
-       return () => {
-        window.removeEventListener("resize", handleResize);
-        if (resizeTimeout) clearTimeout(resizeTimeout);
-      };
+       return () => window.removeEventListener("resize", handleResize);
     }, [hasMore]);
 
   
