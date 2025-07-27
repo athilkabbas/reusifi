@@ -152,7 +152,7 @@ const Chat = () => {
                 
                 useEffect(() => {
         let prevWidth = window.innerWidth;
-        let prevHeight = document.body.scrollHeight;
+        let prevHeight = window.innerHeight;
 
         const updateLimit = () => {
           const newLimit = calculateLimit();
@@ -163,7 +163,7 @@ const Chat = () => {
 
       const handleResize = () => {
         const currentWidth = window.innerWidth;
-        const currentHeight = document.body.scrollHeight;
+        const currentHeight = window.innerHeight;
 
         if (hasMore && currentWidth !== prevWidth) {
           prevWidth = currentWidth;
@@ -175,7 +175,9 @@ const Chat = () => {
 
         if (currentHeight !== prevHeight) {
           prevHeight = currentHeight;
-          scrollableDivRef.current.scrollTo(0, scrollableDivRef.current.scrollHeight);
+          setTimeout(() => {
+            scrollableDivRef.current.scrollTo(0, scrollableDivRef.current.scrollHeight);
+          },100)
         }
       };
 
