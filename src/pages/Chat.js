@@ -133,11 +133,10 @@ const Chat = () => {
       bottomRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
     }, 300);
   };
-
+  const keyboardOpen = useRef(false); // useRef to persist value
   useEffect(() => {
     let prevWidth = window.innerWidth;
     let prevHeight = window.innerHeight;
-    let keyboardOpen = false;
     const updateLimit = () => {
       const newLimit = calculateLimit();
       setLimit(newLimit);
@@ -157,12 +156,12 @@ const Chat = () => {
       }
       // Detect keyboard open (height reduced significantly)
       if (currentHeight < prevHeight - 100) {
-        keyboardOpen = true;
+        keyboardOpen.current = true;
       }
 
       // Detect keyboard close (height increased significantly after being open)
-      if (keyboardOpen && currentHeight > prevHeight + 100) {
-        keyboardOpen = false;
+      if (keyboardOpen.current && currentHeight > prevHeight + 100) {
+        keyboardOpen.current = false;
         textAreaRef.current?.blur(); // only blur on keyboard close
       }
 
