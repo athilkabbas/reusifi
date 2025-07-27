@@ -171,10 +171,10 @@ const getColumnCount = () => {
   const width = window.innerWidth;
   if (width < 576) return 2; // xs
   if (width < 768) return 3; // sm
-  if (width < 992) return 4; // md
-  if (width < 1200) return 5; // lg
-  if (width < 1600) return 6; // xl
-  return 8; // xxl
+  if (width < 992) return 3; // md
+  if (width < 1200) return 4; // lg
+  if (width < 1600) return 4; // xl
+  return 6; // xxl
 };
 
 const errorSessionConfig = {
@@ -576,10 +576,10 @@ const handleImageLoad = (uuid) => {
                 grid={{
                   xs: 2,
                   sm: 3,
-                  md: 4,
-                  lg: 5,
-                  xl: 6,
-                  xxl: 8,
+                  md: 3,
+                  lg: 4,
+                  xl: 4,
+                  xxl: 6,
                   gutter: 10,
                 }}
                 dataSource={data}
