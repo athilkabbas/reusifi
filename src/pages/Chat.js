@@ -550,7 +550,9 @@ const Chat = () => {
   }, [scrollPosition, loading, scrollLoadMoreData, ichatData, chatLoading]);
 
   const handleChange = (value) => {
-    setMessageValue(value.target.value);
+    if (value) {
+      setMessageValue(value);
+    }
   };
   const handleSubmit = () => {
     if (messageValue) {
@@ -837,10 +839,9 @@ const Chat = () => {
         <TextArea
           ref={textAreaRef}
           autoSize={{ minRows: 1, maxRows: 1 }}
-          onChange={(value) => handleChange(value)}
+          onChange={(event) => handleChange(event.target.value)}
           placeholder="Enter message"
           onFocus={scrollToBottom}
-          onBlur={scrollToBottom}
           value={messageValue}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
