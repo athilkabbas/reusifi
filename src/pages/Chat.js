@@ -154,9 +154,11 @@ const Chat = () => {
         setIChatInitialLoad(true);
         updateLimit();
       }
-      if (currentHeight !== prevHeight) {
+      if (currentHeight < prevHeight - 100) {
         prevHeight = currentHeight;
-        scrollToBottom();
+        setTimeout(() => {
+          window.scrollTo(0, document.body.scrollHeight);
+        }, 300);
       }
     };
 
