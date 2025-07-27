@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Col, Row, Skeleton, Space, Spin } from "antd";
+import { Skeleton, Space, Spin } from "antd";
 import { Input } from "antd";
 import { useNavigate } from "react-router-dom";
 import { Select } from "antd";
-import { Breadcrumb, Layout, Menu, theme, Modal } from "antd";
-import { states, districts, districtMap } from "../helpers/locations";
+import { Layout, Menu, theme, Modal } from "antd";
+import { states, districtMap } from "../helpers/locations";
 import { PlusOutlined } from "@ant-design/icons";
 import { Image, Upload, Typography, message } from "antd";
 import { Button, Badge } from "antd";
@@ -16,8 +16,6 @@ import {
   UploadOutlined,
   MessageFilled,
   LogoutOutlined,
-  MailOutlined,
-  HeartOutlined,
   ProductFilled,
   MailFilled,
   HeartFilled,
@@ -27,7 +25,7 @@ import {
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
 import { callApi } from "../helpers/api";
-const { Text, Link } = Typography;
+const { Text } = Typography;
 const { TextArea } = Input;
 const IconText = ["Home", "Sell", "Chats", "My Ads", "Favourites", ""];
 const { Header, Content, Footer } = Layout;
@@ -51,34 +49,15 @@ const AddDress = () => {
     price: null,
   });
   const {
-    setData,
-    setInitialLoad,
-    data,
     count,
     setCount,
-    setHomeInitialLoad,
     setAdInitialLoad,
-    setChatData,
-    setFavData,
     setAdData,
-    setFavInitialLoad,
-    setChatInitialLoad,
-    setFavPageInitialLoad,
-    setAdPageInitialLoad,
-    setChatPageInitialLoad,
-    setLastEvaluatedKey,
-    setLastEvaluatedKeys,
-    setExhaustedShards,
-    setFavLastEvaluatedKey,
-    setChatLastEvaluatedKey,
     setAdLastEvaluatedKey,
     addProductInitialLoad,
-    setContactInitialLoad,
-    setIChatInitialLoad,
     setAddProductInitialLoad,
     unreadChatCount,
     setUnreadChatCount,
-    token,
   } = useContext(Context);
   const isMobile = useIsMobile();
 

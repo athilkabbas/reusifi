@@ -2,20 +2,14 @@ import React, { useEffect, useState, useRef, useContext } from "react";
 import { Col, message, Row, Spin } from "antd";
 import { Input } from "antd";
 import { useNavigate } from "react-router-dom";
-import { Select, Badge } from "antd";
-import { Breadcrumb, Layout, Menu, theme, Modal } from "antd";
-import { states, districts, districtMap } from "../helpers/locations";
-import { PlusOutlined } from "@ant-design/icons";
-import { Image, Upload } from "antd";
-import { Button } from "antd";
-import axios from "axios";
+import { Badge } from "antd";
+import { Layout, Menu, theme, Modal } from "antd";
+import { Image } from "antd";
 import { getCurrentUser, signInWithRedirect, signOut } from "@aws-amplify/auth";
-import { Divider, List, Typography } from "antd";
+import { List } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { hashString } from "react-hash-string";
 import { Card, Skeleton } from "antd";
 import { Dropdown, Space } from "antd";
-import { DownOutlined, SmileOutlined } from "@ant-design/icons";
 import { Context } from "../context/provider";
 import { Empty } from "antd";
 import {
@@ -26,15 +20,11 @@ import {
   MenuOutlined,
   MailFilled,
   HeartFilled,
-  HeartOutlined,
-  MailOutlined,
   ProductFilled,
   LoadingOutlined,
 } from "@ant-design/icons";
-import { useLocation } from "react-router-dom";
 import { useIsMobile } from "../hooks/windowSize";
 import { callApi } from "../helpers/api";
-const { TextArea } = Input;
 const IconText = ["Home", "Sell", "Chats", "My Ads", "Favourites", ""];
 
 const menuItems = [
@@ -64,7 +54,6 @@ const menuItemsBlocked = [
 ];
 const { Header, Content, Footer } = Layout;
 const ChatPage = () => {
-  const [lastEvaluatedKey, setLastEvaluatedKey] = useState(null);
   const [scrollLoadMoreData, setScrollLoadMoreData] = useState(false);
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
@@ -102,35 +91,18 @@ const ChatPage = () => {
   } = theme.useToken();
   const [chatLoading, setChatLoading] = useState(false);
   const {
-    setInitialLoad,
-    data,
     chatScrollPosition,
     setChatScrollPosition,
     chatInitialLoad,
     setChatInitialLoad,
     chatData,
     setChatData,
-    setHomeInitialLoad,
-    setAdInitialLoad,
-    adData,
-    setFavData,
-    setAdData,
-    setFavInitialLoad,
-    setAdPageInitialLoad,
-    setFavPageInitialLoad,
-    chatPageInitialLoad,
     setChatHasMore,
     chatHasMore,
     chatLastEvaluatedKey,
-    setFavLastEvaluatedKey,
     setChatLastEvaluatedKey,
-    setAdLastEvaluatedKey,
-    setContactInitialLoad,
-    setIChatInitialLoad,
-    setAddProductInitialLoad,
     unreadChatCount,
     setUnreadChatCount,
-    token,
   } = useContext(Context);
   const [loadedImages, setLoadedImages] = useState({});
   const handleImageLoad = (uuid) => {

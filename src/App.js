@@ -1,14 +1,9 @@
 import { useContext, useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LoadingOutlined } from "@ant-design/icons";
 import { Amplify } from "aws-amplify";
 import awsconfig from "./aws-exports";
-import {
-  signInWithRedirect,
-  fetchAuthSession,
-  signOut,
-  getCurrentUser,
-} from "@aws-amplify/auth";
+import { signInWithRedirect, getCurrentUser } from "@aws-amplify/auth";
 
 import AddDress from "./pages/AddDress";
 import Layout from "./pages/Layout";
@@ -66,7 +61,6 @@ function AppWithSession() {
     setChatLastEvaluatedKey,
   } = useContext(Context);
   const [socketLoading, setSocketLoading] = useState(false);
-  const location = useLocation();
   useEffect(() => {
     let socket;
     const fetchNotifications = async () => {

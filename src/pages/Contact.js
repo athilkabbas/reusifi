@@ -1,30 +1,16 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Input, Spin } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { Badge } from "antd";
-import {
-  Layout,
-  Menu,
-  theme,
-  Space,
-  Skeleton,
-  Typography,
-  message,
-  Modal,
-} from "antd";
-import axios from "axios";
+import { Layout, Menu, theme, Space, Skeleton, Typography, Modal } from "antd";
 import {
   HomeFilled,
   UploadOutlined,
   MessageFilled,
   LogoutOutlined,
-  MailOutlined,
-  HeartOutlined,
   ProductFilled,
   MailFilled,
   HeartFilled,
-  LoadingOutlined,
   MenuOutlined,
 } from "@ant-design/icons";
 import { getCurrentUser, signInWithRedirect, signOut } from "@aws-amplify/auth";
@@ -33,9 +19,8 @@ import { useIsMobile } from "../hooks/windowSize";
 import { callApi } from "../helpers/api";
 const IconText = ["Home", "Sell", "Chats", "My Ads", "Favourites", ""];
 const { Content, Footer, Header } = Layout;
-const { Text, Link } = Typography;
+const { Text } = Typography;
 const Contact = () => {
-  const location = useLocation();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const errorSessionConfig = {
@@ -86,30 +71,10 @@ const Contact = () => {
   };
 
   const {
-    setHomeInitialLoad,
-    setAdInitialLoad,
-    data,
-    setInitialLoad,
-    adData,
-    setAdData,
-    setFavData,
-    setChatData,
-    setFavInitialLoad,
-    setChatInitialLoad,
-    setChatPageInitialLoad,
-    setFavPageInitialLoad,
-    setAdPageInitialLoad,
-    setFavLastEvaluatedKey,
-    setChatLastEvaluatedKey,
-    setAdLastEvaluatedKey,
-    contactInita,
     contactInitialLoad,
-    setIChatInitialLoad,
-    setAddProductInitialLoad,
     setContactInitialLoad,
     unreadChatCount,
     setUnreadChatCount,
-    token,
   } = useContext(Context);
 
   useEffect(() => {
@@ -217,9 +182,7 @@ const Contact = () => {
       icon: divHtml,
     };
   });
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
+
   return (
     <Layout
       style={{ height: "100dvh", overflow: "hidden", background: "#F9FAFB" }}

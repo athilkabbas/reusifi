@@ -2,22 +2,11 @@ import React, {
   Fragment,
   useEffect,
   useState,
-  useCallback,
   useRef,
   useContext,
 } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Badge,
-  Breadcrumb,
-  Layout,
-  Menu,
-  Spin,
-  theme,
-  Image,
-  message,
-  Modal,
-} from "antd";
+import { Badge, Layout, Menu, Spin, message, Modal } from "antd";
 import {
   HomeFilled,
   UploadOutlined,
@@ -25,27 +14,22 @@ import {
   LogoutOutlined,
   SearchOutlined,
   ProductFilled,
-  MailOutlined,
   MailFilled,
-  HeartOutlined,
   HeartFilled,
   LoadingOutlined,
   MenuOutlined,
 } from "@ant-design/icons";
-import { Button, Input, Select, Space, Empty } from "antd";
+import { Input, Select, Space, Empty } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { Avatar, Divider, List, Skeleton, Radio } from "antd";
+import { List, Skeleton, Radio } from "antd";
 import { Card, Typography } from "antd";
-import axios from "axios";
 import { getCurrentUser, signInWithRedirect, signOut } from "@aws-amplify/auth";
-import debounce from "lodash/debounce";
-import { states, districts, districtMap } from "../helpers/locations";
+import { states, districtMap } from "../helpers/locations";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
 import { callApi } from "../helpers/api";
 const IconText = ["Home", "Sell", "Chats", "My Ads", "Favourites", ""];
-const { Meta } = Card;
-const { Text, Link } = Typography;
+const { Text } = Typography;
 const capitalize = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
@@ -72,8 +56,6 @@ const Home = () => {
     setScrollPosition,
     initialLoad,
     setInitialLoad,
-    lastEvaluatedKey,
-    setLastEvaluatedKey,
     lastEvaluatedKeys,
     setLastEvaluatedKeys,
     setExhaustedShards,
@@ -81,26 +63,10 @@ const Home = () => {
     setHasMore,
     filterList,
     setFilterList,
-    homeInitialLoad,
-    setAdInitialLoad,
-    setChatData,
     setFavData,
-    setAdData,
-    setFavInitialLoad,
-    setChatInitialLoad,
-    setAdPageInitialLoad,
-    setFavPageInitialLoad,
-    setChatPageInitialLoad,
-    setFavLastEvaluatedKey,
-    setChatLastEvaluatedKey,
-    setAdLastEvaluatedKey,
-    setContactInitialLoad,
-    setIChatInitialLoad,
-    setAddProductInitialLoad,
     unreadChatCount,
     setUnreadChatCount,
     exhaustedShards,
-    token,
   } = useContext(Context);
   const [handleFavLoading, setHandleFavLoading] = useState(false);
 

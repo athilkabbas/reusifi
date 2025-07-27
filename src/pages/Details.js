@@ -1,31 +1,18 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Col, Row, Skeleton, Spin } from "antd";
+import { Skeleton, Spin } from "antd";
 import { Input } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import { Select, Badge } from "antd";
-import {
-  Breadcrumb,
-  Layout,
-  Menu,
-  theme,
-  message,
-  Modal,
-  Popconfirm,
-} from "antd";
-import { states, districts, districtMap } from "../helpers/locations";
-import { PlusOutlined } from "@ant-design/icons";
-import { Image, Upload, Space } from "antd";
+import { Badge } from "antd";
+import { Layout, Menu, message, Modal, Popconfirm } from "antd";
+import { Image, Space } from "antd";
 import { Button, Typography } from "antd";
-import axios from "axios";
 import { Carousel } from "antd";
 import {
   HomeFilled,
   UploadOutlined,
   MessageFilled,
   LogoutOutlined,
-  MailOutlined,
-  HeartOutlined,
   MailFilled,
   HeartFilled,
   ProductFilled,
@@ -45,10 +32,8 @@ const Details = () => {
   const [loading, setLoading] = useState(false);
   const { item, ad } = location.state || "";
   const [user, setUser] = useState(null);
-  const [images, setImages] = useState([]);
   const [chatLoading, setChatLoading] = useState(false);
   const [chatProductLoading, setChatProductLoading] = useState(false);
-  const [imageLoad, setImageLoad] = useState(false);
   const [chatProduct, setChatProduct] = useState(false);
   const [unblockLoading, setUnblockLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
@@ -82,32 +67,15 @@ const Details = () => {
     }
   };
   const {
-    setInitialLoad,
-    setData,
-    data,
-    favData,
-    setFavInitialLoad,
-    adData,
-    setAdInitialLoad,
-    setHomeInitialLoad,
-    setFavPageInitialLoad,
     setChatData,
     setChatInitialLoad,
-    setAdPageInitialLoad,
-    setChatPageInitialLoad,
-    setLastEvaluatedKey,
-    setLastEvaluatedKeys,
-    setExhaustedShards,
     setChatLastEvaluatedKey,
-    detailInitialLoad,
-    setDetailInitialLoad,
     setAdData,
     setCount,
     detailData,
     setDetailData,
     unreadChatCount,
     setUnreadChatCount,
-    token,
   } = useContext(Context);
   const errorSessionConfig = {
     title: "Session has expired.",
@@ -129,17 +97,8 @@ const Details = () => {
       navigate("/");
     },
   };
-  const infoConfig = {
-    title: "Ad no longer available",
-    content: "",
-    okText: "Go back",
-    closable: false,
-    maskClosable: false,
-    onOk: () => {
-      navigate(-1);
-    },
-  };
-  const { Text, Link } = Typography;
+
+  const { Text } = Typography;
 
   const items = [
     HomeFilled,

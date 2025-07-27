@@ -2,48 +2,31 @@ import React, {
   Fragment,
   useEffect,
   useState,
-  useCallback,
   useRef,
   useContext,
 } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Badge,
-  Breadcrumb,
-  Layout,
-  Menu,
-  Spin,
-  theme,
-  message,
-  Modal,
-} from "antd";
+import { Badge, Layout, Menu, Spin, theme, message, Modal } from "antd";
 import {
   HomeFilled,
   UploadOutlined,
   MessageFilled,
   LogoutOutlined,
-  SearchOutlined,
   ProductFilled,
-  MailOutlined,
   MailFilled,
   HeartOutlined,
   HeartFilled,
   LoadingOutlined,
   MenuOutlined,
 } from "@ant-design/icons";
-import { Button, Input, Select, Space } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { Avatar, Divider, List, Skeleton, Empty } from "antd";
+import { List, Skeleton, Empty } from "antd";
 import { Card } from "antd";
-import axios from "axios";
 import { getCurrentUser, signInWithRedirect, signOut } from "@aws-amplify/auth";
-import debounce from "lodash/debounce";
-import { states, districts, districtMap } from "../helpers/locations";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
 import { callApi } from "../helpers/api";
 const IconText = ["Home", "Sell", "Chats", "My Ads", "Favourites", ""];
-const { Meta } = Card;
 const capitalize = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
@@ -51,20 +34,13 @@ const { Header, Content, Footer } = Layout;
 const Favourites = () => {
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
-  const timer = useRef(null);
-  const [districts, setDistricts] = useState([]);
   const scrollableDivRef = useRef(null);
   const [scrollLoadMoreData, setScrollLoadMoreData] = useState(false);
-  const [lastEvaluatedKey, setLastEvaluatedKey] = useState(null);
-  const [scrollPosition, setScrollPosition] = useState(0);
   const [chatLoading, setChatLoading] = useState(false);
   const [favLoading, setFavLoading] = useState(false);
   const [handleFavLoading, setHandleFavLoading] = useState(false);
   const isMobile = useIsMobile();
   const {
-    data,
-    initialLoad,
-    setInitialLoad,
     filterList,
     setFilterList,
     favScrollPosition,
@@ -73,26 +49,12 @@ const Favourites = () => {
     setFavInitialLoad,
     favData,
     setFavData,
-    setHomeInitialLoad,
-    favPageInitialLoad,
-    setAdInitialLoad,
-    setAdData,
-    setChatData,
-    setChatInitialLoad,
-    setAdPageInitialLoad,
-    setChatPageInitialLoad,
     favHasMore,
     setFavHasMore,
     setFavLastEvaluatedKey,
     favLastEvaluatedKey,
-    setChatLastEvaluatedKey,
-    setAdLastEvaluatedKey,
-    setContactInitialLoad,
-    setIChatInitialLoad,
-    setAddProductInitialLoad,
     unreadChatCount,
     setUnreadChatCount,
-    token,
   } = useContext(Context);
 
   const items = [
