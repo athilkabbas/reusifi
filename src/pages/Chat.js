@@ -175,7 +175,7 @@ const Chat = () => {
 
         if (currentHeight !== prevHeight) {
           prevHeight = currentHeight;
-          window.scrollTo(0, document.body.scrollHeight);
+          scrollableDivRef.current.scrollTo(0, scrollableDivRef.current.scrollHeight);
         }
       };
 
