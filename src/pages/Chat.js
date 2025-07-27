@@ -1,45 +1,35 @@
-import React, { useEffect, useState, useRef, useContext, useLayoutEffect } from "react";
-import { Col, message, Row, Spin } from "antd";
+import React, { useEffect, useState, useRef, useContext } from "react";
+import { Spin } from "antd";
 import { Input } from "antd";
 import { useNavigate } from "react-router-dom";
-import { Select, Badge } from "antd";
-import { Breadcrumb, Layout, Menu, theme , Modal} from "antd";
-import { states, districts, districtMap } from "../helpers/locations";
-import { PlusOutlined } from "@ant-design/icons";
-import { Image, Upload } from "antd";
+import { Badge } from "antd";
+import { Layout, Menu, Modal } from "antd";
 import { Button } from "antd";
-import axios from "axios";
-import { fetchAuthSession, getCurrentUser, signInWithRedirect, signOut } from "@aws-amplify/auth";
-import { Divider, List, Typography } from "antd";
+import {
+  fetchAuthSession,
+  getCurrentUser,
+  signInWithRedirect,
+  signOut,
+} from "@aws-amplify/auth";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { Skeleton, Space } from "antd";
+import { Skeleton, Space, Typography } from "antd";
 import { Context } from "../context/provider";
-import { Empty } from "antd";
 import {
   HomeFilled,
   UploadOutlined,
   MessageFilled,
   ProductFilled,
-  MailOutlined,
-  HeartOutlined,
   MailFilled,
   HeartFilled,
   LogoutOutlined,
   LoadingOutlined,
-  MenuOutlined
+  MenuOutlined,
 } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
 import { useIsMobile } from "../hooks/windowSize";
 import { callApi } from "../helpers/api";
 const { TextArea } = Input;
-const IconText = [
-  "Home",
-  "Sell",
-  "Chats",
-  "My Ads",
-  "Favourites",
-  "",
-];
+const IconText = ["Home", "Sell", "Chats", "My Ads", "Favourites", ""];
 const { Header, Content, Footer } = Layout;
 const Chat = () => {
   const [ichatData, setIChatData] = useState([]);
@@ -57,10 +47,16 @@ const Chat = () => {
   const [loading, setLoading] = useState(false);
   const scrollableDivRef = useRef(null);
   const [scrollPosition, setScrollPosition] = useState(0);
-  const [speed, setSpeed] = useState(0);
-  const { Text, Link } = Typography;
+  const { Text } = Typography;
   const [scrollLoadMoreData, setScrollLoadMoreData] = useState(false);
-  const sendMessage = (message, recipientUserId, senderUserId,productId,title,image) => {
+  const sendMessage = (
+    message,
+    recipientUserId,
+    senderUserId,
+    productId,
+    title,
+    image
+  ) => {
     try {
       if (ws) {
         ws.send(
@@ -71,7 +67,7 @@ const Chat = () => {
             productId: productId,
             message: message,
             title: title,
-            image: image
+            image: image,
           })
         );
       }
@@ -80,139 +76,87 @@ const Chat = () => {
     }
   };
   const {
-    setInitialLoad,
-    data,
-    chatData,
     setChatInitialLoad,
-    chatInitialLoad,
-    setHomeInitialLoad,
-    setAdInitialLoad,
-    adData,
-    setFavData,
-    setFavInitialLoad,
-    setAdData,
-    setChatPageInitialLoad,
-    setAdPageInitialLoad,
-    setFavPageInitialLoad,
-    setFavLastEvaluatedKey,
-    setAdLastEvaluatedKey,
     setChatData,
     setChatLastEvaluatedKey,
-    setContactInitialLoad,
-    setAddProductInitialLoad,
-    iChatInitialLoad,
     setIChatInitialLoad,
     unreadChatCount,
     setUnreadChatCount,
-    token
   } = useContext(Context);
   const [chatLoading, setChatLoading] = useState(false);
-  const [socketLoading, setSocketLoading] = useState(false)
-   
-     const errorSessionConfig = {
-       title: 'Session has expired.',
-       content: 'Please login again.',
-       closable: false,
-       maskClosable: false,
-       okText: 'Login',
-       onOk: async () => {
-         await signInWithRedirect()
-       }
-     }
-         const errorConfig = {
-  title: 'An error has occurred.',
-  content: 'Please try again later.',
-  closable: false,
-  maskClosable: false,
-  okText: 'Close',
-  onOk: () => {
-    navigate('/')
-  }
-}
-  const isMobile = useIsMobile()
-   const calculateLimit = () => {
-                  const viewportHeight = window.innerHeight;
-                  const itemHeight = 70; // adjust if needed
-                  const rowsVisible = Math.ceil(viewportHeight / itemHeight);
-                  const columns = getColumnCount(); // depending on screen size (see below)
-                  return rowsVisible * 8;
-                };
-                
-                const getColumnCount = () => {
-                  const width = window.innerWidth;
-                  if (width < 576) return 2; // xs
-                  if (width < 768) return 3; // sm
-                  if (width < 992) return 4; // md
-                  if (width < 1200) return 5; // lg
-                  if (width < 1600) return 6; // xl
-                  return 8; // xxl
-                };
-                
-                const [limit, setLimit] = useState(0); // default
-
-                useEffect(() => {
-  const onFocus = () => {
-    setTimeout(() => {
-      window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight);
-    }, 150);
+  const [socketLoading, setSocketLoading] = useState(false);
+  const textAreaRef = useRef(null);
+  const errorSessionConfig = {
+    title: "Session has expired.",
+    content: "Please login again.",
+    closable: false,
+    maskClosable: false,
+    okText: "Login",
+    onOk: async () => {
+      await signInWithRedirect();
+    },
+  };
+  const errorConfig = {
+    title: "An error has occurred.",
+    content: "Please try again later.",
+    closable: false,
+    maskClosable: false,
+    okText: "Close",
+    onOk: () => {
+      navigate("/");
+    },
+  };
+  const isMobile = useIsMobile();
+  const calculateLimit = () => {
+    const viewportHeight = window.innerHeight;
+    const itemHeight = 70; // adjust if needed
+    const rowsVisible = Math.ceil(viewportHeight / itemHeight);
+    const columns = getColumnCount(); // depending on screen size (see below)
+    return rowsVisible * 8;
   };
 
-  const onBlur = () => {
-    setTimeout(() => {
-      window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight);
-    }, 150);
+  const getColumnCount = () => {
+    const width = window.innerWidth;
+    if (width < 576) return 2; // xs
+    if (width < 768) return 3; // sm
+    if (width < 992) return 4; // md
+    if (width < 1200) return 5; // lg
+    if (width < 1600) return 6; // xl
+    return 8; // xxl
   };
 
-  const inputEl = document.querySelector('textarea'); // or your input selector
-  if (inputEl) {
-    inputEl.addEventListener('focus', onFocus);
-    inputEl.addEventListener('blur', onBlur);
-  }
+  const [limit, setLimit] = useState(0); // default
 
-  return () => {
-    if (inputEl) {
-      inputEl.removeEventListener('focus', onFocus);
-      inputEl.removeEventListener('blur', onBlur);
-    }
+  const scrollToBottom = () => {
+    bottomRef.current?.scrollIntoView();
   };
-}, []);
-                
-                useEffect(() => {
-        let prevWidth = window.innerWidth;
-        let prevHeight = window.innerHeight;
-        const updateLimit = () => {
-          const newLimit = calculateLimit();
-          setLimit(newLimit);
-        };
 
-          updateLimit();
+  useEffect(() => {
+    let prevWidth = window.innerWidth;
+    const updateLimit = () => {
+      const newLimit = calculateLimit();
+      setLimit(newLimit);
+    };
 
-      const handleResize = () => {
-        const currentWidth = window.innerWidth;
-        const currentHeight = window.innerHeight;
+    updateLimit();
 
-        if (hasMore && currentWidth !== prevWidth) {
-          prevWidth = currentWidth;
-          setIChatData([]);
-          setLastEvaluatedKey(null);
-          setIChatInitialLoad(true);
-          updateLimit();
-        }
+    const handleResize = () => {
+      const currentWidth = window.innerWidth;
 
-        if (currentHeight !== prevHeight) {
-            prevHeight = currentHeight;
-            setTimeout(() => {
-              window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight);
-            },150)
-          }
-      };
+      if (hasMore && currentWidth !== prevWidth) {
+        prevWidth = currentWidth;
+        setIChatData([]);
+        setLastEvaluatedKey(null);
+        setIChatInitialLoad(true);
+        updateLimit();
+      }
+    };
 
-      window.addEventListener("resize", handleResize);
-       return () => window.removeEventListener("resize", handleResize);
-    }, [hasMore]);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [hasMore]);
 
-  
-    const items = [
+  const items = [
     HomeFilled,
     UploadOutlined,
     MessageFilled,
@@ -220,53 +164,75 @@ const Chat = () => {
     HeartFilled,
     MenuOutlined,
   ].map((icon, index) => {
-    let divHtml
-    if(isMobile){
-      divHtml =  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: 10 }}>
-              <span style={{ fontSize: '16px', marginTop: '0px' }}>{React.createElement(icon)}</span>
-              <span style={{ fontSize: '10px', marginTop: '5px' }}>{IconText[index]}</span>
-            </div>
-    }
-    else{
-      divHtml = <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', fontSize: 10 }}>
-        <span style={{ fontSize: '20px', marginTop: '0px' }}>{React.createElement(icon)}</span>
-        <span style={{ fontSize: '15px', marginTop: '5px', marginLeft: '5px' }}>{IconText[index]}</span>
-      </div>
+    let divHtml;
+    if (isMobile) {
+      divHtml = (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            fontSize: 10,
+          }}
+        >
+          <span style={{ fontSize: "16px", marginTop: "0px" }}>
+            {React.createElement(icon)}
+          </span>
+          <span style={{ fontSize: "10px", marginTop: "5px" }}>
+            {IconText[index]}
+          </span>
+        </div>
+      );
+    } else {
+      divHtml = (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            fontSize: 10,
+          }}
+        >
+          <span style={{ fontSize: "20px", marginTop: "0px" }}>
+            {React.createElement(icon)}
+          </span>
+          <span
+            style={{ fontSize: "15px", marginTop: "5px", marginLeft: "5px" }}
+          >
+            {IconText[index]}
+          </span>
+        </div>
+      );
     }
     if (index === 2) {
       return {
         key: String(index + 1),
-        icon: (
-          <Badge dot={unreadChatCount}>
-            {divHtml}
-          </Badge>
-        )
+        icon: <Badge dot={unreadChatCount}>{divHtml}</Badge>,
       };
-    }
-    else if(index === 5){
-      return{
+    } else if (index === 5) {
+      return {
         key: String(index + 1),
         icon: divHtml,
-            children: [
-      {
-        key: '6-1',
-        label: 'Contact',
-        icon: React.createElement(MailFilled)
-      },
-      {
-        key: '6-2',
-        label: 'Sign out',
-        icon: React.createElement(LogoutOutlined)
-      },
-    ],
-      }
+        children: [
+          {
+            key: "6-1",
+            label: "Contact",
+            icon: React.createElement(MailFilled),
+          },
+          {
+            key: "6-2",
+            label: "Sign out",
+            icon: React.createElement(LogoutOutlined),
+          },
+        ],
+      };
     }
-      return {
+    return {
       key: String(index + 1),
-      icon: divHtml
+      icon: divHtml,
     };
   });
-  
+
   // useEffect(() => {
   //   if (data.length > 0) {
   //     setInitialLoad(false);
@@ -279,35 +245,37 @@ const Chat = () => {
     let socket;
     const fetchUser = async () => {
       try {
-        setSocketLoading(true)
-        let token = ''
+        setSocketLoading(true);
+        let token = "";
         const session = await fetchAuthSession();
         const tokens = session.tokens;
 
         if (tokens?.idToken) {
-          token = tokens.idToken
+          token = tokens.idToken;
         } else {
-          const error = new Error('Session expired')
-          error.status = 401
-          throw error
+          const error = new Error("Session expired");
+          error.status = 401;
+          throw error;
         }
 
         const currentUser = await getCurrentUser();
         setUser(currentUser);
 
         socket = new WebSocket(
-          `wss://apichat.reusifi.com/production?userId=${currentUser.userId}&productId=${productId || recipient["item"]["uuid"]}&token=${token}`
+          `wss://apichat.reusifi.com/production?userId=${
+            currentUser.userId
+          }&productId=${productId || recipient["item"]["uuid"]}&token=${token}`
         );
         setWs(socket);
         socket.onopen = () => {
           console.log("Connected to the WebSocket");
-          setSocketLoading(false)
+          setSocketLoading(false);
         };
 
         socket.onerror = (err) => {
-          setSocketLoading(false)
-           Modal.error(errorConfig)
-        }
+          setSocketLoading(false);
+          Modal.error(errorConfig);
+        };
 
         socket.onmessage = async (event) => {
           console.log("Message from server:", event);
@@ -318,63 +286,85 @@ const Chat = () => {
               timestamp: data.timestamp,
               recipientId: data.recipientUserId,
               senderId: data.senderUserId,
-              productId: data.productId
+              productId: data.productId,
             },
             ...prevValue,
           ]);
-          await callApi(`https://api.reusifi.com/prod/getChatsRead?userId1=${
-              encodeURIComponent(data.recipientUserId)
-            }&userId2=${encodeURIComponent(data.senderUserId)}&productId=${data.productId}&read=${encodeURIComponent(true)}`,'GET')
-          setChatData([])
-          setChatLastEvaluatedKey(null)
-          setChatInitialLoad(true)
+          await callApi(
+            `https://api.reusifi.com/prod/getChatsRead?userId1=${encodeURIComponent(
+              data.recipientUserId
+            )}&userId2=${encodeURIComponent(data.senderUserId)}&productId=${
+              data.productId
+            }&read=${encodeURIComponent(true)}`,
+            "GET"
+          );
+          setChatData([]);
+          setChatLastEvaluatedKey(null);
+          setChatInitialLoad(true);
         };
         // To close the connection
         socket.onclose = () => {
           console.log("Disconnected from WebSocket");
         };
       } catch (err) {
-        setSocketLoading(false)
-           if (err?.name === "NotAuthorizedException" && err?.message?.includes("Refresh Token has expired")) {
-            Modal.error(errorSessionConfig)
-          } 
-          else if(err?.status === 401){
-            Modal.error(errorSessionConfig)
-          }
-          else {
-            Modal.error(errorConfig)
-          }
-      }
-    };
-    if(productId || (recipient && recipient["item"]["uuid"])){
-        fetchUser();
-    }
-    return () => {
-      if(socket && socket.readyState === WebSocket.OPEN){
-        socket.close();
-      }
-      else if(socket && socket.readyState === WebSocket.CONNECTING){
-        socket.onopen = () => {
-          socket.close()
+        setSocketLoading(false);
+        if (
+          err?.name === "NotAuthorizedException" &&
+          err?.message?.includes("Refresh Token has expired")
+        ) {
+          Modal.error(errorSessionConfig);
+        } else if (err?.status === 401) {
+          Modal.error(errorSessionConfig);
+        } else {
+          Modal.error(errorConfig);
         }
       }
     };
-  }, [reconnect,productId,recipient]);
+    if (productId || (recipient && recipient["item"]["uuid"])) {
+      fetchUser();
+    }
+    return () => {
+      if (socket && socket.readyState === WebSocket.OPEN) {
+        socket.close();
+      } else if (socket && socket.readyState === WebSocket.CONNECTING) {
+        socket.onopen = () => {
+          socket.close();
+        };
+      }
+    };
+  }, [reconnect, productId, recipient]);
 
   const getChats = async () => {
     try {
       const scrollPosition = scrollableDivRef.current.scrollTop;
       setLoading(true);
       let result;
-      let readRes
+      let readRes;
       if (recipient && recipient["item"]["email"]) {
-        [result, readRes] = await Promise.all([callApi(
-          `https://api.reusifi.com/prod/getChatsConversation?userId1=${encodeURIComponent(user.userId)}&userId2=${encodeURIComponent(recipient["item"]["email"])}&productId=${encodeURIComponent(recipient["item"]["uuid"])}&lastEvaluatedKey=${encodeURIComponent(lastEvaluatedKey)}&limit=${encodeURIComponent(limit)}`,'GET'
-        ),callApi(
-          `https://api.reusifi.com/prod/getChatsRead?userId1=${
-            encodeURIComponent(user.userId)
-          }&userId2=${encodeURIComponent(recipient["item"]["email"])}&productId=${encodeURIComponent(recipient["item"]["uuid"])}&read=${encodeURIComponent(true)}`,'GET'
-        )])
+        [result, readRes] = await Promise.all([
+          callApi(
+            `https://api.reusifi.com/prod/getChatsConversation?userId1=${encodeURIComponent(
+              user.userId
+            )}&userId2=${encodeURIComponent(
+              recipient["item"]["email"]
+            )}&productId=${encodeURIComponent(
+              recipient["item"]["uuid"]
+            )}&lastEvaluatedKey=${encodeURIComponent(
+              lastEvaluatedKey
+            )}&limit=${encodeURIComponent(limit)}`,
+            "GET"
+          ),
+          callApi(
+            `https://api.reusifi.com/prod/getChatsRead?userId1=${encodeURIComponent(
+              user.userId
+            )}&userId2=${encodeURIComponent(
+              recipient["item"]["email"]
+            )}&productId=${encodeURIComponent(
+              recipient["item"]["uuid"]
+            )}&read=${encodeURIComponent(true)}`,
+            "GET"
+          ),
+        ]);
         setChatData((chatData) => {
           return chatData.map((item) => {
             let conversationId = [user.userId, recipient["item"]["email"]]
@@ -388,7 +378,7 @@ const Chat = () => {
         });
       } else if (conversationId) {
         let userIds = conversationId.split("#");
-        userIds.splice(1,1)
+        userIds.splice(1, 1);
         let userId2;
         for (let userId of userIds) {
           if (user.userId !== userId) {
@@ -396,16 +386,35 @@ const Chat = () => {
             break;
           }
         }
-        [result, readRes] = await Promise.all([callApi(
-          `https://api.reusifi.com/prod/getChatsConversation?userId1=${encodeURIComponent(user.userId)}&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(productId)}&lastEvaluatedKey=${encodeURIComponent(lastEvaluatedKey)}&limit=${encodeURIComponent(limit)}`,'GET'
-        ),callApi(
-          `https://api.reusifi.com/prod/getChatsRead?userId1=${
-            encodeURIComponent(user.userId)
-          }&userId2=${encodeURIComponent(userId2)}&productId=${encodeURIComponent(productId)}&read=${encodeURIComponent(true)}`,'GET'
-        )])
+        [result, readRes] = await Promise.all([
+          callApi(
+            `https://api.reusifi.com/prod/getChatsConversation?userId1=${encodeURIComponent(
+              user.userId
+            )}&userId2=${encodeURIComponent(
+              userId2
+            )}&productId=${encodeURIComponent(
+              productId
+            )}&lastEvaluatedKey=${encodeURIComponent(
+              lastEvaluatedKey
+            )}&limit=${encodeURIComponent(limit)}`,
+            "GET"
+          ),
+          callApi(
+            `https://api.reusifi.com/prod/getChatsRead?userId1=${encodeURIComponent(
+              user.userId
+            )}&userId2=${encodeURIComponent(
+              userId2
+            )}&productId=${encodeURIComponent(
+              productId
+            )}&read=${encodeURIComponent(true)}`,
+            "GET"
+          ),
+        ]);
         setChatData((chatData) => {
           return chatData.map((item) => {
-            let conversationId = [user.userId, userId2].sort().join(`#${productId}#`);
+            let conversationId = [user.userId, userId2]
+              .sort()
+              .join(`#${productId}#`);
             if (item.conversationId === conversationId) {
               return { ...item, read: "true" };
             }
@@ -418,20 +427,18 @@ const Chat = () => {
       // If no more data to load, set hasMore to false
       if (result.data.lastEvaluatedKey) {
         setHasMore(true);
-      }
-      else{
-         setHasMore(false);
+      } else {
+        setHasMore(false);
       }
       setLoading(false);
       setScrollPosition(scrollPosition);
-      setIChatInitialLoad(false)
+      setIChatInitialLoad(false);
     } catch (err) {
       setLoading(false);
-       if(err?.status === 401){
-        Modal.error(errorSessionConfig)
-      }
-      else{
-        Modal.error(errorConfig)
+      if (err?.status === 401) {
+        Modal.error(errorSessionConfig);
+      } else {
+        Modal.error(errorConfig);
       }
       console.log(err);
     }
@@ -446,32 +453,41 @@ const Chat = () => {
   // }, []);
 
   useEffect(() => {
-  const getChatsAndCount = async () => {
-    try{
+    const getChatsAndCount = async () => {
+      try {
         setChatLoading(true);
         setLoading(true);
-        
-        await getChats()
-        const getChatCount = await callApi(`https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,'GET')
+
+        await getChats();
+        const getChatCount = await callApi(
+          `https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(
+            user.userId
+          )}&count=${encodeURIComponent(true)}`,
+          "GET"
+        );
         setUnreadChatCount(getChatCount.data.count);
         setChatLoading(false);
         setLoading(false);
-    }
-    catch(err){
+      } catch (err) {
         setChatLoading(false);
         setLoading(false);
-       if(err?.status === 401){
-        Modal.error(errorSessionConfig)
+        if (err?.status === 401) {
+          Modal.error(errorSessionConfig);
+        } else {
+          Modal.error(errorConfig);
+        }
       }
-      else{
-        Modal.error(errorConfig)
-      }
+    };
+    if (
+      user &&
+      user.userId &&
+      limit &&
+      ((recipient && recipient["item"]["email"]) ||
+        (conversationId && productId))
+    ) {
+      getChatsAndCount();
     }
-    }
-    if (user && user.userId && limit && ((recipient && recipient["item"]["email"]) || (conversationId && productId))) {
-        getChatsAndCount()
-    }
-}, [user,limit,conversationId,recipient,productId]);
+  }, [user, limit, conversationId, recipient, productId]);
 
   // useEffect(() => {
   //   if (
@@ -515,26 +531,30 @@ const Chat = () => {
   //       getChats();
   //     }
   //   }
-  // }, [ichatData,loading,chatLoading,limit]); 
+  // }, [ichatData,loading,chatLoading,limit]);
 
-    useEffect(() => {
-      if(scrollableDivRef.current && !loading && !chatLoading)
+  useEffect(() => {
+    if (scrollableDivRef.current && !loading && !chatLoading)
       requestAnimationFrame(() => {
-          scrollableDivRef.current.scrollTo(0, scrollPosition);
-          setScrollLoadMoreData(false)
+        scrollableDivRef.current.scrollTo(0, scrollPosition);
+        setScrollLoadMoreData(false);
       });
-    }, [scrollPosition,loading,scrollLoadMoreData,ichatData,chatLoading]);
+  }, [scrollPosition, loading, scrollLoadMoreData, ichatData, chatLoading]);
 
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
   const handleChange = (value) => {
     setMessageValue(value.target.value);
   };
   const handleSubmit = () => {
     if (messageValue) {
       if (recipient && recipient["item"]["email"]) {
-        sendMessage(messageValue, recipient["item"]["email"], user.userId,recipient["item"]["uuid"],recipient["item"]["title"],recipient["images"][0]);
+        sendMessage(
+          messageValue,
+          recipient["item"]["email"],
+          user.userId,
+          recipient["item"]["uuid"],
+          recipient["item"]["title"],
+          recipient["images"][0]
+        );
         // setChatData((chatData) => {
         //   return chatData.map((item) => {
         //     let conversationId = [user.userId, recipient["item"]["email"]]
@@ -548,7 +568,7 @@ const Chat = () => {
         // });
       } else if (conversationId) {
         let userIds = conversationId.split("#");
-        userIds.splice(1,1)
+        userIds.splice(1, 1);
         let userId2;
         for (let userId of userIds) {
           if (user.userId !== userId) {
@@ -567,16 +587,20 @@ const Chat = () => {
         // });
       }
       setIChatData((prevValue) => [
-        { message: messageValue, timestamp: Date.now(), senderId: user.userId, productId: productId },
+        {
+          message: messageValue,
+          timestamp: Date.now(),
+          senderId: user.userId,
+          productId: productId,
+        },
         ...prevValue,
       ]);
-      setChatData([])
-      setChatLastEvaluatedKey(null)
-      setChatInitialLoad(true)
+      setChatData([]);
+      setChatLastEvaluatedKey(null);
+      setChatInitialLoad(true);
     }
     setMessageValue("");
   };
-
 
   const formatTimeStamp = (timestamp) => {
     const date = new Date(timestamp);
@@ -593,48 +617,62 @@ const Chat = () => {
     return formattedDate;
   };
 
-function formatChatTimestamp(timestamp) {
-  const date = new Date(timestamp);
-  const now = new Date();
+  function formatChatTimestamp(timestamp) {
+    const date = new Date(timestamp);
+    const now = new Date();
 
-  const isToday = date.toDateString() === now.toDateString();
+    const isToday = date.toDateString() === now.toDateString();
 
-  const yesterday = new Date();
-  yesterday.setDate(now.getDate() - 1);
-  const isYesterday = date.toDateString() === yesterday.toDateString();
+    const yesterday = new Date();
+    yesterday.setDate(now.getDate() - 1);
+    const isYesterday = date.toDateString() === yesterday.toDateString();
 
-  const day = String(date.getDate()).padStart(2, "0");
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const year = date.getFullYear();
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
 
-  const timeString = date.toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+    const timeString = date.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
 
-  if (isToday) return timeString;
-  if (isYesterday) return `Yesterday ${timeString}`;
+    if (isToday) return timeString;
+    if (isYesterday) return `Yesterday ${timeString}`;
 
-  return `${day}/${month}/${year} ${timeString}`;
-}
+    return `${day}/${month}/${year} ${timeString}`;
+  }
 
   return (
-    <Layout style={{ height: "100dvh", overflow: "hidden", background: "#F9FAFB", }}>
-      
-         {!isMobile && <Header style={{ display: 'flex', alignItems: 'center', padding: '0px', height: '50px' }}>
-                    <Menu
-                      onClick={(event) => handleNavigation(event)}
-                      theme="dark"
-                      mode="horizontal"
-                      defaultSelectedKeys={["0"]}
-                      items={items}
-                      style={{ minWidth: 0, justifyContent: 'space-around',
-            flex: 1,background: "#6366F1" }}
-                    />
-                  </Header>}
+    <Layout
+      style={{ height: "100dvh", overflow: "hidden", background: "#F9FAFB" }}
+    >
+      {!isMobile && (
+        <Header
+          style={{
+            display: "flex",
+            alignItems: "center",
+            padding: "0px",
+            height: "50px",
+          }}
+        >
+          <Menu
+            onClick={(event) => handleNavigation(event)}
+            theme="dark"
+            mode="horizontal"
+            defaultSelectedKeys={["0"]}
+            items={items}
+            style={{
+              minWidth: 0,
+              justifyContent: "space-around",
+              flex: 1,
+              background: "#6366F1",
+            }}
+          />
+        </Header>
+      )}
       <Content>
         <div
-         className="hide-scrollbar overflow-auto"
+          className="hide-scrollbar overflow-auto"
           id="scrollableDiv"
           ref={scrollableDivRef}
           style={{
@@ -659,7 +697,7 @@ function formatChatTimestamp(timestamp) {
             }}
             dataLength={ichatData.length}
             next={() => {
-              getChats()
+              getChats();
               setScrollLoadMoreData(true);
             }}
             hasMore={hasMore}
@@ -674,7 +712,11 @@ function formatChatTimestamp(timestamp) {
                     return (
                       <div
                         key={item.timestamp}
-                        style={{ display: "flex", justifyContent: "flex-end", padding: "10px" }}
+                        style={{
+                          display: "flex",
+                          justifyContent: "flex-end",
+                          padding: "10px",
+                        }}
                       >
                         <div
                           style={{
@@ -701,7 +743,9 @@ function formatChatTimestamp(timestamp) {
                               </React.Fragment>
                             ))}
                           </div>
-                          <div style={{ display: "flex", justifyContent: "end" }}>
+                          <div
+                            style={{ display: "flex", justifyContent: "end" }}
+                          >
                             <Text style={{ fontSize: "10px" }}>
                               {formatChatTimestamp(item.timestamp)}
                             </Text>
@@ -713,7 +757,11 @@ function formatChatTimestamp(timestamp) {
                     return (
                       <div
                         key={item.timestamp}
-                        style={{ display: "flex", justifyContent: "flex-start", padding: "10px" }}
+                        style={{
+                          display: "flex",
+                          justifyContent: "flex-start",
+                          padding: "10px",
+                        }}
                       >
                         <div
                           style={{
@@ -753,20 +801,19 @@ function formatChatTimestamp(timestamp) {
                           </div>
                         </div>
                       </div>
-
                     );
                   }
                 })}
               </>
             )}
-            {(loading || chatLoading) && 
-             <Skeleton
+            {(loading || chatLoading) && (
+              <Skeleton
                 paragraph={{
                   rows: 4,
                 }}
                 active
               />
-            }
+            )}
           </InfiniteScroll>
         </div>
       </Content>
@@ -781,56 +828,69 @@ function formatChatTimestamp(timestamp) {
         }}
       >
         <TextArea
+          ref={textAreaRef}
           autoSize={{ minRows: 1, maxRows: 1 }}
           onChange={(value) => handleChange(value)}
           placeholder="Enter message"
+          onFocus={scrollToBottom}
+          onBlur={scrollToBottom}
           value={messageValue}
           onKeyDown={(e) => {
-          if (e.key === 'Enter') {
-            if (e.shiftKey || isMobile) {
-              return;
-          } else {
-              e.preventDefault();
-              handleSubmit()
-          }
-          }
-        }}
+            if (e.key === "Enter") {
+              if (e.shiftKey || isMobile) {
+                return;
+              } else {
+                e.preventDefault();
+                handleSubmit();
+              }
+            }
+          }}
         />
-        <Button style={{ background: '#10B981' }} type="primary" onClick={() => handleSubmit()}>
+        <Button
+          style={{ background: "#10B981" }}
+          type="primary"
+          onClick={() => handleSubmit()}
+        >
           send
         </Button>
       </Space.Compact>
-      {isMobile && <Footer
-        style={{
-          position: "fixed",
-          bottom: 0,
-          zIndex: 1,
-          display: "flex",
-          alignItems: "center",
-          padding: "0px",
-          width: "100vw",
-          height: '50px'
-        }}
-      >
-        <div className="demo-logo" />
-        <Menu
-          onClick={(event) => handleNavigation(event)}
-          theme="dark"
-          mode="horizontal"
-          defaultSelectedKeys={["0"]}
-          items={items}
+      {isMobile && (
+        <Footer
           style={{
-            justifyContent: 'space-around',
-            flex: 1,
-            minWidth: 0,background: "#6366F1"
+            position: "fixed",
+            bottom: 0,
+            zIndex: 1,
+            display: "flex",
+            alignItems: "center",
+            padding: "0px",
+            width: "100vw",
+            height: "50px",
           }}
+        >
+          <div className="demo-logo" />
+          <Menu
+            onClick={(event) => handleNavigation(event)}
+            theme="dark"
+            mode="horizontal"
+            defaultSelectedKeys={["0"]}
+            items={items}
+            style={{
+              justifyContent: "space-around",
+              flex: 1,
+              minWidth: 0,
+              background: "#6366F1",
+            }}
+          />
+        </Footer>
+      )}
+      {socketLoading && (
+        <Spin
+          fullscreen
+          indicator={
+            <LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />
+          }
         />
-      </Footer>}
-        {
-          socketLoading && (
-                          <Spin fullscreen indicator={<LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />} />
-                        )
-        }
+      )}
     </Layout>
   );
 };
