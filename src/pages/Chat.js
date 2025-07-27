@@ -154,11 +154,9 @@ const Chat = () => {
         setIChatInitialLoad(true);
         updateLimit();
       }
-      if (currentHeight < prevHeight - 100) {
+      if (currentHeight !== prevHeight) {
         prevHeight = currentHeight;
-        setTimeout(() => {
-          window.scrollTo(0, document.body.scrollHeight);
-        }, 300);
+        textAreaRef.current.blur();
       }
     };
 

@@ -2,38 +2,30 @@ import React, {
   Fragment,
   useEffect,
   useState,
-  useCallback,
   useRef,
   useContext,
 } from "react";
 import { useNavigate } from "react-router-dom";
-import { Breadcrumb, Layout, Menu, Spin, theme, message, Modal } from "antd";
+import { Layout, Menu, Spin, theme, Modal } from "antd";
 import {
   HomeFilled,
   UploadOutlined,
   MessageFilled,
   LogoutOutlined,
-  MailOutlined,
-  HeartOutlined,
   ProductFilled,
   LoadingOutlined,
   MailFilled,
   HeartFilled,
   MenuOutlined,
 } from "@ant-design/icons";
-import { Button, Input, Select, Space } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { Avatar, Divider, List, Skeleton, Empty } from "antd";
+import { List, Skeleton, Empty } from "antd";
 import { Card, Badge } from "antd";
-import axios from "axios";
 import { getCurrentUser, signInWithRedirect, signOut } from "@aws-amplify/auth";
-import debounce from "lodash/debounce";
-import { states, districts, districtMap } from "../helpers/locations";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
 import { callApi } from "../helpers/api";
 const IconText = ["Home", "Sell", "Chats", "My Ads", "Favourites", ""];
-const { Meta } = Card;
 const capitalize = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
@@ -42,52 +34,21 @@ const Ads = () => {
   const [loading, setLoading] = useState(false);
   const [scrollLoadMoreData, setScrollLoadMoreData] = useState(false);
   const [user, setUser] = useState(null);
-  const [search, setSearch] = useState(null);
-  const timer = useRef(null);
-  const [districts, setDistricts] = useState([]);
   const scrollableDivRef = useRef(null);
-  const [scrollPosition, setScrollPosition] = useState(0);
-  const [location, setLocation] = useState({
-    state: null,
-    district: null,
-  });
-  const [lastEvaluatedKeys, setLastEvaluatedKeys] = useState({
-    tLEK: null,
-    tS1LEK: null,
-    tS2LEK: null,
-    tS3LEK: null,
-    tS4LEK: null,
-  });
   const [chatLoading, setChatLoading] = useState(false);
   const {
-    setInitialLoad,
-    data,
     setAdScrollPosition,
     adScrollPosition,
     adInitialLoad,
     setAdInitialLoad,
     adData,
     setAdData,
-    setHomeInitialLoad,
-    setFavData,
-    setFavInitialLoad,
-    setChatData,
-    setChatInitialLoad,
-    adPageInitialLoad,
-    setChatPageInitialLoad,
-    setFavPageInitialLoad,
     adHasMore,
     setAdHasMore,
     adLastEvaluatedKey,
     setAdLastEvaluatedKey,
-    setFavLastEvaluatedKey,
-    setChatLastEvaluatedKey,
-    setContactInitialLoad,
-    setIChatInitialLoad,
-    setAddProductInitialLoad,
     setUnreadChatCount,
     unreadChatCount,
-    token,
   } = useContext(Context);
 
   const errorSessionConfig = {
@@ -367,12 +328,6 @@ const Ads = () => {
         break;
     }
   };
-  useEffect(() => {
-    scrollableDivRef.current.scrollTo(0, scrollPosition);
-  }, [scrollPosition]);
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
   return (
     <Layout
       style={{ height: "100dvh", overflow: "hidden", background: "#F9FAFB" }}
