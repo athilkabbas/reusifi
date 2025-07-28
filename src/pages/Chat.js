@@ -85,6 +85,7 @@ const Chat = () => {
   } = useContext(Context);
   const [chatLoading, setChatLoading] = useState(false);
   const [socketLoading, setSocketLoading] = useState(false);
+  const [moreWidth, setMoreWidth] = useState(true);
   const textAreaRef = useRef(null);
   const errorSessionConfig = {
     title: "Session has expired.",
@@ -145,11 +146,15 @@ const Chat = () => {
     const handleResize = () => {
       const currentWidth = window.innerWidth;
       const currentHeight = window.innerHeight;
-      if (hasMore && currentWidth > prevWidth) {
+      console.log(hasMore, currentWidth, prevWidth, "athil");
+      if (currentWidth > prevWidth) {
         setIChatData([]);
         setLastEvaluatedKey(null);
         setIChatInitialLoad(true);
         updateLimit();
+        setMoreWidth(true);
+      } else {
+        setMoreWidth(false);
       }
       if (currentHeight < prevHeight) {
         scrollToBottom();
@@ -487,12 +492,13 @@ const Chat = () => {
       user &&
       user.userId &&
       limit &&
+      moreWidth &&
       ((recipient && recipient["item"]["email"]) ||
         (conversationId && productId))
     ) {
       getChatsAndCount();
     }
-  }, [user, limit, conversationId, recipient, productId]);
+  }, [user, limit, conversationId, recipient, productId, moreWidth]);
 
   // useEffect(() => {
   //   if (
@@ -686,13 +692,56 @@ const Chat = () => {
             overflow: "scroll",
             display: "flex",
             flexDirection: "column-reverse",
-            height: !isMobile ? "calc(100% - 120px)" : "100%",
+            height: "100%",
             position: !isMobile ? "relative" : "fixed",
-            bottom: !isMobile ? "0px" : "120px",
+            bottom: !isMobile ? "0px" : "50px",
             width: "100%",
-            paddingTop: !isMobile ? "0px" : "120px",
+            paddingTop: !isMobile ? "0px" : "60px",
           }}
         >
+          <Space.Compact
+            size="large"
+            style={{
+              display: "flex",
+              flexDirection: "column-reverse",
+              position: "sticky",
+              bottom: "0px",
+              paddingBottom: 10,
+              width: "calc(100% - 10px)",
+              background: "#F9FAFB",
+            }}
+          >
+            <div style={{ display: "flex" }}>
+              <TextArea
+                ref={textAreaRef}
+                autoSize={{ minRows: 1, maxRows: 3 }}
+                onChange={(event) => handleChange(event.target.value)}
+                placeholder="Enter message"
+                value={messageValue}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    if (e.shiftKey || isMobile) {
+                      return;
+                    } else {
+                      e.preventDefault();
+                      handleSubmit();
+                    }
+                  }
+                }}
+              />
+              <Button
+                style={{
+                  background: "#10B981",
+                  display: "flex",
+                  alignSelf: "flex-end",
+                }}
+                type="primary"
+                onClick={() => handleSubmit()}
+              >
+                send
+              </Button>
+            </div>
+          </Space.Compact>
           <InfiniteScroll
             style={{
               overflowX: "hidden",
@@ -821,49 +870,6 @@ const Chat = () => {
           </InfiniteScroll>
         </div>
       </Content>
-      <Space.Compact
-        size="large"
-        style={{
-          display: "flex",
-          flexDirection: "column-reverse",
-          padding: 10,
-          position: "fixed",
-          bottom: "50px",
-          height: "60px",
-          width: "calc(100% - 10px)",
-        }}
-      >
-        <div style={{ display: "flex" }}>
-          <TextArea
-            ref={textAreaRef}
-            autoSize={{ minRows: 1, maxRows: 3 }}
-            onChange={(event) => handleChange(event.target.value)}
-            placeholder="Enter message"
-            value={messageValue}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                if (e.shiftKey || isMobile) {
-                  return;
-                } else {
-                  e.preventDefault();
-                  handleSubmit();
-                }
-              }
-            }}
-          />
-          <Button
-            style={{
-              background: "#10B981",
-              display: "flex",
-              alignSelf: "flex-end",
-            }}
-            type="primary"
-            onClick={() => handleSubmit()}
-          >
-            send
-          </Button>
-        </div>
-      </Space.Compact>
       {isMobile && (
         <Footer
           style={{
