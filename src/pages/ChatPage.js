@@ -82,7 +82,7 @@ const ChatPage = () => {
         navigate("/contact");
         break;
       case "6-2":
-        await signOut();
+        signOut();
         break;
     }
   };
@@ -264,8 +264,8 @@ const ChatPage = () => {
     closable: false,
     maskClosable: false,
     okText: "Login",
-    onOk: async () => {
-      await signInWithRedirect();
+    onOk: () => {
+      signInWithRedirect();
     },
   };
   const errorConfig = {

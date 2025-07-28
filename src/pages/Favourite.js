@@ -139,8 +139,8 @@ const Favourites = () => {
     closable: false,
     maskClosable: false,
     okText: "Login",
-    onOk: async () => {
-      await signInWithRedirect();
+    onOk: () => {
+      signInWithRedirect();
     },
   };
   const errorConfig = {
@@ -388,7 +388,7 @@ const Favourites = () => {
         navigate("/contact");
         break;
       case "6-2":
-        await signOut();
+        signOut();
         break;
     }
   };
@@ -413,7 +413,7 @@ const Favourites = () => {
             onClick={(event) => handleNavigation(event)}
             theme="dark"
             mode="horizontal"
-            defaultSelectedKeys={["6"]}
+            defaultSelectedKeys={["5"]}
             items={items}
             style={{
               minWidth: 0,

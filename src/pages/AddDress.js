@@ -67,8 +67,8 @@ const AddDress = () => {
     closable: false,
     maskClosable: false,
     okText: "Login",
-    onOk: async () => {
-      await signInWithRedirect();
+    onOk: () => {
+      signInWithRedirect();
     },
   };
   const errorConfig = {
@@ -251,7 +251,7 @@ const AddDress = () => {
         navigate("/contact");
         break;
       case "6-2":
-        await signOut();
+        signOut();
         break;
     }
   };

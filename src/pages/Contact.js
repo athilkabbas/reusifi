@@ -29,8 +29,8 @@ const Contact = () => {
     closable: false,
     maskClosable: false,
     okText: "Login",
-    onOk: async () => {
-      await signInWithRedirect();
+    onOk: () => {
+      signInWithRedirect();
     },
   };
   const errorConfig = {
@@ -65,7 +65,7 @@ const Contact = () => {
         navigate("/contact");
         break;
       case "6-2":
-        await signOut();
+        signOut();
         break;
     }
   };
@@ -200,7 +200,7 @@ const Contact = () => {
             onClick={(event) => handleNavigation(event)}
             theme="dark"
             mode="horizontal"
-            defaultSelectedKeys={["5"]}
+            defaultSelectedKeys={["6-1"]}
             items={items}
             style={{
               minWidth: 0,

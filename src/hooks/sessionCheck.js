@@ -32,7 +32,7 @@ export function useSessionCheck() {
   useEffect(() => {
     const completeCheck = async () => {
       if (checked && !isSignedIn) {
-        await signInWithRedirect();
+        signInWithRedirect();
       }
     };
     completeCheck();

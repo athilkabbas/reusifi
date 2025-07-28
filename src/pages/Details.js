@@ -62,7 +62,7 @@ const Details = () => {
         navigate("/contact");
         break;
       case "6-2":
-        await signOut();
+        signOut();
         break;
     }
   };
@@ -83,8 +83,8 @@ const Details = () => {
     closable: false,
     maskClosable: false,
     okText: "Login",
-    onOk: async () => {
-      await signInWithRedirect();
+    onOk: () => {
+      signInWithRedirect();
     },
   };
   const errorConfig = {

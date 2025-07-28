@@ -36,8 +36,8 @@ const errorSessionConfig = {
   closable: false,
   maskClosable: false,
   okText: "Login",
-  onOk: async () => {
-    await signInWithRedirect();
+  onOk: () => {
+    signInWithRedirect();
   },
 };
 const errorConfig = {
