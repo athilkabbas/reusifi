@@ -146,7 +146,7 @@ function AppWithSession() {
       <div
         style={{
           display: "flex",
-          height: "100dvh",
+          height: "100%",
           justifyContent: "center",
           alignItems: "center",
           fontSize: "1.5rem",

@@ -494,7 +494,7 @@ const Home = () => {
   };
   return (
     <Layout
-      style={{ height: "100dvh", overflow: "hidden", background: "#F9FAFB" }}
+      style={{ height: "100%", overflow: "hidden", background: "#F9FAFB" }}
     >
       {!isMobile && (
         <Header
