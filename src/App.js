@@ -23,6 +23,18 @@ import { useSessionCheck } from "./hooks/sessionCheck";
 Amplify.configure(awsconfig);
 
 function App() {
+  useEffect(() => {
+    const setVH = () => {
+      const vh = window.innerHeight;
+      document.documentElement.style.setProperty("--vh", `${vh}px`);
+    };
+
+    setVH();
+    window.addEventListener("resize", setVH);
+
+    return () => window.removeEventListener("resize", setVH);
+  }, []);
+
   return (
     <BrowserRouter>
       <AppWithSession />

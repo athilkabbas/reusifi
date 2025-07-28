@@ -185,7 +185,11 @@ const Contact = () => {
 
   return (
     <Layout
-      style={{ height: "100%", overflow: "hidden", background: "#F9FAFB" }}
+      style={{
+        height: "var(--vh, 100dvh)",
+        overflow: "hidden",
+        background: "#F9FAFB",
+      }}
     >
       {!isMobile && (
         <Header

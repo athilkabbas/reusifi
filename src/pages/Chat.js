@@ -652,7 +652,11 @@ const Chat = () => {
 
   return (
     <Layout
-      style={{ height: "100%", overflow: "hidden", background: "#F9FAFB" }}
+      style={{
+        height: "var(--vh, 100dvh)",
+        overflow: "hidden",
+        background: "#F9FAFB",
+      }}
     >
       {!isMobile && (
         <Header
@@ -708,14 +712,9 @@ const Chat = () => {
               background: "#F9FAFB",
             }}
           >
-            <div style={{ display: "flex" }}>
+            <div style={{ display: "flex", overflow: "scroll" }}>
               <TextArea
                 ref={textAreaRef}
-                style={{
-                  overflowY: "auto",
-                  WebkitOverflowScrolling: "touch",
-                  maxHeight: "150px",
-                }}
                 autoSize={{ minRows: 1, maxRows: 3 }}
                 onChange={(event) => handleChange(event.target.value)}
                 placeholder="Enter message"
