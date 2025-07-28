@@ -127,9 +127,7 @@ const Chat = () => {
   };
 
   const [limit, setLimit] = useState(0); // default
-
   const scrollToBottom = () => {
-    console.log("athil");
     bottomRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
   };
 
@@ -146,7 +144,6 @@ const Chat = () => {
     const handleResize = () => {
       const currentWidth = window.innerWidth;
       const currentHeight = window.innerHeight;
-      console.log(hasMore, currentWidth, prevWidth, "athil");
       if (currentWidth > prevWidth) {
         setIChatData([]);
         setLastEvaluatedKey(null);
@@ -720,7 +717,7 @@ const Chat = () => {
                 value={messageValue}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
-                    if (e.shiftKey || isMobile) {
+                    if (e.shiftKey || isMobile || window.innerWidth < 1200) {
                       return;
                     } else {
                       e.preventDefault();
