@@ -824,6 +824,8 @@ const Chat = () => {
       <Space.Compact
         size="large"
         style={{
+          display: "flex",
+          flexDirection: "column-reverse",
           padding: 10,
           position: "fixed",
           bottom: "50px",
@@ -831,30 +833,36 @@ const Chat = () => {
           width: "calc(100% - 10px)",
         }}
       >
-        <TextArea
-          ref={textAreaRef}
-          autoSize={{ minRows: 1, maxRows: 1 }}
-          onChange={(event) => handleChange(event.target.value)}
-          placeholder="Enter message"
-          value={messageValue}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              if (e.shiftKey || isMobile) {
-                return;
-              } else {
-                e.preventDefault();
-                handleSubmit();
+        <div style={{ display: "flex" }}>
+          <TextArea
+            ref={textAreaRef}
+            autoSize={{ minRows: 1, maxRows: 3 }}
+            onChange={(event) => handleChange(event.target.value)}
+            placeholder="Enter message"
+            value={messageValue}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                if (e.shiftKey || isMobile) {
+                  return;
+                } else {
+                  e.preventDefault();
+                  handleSubmit();
+                }
               }
-            }
-          }}
-        />
-        <Button
-          style={{ background: "#10B981" }}
-          type="primary"
-          onClick={() => handleSubmit()}
-        >
-          send
-        </Button>
+            }}
+          />
+          <Button
+            style={{
+              background: "#10B981",
+              display: "flex",
+              alignSelf: "flex-end",
+            }}
+            type="primary"
+            onClick={() => handleSubmit()}
+          >
+            send
+          </Button>
+        </div>
       </Space.Compact>
       {isMobile && (
         <Footer
