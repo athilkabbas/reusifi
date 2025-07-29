@@ -131,7 +131,7 @@ const Chat = () => {
       bottomRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
     }
   };
-
+  const [isKeyboardOpen, setKeyboardOpen] = useState(false);
   useEffect(() => {
     let prevWidth = window.innerWidth;
     let prevHeight = window.innerHeight;
@@ -156,6 +156,7 @@ const Chat = () => {
       }
       if (currentHeight < prevHeight) {
         scrollToBottom();
+        setKeyboardOpen(true);
       }
       prevWidth = currentWidth;
       prevHeight = currentHeight;
@@ -726,11 +727,50 @@ const Chat = () => {
             borderRadius: "0px",
             display: "flex",
             flexDirection: "column-reverse",
-            height: "calc(100% - 100px)",
+            height: "calc(100% - 50px)",
             position: "relative",
             width: "100%",
           }}
         >
+          <Space.Compact
+            size="large"
+            style={{
+              padding: "10px",
+              width: "calc(100% - 10px)",
+              background: "#F9FAFB",
+              display: "flex",
+              position: "sticky",
+              bottom: "50px",
+            }}
+          >
+            <TextArea
+              autoSize={{ minRows: 1, maxRows: 5 }}
+              onChange={(event) => handleChange(event.target.value)}
+              placeholder="Enter message"
+              value={messageValue}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  if (e.shiftKey || isMobile || window.innerWidth < 1200) {
+                    return;
+                  } else {
+                    e.preventDefault();
+                    handleSubmit();
+                  }
+                }
+              }}
+            />
+            <Button
+              style={{
+                background: "#10B981",
+                display: "flex",
+                alignSelf: "flex-end",
+              }}
+              type="primary"
+              onClick={() => handleSubmit()}
+            >
+              send
+            </Button>
+          </Space.Compact>
           <div
             className="hide-scrollbar overflow-auto"
             id="scrollableDiv"
@@ -739,7 +779,7 @@ const Chat = () => {
               background: "#F9FAFB",
               borderRadius: "0px",
               display: "flex",
-              overflowY: "auto",
+              overflowY: isKeyboardOpen ? "hidden" : "auto",
               flexDirection: "column-reverse",
               width: "100%",
             }}
@@ -872,65 +912,6 @@ const Chat = () => {
             </InfiniteScroll>
           </div>
         </div>
-        <Space.Compact
-          size="large"
-          style={{
-            paddingBottom: 10,
-            width: "calc(100% - 10px)",
-            background: "#F9FAFB",
-            display: "flex",
-            flexDirection: "column-reverse",
-            position: "sticky",
-            bottom: "50px",
-          }}
-        >
-          <TextArea
-            autoSize={{ minRows: 1, maxRows: 5 }}
-            onChange={(event) => handleChange(event.target.value)}
-            placeholder="Enter message"
-            value={messageValue}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                if (e.shiftKey || isMobile || window.innerWidth < 1200) {
-                  return;
-                } else {
-                  e.preventDefault();
-                  handleSubmit();
-                }
-              }
-            }}
-            onTouchStart={(e) => {
-              const textarea = e.currentTarget;
-              const scrollTop = textarea.scrollTop;
-              const scrollHeight = textarea.scrollHeight;
-              const offsetHeight = textarea.offsetHeight;
-
-              const isScrollable = scrollHeight > offsetHeight;
-
-              if (!isScrollable) return;
-
-              if (scrollTop === 0) {
-                textarea.scrollTop = 1; // prevent scroll chaining at top
-              } else if (scrollTop + offsetHeight >= scrollHeight) {
-                textarea.scrollTop = scrollTop - 1; // prevent scroll chaining at bottom
-              }
-            }}
-            onTouchMove={(e) => {
-              e.stopPropagation(); // stop from bubbling to parent
-            }}
-          />
-          {/* <Button
-              style={{
-                background: "#10B981",
-                display: "flex",
-                alignSelf: "flex-end",
-              }}
-              type="primary"
-              onClick={() => handleSubmit()}
-            >
-              send
-            </Button> */}
-        </Space.Compact>
       </Content>
       {isMobile && (
         <Footer
