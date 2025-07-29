@@ -692,6 +692,7 @@ const Chat = () => {
       style={{
         height: "100dvh",
         background: "#F9FAFB",
+        overflow: "hidden",
       }}
     >
       {!isMobile && (
@@ -724,8 +725,8 @@ const Chat = () => {
             background: "#F9FAFB",
             borderRadius: "0px",
             display: "flex",
-            flexDirection: "column",
-            height: "calc(100% - 50px)",
+            flexDirection: "column-reverse",
+            height: "calc(100% - 100px)",
             position: "relative",
             width: "100%",
           }}
@@ -870,31 +871,36 @@ const Chat = () => {
               )}
             </InfiniteScroll>
           </div>
-          <Space.Compact
-            size="large"
-            style={{
-              paddingBottom: 10,
-              width: "calc(100% - 10px)",
-              background: "#F9FAFB",
-            }}
-          >
-            <TextArea
-              autoSize={{ minRows: 1, maxRows: 5 }}
-              onChange={(event) => handleChange(event.target.value)}
-              placeholder="Enter message"
-              value={messageValue}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  if (e.shiftKey || isMobile || window.innerWidth < 1200) {
-                    return;
-                  } else {
-                    e.preventDefault();
-                    handleSubmit();
-                  }
+        </div>
+        <Space.Compact
+          size="large"
+          style={{
+            paddingBottom: 10,
+            width: "calc(100% - 10px)",
+            background: "#F9FAFB",
+            display: "flex",
+            flexDirection: "column-reverse",
+            position: "sticky",
+            bottom: "50px",
+          }}
+        >
+          <TextArea
+            autoSize={{ minRows: 1, maxRows: 5 }}
+            onChange={(event) => handleChange(event.target.value)}
+            placeholder="Enter message"
+            value={messageValue}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                if (e.shiftKey || isMobile || window.innerWidth < 1200) {
+                  return;
+                } else {
+                  e.preventDefault();
+                  handleSubmit();
                 }
-              }}
-            />
-            {/* <Button
+              }
+            }}
+          />
+          {/* <Button
               style={{
                 background: "#10B981",
                 display: "flex",
@@ -905,8 +911,7 @@ const Chat = () => {
             >
               send
             </Button> */}
-          </Space.Compact>
-        </div>
+        </Space.Compact>
       </Content>
       {isMobile && (
         <Footer
