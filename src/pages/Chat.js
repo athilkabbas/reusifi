@@ -250,6 +250,7 @@ const Chat = () => {
 
   useEffect(() => {
     let socket;
+    let reconnectTimeout;
     const fetchUser = async () => {
       try {
         setSocketLoading(true);
@@ -311,7 +312,7 @@ const Chat = () => {
         // To close the connection
         socket.onclose = () => {
           console.log("Disconnected from WebSocket");
-          fetchUser();
+          reconnectTimeout = setTimeout(fetchUser, 1000);
         };
       } catch (err) {
         setSocketLoading(false);
@@ -331,6 +332,9 @@ const Chat = () => {
       fetchUser();
     }
     return () => {
+      if (reconnectTimeout) {
+        clearTimeout(reconnectTimeout);
+      }
       if (socket && socket.readyState === WebSocket.OPEN) {
         socket.close();
       } else if (socket && socket.readyState === WebSocket.CONNECTING) {
@@ -684,14 +688,10 @@ const Chat = () => {
       )}
       <Content>
         <div
-          className="hide-scrollbar overflow-auto"
-          id="scrollableDiv"
-          ref={scrollableDivRef}
           style={{
             background: "#F9FAFB",
             borderRadius: "0px",
             display: "flex",
-            overflow: "scroll",
             flexDirection: "column-reverse",
             height: "100%",
             position: !isMobile ? "relative" : "fixed",
@@ -744,132 +744,147 @@ const Chat = () => {
               </Button>
             </div>
           </Space.Compact>
-          <InfiniteScroll
+          <div
+            className="hide-scrollbar overflow-auto"
+            id="scrollableDiv"
+            ref={scrollableDivRef}
             style={{
-              overflowX: "hidden",
-              display: "flex",
-              flexDirection: "column-reverse",
               background: "#F9FAFB",
+              borderRadius: "0px",
+              display: "flex",
+              overflow: "scroll",
+              flexDirection: "column-reverse",
+              height: "100%",
+              width: "100%",
             }}
-            dataLength={ichatData.length}
-            next={() => {
-              getChats();
-              setScrollLoadMoreData(true);
-            }}
-            hasMore={hasMore}
-            inverse
-            scrollableTarget="scrollableDiv"
           >
-            {!loading && !chatLoading && user && (
-              <>
-                {ichatData.map((item) => {
-                  if (item.senderId === user.userId) {
-                    return (
-                      <div
-                        key={item.timestamp}
-                        style={{
-                          display: "flex",
-                          justifyContent: "flex-end",
-                          padding: "10px",
-                        }}
-                      >
+            <InfiniteScroll
+              style={{
+                overflowX: "hidden",
+                display: "flex",
+                flexDirection: "column-reverse",
+                background: "#F9FAFB",
+              }}
+              dataLength={ichatData.length}
+              next={() => {
+                getChats();
+                setScrollLoadMoreData(true);
+              }}
+              hasMore={hasMore}
+              inverse
+              scrollableTarget="scrollableDiv"
+            >
+              {!loading && !chatLoading && user && (
+                <>
+                  {ichatData.map((item) => {
+                    if (item.senderId === user.userId) {
+                      return (
                         <div
+                          key={item.timestamp}
                           style={{
                             display: "flex",
-                            flexDirection: "column",
-                            background: "#E5E7EB",
-                            borderRadius: "16px 16px 4px 16px",
+                            justifyContent: "flex-end",
                             padding: "10px",
-                            maxWidth: "80vw", // prevent it from overflowing
                           }}
                         >
                           <div
                             style={{
                               display: "flex",
-                              wordBreak: "break-word",
-                              justifyContent: "end",
-                              whiteSpace: "pre-wrap",
+                              flexDirection: "column",
+                              background: "#E5E7EB",
+                              borderRadius: "16px 16px 4px 16px",
+                              padding: "10px",
+                              maxWidth: "80vw", // prevent it from overflowing
                             }}
                           >
-                            {item.message.split("\n").map((line, index) => (
-                              <React.Fragment key={index}>
-                                {line}
-                                <br />
-                              </React.Fragment>
-                            ))}
-                          </div>
-                          <div
-                            style={{ display: "flex", justifyContent: "end" }}
-                          >
-                            <Text style={{ fontSize: "10px" }}>
-                              {formatChatTimestamp(item.timestamp)}
-                            </Text>
+                            <div
+                              style={{
+                                display: "flex",
+                                wordBreak: "break-word",
+                                justifyContent: "end",
+                                whiteSpace: "pre-wrap",
+                              }}
+                            >
+                              {item.message.split("\n").map((line, index) => (
+                                <React.Fragment key={index}>
+                                  {line}
+                                  <br />
+                                </React.Fragment>
+                              ))}
+                            </div>
+                            <div
+                              style={{ display: "flex", justifyContent: "end" }}
+                            >
+                              <Text style={{ fontSize: "10px" }}>
+                                {formatChatTimestamp(item.timestamp)}
+                              </Text>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    );
-                  } else {
-                    return (
-                      <div
-                        key={item.timestamp}
-                        style={{
-                          display: "flex",
-                          justifyContent: "flex-start",
-                          padding: "10px",
-                        }}
-                      >
+                      );
+                    } else {
+                      return (
                         <div
+                          key={item.timestamp}
                           style={{
                             display: "flex",
-                            flexDirection: "column",
-                            background: "#E0E7FF",
-                            borderRadius: "16px 16px 16px 4px",
+                            justifyContent: "flex-start",
                             padding: "10px",
-                            maxWidth: "80vw", // prevent overflow
                           }}
                         >
                           <div
                             style={{
                               display: "flex",
-                              wordBreak: "break-word",
-                              justifyContent: "start",
-                              paddingLeft: "10px",
+                              flexDirection: "column",
+                              background: "#E0E7FF",
+                              borderRadius: "16px 16px 16px 4px",
+                              padding: "10px",
+                              maxWidth: "80vw", // prevent overflow
                             }}
                           >
-                            {item.message.split("\n").map((line, index) => (
-                              <React.Fragment key={index}>
-                                {line}
-                                <br />
-                              </React.Fragment>
-                            ))}
-                          </div>
-                          <div
-                            style={{
-                              display: "flex",
-                              justifyContent: "start",
-                              paddingLeft: "10px",
-                            }}
-                          >
-                            <Text style={{ fontSize: "10px" }}>
-                              {formatChatTimestamp(item.timestamp)}
-                            </Text>
+                            <div
+                              style={{
+                                display: "flex",
+                                wordBreak: "break-word",
+                                justifyContent: "start",
+                                paddingLeft: "10px",
+                              }}
+                            >
+                              {item.message.split("\n").map((line, index) => (
+                                <React.Fragment key={index}>
+                                  {line}
+                                  <br />
+                                </React.Fragment>
+                              ))}
+                            </div>
+                            <div
+                              style={{
+                                display: "flex",
+                                justifyContent: "start",
+                                paddingLeft: "10px",
+                              }}
+                            >
+                              <Text style={{ fontSize: "10px" }}>
+                                {formatChatTimestamp(item.timestamp)}
+                              </Text>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    );
-                  }
-                })}
-              </>
-            )}
-            {(loading || chatLoading) && (
-              <Skeleton
-                paragraph={{
-                  rows: 4,
-                }}
-                active
-              />
-            )}
-          </InfiniteScroll>
+                      );
+                    }
+                  })}
+                </>
+              )}
+              {(loading || chatLoading) && (
+                <Skeleton
+                  paragraph={{
+                    rows: 4,
+                  }}
+                  active
+                />
+              )}
+            </InfiniteScroll>
+          </div>
         </div>
       </Content>
       {isMobile && (

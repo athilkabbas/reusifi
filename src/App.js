@@ -63,6 +63,7 @@ function AppWithSession() {
   const [socketLoading, setSocketLoading] = useState(false);
   useEffect(() => {
     let socket;
+    let reconnectTimeout;
     const fetchNotifications = async () => {
       try {
         setSocketLoading(true);
@@ -88,7 +89,7 @@ function AppWithSession() {
         };
         // To close the connection
         socket.onclose = () => {
-          fetchNotifications();
+          reconnectTimeout = setTimeout(fetchNotifications, 1000);
         };
       } catch (err) {
         setSocketLoading(false);
@@ -108,6 +109,9 @@ function AppWithSession() {
       fetchNotifications();
     }
     return () => {
+      if (reconnectTimeout) {
+        clearTimeout(reconnectTimeout);
+      }
       if (socket && socket.readyState === WebSocket.OPEN) {
         socket.close();
       } else if (socket && socket.readyState === WebSocket.CONNECTING) {
