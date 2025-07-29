@@ -899,6 +899,25 @@ const Chat = () => {
                 }
               }
             }}
+            onTouchStart={(e) => {
+              const textarea = e.currentTarget;
+              const scrollTop = textarea.scrollTop;
+              const scrollHeight = textarea.scrollHeight;
+              const offsetHeight = textarea.offsetHeight;
+
+              const isScrollable = scrollHeight > offsetHeight;
+
+              if (!isScrollable) return;
+
+              if (scrollTop === 0) {
+                textarea.scrollTop = 1; // prevent scroll chaining at top
+              } else if (scrollTop + offsetHeight >= scrollHeight) {
+                textarea.scrollTop = scrollTop - 1; // prevent scroll chaining at bottom
+              }
+            }}
+            onTouchMove={(e) => {
+              e.stopPropagation(); // stop from bubbling to parent
+            }}
           />
           {/* <Button
               style={{
