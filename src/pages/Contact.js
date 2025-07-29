@@ -38,9 +38,9 @@ const Contact = () => {
     content: "Please try again later.",
     closable: false,
     maskClosable: false,
-    okText: "Close",
+    okText: "Reload",
     onOk: () => {
-      navigate("/");
+      window.location.reload();
     },
   };
   const [loading, setLoading] = useState(false);

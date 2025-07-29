@@ -101,9 +101,9 @@ const Chat = () => {
     content: "Please try again later.",
     closable: false,
     maskClosable: false,
-    okText: "Close",
+    okText: "Reload",
     onOk: () => {
-      navigate("/");
+      window.location.reload();
     },
   };
   const isMobile = useIsMobile();
@@ -278,9 +278,8 @@ const Chat = () => {
       if (tokens?.idToken) {
         token = tokens.idToken;
       } else {
-        const error = new Error("Session expired");
-        error.status = 401;
-        throw error;
+        Modal.error(errorSessionConfig);
+        return;
       }
 
       const currentUser = await getCurrentUser();
