@@ -86,6 +86,7 @@ const Chat = () => {
   const [chatLoading, setChatLoading] = useState(false);
   const [socketLoading, setSocketLoading] = useState(false);
   const [moreWidth, setMoreWidth] = useState(true);
+  const layoutRef = useRef(null);
   const errorSessionConfig = {
     title: "Session has expired.",
     content: "Please login again.",
@@ -659,6 +660,7 @@ const Chat = () => {
 
   return (
     <Layout
+      ref={layoutRef}
       style={{
         height: "100dvh",
         overflow: "hidden",
@@ -735,10 +737,16 @@ const Chat = () => {
                   if (scrollableDivRef.current) {
                     scrollableDivRef.current.style.overflow = "hidden";
                   }
+                  if (layoutRef.current) {
+                    layoutRef.current.style.overflow = "hidden";
+                  }
                 }}
                 onBlur={() => {
                   if (scrollableDivRef.current) {
                     scrollableDivRef.current.style.overflow = "scroll";
+                  }
+                  if (layoutRef.current) {
+                    layoutRef.current.style.overflow = "scroll";
                   }
                 }}
               />
