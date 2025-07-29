@@ -128,7 +128,7 @@ const Chat = () => {
   const [limit, setLimit] = useState(0); // default
   const scrollToBottom = () => {
     if (bottomRef?.current) {
-      bottomRef.current?.scrollIntoView({ behavior: "auto" });
+      bottomRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
     }
   };
 
