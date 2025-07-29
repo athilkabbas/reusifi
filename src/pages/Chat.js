@@ -128,7 +128,7 @@ const Chat = () => {
   const [limit, setLimit] = useState(0); // default
   const scrollToBottom = () => {
     if (bottomRef?.current) {
-      bottomRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
+      bottomRef.current?.scrollIntoView({ behavior: "auto" });
     }
   };
 
@@ -747,11 +747,6 @@ const Chat = () => {
           >
             <div style={{ display: "flex", width: "100%" }}>
               <TextArea
-                ref={(el) => {
-                  if (el) {
-                    bottomRef.current = el.resizableTextArea?.textArea;
-                  }
-                }}
                 autoSize={{ minRows: 1, maxRows: 5 }}
                 onChange={(event) => handleChange(event.target.value)}
                 placeholder="Enter message"
@@ -952,6 +947,7 @@ const Chat = () => {
           />
         </Footer>
       )}
+      <div ref={bottomRef}></div>
       {socketLoading && (
         <Spin
           fullscreen
