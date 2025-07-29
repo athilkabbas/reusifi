@@ -23,18 +23,6 @@ import { useSessionCheck } from "./hooks/sessionCheck";
 Amplify.configure(awsconfig);
 
 function App() {
-  useEffect(() => {
-    const setVH = () => {
-      const vh = window.innerHeight;
-      document.documentElement.style.setProperty("--vh", `${vh}px`);
-    };
-
-    setVH();
-    window.addEventListener("resize", setVH);
-
-    return () => window.removeEventListener("resize", setVH);
-  }, []);
-
   return (
     <BrowserRouter>
       <AppWithSession />
@@ -90,7 +78,6 @@ function AppWithSession() {
 
         socket.onerror = (err) => {
           setSocketLoading(false);
-          Modal.error(errorConfig);
         };
 
         socket.onmessage = async (event) => {
@@ -101,7 +88,7 @@ function AppWithSession() {
         };
         // To close the connection
         socket.onclose = () => {
-          console.log("Disconnected from WebSocket");
+          fetchNotifications();
         };
       } catch (err) {
         setSocketLoading(false);

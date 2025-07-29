@@ -418,7 +418,7 @@ const AddDress = () => {
   return (
     <Layout
       style={{
-        height: "var(--vh, 100dvh)",
+        height: "100dvh",
         overflow: "hidden",
         background: "#F9FAFB",
       }}

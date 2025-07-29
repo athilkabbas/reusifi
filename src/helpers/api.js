@@ -35,7 +35,7 @@ export const callApi = async (url, method, skipRefresh = false, data) => {
           withCredentials: true,
         });
 
-        return callApi(url, method, false, data);
+        return callApi(url, method, true, data);
       } catch (refreshErr) {
         console.error("Refresh failed:", refreshErr);
         throw refreshErr;

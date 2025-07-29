@@ -281,7 +281,6 @@ const Chat = () => {
 
         socket.onerror = (err) => {
           setSocketLoading(false);
-          Modal.error(errorConfig);
         };
 
         socket.onmessage = async (event) => {
@@ -312,6 +311,7 @@ const Chat = () => {
         // To close the connection
         socket.onclose = () => {
           console.log("Disconnected from WebSocket");
+          fetchUser();
         };
       } catch (err) {
         setSocketLoading(false);
@@ -653,7 +653,7 @@ const Chat = () => {
   return (
     <Layout
       style={{
-        height: "var(--vh, 100dvh)",
+        height: "100dvh",
         overflow: "hidden",
         background: "#F9FAFB",
       }}
@@ -690,8 +690,8 @@ const Chat = () => {
           style={{
             background: "#F9FAFB",
             borderRadius: "0px",
-            overflow: "scroll",
             display: "flex",
+            overflow: "scroll",
             flexDirection: "column-reverse",
             height: "100%",
             position: !isMobile ? "relative" : "fixed",
@@ -712,13 +712,14 @@ const Chat = () => {
               background: "#F9FAFB",
             }}
           >
-            <div style={{ display: "flex", overflow: "scroll" }}>
+            <div style={{ display: "flex" }}>
               <TextArea
                 ref={textAreaRef}
                 autoSize={{ minRows: 1, maxRows: 3 }}
                 onChange={(event) => handleChange(event.target.value)}
                 placeholder="Enter message"
                 value={messageValue}
+                onTouchMove={(e) => e.stopPropagation()}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
                     if (e.shiftKey || isMobile || window.innerWidth < 1200) {
