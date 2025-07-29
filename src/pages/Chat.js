@@ -269,7 +269,7 @@ const Chat = () => {
         } else if (err?.status === 401) {
           Modal.error(errorSessionConfig);
         } else {
-          Modal.error({ ...errorConfig, content: err.message });
+          Modal.error({ ...errorConfig, content: err.message + "chat socket" });
         }
         return;
       }
@@ -336,7 +336,7 @@ const Chat = () => {
           } else if (err?.status === 401) {
             Modal.error(errorSessionConfig);
           } else {
-            Modal.error({ ...errorConfig, content: err.message });
+            Modal.error({ ...errorConfig, content: err.message + "chat read" });
           }
           return;
         }
@@ -482,7 +482,7 @@ const Chat = () => {
       if (err?.status === 401) {
         Modal.error(errorSessionConfig);
       } else {
-        Modal.error({ ...errorConfig, content: err.message });
+        Modal.error({ ...errorConfig, content: err.message + "get chats" });
       }
       console.log(err);
     }
@@ -518,7 +518,7 @@ const Chat = () => {
         if (err?.status === 401) {
           Modal.error(errorSessionConfig);
         } else {
-          Modal.error({ ...errorConfig, content: err.message });
+          Modal.error({ ...errorConfig, content: err.message + "get count" });
         }
       }
     };
