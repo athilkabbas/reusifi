@@ -717,7 +717,6 @@ const Chat = () => {
             size="large"
             style={{
               display: "flex",
-              flexDirection: "column-reverse",
               position: "sticky",
               bottom: "0px",
               paddingBottom: 10,
@@ -725,7 +724,7 @@ const Chat = () => {
               background: "#F9FAFB",
             }}
           >
-            <div style={{ display: "flex" }}>
+            <div style={{ display: "flex", width: "100%" }}>
               <TextArea
                 autoSize={{ minRows: 1, maxRows: 3 }}
                 onChange={(event) => handleChange(event.target.value)}
