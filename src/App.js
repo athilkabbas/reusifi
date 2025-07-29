@@ -89,7 +89,11 @@ function AppWithSession() {
         };
         // To close the connection
         socket.onclose = () => {
-          reconnectTimeout = setTimeout(fetchNotifications, 1000);
+          reconnectTimeout = setTimeout(() => {
+            if (token) {
+              fetchNotifications();
+            }
+          }, 1000);
         };
       } catch (err) {
         setSocketLoading(false);

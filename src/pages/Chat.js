@@ -312,7 +312,11 @@ const Chat = () => {
         // To close the connection
         socket.onclose = () => {
           console.log("Disconnected from WebSocket");
-          reconnectTimeout = setTimeout(fetchUser, 1000);
+          reconnectTimeout = setTimeout(() => {
+            if (productId || (recipient && recipient["item"]["uuid"])) {
+              fetchUser();
+            }
+          }, 1000);
         };
       } catch (err) {
         setSocketLoading(false);
@@ -719,7 +723,6 @@ const Chat = () => {
                 onChange={(event) => handleChange(event.target.value)}
                 placeholder="Enter message"
                 value={messageValue}
-                onTouchMove={(e) => e.stopPropagation()}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
                     if (e.shiftKey || isMobile || window.innerWidth < 1200) {
@@ -730,6 +733,10 @@ const Chat = () => {
                     }
                   }
                 }}
+                onTouchStart={(e) => e.stopPropagation()}
+                onTouchMove={(e) => e.stopPropagation()}
+                onWheel={(e) => e.stopPropagation()}
+                onScroll={(e) => e.stopPropagation()}
               />
               <Button
                 style={{
