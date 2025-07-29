@@ -725,7 +725,7 @@ const Chat = () => {
             background: "#F9FAFB",
             borderRadius: "0px",
             display: "flex",
-            flexDirection: "column-reverse",
+            flexDirection: "column",
             height: "100%",
             position: "relative",
             bottom: !isMobile ? "0px" : "50px",
@@ -733,45 +733,6 @@ const Chat = () => {
             paddingTop: !isMobile ? "0px" : "60px",
           }}
         >
-          <Space.Compact
-            size="large"
-            style={{
-              display: "flex",
-              paddingBottom: 10,
-              width: "calc(100% - 10px)",
-              background: "#F9FAFB",
-            }}
-          >
-            <div style={{ display: "flex", width: "100%" }}>
-              <TextArea
-                autoSize={{ minRows: 1, maxRows: 5 }}
-                onChange={(event) => handleChange(event.target.value)}
-                placeholder="Enter message"
-                value={messageValue}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    if (e.shiftKey || isMobile || window.innerWidth < 1200) {
-                      return;
-                    } else {
-                      e.preventDefault();
-                      handleSubmit();
-                    }
-                  }
-                }}
-              />
-              <Button
-                style={{
-                  background: "#10B981",
-                  display: "flex",
-                  alignSelf: "flex-end",
-                }}
-                type="primary"
-                onClick={() => handleSubmit()}
-              >
-                send
-              </Button>
-            </div>
-          </Space.Compact>
           <div
             className="hide-scrollbar overflow-auto"
             id="scrollableDiv"
@@ -780,7 +741,7 @@ const Chat = () => {
               background: "#F9FAFB",
               borderRadius: "0px",
               display: "flex",
-              overflow: "scroll",
+              overflowY: "auto",
               flexDirection: "column-reverse",
               height: "100%",
               width: "100%",
@@ -913,6 +874,45 @@ const Chat = () => {
               )}
             </InfiniteScroll>
           </div>
+          <Space.Compact
+            size="large"
+            style={{
+              display: "flex",
+              paddingBottom: 10,
+              width: "calc(100% - 10px)",
+              background: "#F9FAFB",
+            }}
+          >
+            <div style={{ display: "flex", width: "100%" }}>
+              <TextArea
+                autoSize={{ minRows: 1, maxRows: 5 }}
+                onChange={(event) => handleChange(event.target.value)}
+                placeholder="Enter message"
+                value={messageValue}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    if (e.shiftKey || isMobile || window.innerWidth < 1200) {
+                      return;
+                    } else {
+                      e.preventDefault();
+                      handleSubmit();
+                    }
+                  }
+                }}
+              />
+              <Button
+                style={{
+                  background: "#10B981",
+                  display: "flex",
+                  alignSelf: "flex-end",
+                }}
+                type="primary"
+                onClick={() => handleSubmit()}
+              >
+                send
+              </Button>
+            </div>
+          </Space.Compact>
         </div>
       </Content>
       {isMobile && (
