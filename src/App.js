@@ -3,7 +3,11 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LoadingOutlined } from "@ant-design/icons";
 import { Amplify } from "aws-amplify";
 import awsconfig from "./aws-exports";
-import { signInWithRedirect, getCurrentUser } from "@aws-amplify/auth";
+import {
+  signInWithRedirect,
+  getCurrentUser,
+  fetchAuthSession,
+} from "@aws-amplify/auth";
 
 import AddDress from "./pages/AddDress";
 import Layout from "./pages/Layout";
@@ -55,7 +59,6 @@ function AppWithSession() {
   const { isSignedIn, checked } = useSessionCheck();
   const {
     setUnreadChatCount,
-    token,
     setChatInitialLoad,
     setChatData,
     setChatLastEvaluatedKey,
@@ -66,38 +69,11 @@ function AppWithSession() {
     let reconnectTimeout = null;
 
     const fetchNotifications = async () => {
+      setSocketLoading(true);
+      let token = "";
+      let session;
       try {
-        setSocketLoading(true);
-        const currentUser = await getCurrentUser();
-
-        socket = new WebSocket(
-          `wss://apichat.reusifi.com/production?userId=${currentUser.userId}&token=${token}`
-        );
-
-        socket.onopen = () => {
-          console.log("Connected to the WebSocket");
-          setSocketLoading(false);
-        };
-
-        socket.onerror = (err) => {
-          setSocketLoading(false);
-        };
-
-        socket.onmessage = async (event) => {
-          if (!socket || socket.readyState !== WebSocket.OPEN) return; // guard
-          setChatData([]);
-          setChatLastEvaluatedKey(null);
-          setChatInitialLoad(true);
-          setUnreadChatCount(1);
-        };
-
-        socket.onclose = () => {
-          reconnectTimeout = setTimeout(() => {
-            if (token) {
-              fetchNotifications();
-            }
-          }, 1000);
-        };
+        session = await fetchAuthSession();
       } catch (err) {
         setSocketLoading(false);
         if (
@@ -110,12 +86,46 @@ function AppWithSession() {
         } else {
           Modal.error(errorConfig);
         }
+        return;
       }
+      const tokens = session.tokens;
+      if (tokens?.idToken) {
+        token = tokens.idToken;
+      } else {
+        Modal.error(errorSessionConfig);
+        return;
+      }
+      const currentUser = await getCurrentUser();
+
+      socket = new WebSocket(
+        `wss://apichat.reusifi.com/production?userId=${currentUser.userId}&token=${token}`
+      );
+
+      socket.onopen = () => {
+        console.log("Connected to the WebSocket");
+        setSocketLoading(false);
+      };
+
+      socket.onerror = (err) => {
+        setSocketLoading(false);
+      };
+
+      socket.onmessage = async (event) => {
+        if (!socket || socket.readyState !== WebSocket.OPEN) return; // guard
+        setChatData([]);
+        setChatLastEvaluatedKey(null);
+        setChatInitialLoad(true);
+        setUnreadChatCount(1);
+      };
+
+      socket.onclose = () => {
+        reconnectTimeout = setTimeout(() => {
+          fetchNotifications();
+        }, 1000);
+      };
     };
 
-    if (token) {
-      fetchNotifications();
-    }
+    fetchNotifications();
 
     return () => {
       if (reconnectTimeout) {
@@ -134,7 +144,7 @@ function AppWithSession() {
         }
       }
     };
-  }, [token]);
+  }, []);
 
   if (socketLoading) {
     return (

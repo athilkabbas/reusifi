@@ -40,12 +40,9 @@ const Provider = ({ children }) => {
   const [iChatInitialLoad, setIChatInitialLoad] = useState(true);
   const [detailData, setDetailData] = useState([]);
   const [unreadChatCount, setUnreadChatCount] = useState(0);
-  const [token, setToken] = useState(null);
   return (
     <Context.Provider
       value={{
-        token,
-        setToken,
         count,
         setCount,
         unreadChatCount,

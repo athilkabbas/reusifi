@@ -1,12 +1,10 @@
 // hooks/sessionCheck.js
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { fetchAuthSession, signInWithRedirect } from "@aws-amplify/auth";
-import { Context } from "../context/provider";
 
 export function useSessionCheck() {
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [checked, setChecked] = useState(false);
-  const { setToken } = useContext(Context);
 
   useEffect(() => {
     const checkSession = async () => {
@@ -15,7 +13,6 @@ export function useSessionCheck() {
         const tokens = session.tokens;
         if (tokens?.idToken) {
           setIsSignedIn(true);
-          setToken(tokens.idToken);
         } else {
           setIsSignedIn(false);
         }

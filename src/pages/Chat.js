@@ -127,7 +127,9 @@ const Chat = () => {
 
   const [limit, setLimit] = useState(0); // default
   const scrollToBottom = () => {
-    bottomRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
+    if (bottomRef?.current) {
+      bottomRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
+    }
   };
 
   useEffect(() => {
@@ -252,74 +254,11 @@ const Chat = () => {
     let reconnectTimeout = null;
 
     const fetchUser = async () => {
+      setSocketLoading(true);
+      let token = "";
+      let session;
       try {
-        setSocketLoading(true);
-        let token = "";
-        const session = await fetchAuthSession();
-        const tokens = session.tokens;
-
-        if (tokens?.idToken) {
-          token = tokens.idToken;
-        } else {
-          const error = new Error("Session expired");
-          error.status = 401;
-          throw error;
-        }
-
-        const currentUser = await getCurrentUser();
-        setUser(currentUser);
-
-        socket = new WebSocket(
-          `wss://apichat.reusifi.com/production?userId=${
-            currentUser.userId
-          }&productId=${productId || recipient?.item?.uuid}&token=${token}`
-        );
-        setWs(socket);
-
-        socket.onopen = () => {
-          console.log("Connected to the WebSocket");
-          setSocketLoading(false);
-        };
-
-        socket.onerror = (err) => {
-          setSocketLoading(false);
-        };
-
-        socket.onmessage = async (event) => {
-          if (!socket || socket.readyState !== WebSocket.OPEN) return; // Guard
-          console.log("Message from server:", event);
-          const data = JSON.parse(event.data);
-          setIChatData((prevValue) => [
-            {
-              message: data.message,
-              timestamp: data.timestamp,
-              recipientId: data.recipientUserId,
-              senderId: data.senderUserId,
-              productId: data.productId,
-            },
-            ...prevValue,
-          ]);
-          await callApi(
-            `https://api.reusifi.com/prod/getChatsRead?userId1=${encodeURIComponent(
-              data.recipientUserId
-            )}&userId2=${encodeURIComponent(data.senderUserId)}&productId=${
-              data.productId
-            }&read=${encodeURIComponent(true)}`,
-            "GET"
-          );
-          setChatData([]);
-          setChatLastEvaluatedKey(null);
-          setChatInitialLoad(true);
-        };
-
-        socket.onclose = () => {
-          console.log("Disconnected from WebSocket");
-          reconnectTimeout = setTimeout(() => {
-            if (productId || (recipient && recipient["item"]["uuid"])) {
-              fetchUser();
-            }
-          }, 1000);
-        };
+        session = await fetchAuthSession();
       } catch (err) {
         setSocketLoading(false);
         if (
@@ -332,7 +271,89 @@ const Chat = () => {
         } else {
           Modal.error(errorConfig);
         }
+        return;
       }
+      const tokens = session.tokens;
+
+      if (tokens?.idToken) {
+        token = tokens.idToken;
+      } else {
+        const error = new Error("Session expired");
+        error.status = 401;
+        throw error;
+      }
+
+      const currentUser = await getCurrentUser();
+      setUser(currentUser);
+
+      socket = new WebSocket(
+        `wss://apichat.reusifi.com/production?userId=${
+          currentUser.userId
+        }&productId=${productId || recipient?.item?.uuid}&token=${token}`
+      );
+      setWs(socket);
+
+      socket.onopen = () => {
+        console.log("Connected to the WebSocket");
+        setSocketLoading(false);
+      };
+
+      socket.onerror = (err) => {
+        setSocketLoading(false);
+      };
+
+      socket.onmessage = async (event) => {
+        if (!socket || socket.readyState !== WebSocket.OPEN) return; // Guard
+        console.log("Message from server:", event);
+        const data = JSON.parse(event.data);
+        setIChatData((prevValue) => [
+          {
+            message: data.message,
+            timestamp: data.timestamp,
+            recipientId: data.recipientUserId,
+            senderId: data.senderUserId,
+            productId: data.productId,
+          },
+          ...prevValue,
+        ]);
+        try {
+          setSocketLoading(true);
+          await callApi(
+            `https://api.reusifi.com/prod/getChatsRead?userId1=${encodeURIComponent(
+              data.recipientUserId
+            )}&userId2=${encodeURIComponent(data.senderUserId)}&productId=${
+              data.productId
+            }&read=${encodeURIComponent(true)}`,
+            "GET"
+          );
+          setSocketLoading(false);
+        } catch (err) {
+          setSocketLoading(false);
+          if (
+            err?.name === "NotAuthorizedException" &&
+            err?.message?.includes("Refresh Token has expired")
+          ) {
+            Modal.error(errorSessionConfig);
+          } else if (err?.status === 401) {
+            Modal.error(errorSessionConfig);
+          } else {
+            Modal.error(errorConfig);
+          }
+          return;
+        }
+        setChatData([]);
+        setChatLastEvaluatedKey(null);
+        setChatInitialLoad(true);
+      };
+
+      socket.onclose = () => {
+        console.log("Disconnected from WebSocket");
+        reconnectTimeout = setTimeout(() => {
+          if (productId || (recipient && recipient["item"]["uuid"])) {
+            fetchUser();
+          }
+        }, 1000);
+      };
     };
 
     if (productId || (recipient && recipient["item"]["uuid"])) {
@@ -717,7 +738,6 @@ const Chat = () => {
             size="large"
             style={{
               display: "flex",
-              direction: "column",
               position: "sticky",
               bottom: "0px",
               paddingBottom: 10,
@@ -727,6 +747,11 @@ const Chat = () => {
           >
             <div style={{ display: "flex", width: "100%" }}>
               <TextArea
+                ref={(el) => {
+                  if (el) {
+                    bottomRef.current = el.resizableTextArea?.textArea;
+                  }
+                }}
                 autoSize={{ minRows: 1, maxRows: 5 }}
                 onChange={(event) => handleChange(event.target.value)}
                 placeholder="Enter message"
@@ -927,7 +952,6 @@ const Chat = () => {
           />
         </Footer>
       )}
-      <div ref={bottomRef} />
       {socketLoading && (
         <Spin
           fullscreen
