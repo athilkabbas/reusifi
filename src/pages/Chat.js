@@ -691,7 +691,7 @@ const Chat = () => {
   return (
     <Layout
       style={{
-        height: isMobile ? "100vh" : "100dvh",
+        height: "100dvh",
         background: "#F9FAFB",
       }}
     >
