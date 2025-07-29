@@ -876,43 +876,39 @@ const Chat = () => {
           <Space.Compact
             size="large"
             style={{
-              display: "flex",
               paddingBottom: 10,
               width: "calc(100% - 10px)",
               background: "#F9FAFB",
-              overflow: "scroll",
             }}
           >
-            <div style={{ display: "flex", width: "100%", overflow: "scroll" }}>
-              <TextArea
-                autoSize={{ minRows: 1, maxRows: 5 }}
-                onChange={(event) => handleChange(event.target.value)}
-                placeholder="Enter message"
-                value={messageValue}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    if (e.shiftKey || isMobile || window.innerWidth < 1200) {
-                      scrollToBottom();
-                      return;
-                    } else {
-                      e.preventDefault();
-                      handleSubmit();
-                    }
+            <TextArea
+              autoSize={{ minRows: 1, maxRows: 5 }}
+              onChange={(event) => handleChange(event.target.value)}
+              placeholder="Enter message"
+              value={messageValue}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  if (e.shiftKey || isMobile || window.innerWidth < 1200) {
+                    scrollToBottom();
+                    return;
+                  } else {
+                    e.preventDefault();
+                    handleSubmit();
                   }
-                }}
-              />
-              <Button
-                style={{
-                  background: "#10B981",
-                  display: "flex",
-                  alignSelf: "flex-end",
-                }}
-                type="primary"
-                onClick={() => handleSubmit()}
-              >
-                send
-              </Button>
-            </div>
+                }
+              }}
+            />
+            <Button
+              style={{
+                background: "#10B981",
+                display: "flex",
+                alignSelf: "flex-end",
+              }}
+              type="primary"
+              onClick={() => handleSubmit()}
+            >
+              send
+            </Button>
           </Space.Compact>
         </div>
       </Content>
