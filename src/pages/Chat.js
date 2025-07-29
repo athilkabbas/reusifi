@@ -897,7 +897,7 @@ const Chat = () => {
                 }
               }}
             />
-            <Button
+            {/* <Button
               style={{
                 background: "#10B981",
                 display: "flex",
@@ -907,7 +907,7 @@ const Chat = () => {
               onClick={() => handleSubmit()}
             >
               send
-            </Button>
+            </Button> */}
           </Space.Compact>
         </div>
       </Content>
