@@ -694,14 +694,14 @@ const Chat = () => {
     if (!isMobile) return;
     if (!textAreaRef.current) return;
 
-  // AntD v4+ exposes the DOM node here:
-  const textarea =
-    textAreaRef.current.resizableTextArea?.textArea ||
-    textAreaRef.current.textArea ||
-    textAreaRef.current.input ||
-    textAreaRef.current;
+    // AntD v4+ exposes the DOM node here:
+    const textarea =
+      textAreaRef.current.resizableTextArea?.textArea ||
+      textAreaRef.current.textArea ||
+      textAreaRef.current.input ||
+      textAreaRef.current;
 
-  if (!textarea) return;
+    if (!textarea) return;
 
     const canScroll = () => textarea.scrollHeight > textarea.clientHeight;
 
@@ -724,11 +724,13 @@ const Chat = () => {
       if (!canScroll()) return;
       textarea._lastY = e.touches[0].clientY;
     };
-    textarea.addEventListener('touchstart', handleTouchStart, { passive: false });
-    textarea.addEventListener('touchmove', handleTouchMove, { passive: false });
+    textarea.addEventListener("touchstart", handleTouchStart, {
+      passive: false,
+    });
+    textarea.addEventListener("touchmove", handleTouchMove, { passive: false });
     return () => {
-      textarea.removeEventListener('touchstart', handleTouchStart);
-      textarea.removeEventListener('touchmove', handleTouchMove);
+      textarea.removeEventListener("touchstart", handleTouchStart);
+      textarea.removeEventListener("touchmove", handleTouchMove);
     };
   }, [isMobile]);
 
