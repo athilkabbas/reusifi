@@ -688,6 +688,44 @@ const Chat = () => {
     return `${day}/${month}/${year} ${timeString}`;
   }
 
+  const textAreaRef = useRef(null);
+
+  useEffect(() => {
+    if (!isMobile) return;
+    const textarea = textAreaRef.current;
+    if (!textarea) return;
+
+    // Helper to check if textarea can scroll
+    const canScroll = () => textarea.scrollHeight > textarea.clientHeight;
+
+    // Prevent parent scroll when scrolling inside textarea
+    const handleTouchMove = (e) => {
+      if (!canScroll()) return;
+      const { scrollTop, scrollHeight, clientHeight } = textarea;
+      const isAtTop = scrollTop === 0;
+      const isAtBottom = scrollTop + clientHeight === scrollHeight;
+      const touch = e.touches[0];
+      if (!textarea._lastY) textarea._lastY = touch.clientY;
+      const up = touch.clientY > textarea._lastY;
+      const down = !up;
+      textarea._lastY = touch.clientY;
+      if ((isAtTop && up) || (isAtBottom && down)) {
+        e.preventDefault();
+      }
+      e.stopPropagation();
+    };
+    const handleTouchStart = (e) => {
+      if (!canScroll()) return;
+      textarea._lastY = e.touches[0].clientY;
+    };
+    textarea.addEventListener('touchstart', handleTouchStart, { passive: false });
+    textarea.addEventListener('touchmove', handleTouchMove, { passive: false });
+    return () => {
+      textarea.removeEventListener('touchstart', handleTouchStart);
+      textarea.removeEventListener('touchmove', handleTouchMove);
+    };
+  }, [isMobile]);
+
   return (
     <Layout
       style={{
@@ -747,6 +785,7 @@ const Chat = () => {
           >
             <div style={{ display: "flex", width: "100%" }}>
               <TextArea
+                ref={textAreaRef}
                 autoSize={{ minRows: 1, maxRows: 5 }}
                 onChange={(event) => handleChange(event.target.value)}
                 placeholder="Enter message"
