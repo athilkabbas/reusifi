@@ -692,13 +692,19 @@ const Chat = () => {
 
   useEffect(() => {
     if (!isMobile) return;
-    const textarea = textAreaRef.current;
-    if (!textarea) return;
+    if (!textAreaRef.current) return;
 
-    // Helper to check if textarea can scroll
+  // AntD v4+ exposes the DOM node here:
+  const textarea =
+    textAreaRef.current.resizableTextArea?.textArea ||
+    textAreaRef.current.textArea ||
+    textAreaRef.current.input ||
+    textAreaRef.current;
+
+  if (!textarea) return;
+
     const canScroll = () => textarea.scrollHeight > textarea.clientHeight;
 
-    // Prevent parent scroll when scrolling inside textarea
     const handleTouchMove = (e) => {
       if (!canScroll()) return;
       const { scrollTop, scrollHeight, clientHeight } = textarea;
