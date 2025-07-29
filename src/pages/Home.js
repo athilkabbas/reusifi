@@ -385,7 +385,7 @@ const Home = () => {
       if (err?.status === 401) {
         Modal.error(errorSessionConfig);
       } else {
-        Modal.error(errorConfig);
+        Modal.error({ ...errorConfig, content: err.message });
       }
     }
   };
@@ -435,7 +435,7 @@ const Home = () => {
             if (err?.status === 401) {
               Modal.error(errorSessionConfig);
             } else {
-              Modal.error(errorConfig);
+              Modal.error({ ...errorConfig, content: err.message });
             }
             console.log(err);
           })
@@ -451,7 +451,7 @@ const Home = () => {
         if (err?.status === 401) {
           Modal.error(errorSessionConfig);
         } else {
-          Modal.error(errorConfig);
+          Modal.error({ ...errorConfig, content: err.message });
         }
       }
     }

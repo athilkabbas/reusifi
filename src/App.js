@@ -84,7 +84,7 @@ function AppWithSession() {
         } else if (err?.status === 401) {
           Modal.error(errorSessionConfig);
         } else {
-          Modal.error(errorConfig);
+          Modal.error({ ...errorConfig, content: err.message });
         }
         return;
       }

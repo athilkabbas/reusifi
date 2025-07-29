@@ -219,7 +219,7 @@ const Details = () => {
             if (err?.status === 401) {
               Modal.error(errorSessionConfig);
             } else {
-              Modal.error(errorConfig);
+              Modal.error({ ...errorConfig, content: err.message });
             }
           })
           .finally(() => {
@@ -234,7 +234,7 @@ const Details = () => {
         if (err?.status === 401) {
           Modal.error(errorSessionConfig);
         } else {
-          Modal.error(errorConfig);
+          Modal.error({ ...errorConfig, content: err.message });
         }
       }
     }
