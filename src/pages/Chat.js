@@ -889,7 +889,6 @@ const Chat = () => {
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   if (e.shiftKey || isMobile || window.innerWidth < 1200) {
-                    scrollToBottom();
                     return;
                   } else {
                     e.preventDefault();
