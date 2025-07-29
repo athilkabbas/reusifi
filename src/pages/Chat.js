@@ -688,13 +688,10 @@ const Chat = () => {
     return `${day}/${month}/${year} ${timeString}`;
   }
 
-  const textAreaRef = useRef(null);
-
   return (
     <Layout
       style={{
         height: "100dvh",
-        overflow: "hidden",
         background: "#F9FAFB",
       }}
     >
@@ -730,7 +727,7 @@ const Chat = () => {
             display: "flex",
             flexDirection: "column-reverse",
             height: "100%",
-            position: !isMobile ? "relative" : "fixed",
+            position: "relative",
             bottom: !isMobile ? "0px" : "50px",
             width: "100%",
             paddingTop: !isMobile ? "0px" : "60px",
@@ -740,8 +737,6 @@ const Chat = () => {
             size="large"
             style={{
               display: "flex",
-              position: "sticky",
-              bottom: "0px",
               paddingBottom: 10,
               width: "calc(100% - 10px)",
               background: "#F9FAFB",
@@ -749,7 +744,6 @@ const Chat = () => {
           >
             <div style={{ display: "flex", width: "100%" }}>
               <TextArea
-                ref={textAreaRef}
                 autoSize={{ minRows: 1, maxRows: 5 }}
                 onChange={(event) => handleChange(event.target.value)}
                 placeholder="Enter message"
@@ -763,20 +757,6 @@ const Chat = () => {
                       handleSubmit();
                     }
                   }
-                }}
-                onFocus={() => {
-                  if (textAreaRef?.current) {
-                    textAreaRef.current?.resizableTextArea?.textArea?.scrollIntoView(
-                      {
-                        behavior: "auto",
-                        block: "nearest",
-                      }
-                    );
-                  }
-                }}
-                onTouchMove={(event) => {
-                  event.preventDefault();
-                  event.stopPropagation();
                 }}
               />
               <Button
