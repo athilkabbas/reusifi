@@ -62,8 +62,9 @@ function AppWithSession() {
   } = useContext(Context);
   const [socketLoading, setSocketLoading] = useState(false);
   useEffect(() => {
-    let socket;
-    let reconnectTimeout;
+    let socket = null;
+    let reconnectTimeout = null;
+
     const fetchNotifications = async () => {
       try {
         setSocketLoading(true);
@@ -72,6 +73,7 @@ function AppWithSession() {
         socket = new WebSocket(
           `wss://apichat.reusifi.com/production?userId=${currentUser.userId}&token=${token}`
         );
+
         socket.onopen = () => {
           console.log("Connected to the WebSocket");
           setSocketLoading(false);
@@ -82,12 +84,13 @@ function AppWithSession() {
         };
 
         socket.onmessage = async (event) => {
+          if (!socket || socket.readyState !== WebSocket.OPEN) return; // guard
           setChatData([]);
           setChatLastEvaluatedKey(null);
           setChatInitialLoad(true);
           setUnreadChatCount(1);
         };
-        // To close the connection
+
         socket.onclose = () => {
           reconnectTimeout = setTimeout(() => {
             if (token) {
@@ -109,19 +112,26 @@ function AppWithSession() {
         }
       }
     };
+
     if (token) {
       fetchNotifications();
     }
+
     return () => {
       if (reconnectTimeout) {
         clearTimeout(reconnectTimeout);
       }
-      if (socket && socket.readyState === WebSocket.OPEN) {
-        socket.close();
-      } else if (socket && socket.readyState === WebSocket.CONNECTING) {
-        socket.onopen = () => {
+      if (socket) {
+        socket.onopen = null;
+        socket.onmessage = null;
+        socket.onerror = null;
+        socket.onclose = null;
+        if (
+          socket.readyState === WebSocket.OPEN ||
+          socket.readyState === WebSocket.CONNECTING
+        ) {
           socket.close();
-        };
+        }
       }
     };
   }, [token]);

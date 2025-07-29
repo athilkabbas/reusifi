@@ -248,8 +248,9 @@ const Chat = () => {
   // }, []);
 
   useEffect(() => {
-    let socket;
-    let reconnectTimeout;
+    let socket = null;
+    let reconnectTimeout = null;
+
     const fetchUser = async () => {
       try {
         setSocketLoading(true);
@@ -271,9 +272,10 @@ const Chat = () => {
         socket = new WebSocket(
           `wss://apichat.reusifi.com/production?userId=${
             currentUser.userId
-          }&productId=${productId || recipient["item"]["uuid"]}&token=${token}`
+          }&productId=${productId || recipient?.item?.uuid}&token=${token}`
         );
         setWs(socket);
+
         socket.onopen = () => {
           console.log("Connected to the WebSocket");
           setSocketLoading(false);
@@ -284,6 +286,7 @@ const Chat = () => {
         };
 
         socket.onmessage = async (event) => {
+          if (!socket || socket.readyState !== WebSocket.OPEN) return; // Guard
           console.log("Message from server:", event);
           const data = JSON.parse(event.data);
           setIChatData((prevValue) => [
@@ -308,7 +311,7 @@ const Chat = () => {
           setChatLastEvaluatedKey(null);
           setChatInitialLoad(true);
         };
-        // To close the connection
+
         socket.onclose = () => {
           console.log("Disconnected from WebSocket");
           reconnectTimeout = setTimeout(() => {
@@ -331,19 +334,26 @@ const Chat = () => {
         }
       }
     };
+
     if (productId || (recipient && recipient["item"]["uuid"])) {
       fetchUser();
     }
+
     return () => {
       if (reconnectTimeout) {
         clearTimeout(reconnectTimeout);
       }
-      if (socket && socket.readyState === WebSocket.OPEN) {
-        socket.close();
-      } else if (socket && socket.readyState === WebSocket.CONNECTING) {
-        socket.onopen = () => {
+      if (socket) {
+        socket.onopen = null;
+        socket.onmessage = null;
+        socket.onerror = null;
+        socket.onclose = null;
+        if (
+          socket.readyState === WebSocket.OPEN ||
+          socket.readyState === WebSocket.CONNECTING
+        ) {
           socket.close();
-        };
+        }
       }
     };
   }, [reconnect, productId, recipient]);
@@ -730,18 +740,6 @@ const Chat = () => {
                       handleSubmit();
                     }
                   }
-                }}
-                onFocus={() => {
-                  if (scrollableDivRef.current) {
-                    scrollableDivRef.current.style.overflow = "hidden";
-                  }
-                  document.body.style.overflow = "hidden";
-                }}
-                onBlur={() => {
-                  if (scrollableDivRef.current) {
-                    scrollableDivRef.current.style.overflow = "scroll";
-                  }
-                  document.body.style.overflow = "scroll";
                 }}
               />
               <Button
