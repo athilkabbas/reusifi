@@ -691,7 +691,7 @@ const Chat = () => {
   return (
     <Layout
       style={{
-        height: "100dvh",
+        height: isMobile ? "100vh" : "100dvh",
         background: "#F9FAFB",
       }}
     >
@@ -892,6 +892,7 @@ const Chat = () => {
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
                     if (e.shiftKey || isMobile || window.innerWidth < 1200) {
+                      scrollToBottom();
                       return;
                     } else {
                       e.preventDefault();
