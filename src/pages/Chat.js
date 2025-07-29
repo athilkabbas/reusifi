@@ -725,11 +725,9 @@ const Chat = () => {
             borderRadius: "0px",
             display: "flex",
             flexDirection: "column",
-            height: "100%",
+            height: "calc(100% - 50px)",
             position: "relative",
-            bottom: !isMobile ? "0px" : "50px",
             width: "100%",
-            paddingTop: !isMobile ? "0px" : "60px",
           }}
         >
           <div
@@ -742,7 +740,6 @@ const Chat = () => {
               display: "flex",
               overflowY: "auto",
               flexDirection: "column-reverse",
-              height: "100%",
               width: "100%",
             }}
           >
