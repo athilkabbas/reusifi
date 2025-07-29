@@ -880,9 +880,10 @@ const Chat = () => {
               paddingBottom: 10,
               width: "calc(100% - 10px)",
               background: "#F9FAFB",
+              overflow: "scroll",
             }}
           >
-            <div style={{ display: "flex", width: "100%" }}>
+            <div style={{ display: "flex", width: "100%", overflow: "scroll" }}>
               <TextArea
                 autoSize={{ minRows: 1, maxRows: 5 }}
                 onChange={(event) => handleChange(event.target.value)}
