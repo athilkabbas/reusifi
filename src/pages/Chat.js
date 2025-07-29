@@ -726,6 +726,7 @@ const Chat = () => {
           >
             <div style={{ display: "flex", width: "100%" }}>
               <TextArea
+                style={{ overflow: "auto", WebkitOverflowScrolling: "touch" }}
                 autoSize={{ minRows: 1, maxRows: 3 }}
                 onChange={(event) => handleChange(event.target.value)}
                 placeholder="Enter message"
