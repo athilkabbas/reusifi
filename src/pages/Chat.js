@@ -86,7 +86,6 @@ const Chat = () => {
   const [chatLoading, setChatLoading] = useState(false);
   const [socketLoading, setSocketLoading] = useState(false);
   const [moreWidth, setMoreWidth] = useState(true);
-  const textAreaRef = useRef(null);
   const errorSessionConfig = {
     title: "Session has expired.",
     content: "Please login again.",
@@ -718,7 +717,6 @@ const Chat = () => {
           >
             <div style={{ display: "flex" }}>
               <TextArea
-                ref={textAreaRef}
                 autoSize={{ minRows: 1, maxRows: 3 }}
                 onChange={(event) => handleChange(event.target.value)}
                 placeholder="Enter message"
@@ -733,10 +731,16 @@ const Chat = () => {
                     }
                   }
                 }}
-                onTouchStart={(e) => e.stopPropagation()}
-                onTouchMove={(e) => e.stopPropagation()}
-                onWheel={(e) => e.stopPropagation()}
-                onScroll={(e) => e.stopPropagation()}
+                onFocus={() => {
+                  if (scrollableDivRef.current) {
+                    scrollableDivRef.current.style.overflow = "hidden";
+                  }
+                }}
+                onBlur={() => {
+                  if (scrollableDivRef.current) {
+                    scrollableDivRef.current.style.overflow = "scroll";
+                  }
+                }}
               />
               <Button
                 style={{
