@@ -131,7 +131,7 @@ const Chat = () => {
       bottomRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
     }
   };
-  const [isKeyboardOpen, setKeyboardOpen] = useState(false);
+
   useEffect(() => {
     let prevWidth = window.innerWidth;
     let prevHeight = window.innerHeight;
@@ -156,7 +156,6 @@ const Chat = () => {
       }
       if (currentHeight < prevHeight) {
         scrollToBottom();
-        setKeyboardOpen(true);
       }
       prevWidth = currentWidth;
       prevHeight = currentHeight;
@@ -779,7 +778,7 @@ const Chat = () => {
               background: "#F9FAFB",
               borderRadius: "0px",
               display: "flex",
-              overflowY: isKeyboardOpen ? "hidden" : "auto",
+              overflowY: "auto",
               flexDirection: "column-reverse",
               width: "100%",
             }}
