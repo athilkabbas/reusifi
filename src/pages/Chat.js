@@ -728,6 +728,7 @@ const Chat = () => {
             flexDirection: "column-reverse",
             height: "calc(100% - 50px)",
             width: "100%",
+            position: "fixed",
           }}
         >
           <Space.Compact
