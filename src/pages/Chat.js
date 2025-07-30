@@ -156,13 +156,6 @@ const Chat = () => {
       }
       if (currentHeight < prevHeight) {
         scrollToBottom();
-        document.body.style.overflow = "hidden";
-        document.body.style.position = "fixed";
-        document.body.style.width = "100%";
-      } else {
-        document.body.style.overflow = "";
-        document.body.style.position = "";
-        document.body.style.width = "";
       }
       prevWidth = currentWidth;
       prevHeight = currentHeight;
@@ -693,7 +686,7 @@ const Chat = () => {
 
     return `${day}/${month}/${year} ${timeString}`;
   }
-
+  const textAreaRef = useRef(null);
   return (
     <Layout
       style={{
@@ -747,12 +740,7 @@ const Chat = () => {
             }}
           >
             <TextArea
-              style={{
-                overflowY: "auto",
-                WebkitOverflowScrolling: "touch",
-                overscrollBehavior: "contain",
-                touchAction: "pan-y",
-              }}
+              ref={textAreaRef}
               autoSize={{ minRows: 1, maxRows: 5 }}
               onChange={(event) => handleChange(event.target.value)}
               placeholder="Enter message"
@@ -767,8 +755,10 @@ const Chat = () => {
                   }
                 }
               }}
-              onTouchMove={(e) => {
-                e.stopPropagation(); // block scroll bubbling to container
+              onTouchMove={() => {
+                if (textAreaRef.current) {
+                  textAreaRef.current.resizableTextArea.textArea.blur();
+                }
               }}
             />
             <Button
