@@ -755,7 +755,11 @@ const Chat = () => {
                   }
                 }
               }}
-              onTouchMove={() => {
+              onScroll={(event) => {
+                event.stopPropagation();
+              }}
+              onTouchMove={(event) => {
+                event.stopPropagation();
                 if (textAreaRef.current) {
                   textAreaRef.current.resizableTextArea.textArea.focus();
                 }
