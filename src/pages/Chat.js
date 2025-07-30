@@ -727,7 +727,6 @@ const Chat = () => {
             display: "flex",
             flexDirection: "column-reverse",
             height: "calc(100% - 50px)",
-            position: "relative",
             width: "100%",
           }}
         >
@@ -735,11 +734,8 @@ const Chat = () => {
             size="large"
             style={{
               padding: "10px",
-              width: "calc(100% - 10px)",
               background: "#F9FAFB",
               display: "flex",
-              position: "sticky",
-              bottom: "50px",
             }}
           >
             <TextArea
