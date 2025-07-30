@@ -157,8 +157,7 @@
   align-items: center;
 }
 
-html,
-body,
-#root {
-  height: 100%;
+textarea {
+  overscroll-behavior: contain;
+  touch-action: pan-y;
 }

@@ -754,6 +754,22 @@ const Chat = () => {
                   }
                 }
               }}
+              onTouchStart={(e) => {
+                const textarea = e.currentTarget;
+                if (textarea.scrollHeight > textarea.clientHeight) {
+                  if (textarea.scrollTop === 0) {
+                    textarea.scrollTop = 1;
+                  } else if (
+                    textarea.scrollTop + textarea.clientHeight ===
+                    textarea.scrollHeight
+                  ) {
+                    textarea.scrollTop -= 1;
+                  }
+                }
+              }}
+              onTouchMove={(e) => {
+                e.stopPropagation(); // block scroll bubbling to container
+              }}
             />
             <Button
               style={{
