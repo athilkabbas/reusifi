@@ -156,6 +156,13 @@ const Chat = () => {
       }
       if (currentHeight < prevHeight) {
         scrollToBottom();
+        document.body.style.overflow = "hidden";
+        document.body.style.position = "fixed";
+        document.body.style.width = "100%";
+      } else {
+        document.body.style.overflow = "";
+        document.body.style.position = "";
+        document.body.style.width = "";
       }
       prevWidth = currentWidth;
       prevHeight = currentHeight;
@@ -740,6 +747,12 @@ const Chat = () => {
             }}
           >
             <TextArea
+              style={{
+                overflowY: "auto",
+                WebkitOverflowScrolling: "touch",
+                overscrollBehavior: "contain",
+                touchAction: "pan-y",
+              }}
               autoSize={{ minRows: 1, maxRows: 5 }}
               onChange={(event) => handleChange(event.target.value)}
               placeholder="Enter message"
@@ -751,19 +764,6 @@ const Chat = () => {
                   } else {
                     e.preventDefault();
                     handleSubmit();
-                  }
-                }
-              }}
-              onTouchStart={(e) => {
-                const textarea = e.currentTarget;
-                if (textarea.scrollHeight > textarea.clientHeight) {
-                  if (textarea.scrollTop === 0) {
-                    textarea.scrollTop = 1;
-                  } else if (
-                    textarea.scrollTop + textarea.clientHeight ===
-                    textarea.scrollHeight
-                  ) {
-                    textarea.scrollTop -= 1;
                   }
                 }
               }}

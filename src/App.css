@@ -156,8 +156,3 @@
   justify-content: center;
   align-items: center;
 }
-
-textarea {
-  overscroll-behavior: contain;
-  touch-action: pan-y;
-}
