@@ -757,7 +757,7 @@ const Chat = () => {
               }}
               onTouchMove={() => {
                 if (textAreaRef.current) {
-                  textAreaRef.current.resizableTextArea.textArea.blur();
+                  textAreaRef.current.resizableTextArea.textArea.focus();
                 }
               }}
             />
