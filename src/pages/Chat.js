@@ -755,13 +755,9 @@ const Chat = () => {
                   }
                 }
               }}
-              onScroll={(event) => {
-                event.stopPropagation();
-              }}
-              onTouchMove={(event) => {
-                event.stopPropagation();
+              onTouchMove={() => {
                 if (textAreaRef.current) {
-                  textAreaRef.current.resizableTextArea.textArea.focus();
+                  textAreaRef.current.resizableTextArea.textArea.blur();
                 }
               }}
             />
