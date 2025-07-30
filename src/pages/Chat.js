@@ -690,7 +690,7 @@ const Chat = () => {
   return (
     <Layout
       style={{
-        height: "100dvh",
+        height: "100svh",
         background: "#F9FAFB",
         overflow: "hidden",
       }}
@@ -755,11 +755,11 @@ const Chat = () => {
                   }
                 }
               }}
-              onTouchMove={() => {
-                if (textAreaRef.current) {
-                  textAreaRef.current.resizableTextArea.textArea.blur();
-                }
-              }}
+              // onTouchMove={() => {
+              //   if (textAreaRef.current) {
+              //     textAreaRef.current.resizableTextArea.textArea.blur();
+              //   }
+              // }}
             />
             <Button
               style={{
