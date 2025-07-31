@@ -167,7 +167,7 @@ const Home = () => {
     if (width < 1600) return 4; // xl
     return 6; // xxl
   };
-
+  const isModalVisibleRef = useRef(false);
   const errorSessionConfig = {
     title: "Session has expired.",
     content: "Please login again.",
@@ -175,16 +175,18 @@ const Home = () => {
     maskClosable: false,
     okText: "Login",
     onOk: () => {
+      isModalVisibleRef.current = false;
       signInWithRedirect();
     },
   };
   const errorConfig = {
     title: "An error has occurred.",
-    content: "Please try again later.",
+    content: "Please reload.",
     closable: false,
     maskClosable: false,
     okText: "Reload",
     onOk: () => {
+      isModalVisibleRef.current = false;
       window.location.reload();
     },
   };
@@ -382,6 +384,10 @@ const Home = () => {
       setInitialLoad(false);
     } catch (err) {
       setLoading(false);
+      if (isModalVisibleRef.current) {
+        return;
+      }
+      isModalVisibleRef.current = true;
       if (err?.status === 401) {
         Modal.error(errorSessionConfig);
       } else {
@@ -432,6 +438,10 @@ const Home = () => {
             setUnreadChatCount(chatResult.data.count);
           })
           .catch((err) => {
+            if (isModalVisibleRef.current) {
+              return;
+            }
+            isModalVisibleRef.current = true;
             if (err?.status === 401) {
               Modal.error(errorSessionConfig);
             } else {
@@ -448,6 +458,10 @@ const Home = () => {
         setChatLoading(false);
         setFavLoading(false);
         setLoading(false);
+        if (isModalVisibleRef.current) {
+          return;
+        }
+        isModalVisibleRef.current = true;
         if (err?.status === 401) {
           Modal.error(errorSessionConfig);
         } else {

@@ -133,6 +133,7 @@ const Favourites = () => {
       icon: divHtml,
     };
   });
+  const isModalVisibleRef = useRef(false);
   const errorSessionConfig = {
     title: "Session has expired.",
     content: "Please login again.",
@@ -140,16 +141,18 @@ const Favourites = () => {
     maskClosable: false,
     okText: "Login",
     onOk: () => {
+      isModalVisibleRef.current = false;
       signInWithRedirect();
     },
   };
   const errorConfig = {
     title: "An error has occurred.",
-    content: "Please try again later.",
+    content: "Please reload.",
     closable: false,
     maskClosable: false,
     okText: "Reload",
     onOk: () => {
+      isModalVisibleRef.current = false;
       window.location.reload();
     },
   };
@@ -269,8 +272,8 @@ const Favourites = () => {
       if (err?.status === 401) {
         Modal.error(errorSessionConfig);
       } else {
-        message.error("An Error has occurred");
-        // Modal.error(errorConfig)
+        // message.error("An Error has occurred");
+        Modal.error({ ...errorConfig, content: err.message });
       }
     }
   };
@@ -311,6 +314,10 @@ const Favourites = () => {
     } catch (err) {
       setLoading(false);
       // message.error("An Error has occurred")
+      if (isModalVisibleRef.current) {
+        return;
+      }
+      isModalVisibleRef.current = true;
       if (err?.status === 401) {
         Modal.error(errorSessionConfig);
       } else {
@@ -340,6 +347,10 @@ const Favourites = () => {
             setUnreadChatCount(chatResult.data.count);
           })
           .catch((err) => {
+            if (isModalVisibleRef.current) {
+              return;
+            }
+            isModalVisibleRef.current = true;
             if (err?.status === 401) {
               Modal.error(errorSessionConfig);
             } else {
@@ -356,6 +367,10 @@ const Favourites = () => {
         setChatLoading(false);
         setFavLoading(false);
         setLoading(false);
+        if (isModalVisibleRef.current) {
+          return;
+        }
+        isModalVisibleRef.current = true;
         if (err?.status === 401) {
           Modal.error(errorSessionConfig);
         } else {

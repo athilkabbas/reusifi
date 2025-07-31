@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Skeleton, Space, Spin } from "antd";
 import { Input } from "antd";
 import { useNavigate } from "react-router-dom";
@@ -60,7 +60,7 @@ const AddDress = () => {
     setUnreadChatCount,
   } = useContext(Context);
   const isMobile = useIsMobile();
-
+  const isModalVisibleRef = useRef(false);
   const errorSessionConfig = {
     title: "Session has expired.",
     content: "Please login again.",
@@ -68,16 +68,18 @@ const AddDress = () => {
     maskClosable: false,
     okText: "Login",
     onOk: () => {
+      isModalVisibleRef.current = false;
       signInWithRedirect();
     },
   };
   const errorConfig = {
     title: "An error has occurred.",
-    content: "Please try again later.",
+    content: "Please reload.",
     closable: false,
     maskClosable: false,
     okText: "Reload",
     onOk: () => {
+      isModalVisibleRef.current = false;
       window.location.reload();
     },
   };
@@ -118,6 +120,10 @@ const AddDress = () => {
             setCount(adResult.data.count);
           })
           .catch((err) => {
+            if (isModalVisibleRef.current) {
+              return;
+            }
+            isModalVisibleRef.current = true;
             if (err?.status === 401) {
               Modal.error(errorSessionConfig);
             } else {
@@ -131,6 +137,10 @@ const AddDress = () => {
             setAddProductInitialLoad(false);
           });
       } catch (err) {
+        if (isModalVisibleRef.current) {
+          return;
+        }
+        isModalVisibleRef.current = true;
         if (err?.status === 401) {
           Modal.error(errorSessionConfig);
         } else {

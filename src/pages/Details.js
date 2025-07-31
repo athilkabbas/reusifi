@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Skeleton, Spin } from "antd";
 import { Input } from "antd";
 import { useNavigate } from "react-router-dom";
@@ -77,6 +77,7 @@ const Details = () => {
     unreadChatCount,
     setUnreadChatCount,
   } = useContext(Context);
+  const isModalVisibleRef = useRef(false);
   const errorSessionConfig = {
     title: "Session has expired.",
     content: "Please login again.",
@@ -84,6 +85,7 @@ const Details = () => {
     maskClosable: false,
     okText: "Login",
     onOk: () => {
+      isModalVisibleRef.current = false;
       signInWithRedirect();
     },
   };
@@ -94,6 +96,7 @@ const Details = () => {
     maskClosable: false,
     okText: "Reload",
     onOk: () => {
+      isModalVisibleRef.current = false;
       window.location.reload();
     },
   };
@@ -216,6 +219,10 @@ const Details = () => {
             setChatProduct(chatProductResult.data);
           })
           .catch((err) => {
+            if (isModalVisibleRef.current) {
+              return;
+            }
+            isModalVisibleRef.current = true;
             if (err?.status === 401) {
               Modal.error(errorSessionConfig);
             } else {
@@ -231,6 +238,10 @@ const Details = () => {
         setChatLoading(false);
         setChatProductLoading(false);
         setLoading(false);
+        if (isModalVisibleRef.current) {
+          return;
+        }
+        isModalVisibleRef.current = true;
         if (err?.status === 401) {
           Modal.error(errorSessionConfig);
         } else {

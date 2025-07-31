@@ -19,13 +19,9 @@ export const callApi = async (url, method, skipRefresh = false, data) => {
 
     return result;
   } catch (err) {
-    const isRefreshExpired =
-      err?.name === "NotAuthorizedException" &&
-      err?.message?.includes("Refresh Token has expired");
-    const isUnauthorized =
-      err?.response?.status === 401 || err?.response?.status === 403;
+    const isForbidden = err?.response?.status === 403;
 
-    if (!skipRefresh && (isRefreshExpired || isUnauthorized)) {
+    if (!skipRefresh && isForbidden) {
       try {
         const session = await fetchAuthSession();
         const tokens = session.tokens;
@@ -35,9 +31,15 @@ export const callApi = async (url, method, skipRefresh = false, data) => {
           withCredentials: true,
         });
 
-        return callApi(url, method, true, data);
+        return callApi(url, method, false, data);
       } catch (refreshErr) {
-        console.error("Refresh failed:", refreshErr);
+        const isRefreshExpired =
+          refreshErr?.name === "NotAuthorizedException" &&
+          refreshErr?.message?.includes("Refresh Token has expired");
+        const isUnauthorized = refreshErr?.response?.status === 401;
+        if (isRefreshExpired || isUnauthorized) {
+          refreshErr.status = 401;
+        }
         throw refreshErr;
       }
     }

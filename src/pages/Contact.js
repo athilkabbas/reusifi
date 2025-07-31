@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { Badge } from "antd";
@@ -23,6 +23,7 @@ const { Text } = Typography;
 const Contact = () => {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const isModalVisibleRef = useRef(false);
   const errorSessionConfig = {
     title: "Session has expired.",
     content: "Please login again.",
@@ -30,16 +31,18 @@ const Contact = () => {
     maskClosable: false,
     okText: "Login",
     onOk: () => {
+      isModalVisibleRef.current = false;
       signInWithRedirect();
     },
   };
   const errorConfig = {
     title: "An error has occurred.",
-    content: "Please try again later.",
+    content: "Please reload.",
     closable: false,
     maskClosable: false,
     okText: "Reload",
     onOk: () => {
+      isModalVisibleRef.current = false;
       window.location.reload();
     },
   };
@@ -93,6 +96,10 @@ const Contact = () => {
         setContactInitialLoad(false);
       } catch (err) {
         // message.error("An Error has occurred")
+        if (isModalVisibleRef.current) {
+          return;
+        }
+        isModalVisibleRef.current = true;
         if (err?.status === 401) {
           Modal.error(errorSessionConfig);
         } else {

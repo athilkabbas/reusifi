@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LoadingOutlined } from "@ant-design/icons";
 import { Amplify } from "aws-amplify";
@@ -34,29 +34,31 @@ function App() {
   );
 }
 
-const errorSessionConfig = {
-  title: "Session has expired.",
-  content: "Please login again.",
-  closable: false,
-  maskClosable: false,
-  okText: "Login",
-  onOk: () => {
-    signInWithRedirect();
-  },
-};
-const errorConfig = {
-  title: "An error has occurred.",
-  content: "Please login again.",
-  closable: false,
-  maskClosable: false,
-  okText: "Login",
-  onOk: () => {
-    signInWithRedirect();
-  },
-};
-
 function AppWithSession() {
   const { isSignedIn, checked } = useSessionCheck();
+  const isModalVisibleRef = useRef(false);
+  const errorSessionConfig = {
+    title: "Session has expired.",
+    content: "Please login again.",
+    closable: false,
+    maskClosable: false,
+    okText: "Login",
+    onOk: () => {
+      isModalVisibleRef.current = false;
+      signInWithRedirect();
+    },
+  };
+  const errorConfig = {
+    title: "An error has occurred.",
+    content: "Please reload",
+    closable: false,
+    maskClosable: false,
+    okText: "Reload",
+    onOk: () => {
+      isModalVisibleRef.current = false;
+      window.location.reload();
+    },
+  };
   const {
     setUnreadChatCount,
     setChatInitialLoad,
@@ -76,6 +78,10 @@ function AppWithSession() {
         session = await fetchAuthSession();
       } catch (err) {
         setSocketLoading(false);
+        if (isModalVisibleRef.current) {
+          return;
+        }
+        isModalVisibleRef.current = true;
         if (
           err?.name === "NotAuthorizedException" &&
           err?.message?.includes("Refresh Token has expired")
@@ -92,6 +98,10 @@ function AppWithSession() {
       if (tokens?.idToken) {
         token = tokens.idToken;
       } else {
+        if (isModalVisibleRef.current) {
+          return;
+        }
+        isModalVisibleRef.current = true;
         Modal.error(errorSessionConfig);
         return;
       }
@@ -121,7 +131,7 @@ function AppWithSession() {
       socket.onclose = () => {
         reconnectTimeout = setTimeout(() => {
           fetchNotifications();
-        }, 1000);
+        }, 300);
       };
     };
 

@@ -86,6 +86,7 @@ const Chat = () => {
   const [chatLoading, setChatLoading] = useState(false);
   const [socketLoading, setSocketLoading] = useState(false);
   const [moreWidth, setMoreWidth] = useState(true);
+  const isModalVisibleRef = useRef(false);
   const errorSessionConfig = {
     title: "Session has expired.",
     content: "Please login again.",
@@ -93,16 +94,18 @@ const Chat = () => {
     maskClosable: false,
     okText: "Login",
     onOk: () => {
+      isModalVisibleRef.current = false;
       signInWithRedirect();
     },
   };
   const errorConfig = {
     title: "An error has occurred.",
-    content: "Please try again later.",
+    content: "Please reload.",
     closable: false,
     maskClosable: false,
     okText: "Reload",
     onOk: () => {
+      isModalVisibleRef.current = false;
       window.location.reload();
     },
   };
@@ -261,6 +264,10 @@ const Chat = () => {
         session = await fetchAuthSession();
       } catch (err) {
         setSocketLoading(false);
+        if (isModalVisibleRef.current) {
+          return;
+        }
+        isModalVisibleRef.current = true;
         if (
           err?.name === "NotAuthorizedException" &&
           err?.message?.includes("Refresh Token has expired")
@@ -328,6 +335,10 @@ const Chat = () => {
           setSocketLoading(false);
         } catch (err) {
           setSocketLoading(false);
+          if (isModalVisibleRef.current) {
+            return;
+          }
+          isModalVisibleRef.current = true;
           if (
             err?.name === "NotAuthorizedException" &&
             err?.message?.includes("Refresh Token has expired")
@@ -351,7 +362,7 @@ const Chat = () => {
           if (productId || (recipient && recipient["item"]["uuid"])) {
             fetchUser();
           }
-        }, 1000);
+        }, 300);
       };
     };
 
@@ -479,6 +490,10 @@ const Chat = () => {
       setIChatInitialLoad(false);
     } catch (err) {
       setLoading(false);
+      if (isModalVisibleRef.current) {
+        return;
+      }
+      isModalVisibleRef.current = true;
       if (err?.status === 401) {
         Modal.error(errorSessionConfig);
       } else {
@@ -515,6 +530,10 @@ const Chat = () => {
       } catch (err) {
         setChatLoading(false);
         setLoading(false);
+        if (isModalVisibleRef.current) {
+          return;
+        }
+        isModalVisibleRef.current = true;
         if (err?.status === 401) {
           Modal.error(errorSessionConfig);
         } else {
