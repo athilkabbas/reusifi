@@ -87,9 +87,15 @@ function AppWithSession() {
           err?.name === "NotAuthorizedException" &&
           err?.message?.includes("Refresh Token has expired")
         ) {
-          Modal.error(errorSessionConfig);
+          Modal.error({
+            ...errorSessionConfig,
+            content: err.message + "app fetch",
+          });
         } else if (err?.status === 401) {
-          Modal.error(errorSessionConfig);
+          Modal.error({
+            ...errorSessionConfig,
+            content: err.message + "app 401",
+          });
         } else {
           Modal.error({ ...errorConfig, content: err.message + "app" });
         }
