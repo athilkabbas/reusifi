@@ -19,7 +19,7 @@ import ChatPage from "./pages/ChatPage";
 import Ads from "./pages/Ads";
 import Contact from "./pages/Contact";
 import Favourites from "./pages/Favourite";
-import { Spin, Modal } from "antd";
+import { Spin } from "antd";
 import { Context } from "./context/provider";
 
 import "./App.css";
@@ -38,18 +38,6 @@ function AppWithSession() {
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [checkSession, setCheckSession] = useState(false);
   const [checked, setChecked] = useState(false);
-  const isModalVisibleRef = useRef(false);
-  const errorSessionConfig = {
-    title: "Session has expired.",
-    content: "Please login again.",
-    closable: false,
-    maskClosable: false,
-    okText: "Login",
-    onOk: () => {
-      isModalVisibleRef.current = false;
-      signInWithRedirect();
-    },
-  };
   const {
     setUnreadChatCount,
     setChatInitialLoad,
@@ -121,11 +109,6 @@ function AppWithSession() {
         setIsSignedIn(false);
         setCheckSession(false);
         setChecked(true);
-        if (isModalVisibleRef.current) {
-          return;
-        }
-        isModalVisibleRef.current = true;
-        Modal.error(errorSessionConfig);
         return;
       }
     };
@@ -150,50 +133,51 @@ function AppWithSession() {
       }
     };
   }, []);
-  if (socketLoading || checkSession) {
+
+  if (checked && !isSignedIn) {
+    signInWithRedirect();
     return (
-      <Spin
-        fullscreen
-        indicator={
-          <LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />
-        }
-      />
+      <div
+        style={{
+          display: "flex",
+          height: "100dvh",
+          justifyContent: "center",
+          alignItems: "center",
+          fontSize: "1.5rem",
+          color: "#6366F1",
+          fontWeight: "600",
+          backgroundColor: "#F5F7FF",
+        }}
+      >
+        Redirecting to sign in...
+      </div>
     );
   }
-
-  if (checked && !isSignedIn && !isModalVisibleRef.current) {
-    // return (
-    //   <div
-    //     style={{
-    //       display: "flex",
-    //       height: "100%",
-    //       justifyContent: "center",
-    //       alignItems: "center",
-    //       fontSize: "1.5rem",
-    //       color: "#6366F1",
-    //       fontWeight: "600",
-    //       backgroundColor: "#F5F7FF",
-    //     }}
-    //   >
-    //     Redirecting to sign in...
-    //   </div>
-    // );
-    signInWithRedirect();
-  }
-
   return (
-    <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route index element={<Home />} />
-        <Route path="addProduct" element={<AddDress />} />
-        <Route path="details" element={<Details />} />
-        <Route path="chat" element={<Chat />} />
-        <Route path="chatPage" element={<ChatPage />} />
-        <Route path="ads" element={<Ads />} />
-        <Route path="contact" element={<Contact />} />
-        <Route path="favourite" element={<Favourites />} />
-      </Route>
-    </Routes>
+    <>
+      {!socketLoading && !checkSession && checked && isSignedIn && (
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="addProduct" element={<AddDress />} />
+            <Route path="details" element={<Details />} />
+            <Route path="chat" element={<Chat />} />
+            <Route path="chatPage" element={<ChatPage />} />
+            <Route path="ads" element={<Ads />} />
+            <Route path="contact" element={<Contact />} />
+            <Route path="favourite" element={<Favourites />} />
+          </Route>
+        </Routes>
+      )}
+      {(socketLoading || checkSession || !checked || !isSignedIn) && (
+        <Spin
+          fullscreen
+          indicator={
+            <LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />
+          }
+        />
+      )}
+    </>
   );
 }
 
