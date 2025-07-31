@@ -389,7 +389,10 @@ const Home = () => {
       }
       isModalVisibleRef.current = true;
       if (err?.status === 401) {
-        Modal.error(errorSessionConfig);
+        Modal.error({
+          ...errorSessionConfig,
+          content: err.message + "load more",
+        });
       } else {
         Modal.error({ ...errorConfig, content: err.message });
       }
@@ -443,7 +446,10 @@ const Home = () => {
             }
             isModalVisibleRef.current = true;
             if (err?.status === 401) {
-              Modal.error(errorSessionConfig);
+              Modal.error({
+                ...errorSessionConfig,
+                content: err.message + "chat count",
+              });
             } else {
               Modal.error({ ...errorConfig, content: err.message });
             }
@@ -463,7 +469,10 @@ const Home = () => {
         }
         isModalVisibleRef.current = true;
         if (err?.status === 401) {
-          Modal.error(errorSessionConfig);
+          Modal.error({
+            ...errorSessionConfig,
+            content: err.message + "load more not search",
+          });
         } else {
           Modal.error({ ...errorConfig, content: err.message });
         }
