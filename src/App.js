@@ -23,7 +23,6 @@ import { Spin, Modal } from "antd";
 import { Context } from "./context/provider";
 
 import "./App.css";
-import { useSessionCheck } from "./hooks/sessionCheck";
 
 Amplify.configure(awsconfig);
 
@@ -36,7 +35,9 @@ function App() {
 }
 
 function AppWithSession() {
-  const { isSignedIn, checked } = useSessionCheck();
+  const [isSignedIn, setIsSignedIn] = useState(false);
+  const [checkSession, setCheckSession] = useState(false);
+  const [checked, setChecked] = useState(false);
   const isModalVisibleRef = useRef(false);
   const errorSessionConfig = {
     title: "Session has expired.",
@@ -46,18 +47,7 @@ function AppWithSession() {
     okText: "Login",
     onOk: () => {
       isModalVisibleRef.current = false;
-      signOut();
-    },
-  };
-  const errorConfig = {
-    title: "An error has occurred.",
-    content: "Please reload",
-    closable: false,
-    maskClosable: false,
-    okText: "Reload",
-    onOk: () => {
-      isModalVisibleRef.current = false;
-      window.location.reload();
+      signInWithRedirect();
     },
   };
   const {
@@ -72,39 +62,53 @@ function AppWithSession() {
     let reconnectTimeout = null;
 
     const fetchNotifications = async () => {
-      setSocketLoading(true);
       let token = "";
       let session;
       try {
+        setCheckSession(true);
         session = await fetchAuthSession();
+        const tokens = session.tokens;
+        if (tokens?.idToken) {
+          token = tokens.idToken;
+          setIsSignedIn(true);
+          setCheckSession(false);
+          setChecked(true);
+          const currentUser = await getCurrentUser();
+          setSocketLoading(true);
+          socket = new WebSocket(
+            `wss://apichat.reusifi.com/production?userId=${currentUser.userId}&token=${token}`
+          );
+
+          socket.onopen = () => {
+            console.log("Connected to the WebSocket");
+            setSocketLoading(false);
+          };
+
+          socket.onerror = (err) => {
+            setSocketLoading(false);
+          };
+
+          socket.onmessage = async (event) => {
+            if (!socket || socket.readyState !== WebSocket.OPEN) return; // guard
+            setChatData([]);
+            setChatLastEvaluatedKey(null);
+            setChatInitialLoad(true);
+            setUnreadChatCount(1);
+          };
+
+          socket.onclose = () => {
+            reconnectTimeout = setTimeout(() => {
+              fetchNotifications();
+            }, 300);
+          };
+        } else {
+          throw new Error();
+        }
       } catch (err) {
         setSocketLoading(false);
-        if (isModalVisibleRef.current) {
-          return;
-        }
-        isModalVisibleRef.current = true;
-        if (
-          err?.name === "NotAuthorizedException" &&
-          err?.message?.includes("Refresh Token has expired")
-        ) {
-          Modal.error({
-            ...errorSessionConfig,
-            content: err.message + "app fetch",
-          });
-        } else if (err?.status === 401) {
-          Modal.error({
-            ...errorSessionConfig,
-            content: err.message + "app 401",
-          });
-        } else {
-          Modal.error({ ...errorConfig, content: err.message + "app" });
-        }
-        return;
-      }
-      const tokens = session.tokens;
-      if (tokens?.idToken) {
-        token = tokens.idToken;
-      } else {
+        setIsSignedIn(false);
+        setCheckSession(false);
+        setChecked(true);
         if (isModalVisibleRef.current) {
           return;
         }
@@ -112,34 +116,6 @@ function AppWithSession() {
         Modal.error(errorSessionConfig);
         return;
       }
-      const currentUser = await getCurrentUser();
-
-      socket = new WebSocket(
-        `wss://apichat.reusifi.com/production?userId=${currentUser.userId}&token=${token}`
-      );
-
-      socket.onopen = () => {
-        console.log("Connected to the WebSocket");
-        setSocketLoading(false);
-      };
-
-      socket.onerror = (err) => {
-        setSocketLoading(false);
-      };
-
-      socket.onmessage = async (event) => {
-        if (!socket || socket.readyState !== WebSocket.OPEN) return; // guard
-        setChatData([]);
-        setChatLastEvaluatedKey(null);
-        setChatInitialLoad(true);
-        setUnreadChatCount(1);
-      };
-
-      socket.onclose = () => {
-        reconnectTimeout = setTimeout(() => {
-          fetchNotifications();
-        }, 300);
-      };
     };
 
     fetchNotifications();
@@ -162,8 +138,7 @@ function AppWithSession() {
       }
     };
   }, []);
-
-  if (socketLoading) {
+  if (socketLoading || checkSession) {
     return (
       <Spin
         fullscreen
@@ -174,34 +149,24 @@ function AppWithSession() {
     );
   }
 
-  if (!checked) {
-    return (
-      <Spin
-        fullscreen
-        indicator={
-          <LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />
-        }
-      />
-    );
-  }
-
-  if (!isSignedIn) {
-    return (
-      <div
-        style={{
-          display: "flex",
-          height: "100%",
-          justifyContent: "center",
-          alignItems: "center",
-          fontSize: "1.5rem",
-          color: "#6366F1",
-          fontWeight: "600",
-          backgroundColor: "#F5F7FF",
-        }}
-      >
-        Redirecting to sign in...
-      </div>
-    );
+  if (checked && !isSignedIn && !isModalVisibleRef.current) {
+    // return (
+    //   <div
+    //     style={{
+    //       display: "flex",
+    //       height: "100%",
+    //       justifyContent: "center",
+    //       alignItems: "center",
+    //       fontSize: "1.5rem",
+    //       color: "#6366F1",
+    //       fontWeight: "600",
+    //       backgroundColor: "#F5F7FF",
+    //     }}
+    //   >
+    //     Redirecting to sign in...
+    //   </div>
+    // );
+    signInWithRedirect();
   }
 
   return (

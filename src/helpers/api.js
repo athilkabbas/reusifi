@@ -19,28 +19,33 @@ export const callApi = async (url, method, skipRefresh = false, data) => {
 
     return result;
   } catch (err) {
-    const isForbidden = err?.response?.status === 403;
+    const isUnauthorized =
+      err?.response?.status === 403 || err?.response?.status === 401;
 
-    if (!skipRefresh && isForbidden) {
+    if (!skipRefresh && isUnauthorized) {
+      let tokens;
+      let token;
       try {
         const session = await fetchAuthSession();
-        const tokens = session.tokens;
-
+        tokens = session.tokens;
+        if (tokens?.idToken) {
+          token = tokens.idToken;
+        } else {
+          throw new Error();
+        }
+      } catch (err) {
+        err.status = 401;
+        throw err;
+      }
+      try {
         await axios.get("https://api.reusifi.com/prod/setSession", {
-          headers: { Authorization: tokens.idToken.toString() },
+          headers: { Authorization: token.toString() },
           withCredentials: true,
         });
 
         return callApi(url, method, false, data);
-      } catch (refreshErr) {
-        const isRefreshExpired =
-          refreshErr?.name === "NotAuthorizedException" &&
-          refreshErr?.message?.includes("Refresh Token has expired");
-        const isUnauthorized = refreshErr?.response?.status === 401;
-        if (isRefreshExpired || isUnauthorized) {
-          refreshErr.status = 401;
-        }
-        throw refreshErr;
+      } catch (err) {
+        throw err;
       }
     }
 

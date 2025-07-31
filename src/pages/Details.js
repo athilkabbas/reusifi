@@ -86,7 +86,7 @@ const Details = () => {
     okText: "Login",
     onOk: () => {
       isModalVisibleRef.current = false;
-      signOut();
+      signInWithRedirect();
     },
   };
   const errorConfig = {
@@ -247,6 +247,7 @@ const Details = () => {
         } else {
           Modal.error({ ...errorConfig, content: err.message });
         }
+        return;
       }
     }
   }, [user, item]);
@@ -296,12 +297,19 @@ const Details = () => {
       navigate("/chat", { state: { recipient: item } });
     } catch (err) {
       setUnblockLoading(false);
-      if (err?.status === 401) {
-        Modal.error(errorSessionConfig);
-      } else {
-        message.error("An Error has occurred");
+      if (isModalVisibleRef.current) {
+        return;
       }
-      console.log(err);
+      isModalVisibleRef.current = true;
+      if (err?.status === 401) {
+        Modal.error({
+          ...errorSessionConfig,
+          content: err.message + "details chat",
+        });
+      } else {
+        Modal.error({ ...errorConfig, content: err.message });
+      }
+      return;
     }
   };
 
@@ -329,12 +337,19 @@ const Details = () => {
       navigate("/ads");
     } catch (err) {
       setDeleteLoading(false);
-      if (err?.status === 401) {
-        Modal.error(errorSessionConfig);
-      } else {
-        message.error("An Error has occurred");
+      if (isModalVisibleRef.current) {
+        return;
       }
-      console.log(err);
+      isModalVisibleRef.current = true;
+      if (err?.status === 401) {
+        Modal.error({
+          ...errorSessionConfig,
+          content: err.message + "details",
+        });
+      } else {
+        Modal.error({ ...errorConfig, content: err.message });
+      }
+      return;
     }
   };
   const [loadedImages, setLoadedImages] = useState([]);

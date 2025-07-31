@@ -142,7 +142,7 @@ const Favourites = () => {
     okText: "Login",
     onOk: () => {
       isModalVisibleRef.current = false;
-      signOut();
+      signInWithRedirect();
     },
   };
   const errorConfig = {
@@ -269,12 +269,17 @@ const Favourites = () => {
       setHandleFavLoading(false);
     } catch (err) {
       setHandleFavLoading(false);
+      if (isModalVisibleRef.current) {
+        return;
+      }
+      isModalVisibleRef.current = true;
       if (err?.status === 401) {
         Modal.error(errorSessionConfig);
       } else {
         // message.error("An Error has occurred");
         Modal.error({ ...errorConfig, content: err.message });
       }
+      return;
     }
   };
 
@@ -323,7 +328,7 @@ const Favourites = () => {
       } else {
         Modal.error({ ...errorConfig, content: err.message });
       }
-      console.log(err);
+      return;
     }
   };
 
@@ -376,6 +381,7 @@ const Favourites = () => {
         } else {
           Modal.error({ ...errorConfig, content: err.message });
         }
+        return;
       }
     }
   }, [user, favInitialLoad, limit]);

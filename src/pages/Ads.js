@@ -59,7 +59,7 @@ const Ads = () => {
     okText: "Login",
     onOk: () => {
       isModalVisibleRef.current = false;
-      signOut();
+      signInWithRedirect();
     },
   };
   const errorConfig = {
@@ -262,7 +262,7 @@ const Ads = () => {
       } else {
         Modal.error({ ...errorConfig, content: err.message });
       }
-      console.log(err);
+      return;
     }
   };
 
@@ -311,6 +311,7 @@ const Ads = () => {
         } else {
           Modal.error({ ...errorConfig, content: err.message });
         }
+        return;
       }
     }
   }, [user, adInitialLoad, limit]);

@@ -32,7 +32,7 @@ const Contact = () => {
     okText: "Login",
     onOk: () => {
       isModalVisibleRef.current = false;
-      signOut();
+      signInWithRedirect();
     },
   };
   const errorConfig = {
@@ -105,7 +105,7 @@ const Contact = () => {
         } else {
           Modal.error({ ...errorConfig, content: err.message });
         }
-        console.log(err);
+        return;
       }
     };
     if (contactInitialLoad) {

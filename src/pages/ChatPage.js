@@ -266,7 +266,7 @@ const ChatPage = () => {
     okText: "Login",
     onOk: () => {
       isModalVisibleRef.current = false;
-      signOut();
+      signInWithRedirect();
     },
   };
   const errorConfig = {
@@ -369,12 +369,19 @@ const ChatPage = () => {
       setMenuLoading(false);
     } catch (err) {
       setMenuLoading(false);
-      if (err?.status === 401) {
-        Modal.error(errorSessionConfig);
-      } else {
-        message.error("An Error has occurred");
+      if (isModalVisibleRef.current) {
+        return;
       }
-      console.log(err);
+      isModalVisibleRef.current = true;
+      if (err?.status === 401) {
+        Modal.error({
+          ...errorSessionConfig,
+          content: err.message + "chat menu",
+        });
+      } else {
+        Modal.error({ ...errorConfig, content: err.message });
+      }
+      return;
     }
   };
 
@@ -448,12 +455,19 @@ const ChatPage = () => {
       setMenuLoading(false);
     } catch (err) {
       setMenuLoading(false);
-      if (err?.status === 401) {
-        Modal.error(errorSessionConfig);
-      } else {
-        message.error("An Error has occurred");
+      if (isModalVisibleRef.current) {
+        return;
       }
-      console.log(err);
+      isModalVisibleRef.current = true;
+      if (err?.status === 401) {
+        Modal.error({
+          ...errorSessionConfig,
+          content: err.message + "chat unblock",
+        });
+      } else {
+        Modal.error({ ...errorConfig, content: err.message });
+      }
+      return;
     }
   };
   const menu = (index) => {
@@ -561,7 +575,7 @@ const ChatPage = () => {
       } else {
         Modal.error({ ...errorConfig, content: err.message });
       }
-      console.log(err);
+      return;
     }
   };
   useEffect(() => {
@@ -617,6 +631,7 @@ const ChatPage = () => {
         } else {
           Modal.error({ ...errorConfig, content: err.message });
         }
+        return;
       }
     }
   }, [user, chatInitialLoad, limit]);

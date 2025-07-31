@@ -176,7 +176,7 @@ const Home = () => {
     okText: "Login",
     onOk: () => {
       isModalVisibleRef.current = false;
-      signOut();
+      signInWithRedirect();
     },
   };
   const errorConfig = {
@@ -316,11 +316,19 @@ const Home = () => {
       setHandleFavLoading(false);
     } catch (err) {
       setHandleFavLoading(false);
-      if (err?.status === 401) {
-        Modal.error(errorSessionConfig);
-      } else {
-        message.error("An Error has occurred");
+      if (isModalVisibleRef.current) {
+        return;
       }
+      isModalVisibleRef.current = true;
+      if (err?.status === 401) {
+        Modal.error({
+          ...errorSessionConfig,
+          content: err.message + "fav",
+        });
+      } else {
+        Modal.error({ ...errorConfig, content: err.message });
+      }
+      return;
     }
   };
 
@@ -396,6 +404,7 @@ const Home = () => {
       } else {
         Modal.error({ ...errorConfig, content: err.message });
       }
+      return;
     }
   };
 
@@ -476,6 +485,7 @@ const Home = () => {
         } else {
           Modal.error({ ...errorConfig, content: err.message });
         }
+        return;
       }
     }
   }, [user, initialLoad, limit, search]);

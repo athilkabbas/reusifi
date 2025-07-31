@@ -85,6 +85,7 @@ const Chat = () => {
   } = useContext(Context);
   const [chatLoading, setChatLoading] = useState(false);
   const [socketLoading, setSocketLoading] = useState(false);
+  const [checkSession, setCheckSession] = useState(false);
   const [moreWidth, setMoreWidth] = useState(true);
   const isModalVisibleRef = useRef(false);
   const errorSessionConfig = {
@@ -95,7 +96,7 @@ const Chat = () => {
     okText: "Login",
     onOk: () => {
       isModalVisibleRef.current = false;
-      signOut();
+      signInWithRedirect();
     },
   };
   const errorConfig = {
@@ -257,113 +258,101 @@ const Chat = () => {
     let reconnectTimeout = null;
 
     const fetchUser = async () => {
-      setSocketLoading(true);
       let token = "";
       let session;
       try {
+        setCheckSession(true);
         session = await fetchAuthSession();
+        const tokens = session.tokens;
+
+        if (tokens?.idToken) {
+          token = tokens.idToken;
+          setCheckSession(false);
+          const currentUser = await getCurrentUser();
+          setUser(currentUser);
+          setSocketLoading(true);
+          socket = new WebSocket(
+            `wss://apichat.reusifi.com/production?userId=${
+              currentUser.userId
+            }&productId=${productId || recipient?.item?.uuid}&token=${token}`
+          );
+          setWs(socket);
+
+          socket.onopen = () => {
+            console.log("Connected to the WebSocket");
+            setSocketLoading(false);
+          };
+
+          socket.onerror = (err) => {
+            setSocketLoading(false);
+          };
+
+          socket.onmessage = async (event) => {
+            if (!socket || socket.readyState !== WebSocket.OPEN) return; // Guard
+            console.log("Message from server:", event);
+            const data = JSON.parse(event.data);
+            setIChatData((prevValue) => [
+              {
+                message: data.message,
+                timestamp: data.timestamp,
+                recipientId: data.recipientUserId,
+                senderId: data.senderUserId,
+                productId: data.productId,
+              },
+              ...prevValue,
+            ]);
+            try {
+              setLoading(true);
+              await callApi(
+                `https://api.reusifi.com/prod/getChatsRead?userId1=${encodeURIComponent(
+                  data.recipientUserId
+                )}&userId2=${encodeURIComponent(data.senderUserId)}&productId=${
+                  data.productId
+                }&read=${encodeURIComponent(true)}`,
+                "GET"
+              );
+              setLoading(false);
+              setChatData([]);
+              setChatLastEvaluatedKey(null);
+              setChatInitialLoad(true);
+            } catch (err) {
+              setLoading(false);
+              if (isModalVisibleRef.current) {
+                return;
+              }
+              isModalVisibleRef.current = true;
+              if (err?.status === 401) {
+                Modal.error(errorSessionConfig);
+              } else {
+                Modal.error({
+                  ...errorConfig,
+                  content: err.message + "chat read",
+                });
+              }
+              return;
+            }
+          };
+
+          socket.onclose = () => {
+            console.log("Disconnected from WebSocket");
+            reconnectTimeout = setTimeout(() => {
+              if (productId || (recipient && recipient["item"]["uuid"])) {
+                fetchUser();
+              }
+            }, 300);
+          };
+        } else {
+          throw new Error();
+        }
       } catch (err) {
-        setSocketLoading(false);
+        setCheckSession(false);
         if (isModalVisibleRef.current) {
           return;
         }
         isModalVisibleRef.current = true;
-        if (
-          err?.name === "NotAuthorizedException" &&
-          err?.message?.includes("Refresh Token has expired")
-        ) {
-          Modal.error(errorSessionConfig);
-        } else if (err?.status === 401) {
-          Modal.error(errorSessionConfig);
-        } else {
-          Modal.error({ ...errorConfig, content: err.message + "chat socket" });
-        }
-        return;
-      }
-      const tokens = session.tokens;
-
-      if (tokens?.idToken) {
-        token = tokens.idToken;
-      } else {
         Modal.error(errorSessionConfig);
         return;
       }
-
-      const currentUser = await getCurrentUser();
-      setUser(currentUser);
-
-      socket = new WebSocket(
-        `wss://apichat.reusifi.com/production?userId=${
-          currentUser.userId
-        }&productId=${productId || recipient?.item?.uuid}&token=${token}`
-      );
-      setWs(socket);
-
-      socket.onopen = () => {
-        console.log("Connected to the WebSocket");
-        setSocketLoading(false);
-      };
-
-      socket.onerror = (err) => {
-        setSocketLoading(false);
-      };
-
-      socket.onmessage = async (event) => {
-        if (!socket || socket.readyState !== WebSocket.OPEN) return; // Guard
-        console.log("Message from server:", event);
-        const data = JSON.parse(event.data);
-        setIChatData((prevValue) => [
-          {
-            message: data.message,
-            timestamp: data.timestamp,
-            recipientId: data.recipientUserId,
-            senderId: data.senderUserId,
-            productId: data.productId,
-          },
-          ...prevValue,
-        ]);
-        try {
-          setSocketLoading(true);
-          await callApi(
-            `https://api.reusifi.com/prod/getChatsRead?userId1=${encodeURIComponent(
-              data.recipientUserId
-            )}&userId2=${encodeURIComponent(data.senderUserId)}&productId=${
-              data.productId
-            }&read=${encodeURIComponent(true)}`,
-            "GET"
-          );
-          setSocketLoading(false);
-        } catch (err) {
-          setSocketLoading(false);
-          if (isModalVisibleRef.current) {
-            return;
-          }
-          isModalVisibleRef.current = true;
-          if (
-            err?.name === "NotAuthorizedException" &&
-            err?.message?.includes("Refresh Token has expired")
-          ) {
-            Modal.error(errorSessionConfig);
-          } else if (err?.status === 401) {
-            Modal.error(errorSessionConfig);
-          } else {
-            Modal.error({ ...errorConfig, content: err.message + "chat read" });
-          }
-          return;
-        }
-        setChatData([]);
-        setChatLastEvaluatedKey(null);
-        setChatInitialLoad(true);
-      };
-
-      socket.onclose = () => {
-        console.log("Disconnected from WebSocket");
-        reconnectTimeout = setTimeout(() => {
-          if (productId || (recipient && recipient["item"]["uuid"])) {
-            fetchUser();
-          }
-        }, 300);
-      };
     };
 
     if (productId || (recipient && recipient["item"]["uuid"])) {
@@ -499,7 +488,7 @@ const Chat = () => {
       } else {
         Modal.error({ ...errorConfig, content: err.message + "get chats" });
       }
-      console.log(err);
+      return;
     }
   };
 
@@ -539,6 +528,7 @@ const Chat = () => {
         } else {
           Modal.error({ ...errorConfig, content: err.message + "get count" });
         }
+        return;
       }
     };
     if (
@@ -964,7 +954,7 @@ const Chat = () => {
         </Footer>
       )}
       <div ref={bottomRef}></div>
-      {socketLoading && (
+      {(socketLoading || checkSession) && (
         <Spin
           fullscreen
           indicator={
