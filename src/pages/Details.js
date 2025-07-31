@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { Skeleton, Spin } from "antd";
+import { Skeleton, Spin, Descriptions } from "antd";
 import { Input } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
@@ -348,6 +348,35 @@ const Details = () => {
       return copy;
     });
   };
+
+  const descriptionItems = [
+    {
+      key: "1",
+      label: "Title",
+      children: <p>{detailData?.[0]?.["item"]["title"]}</p>,
+      labelStyle: { width: "0px" },
+    },
+    {
+      key: "2",
+      label: "Description",
+      children: <p>{detailData?.[0]?.["item"]["description"]}</p>,
+    },
+    {
+      key: "3",
+      label: "State",
+      children: <p>{detailData?.[0]?.["item"]["state"]}</p>,
+    },
+    {
+      key: "4",
+      label: "District",
+      children: <p>{detailData?.[0]?.["item"]["district"]}</p>,
+    },
+    {
+      key: "5",
+      label: "Price",
+      children: <p>{detailData?.[0]?.["item"]["price"]}</p>,
+    },
+  ];
   return (
     <Layout
       style={{
@@ -550,115 +579,18 @@ const Details = () => {
                     </Image.PreviewGroup>
                   </Space.Compact>
                   {Object.values(loadedImages).some((item) => item) && (
-                    <Space
-                      size="large"
-                      direction="vertical"
-                      style={{
-                        marginTop: "30px",
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Space.Compact
-                        size="large"
-                        style={{ display: "flex", alignItems: "center" }}
-                      >
-                        <Text
-                          strong
-                          style={{ width: !isMobile ? "10vw" : "25vw" }}
-                        >
-                          Title
-                        </Text>
-                        <Input
-                          readOnly
-                          style={{
-                            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-                            width: !isMobile ? "35vw" : "60vw",
-                          }}
-                          value={capitalize(detailData[0]["item"]["title"])}
-                        />
-                      </Space.Compact>
-                      <Space.Compact
-                        size="large"
-                        style={{ display: "flex", alignItems: "center" }}
-                      >
-                        <Text
-                          strong
-                          style={{ width: !isMobile ? "10vw" : "25vw" }}
-                        >
-                          Description
-                        </Text>
-                        <TextArea
-                          readOnly
-                          autoSize={{ minRows: 2, maxRows: 5 }}
-                          style={{
-                            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-                            width: !isMobile ? "35vw" : "60vw",
-                          }}
-                          value={capitalize(
-                            detailData[0]["item"]["description"]
-                          )}
-                        />
-                      </Space.Compact>
-                      <Space.Compact
-                        size="large"
-                        style={{ display: "flex", alignItems: "center" }}
-                      >
-                        <Text
-                          strong
-                          style={{ width: !isMobile ? "10vw" : "25vw" }}
-                        >
-                          State
-                        </Text>
-                        <Input
-                          readOnly
-                          style={{
-                            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-                            width: !isMobile ? "35vw" : "60vw",
-                          }}
-                          value={detailData[0]["item"]["state"]}
-                        />
-                      </Space.Compact>
-                      <Space.Compact
-                        size="large"
-                        style={{ display: "flex", alignItems: "center" }}
-                      >
-                        <Text
-                          strong
-                          style={{ width: !isMobile ? "10vw" : "25vw" }}
-                        >
-                          District
-                        </Text>
-                        <Input
-                          readOnly
-                          style={{
-                            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-                            width: !isMobile ? "35vw" : "60vw",
-                          }}
-                          value={detailData[0]["item"]["district"]}
-                        />
-                      </Space.Compact>
-                      <Space.Compact
-                        size="large"
-                        style={{ display: "flex", alignItems: "center" }}
-                      >
-                        <Text
-                          strong
-                          style={{ width: !isMobile ? "10vw" : "25vw" }}
-                        >
-                          Price
-                        </Text>
-                        <Input
-                          readOnly
-                          style={{
-                            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-                            width: !isMobile ? "35vw" : "60vw",
-                          }}
-                          prefix="₹"
-                          value={detailData[0]["item"]["price"]}
-                        />
-                      </Space.Compact>
-                    </Space>
+                    <Space.Compact size="large">
+                      <Descriptions
+                        column={1}
+                        size="small"
+                        style={{
+                          width: isMobile ? "calc(100vw - 50px)" : "40vw",
+                        }}
+                        bordered
+                        title=""
+                        items={descriptionItems}
+                      />
+                    </Space.Compact>
                   )}
                   {Object.values(loadedImages).some((item) => item) && (
                     <>
