@@ -159,22 +159,8 @@ function AppWithSession() {
       {!socketLoading && !checkSession && checked && isSignedIn && (
         <Routes>
           <Route path="/" element={<Layout />}>
-            <Route
-              index
-              element={
-                <CheckRender>
-                  <Home />
-                </CheckRender>
-              }
-            />
-            <Route
-              path="addProduct"
-              element={
-                <CheckRender>
-                  <AddDress />
-                </CheckRender>
-              }
-            />
+            <Route index element={<Home />} />
+            <Route path="addProduct" element={<AddDress />} />
             <Route
               path="details"
               element={
@@ -191,38 +177,10 @@ function AppWithSession() {
                 </CheckRender>
               }
             />
-            <Route
-              path="chatPage"
-              element={
-                <CheckRender>
-                  <ChatPage />
-                </CheckRender>
-              }
-            />
-            <Route
-              path="ads"
-              element={
-                <CheckRender>
-                  <Ads />
-                </CheckRender>
-              }
-            />
-            <Route
-              path="contact"
-              element={
-                <CheckRender>
-                  <Contact />
-                </CheckRender>
-              }
-            />
-            <Route
-              path="favourite"
-              element={
-                <CheckRender>
-                  <Favourites />
-                </CheckRender>
-              }
-            />
+            <Route path="chatPage" element={<ChatPage />} />
+            <Route path="ads" element={<Ads />} />
+            <Route path="contact" element={<Contact />} />
+            <Route path="favourite" element={<Favourites />} />
           </Route>
         </Routes>
       )}
