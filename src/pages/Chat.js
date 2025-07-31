@@ -313,7 +313,7 @@ const Chat = () => {
               ...prevValue,
             ]);
             try {
-              setLoading(true);
+              // setLoading(true);
               await callApi(
                 `https://api.reusifi.com/prod/getChatsRead?userId1=${encodeURIComponent(
                   data.recipientUserId
@@ -322,12 +322,12 @@ const Chat = () => {
                 }&read=${encodeURIComponent(true)}`,
                 "GET"
               );
-              setLoading(false);
+              // setLoading(false);
               setChatData([]);
               setChatLastEvaluatedKey(null);
               setChatInitialLoad(true);
             } catch (err) {
-              setLoading(false);
+              // setLoading(false);
               if (isModalVisibleRef.current) {
                 return;
               }
