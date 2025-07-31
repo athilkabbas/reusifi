@@ -224,7 +224,7 @@ const Favourites = () => {
     if (scrollableDivRef.current && !loading && !handleFavLoading) {
       requestAnimationFrame(() => {
         scrollableDivRef.current.scrollTo(0, favScrollPosition);
-        setScrollLoadMoreData(false, scrollLoadMoreData);
+        setScrollLoadMoreData(false);
       });
     }
   }, [favScrollPosition, loading, favData, handleFavLoading]);

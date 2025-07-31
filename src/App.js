@@ -199,7 +199,14 @@ function AppWithSession() {
                 </CheckRender>
               }
             />
-            <Route path="ads" element={<Ads />} />
+            <Route
+              path="ads"
+              element={
+                <CheckRender>
+                  <Ads />
+                </CheckRender>
+              }
+            />
             <Route
               path="contact"
               element={
@@ -212,7 +219,6 @@ function AppWithSession() {
               path="favourite"
               element={
                 <CheckRender>
-                  {" "}
                   <Favourites />
                 </CheckRender>
               }
