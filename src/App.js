@@ -81,7 +81,7 @@ function AppWithSession() {
               reconnectTimeout = setTimeout(() => {
                 fetchNotifications();
                 reconnectTimeout = null;
-              }, 300);
+              }, 1000);
             }
           };
 
@@ -98,7 +98,7 @@ function AppWithSession() {
               reconnectTimeout = setTimeout(() => {
                 fetchNotifications();
                 reconnectTimeout = null;
-              }, 300);
+              }, 1000);
             }
           };
         } else {
