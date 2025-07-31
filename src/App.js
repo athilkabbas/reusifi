@@ -172,6 +172,7 @@ function AppWithSession() {
       {(socketLoading || checkSession || !checked || !isSignedIn) && (
         <Spin
           fullscreen
+          tip={`socket:${socketLoading} chechSession:${checkSession} checked:${checked} isSign:${isSignedIn}`}
           indicator={
             <LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />
           }
