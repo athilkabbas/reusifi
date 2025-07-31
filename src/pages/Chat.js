@@ -48,7 +48,6 @@ const Chat = () => {
   const scrollableDivRef = useRef(null);
   const [scrollPosition, setScrollPosition] = useState(0);
   const { Text } = Typography;
-  const [scrollLoadMoreData, setScrollLoadMoreData] = useState(false);
   const sendMessage = (
     message,
     recipientUserId,
@@ -606,9 +605,8 @@ const Chat = () => {
     if (scrollableDivRef.current && !loading && !chatLoading)
       requestAnimationFrame(() => {
         scrollableDivRef.current.scrollTo(0, scrollPosition);
-        setScrollLoadMoreData(false);
       });
-  }, [scrollPosition, loading, scrollLoadMoreData, ichatData, chatLoading]);
+  }, [scrollPosition, loading, ichatData, chatLoading]);
 
   const handleChange = (value) => {
     setMessageValue(value);
@@ -820,7 +818,6 @@ const Chat = () => {
               dataLength={ichatData.length}
               next={() => {
                 getChats();
-                setScrollLoadMoreData(true);
               }}
               hasMore={hasMore}
               inverse

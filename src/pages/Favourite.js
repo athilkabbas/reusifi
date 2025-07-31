@@ -35,7 +35,6 @@ const Favourites = () => {
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
   const scrollableDivRef = useRef(null);
-  const [scrollLoadMoreData, setScrollLoadMoreData] = useState(false);
   const [chatLoading, setChatLoading] = useState(false);
   const [favLoading, setFavLoading] = useState(false);
   const [handleFavLoading, setHandleFavLoading] = useState(false);
@@ -224,7 +223,6 @@ const Favourites = () => {
     if (scrollableDivRef.current && !loading && !handleFavLoading) {
       requestAnimationFrame(() => {
         scrollableDivRef.current.scrollTo(0, favScrollPosition);
-        setScrollLoadMoreData(false);
       });
     }
   }, [favScrollPosition, loading, favData, handleFavLoading]);
@@ -468,7 +466,6 @@ const Favourites = () => {
             style={{ overflowX: "hidden", background: "#F9FAFB" }}
             dataLength={favData.length}
             next={() => {
-              setScrollLoadMoreData(true);
               loadMoreData();
             }}
             hasMore={favHasMore}

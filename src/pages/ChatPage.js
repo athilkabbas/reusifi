@@ -54,7 +54,6 @@ const menuItemsBlocked = [
 ];
 const { Header, Content, Footer } = Layout;
 const ChatPage = () => {
-  const [scrollLoadMoreData, setScrollLoadMoreData] = useState(false);
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -168,10 +167,9 @@ const ChatPage = () => {
     if (scrollableDivRef.current && !loading && !chatLoading) {
       requestAnimationFrame(() => {
         scrollableDivRef.current.scrollTo(0, chatScrollPosition);
-        setScrollLoadMoreData(false);
       });
     }
-  }, [chatScrollPosition, loading, scrollLoadMoreData, chatData, chatLoading]);
+  }, [chatScrollPosition, loading, chatData, chatLoading]);
 
   const items = [
     HomeFilled,
@@ -690,7 +688,6 @@ const ChatPage = () => {
             }}
             dataLength={chatData.length}
             next={() => {
-              setScrollLoadMoreData(true);
               getChats();
             }}
             hasMore={chatHasMore}

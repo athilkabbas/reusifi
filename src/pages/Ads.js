@@ -32,7 +32,6 @@ const capitalize = (str) => {
 const { Header, Content, Footer } = Layout;
 const Ads = () => {
   const [loading, setLoading] = useState(false);
-  const [scrollLoadMoreData, setScrollLoadMoreData] = useState(false);
   const [user, setUser] = useState(null);
   const scrollableDivRef = useRef(null);
   const [chatLoading, setChatLoading] = useState(false);
@@ -219,10 +218,9 @@ const Ads = () => {
     if (scrollableDivRef.current && !loading && !chatLoading) {
       requestAnimationFrame(() => {
         scrollableDivRef.current.scrollTo(0, adScrollPosition);
-        setScrollLoadMoreData(false);
       });
     }
-  }, [adScrollPosition, loading, scrollLoadMoreData, adData, chatLoading]);
+  }, [adScrollPosition, loading, adData, chatLoading]);
 
   const [lastEvaluatedKey, setLastEvaluatedKey] = useState(null);
 
@@ -395,7 +393,6 @@ const Ads = () => {
             style={{ overflowX: "hidden", background: "#F9FAFB" }}
             dataLength={adData.length}
             next={() => {
-              setScrollLoadMoreData(true);
               loadMoreData();
             }}
             hasMore={adHasMore}

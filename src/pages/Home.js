@@ -42,7 +42,6 @@ const Home = () => {
   const scrollableDivRef = useRef(null);
   const [chatLoading, setChatLoading] = useState(false);
   const [favLoading, setFavLoading] = useState(false);
-  const [scrollLoadMoreData, setScrollLoadMoreData] = useState(false);
   const {
     data,
     setData,
@@ -245,7 +244,6 @@ const Home = () => {
     ) {
       requestAnimationFrame(() => {
         scrollableDivRef.current.scrollTo(0, scrollPosition);
-        setScrollLoadMoreData(false);
       });
     }
   }, [
@@ -254,7 +252,6 @@ const Home = () => {
     favLoading,
     handleFavLoading,
     loading,
-    scrollLoadMoreData,
     data,
   ]);
 
@@ -685,7 +682,6 @@ const Home = () => {
             style={{ overflowX: "hidden", background: "#F9FAFB" }}
             dataLength={data.length}
             next={() => {
-              setScrollLoadMoreData(true);
               loadMoreData();
             }}
             hasMore={hasMore}
