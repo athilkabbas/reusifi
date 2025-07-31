@@ -86,7 +86,7 @@ const Details = () => {
     okText: "Login",
     onOk: () => {
       isModalVisibleRef.current = false;
-      signInWithRedirect();
+      signOut();
     },
   };
   const errorConfig = {
@@ -585,6 +585,7 @@ const Details = () => {
                         size="small"
                         style={{
                           width: isMobile ? "calc(100vw - 50px)" : "40vw",
+                          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                         }}
                         bordered
                         title=""

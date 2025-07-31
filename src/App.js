@@ -7,6 +7,7 @@ import {
   signInWithRedirect,
   getCurrentUser,
   fetchAuthSession,
+  signOut,
 } from "@aws-amplify/auth";
 
 import AddDress from "./pages/AddDress";
@@ -45,7 +46,7 @@ function AppWithSession() {
     okText: "Login",
     onOk: () => {
       isModalVisibleRef.current = false;
-      signInWithRedirect();
+      signOut();
     },
   };
   const errorConfig = {

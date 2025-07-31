@@ -59,7 +59,7 @@ const Ads = () => {
     okText: "Login",
     onOk: () => {
       isModalVisibleRef.current = false;
-      signInWithRedirect();
+      signOut();
     },
   };
   const errorConfig = {

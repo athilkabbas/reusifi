@@ -176,7 +176,7 @@ const Home = () => {
     okText: "Login",
     onOk: () => {
       isModalVisibleRef.current = false;
-      signInWithRedirect();
+      signOut();
     },
   };
   const errorConfig = {
