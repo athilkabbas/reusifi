@@ -23,6 +23,7 @@ import { Spin } from "antd";
 import { Context } from "./context/provider";
 
 import "./App.css";
+import CheckRender from "./helpers/checkRender";
 
 Amplify.configure(awsconfig);
 
@@ -81,7 +82,7 @@ function AppWithSession() {
               reconnectTimeout = setTimeout(() => {
                 fetchNotifications();
                 reconnectTimeout = null;
-              }, 1000);
+              }, 300);
             }
           };
 
@@ -98,7 +99,7 @@ function AppWithSession() {
               reconnectTimeout = setTimeout(() => {
                 fetchNotifications();
                 reconnectTimeout = null;
-              }, 1000);
+              }, 300);
             }
           };
         } else {
@@ -158,14 +159,64 @@ function AppWithSession() {
       {!socketLoading && !checkSession && checked && isSignedIn && (
         <Routes>
           <Route path="/" element={<Layout />}>
-            <Route index element={<Home />} />
-            <Route path="addProduct" element={<AddDress />} />
-            <Route path="details" element={<Details />} />
-            <Route path="chat" element={<Chat />} />
-            <Route path="chatPage" element={<ChatPage />} />
+            <Route
+              index
+              element={
+                <CheckRender>
+                  <Home />
+                </CheckRender>
+              }
+            />
+            <Route
+              path="addProduct"
+              element={
+                <CheckRender>
+                  <AddDress />
+                </CheckRender>
+              }
+            />
+            <Route
+              path="details"
+              element={
+                <CheckRender>
+                  <Details />
+                </CheckRender>
+              }
+            />
+            <Route
+              path="chat"
+              element={
+                <CheckRender>
+                  <Chat />
+                </CheckRender>
+              }
+            />
+            <Route
+              path="chatPage"
+              element={
+                <CheckRender>
+                  <ChatPage />
+                </CheckRender>
+              }
+            />
             <Route path="ads" element={<Ads />} />
-            <Route path="contact" element={<Contact />} />
-            <Route path="favourite" element={<Favourites />} />
+            <Route
+              path="contact"
+              element={
+                <CheckRender>
+                  <Contact />
+                </CheckRender>
+              }
+            />
+            <Route
+              path="favourite"
+              element={
+                <CheckRender>
+                  {" "}
+                  <Favourites />
+                </CheckRender>
+              }
+            />
           </Route>
         </Routes>
       )}
