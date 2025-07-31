@@ -281,10 +281,21 @@ const Chat = () => {
           socket.onopen = () => {
             console.log("Connected to the WebSocket");
             setSocketLoading(false);
+            if (reconnectTimeout) {
+              clearTimeout(reconnectTimeout);
+              reconnectTimeout = null;
+            }
           };
 
           socket.onerror = (err) => {
-            setSocketLoading(false);
+            if (!reconnectTimeout) {
+              reconnectTimeout = setTimeout(() => {
+                if (productId || (recipient && recipient["item"]["uuid"])) {
+                  fetchUser();
+                }
+                reconnectTimeout = null;
+              }, 300);
+            }
           };
 
           socket.onmessage = async (event) => {
@@ -335,16 +346,20 @@ const Chat = () => {
 
           socket.onclose = () => {
             console.log("Disconnected from WebSocket");
-            reconnectTimeout = setTimeout(() => {
-              if (productId || (recipient && recipient["item"]["uuid"])) {
-                fetchUser();
-              }
-            }, 300);
+            if (!reconnectTimeout) {
+              reconnectTimeout = setTimeout(() => {
+                if (productId || (recipient && recipient["item"]["uuid"])) {
+                  fetchUser();
+                }
+                reconnectTimeout = null;
+              }, 300);
+            }
           };
         } else {
           throw new Error();
         }
       } catch (err) {
+        setSocketLoading(false);
         setCheckSession(false);
         if (isModalVisibleRef.current) {
           return;

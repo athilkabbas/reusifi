@@ -82,10 +82,19 @@ function AppWithSession() {
           socket.onopen = () => {
             console.log("Connected to the WebSocket");
             setSocketLoading(false);
+            if (reconnectTimeout) {
+              clearTimeout(reconnectTimeout);
+              reconnectTimeout = null;
+            }
           };
 
           socket.onerror = (err) => {
-            setSocketLoading(false);
+            if (!reconnectTimeout) {
+              reconnectTimeout = setTimeout(() => {
+                fetchNotifications();
+                reconnectTimeout = null;
+              }, 300);
+            }
           };
 
           socket.onmessage = async (event) => {
@@ -97,9 +106,12 @@ function AppWithSession() {
           };
 
           socket.onclose = () => {
-            reconnectTimeout = setTimeout(() => {
-              fetchNotifications();
-            }, 300);
+            if (!reconnectTimeout) {
+              reconnectTimeout = setTimeout(() => {
+                fetchNotifications();
+                reconnectTimeout = null;
+              }, 300);
+            }
           };
         } else {
           throw new Error();
