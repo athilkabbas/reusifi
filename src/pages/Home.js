@@ -544,6 +544,7 @@ const Home = () => {
     setPriceFilter(event.target.value);
   };
   const [open, setOpen] = useState(false);
+  const [popupOpen, setPopUpOpen] = useState(false);
   return (
     <Layout
       style={{
@@ -627,6 +628,8 @@ const Home = () => {
                 setOpen(open);
                 document.body.style.overscrollBehaviorY = open ? "none" : "";
               }}
+              open={popupOpen}
+              onClick={() => setPopUpOpen((value) => !value)}
               onChange={(value) => {
                 setCategory(value);
                 const leaf = isLeafNode(value, options);
