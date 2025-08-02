@@ -260,7 +260,7 @@ const Ads = () => {
       if (err?.status === 401) {
         Modal.error(errorSessionConfig);
       } else {
-        Modal.error({ ...errorConfig, content: err.message });
+        Modal.error(errorConfig);
       }
       return;
     }
@@ -292,7 +292,7 @@ const Ads = () => {
             if (err?.status === 401) {
               Modal.error(errorSessionConfig);
             } else {
-              Modal.error({ ...errorConfig, content: err.message });
+              Modal.error(errorConfig);
             }
             console.error(err);
           })
@@ -309,7 +309,7 @@ const Ads = () => {
         if (err?.status === 401) {
           Modal.error(errorSessionConfig);
         } else {
-          Modal.error({ ...errorConfig, content: err.message });
+          Modal.error(errorConfig);
         }
         return;
       }
@@ -459,7 +459,6 @@ const Ads = () => {
                                   src={item["images"][0]}
                                   alt={item["item"]["title"]}
                                   style={{
-                                    height: "250px",
                                     objectFit: "contain",
                                     display: loadedImages[item["item"]["uuid"]]
                                       ? "block"

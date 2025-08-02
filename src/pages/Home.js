@@ -260,7 +260,7 @@ const Home = () => {
     setInitialLoad(true);
     if (type === "state") {
       setLocation((prevValue) => {
-        return { ...prevValue, [type]: value, district: null };
+        return { ...prevValue, [type]: value, district: "" };
       });
     } else {
       setLocation((prevValue) => {
@@ -321,7 +321,7 @@ const Home = () => {
           content: err.message + "fav",
         });
       } else {
-        Modal.error({ ...errorConfig, content: err.message });
+        Modal.error(errorConfig);
       }
       return;
     }
@@ -343,7 +343,11 @@ const Home = () => {
             search.trim()
           )}&page=${encodeURIComponent(
             currentPage
-          )}&perPage=${encodeURIComponent(limit)}`,
+          )}&perPage=${encodeURIComponent(limit)}&state=${encodeURIComponent(
+            location.state
+          )}&district=${encodeURIComponent(
+            location.district
+          )}&sortByPrice=${encodeURIComponent(priceFilter)}`,
           "GET"
         );
       } else {
@@ -385,7 +389,7 @@ const Home = () => {
           content: err.message + "load more",
         });
       } else {
-        Modal.error({ ...errorConfig, content: err.message });
+        Modal.error(errorConfig);
       }
       return;
     }
@@ -443,7 +447,7 @@ const Home = () => {
                 content: err.message + "chat count",
               });
             } else {
-              Modal.error({ ...errorConfig, content: err.message });
+              Modal.error(errorConfig);
             }
             console.log(err);
           })
@@ -466,7 +470,7 @@ const Home = () => {
             content: err.message + "load more not search",
           });
         } else {
-          Modal.error({ ...errorConfig, content: err.message });
+          Modal.error(errorConfig);
         }
         return;
       }
@@ -559,8 +563,8 @@ const Home = () => {
               setData([]);
               setInitialLoad(true);
               if (!event.target.value.trim()) {
-                setLocation({ state: null, district: null });
-                setPriceFilter(null);
+                setLocation({ state: "", district: "" });
+                setPriceFilter("");
                 setDistricts([]);
               }
             }}
@@ -592,7 +596,7 @@ const Home = () => {
                 borderRadius: "7px",
                 visibility: !search.trim() ? "hidden" : "visible",
               }}
-              value={location.state}
+              value={location.state || null}
               placeholder="State"
               optionFilterProp="label"
               filterSort={(optionA, optionB) =>
@@ -612,7 +616,7 @@ const Home = () => {
                   width: !isMobile ? "20vw" : "35vw",
                   visibility: !search.trim() ? "hidden" : "visible",
                 }}
-                value={location.district}
+                value={location.district || null}
                 placeholder="District"
                 optionFilterProp="label"
                 filterSort={(optionA, optionB) =>
@@ -642,8 +646,8 @@ const Home = () => {
             onChange={onChangePriceFilter}
             value={priceFilter}
           >
-            <Radio.Button value={"LOWTOHIGH"}>Low to High</Radio.Button>
-            <Radio.Button value={"HIGHTOLOW"}>High to Low</Radio.Button>
+            <Radio.Button value={"asc"}>Low to High</Radio.Button>
+            <Radio.Button value={"desc"}>High to Low</Radio.Button>
           </Radio.Group>
         </Space.Compact>
       </div>
@@ -734,7 +738,6 @@ const Home = () => {
                                   src={item["images"][0]}
                                   alt={item["item"]["title"]}
                                   style={{
-                                    height: "250px",
                                     objectFit: "contain",
                                     display: loadedImages[item["item"]["uuid"]]
                                       ? "block"

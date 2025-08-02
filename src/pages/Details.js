@@ -226,7 +226,7 @@ const Details = () => {
             if (err?.status === 401) {
               Modal.error(errorSessionConfig);
             } else {
-              Modal.error({ ...errorConfig, content: err.message });
+              Modal.error(errorConfig);
             }
           })
           .finally(() => {
@@ -245,7 +245,7 @@ const Details = () => {
         if (err?.status === 401) {
           Modal.error(errorSessionConfig);
         } else {
-          Modal.error({ ...errorConfig, content: err.message });
+          Modal.error(errorConfig);
         }
         return;
       }
@@ -307,7 +307,7 @@ const Details = () => {
           content: err.message + "details chat",
         });
       } else {
-        Modal.error({ ...errorConfig, content: err.message });
+        Modal.error(errorConfig);
       }
       return;
     }
@@ -347,7 +347,7 @@ const Details = () => {
           content: err.message + "details",
         });
       } else {
-        Modal.error({ ...errorConfig, content: err.message });
+        Modal.error(errorConfig);
       }
       return;
     }
@@ -368,26 +368,42 @@ const Details = () => {
     {
       key: "1",
       label: "Title",
-      children: <p>{detailData?.[0]?.["item"]["title"]}</p>,
+      children: <p>{capitalize(detailData?.[0]?.["item"]["title"] || "")}</p>,
       labelStyle: { width: "0px" },
     },
     {
       key: "2",
       label: "Description",
-      children: <p>{detailData?.[0]?.["item"]["description"]}</p>,
+      children: (
+        <p>{capitalize(detailData?.[0]?.["item"]["description"] || "")}</p>
+      ),
     },
     {
       key: "3",
+      label: "Category",
+      children: (
+        <p>{capitalize(detailData?.[0]?.["item"]["category"] || "")}</p>
+      ),
+    },
+    {
+      key: "4",
+      label: "SubCategory",
+      children: (
+        <p>{capitalize(detailData?.[0]?.["item"]["subCategory"] || "")}</p>
+      ),
+    },
+    {
+      key: "5",
       label: "State",
       children: <p>{detailData?.[0]?.["item"]["state"]}</p>,
     },
     {
-      key: "4",
+      key: "6",
       label: "District",
       children: <p>{detailData?.[0]?.["item"]["district"]}</p>,
     },
     {
-      key: "5",
+      key: "7",
       label: "Price",
       children: <p>{detailData?.[0]?.["item"]["price"]}</p>,
     },

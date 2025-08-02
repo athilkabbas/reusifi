@@ -11,7 +11,7 @@ const Provider = ({ children }) => {
   const [favHasMore, setFavHasMore] = useState(false);
   const [chatHasMore, setChatHasMore] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
-  const [location, setLocation] = useState({ state: null, district: null });
+  const [location, setLocation] = useState({ state: "", district: "" });
   const [search, setSearch] = useState("");
   const [filterList, setFilterList] = useState([]);
   const [adLastEvaluatedKey, setAdLastEvaluatedKey] = useState(null);
@@ -31,7 +31,7 @@ const Provider = ({ children }) => {
   const [favPageInitialLoad, setFavPageInitialLoad] = useState(true);
   const [adPageInitialLoad, setAdPageInitialLoad] = useState(true);
   const [chatPageInitialLoad, setChatPageInitialLoad] = useState(true);
-  const [priceFilter, setPriceFilter] = useState(null);
+  const [priceFilter, setPriceFilter] = useState("");
   const [detailInitialLoad, setDetailInitialLoad] = useState(true);
   const [contactInitialLoad, setContactInitialLoad] = useState(true);
   const [iChatInitialLoad, setIChatInitialLoad] = useState(true);

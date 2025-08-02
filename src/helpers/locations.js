@@ -902,3 +902,12 @@ export const districtMap = () => {
   }
   return stateDistrictMap;
 };
+
+export const locationsCascader = locations.states.map((stateData) => ({
+  value: stateData.state.toLowerCase().replace(/\s/g, "-"),
+  label: stateData.state,
+  children: stateData.districts.map((district) => ({
+    value: district.toLowerCase().replace(/\s/g, "-"),
+    label: district,
+  })),
+}));

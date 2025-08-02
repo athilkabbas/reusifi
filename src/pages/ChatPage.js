@@ -379,7 +379,7 @@ const ChatPage = () => {
           content: err.message + "chat menu",
         });
       } else {
-        Modal.error({ ...errorConfig, content: err.message });
+        Modal.error(errorConfig);
       }
       return;
     }
@@ -465,7 +465,7 @@ const ChatPage = () => {
           content: err.message + "chat unblock",
         });
       } else {
-        Modal.error({ ...errorConfig, content: err.message });
+        Modal.error(errorConfig);
       }
       return;
     }
@@ -573,7 +573,7 @@ const ChatPage = () => {
       if (err?.status === 401) {
         Modal.error(errorSessionConfig);
       } else {
-        Modal.error({ ...errorConfig, content: err.message });
+        Modal.error(errorConfig);
       }
       return;
     }
@@ -612,7 +612,7 @@ const ChatPage = () => {
             if (err?.status === 401) {
               Modal.error(errorSessionConfig);
             } else {
-              Modal.error({ ...errorConfig, content: err.message });
+              Modal.error(errorConfig);
             }
             console.error(err);
           })
@@ -629,7 +629,7 @@ const ChatPage = () => {
         if (err?.status === 401) {
           Modal.error(errorSessionConfig);
         } else {
-          Modal.error({ ...errorConfig, content: err.message });
+          Modal.error(errorConfig);
         }
         return;
       }
