@@ -625,6 +625,7 @@ const Home = () => {
               treeDefaultExpandAll
               onDropdownVisibleChange={(open) => {
                 setOpen(open);
+                document.body.style.overscrollBehaviorY = open ? "none" : "";
               }}
               onChange={(value) => {
                 setCategory(value);
