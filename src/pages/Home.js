@@ -734,6 +734,8 @@ const Home = () => {
                                   src={item["images"][0]}
                                   alt={item["item"]["title"]}
                                   style={{
+                                    height: "250px",
+                                    objectFit: "contain",
                                     display: loadedImages[item["item"]["uuid"]]
                                       ? "block"
                                       : "none",
