@@ -293,7 +293,7 @@ const Chat = () => {
                   fetchUser();
                 }
                 reconnectTimeout = null;
-              }, 300);
+              }, 1000);
             }
           };
 
@@ -351,7 +351,7 @@ const Chat = () => {
                   fetchUser();
                 }
                 reconnectTimeout = null;
-              }, 300);
+              }, 1000);
             }
           };
         } else {
