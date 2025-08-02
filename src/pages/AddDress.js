@@ -38,7 +38,7 @@ const getBase64 = (file) =>
     reader.onerror = (error) => reject(error);
   });
 
-const options = [
+export const options = [
   {
     value: "electronics",
     label: "Electronics",

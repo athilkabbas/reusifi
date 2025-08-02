@@ -6,7 +6,16 @@ import React, {
   useContext,
 } from "react";
 import { useNavigate } from "react-router-dom";
-import { Badge, Layout, Menu, Spin, message, Modal } from "antd";
+import {
+  Badge,
+  Layout,
+  Menu,
+  Spin,
+  message,
+  Modal,
+  Switch,
+  TreeSelect,
+} from "antd";
 import {
   HomeFilled,
   UploadOutlined,
@@ -28,6 +37,7 @@ import { states, districtMap } from "../helpers/locations";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
 import { callApi } from "../helpers/api";
+import { options } from "./AddDress";
 const IconText = ["Home", "Sell", "Chats", "My Ads", "Favourites", ""];
 const { Text } = Typography;
 const capitalize = (str) => {
@@ -332,12 +342,30 @@ const Home = () => {
     return btoa(unescape(encodeURIComponent(jsonStr))); // handles UTF-8 safely
   };
 
+  function isLeafNode(value, treeData) {
+    function findNode(nodes) {
+      for (const node of nodes) {
+        if (node.value === value) return node;
+        if (node.children) {
+          const found = findNode(node.children);
+          if (found) return found;
+        }
+      }
+      return null;
+    }
+
+    const node = findNode(treeData);
+    return node ? !node.children || node.isLeaf === true : false;
+  }
+  const [inputChecked, setInputChecked] = useState(false);
+  const [category, setCategory] = useState("");
+  const [subCategory, setSubCategory] = useState(false);
   const loadMoreData = async () => {
     try {
       const scrollPosition = scrollableDivRef.current.scrollTop;
       setLoading(true);
       let results;
-      if (search.trim()) {
+      if (search.trim() || category) {
         results = await callApi(
           `https://api.reusifi.com/prod/getProductsSearch?&search=${encodeURIComponent(
             search.trim()
@@ -347,7 +375,11 @@ const Home = () => {
             location.state
           )}&district=${encodeURIComponent(
             location.district
-          )}&sortByPrice=${encodeURIComponent(priceFilter)}`,
+          )}&sortByPrice=${encodeURIComponent(
+            priceFilter
+          )}&category=${encodeURIComponent(
+            !subCategory ? category : ""
+          )}&subCategory=${encodeURIComponent(subCategory ? category : "")}`,
           "GET"
         );
       } else {
@@ -403,6 +435,7 @@ const Home = () => {
       limit &&
       initialLoad &&
       (search.trim() ||
+        category ||
         Object.values(location).some((value) => value) ||
         priceFilter)
     ) {
@@ -416,10 +449,10 @@ const Home = () => {
         clearTimeout(timer.current);
       }
     };
-  }, [search, location, priceFilter, limit]);
+  }, [search, location, priceFilter, limit, category]);
 
   useEffect(() => {
-    if (user && initialLoad && limit && !search.trim()) {
+    if (user && initialLoad && limit && !search.trim() && !category) {
       try {
         setChatLoading(true);
         setFavLoading(true);
@@ -475,7 +508,7 @@ const Home = () => {
         return;
       }
     }
-  }, [user, initialLoad, limit, search]);
+  }, [user, initialLoad, limit, search, category]);
 
   const navigate = useNavigate();
   const handleNavigation = async (event) => {
@@ -504,13 +537,13 @@ const Home = () => {
         break;
     }
   };
-
   const onChangePriceFilter = (event) => {
     setCurrentPage(1);
     setData([]);
     setInitialLoad(true);
     setPriceFilter(event.target.value);
   };
+
   return (
     <Layout
       style={{
@@ -543,43 +576,95 @@ const Home = () => {
           />
         </Header>
       )}
-      <div
+      <Space
+        size="small"
+        direction="vertical"
         style={{
           padding: "10px",
-          background: "white",
-          position: "sticky",
-          top: "0px",
-          zIndex: 1,
-          background: "#F9FAFB",
+          // background: "white",
+          // position: "sticky",
+          // top: "0px",
+          // zIndex: 1,
+          // background: "#F9FAFB",
         }}
       >
         <Space.Compact size="large" style={{ height: "fit-content" }}>
-          <Input
-            addonBefore={<SearchOutlined />}
-            value={search}
-            onChange={(event) => {
-              setSearch(event.target.value);
-              setCurrentPage(1);
-              setData([]);
-              setInitialLoad(true);
-              if (!event.target.value.trim()) {
-                setLocation({ state: "", district: "" });
-                setPriceFilter("");
-                setDistricts([]);
+          {inputChecked ? (
+            <TreeSelect
+              prefix={
+                <Switch
+                  style={{ background: "#6366F1" }}
+                  defaultChecked
+                  onChange={(checked) => {
+                    setCategory("");
+                    setLocation({ state: "", district: "" });
+                    setPriceFilter("");
+                    setDistricts([]);
+                    setInputChecked(checked);
+                  }}
+                ></Switch>
               }
-            }}
-            placeholder="Search"
-            style={{
-              width: search.trim() ? "60vw" : "90vw",
-              height: "fit-content",
-              // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-              borderRadius: "7px",
-            }}
-          />
+              showSearch
+              allowClear
+              style={{
+                width: category ? "60vw" : "90vw",
+                borderRadius: "7px",
+                height: "fit-content",
+              }}
+              value={category || null}
+              styles={{
+                popup: { root: { maxHeight: 400, overflow: "auto" } },
+              }}
+              placeholder="Search by category"
+              treeDefaultExpandAll
+              onChange={(value) => {
+                setCategory(value);
+                const leaf = isLeafNode(value, options);
+                setSubCategory(leaf);
+                setCurrentPage(1);
+                setData([]);
+                setInitialLoad(true);
+              }}
+              treeData={options}
+            />
+          ) : (
+            <Input
+              prefix={
+                <Switch
+                  onChange={(checked) => {
+                    setSearch("");
+                    setLocation({ state: "", district: "" });
+                    setPriceFilter("");
+                    setDistricts([]);
+                    setInputChecked(checked);
+                  }}
+                ></Switch>
+              }
+              value={search}
+              onChange={(event) => {
+                setSearch(event.target.value);
+                setCurrentPage(1);
+                setData([]);
+                setInitialLoad(true);
+                if (!event.target.value.trim()) {
+                  setLocation({ state: "", district: "" });
+                  setPriceFilter("");
+                  setDistricts([]);
+                }
+              }}
+              placeholder="Search"
+              style={{
+                width: search.trim() ? "60vw" : "90vw",
+                height: "fit-content",
+                // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+                borderRadius: "7px",
+              }}
+            />
+          )}
           <Space.Compact
             size="large"
             style={{
-              display: "flex",
+              display: !search.trim() && !category ? "none" : "flex",
               flexDirection: !isMobile ? "row" : "column",
             }}
           >
@@ -594,7 +679,6 @@ const Home = () => {
                 width: !isMobile ? "20vw" : "35vw",
                 // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                 borderRadius: "7px",
-                visibility: !search.trim() ? "hidden" : "visible",
               }}
               value={location.state || null}
               placeholder="State"
@@ -614,7 +698,6 @@ const Home = () => {
                 showSearch
                 style={{
                   width: !isMobile ? "20vw" : "35vw",
-                  visibility: !search.trim() ? "hidden" : "visible",
                 }}
                 value={location.district || null}
                 placeholder="District"
@@ -633,9 +716,8 @@ const Home = () => {
           size="large"
           style={{
             padding: "10px",
-            display: "flex",
+            display: !search.trim() && !category ? "none" : "flex",
             alignItems: "center",
-            visibility: !search.trim() ? "hidden" : "visible",
           }}
         >
           <Text strong>Price</Text>
@@ -650,7 +732,7 @@ const Home = () => {
             <Radio.Button value={"desc"}>High to Low</Radio.Button>
           </Radio.Group>
         </Space.Compact>
-      </div>
+      </Space>
       <Content>
         <div
           className="hide-scrollbar overflow-auto"
