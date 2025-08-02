@@ -156,3 +156,9 @@
   justify-content: center;
   align-items: center;
 }
+
+html,
+body,
+#root {
+  overscroll-behavior: contain;
+}
