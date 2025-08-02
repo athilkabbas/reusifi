@@ -610,11 +610,16 @@ const Home = () => {
                 width: category ? "60vw" : "90vw",
                 borderRadius: "7px",
                 height: "fit-content",
-                overscrollBehavior: "contain",
               }}
               value={category || null}
               styles={{
-                popup: { root: { maxHeight: 400, overflow: "auto" } },
+                popup: {
+                  root: {
+                    maxHeight: 400,
+                    overflow: "auto",
+                    overscrollBehavior: "contain",
+                  },
+                },
               }}
               placeholder="Search by category"
               treeDefaultExpandAll
@@ -821,6 +826,7 @@ const Home = () => {
                                   src={item["images"][0]}
                                   alt={item["item"]["title"]}
                                   style={{
+                                    height: "260px",
                                     objectFit: "contain",
                                     display: loadedImages[item["item"]["uuid"]]
                                       ? "block"

@@ -459,6 +459,7 @@ const Ads = () => {
                                   src={item["images"][0]}
                                   alt={item["item"]["title"]}
                                   style={{
+                                    height: "260px",
                                     objectFit: "contain",
                                     display: loadedImages[item["item"]["uuid"]]
                                       ? "block"
