@@ -424,7 +424,7 @@ const Details = () => {
           />
         </Header>
       )}
-      <Content style={{ padding: "0 15px" }}>
+      <Content>
         <div
           className="hide-scrollbar overflow-auto"
           style={{
@@ -445,7 +445,6 @@ const Details = () => {
                   size="large"
                   direction="vertical"
                   style={{
-                    padding: "20px",
                     display: "flex",
                     alignItems: "center",
                     marginTop: "30px",
