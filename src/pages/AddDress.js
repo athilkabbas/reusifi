@@ -464,7 +464,7 @@ const AddDress = () => {
           />
         </Header>
       )}
-      <Content style={{ padding: "0 15px" }}>
+      <Content>
         <div
           className="hide-scrollbar overflow-auto"
           style={{
