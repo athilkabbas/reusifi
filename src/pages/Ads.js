@@ -217,7 +217,9 @@ const Ads = () => {
   useEffect(() => {
     if (scrollableDivRef.current && !loading && !chatLoading) {
       requestAnimationFrame(() => {
-        scrollableDivRef.current.scrollTo(0, adScrollPosition);
+        if (scrollableDivRef.current) {
+          scrollableDivRef.current.scrollTo(0, adScrollPosition);
+        }
       });
     }
   }, [adScrollPosition, loading, adData, chatLoading]);

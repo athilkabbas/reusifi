@@ -222,7 +222,9 @@ const Favourites = () => {
   useEffect(() => {
     if (scrollableDivRef.current && !loading && !handleFavLoading) {
       requestAnimationFrame(() => {
-        scrollableDivRef.current.scrollTo(0, favScrollPosition);
+        if (scrollableDivRef.current) {
+          scrollableDivRef.current.scrollTo(0, favScrollPosition);
+        }
       });
     }
   }, [favScrollPosition, loading, favData, handleFavLoading]);

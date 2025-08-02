@@ -604,7 +604,9 @@ const Chat = () => {
   useEffect(() => {
     if (scrollableDivRef.current && !loading && !chatLoading)
       requestAnimationFrame(() => {
-        scrollableDivRef.current.scrollTo(0, scrollPosition);
+        if (scrollableDivRef.current) {
+          scrollableDivRef.current.scrollTo(0, scrollPosition);
+        }
       });
   }, [scrollPosition, loading, ichatData, chatLoading]);
 

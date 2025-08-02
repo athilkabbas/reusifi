@@ -166,7 +166,9 @@ const ChatPage = () => {
   useEffect(() => {
     if (scrollableDivRef.current && !loading && !chatLoading) {
       requestAnimationFrame(() => {
-        scrollableDivRef.current.scrollTo(0, chatScrollPosition);
+        if (scrollableDivRef.current) {
+          scrollableDivRef.current.scrollTo(0, chatScrollPosition);
+        }
       });
     }
   }, [chatScrollPosition, loading, chatData, chatLoading]);

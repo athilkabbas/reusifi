@@ -55,9 +55,8 @@ const Home = () => {
     setScrollPosition,
     initialLoad,
     setInitialLoad,
-    lastEvaluatedKeys,
-    setLastEvaluatedKeys,
-    setExhaustedShards,
+    currentPage,
+    setCurrentPage,
     hasMore,
     setHasMore,
     filterList,
@@ -65,7 +64,6 @@ const Home = () => {
     setFavData,
     unreadChatCount,
     setUnreadChatCount,
-    exhaustedShards,
   } = useContext(Context);
   const [handleFavLoading, setHandleFavLoading] = useState(false);
 
@@ -202,8 +200,7 @@ const Home = () => {
       const currentWidth = window.innerWidth;
       if (hasMore && currentWidth > prevWidth) {
         setData([]);
-        setLastEvaluatedKeys({});
-        setExhaustedShards({});
+        setCurrentPage(1);
         setInitialLoad(true);
         updateLimit();
       }
@@ -243,7 +240,9 @@ const Home = () => {
       !loading
     ) {
       requestAnimationFrame(() => {
-        scrollableDivRef.current.scrollTo(0, scrollPosition);
+        if (scrollableDivRef.current) {
+          scrollableDivRef.current.scrollTo(0, scrollPosition);
+        }
       });
     }
   }, [
@@ -257,8 +256,7 @@ const Home = () => {
 
   const handleChange = (value, type) => {
     setData([]);
-    setLastEvaluatedKeys({});
-    setExhaustedShards({});
+    setCurrentPage(1);
     setInitialLoad(true);
     if (type === "state") {
       setLocation((prevValue) => {
@@ -339,38 +337,24 @@ const Home = () => {
       const scrollPosition = scrollableDivRef.current.scrollTop;
       setLoading(true);
       let results;
-      const paginationState = {
-        lastEvaluatedKeys,
-        search,
-        exhaustedShards,
-        location,
-        priceFilter,
-        limit,
-      };
-      const cursor = encodeCursor(paginationState);
       if (search.trim()) {
         results = await callApi(
-          `https://api.reusifi.com/prod/getProductsSearch`,
-          "POST",
-          false,
-          { cursor }
+          `https://api.reusifi.com/prod/getProductsSearch?&page=${encodeURIComponent(
+            currentPage
+          )}&perPage=${encodeURIComponent(limit)}`,
+          "GET"
         );
       } else {
         results = await callApi(
-          `https://api.reusifi.com/prod/getProducts`,
-          "POST",
-          false,
-          { cursor }
+          `https://api.reusifi.com/prod/getProducts?&page=${encodeURIComponent(
+            currentPage
+          )}&perPage=${encodeURIComponent(limit)}`,
+          "GET"
         );
       }
-      setLastEvaluatedKeys(results.data.lastEvaluatedKeys);
-      setExhaustedShards(results.data.exhaustedShards);
-      if (results.data.hasMore) {
-        setHasMore(true);
-      } else {
-        setHasMore(false);
-      }
-      const notUserData = results.data.finalResult.filter(
+      setCurrentPage((currentPage) => currentPage + 1);
+      setHasMore(results.data.pagination.hasMore);
+      const notUserData = results.data.items.filter(
         (item) => user.userId !== item["item"]["email"]
       );
       setData([...data, ...notUserData]);
@@ -516,8 +500,7 @@ const Home = () => {
   };
 
   const onChangePriceFilter = (event) => {
-    setLastEvaluatedKeys({});
-    setExhaustedShards({});
+    setCurrentPage(1);
     setData([]);
     setInitialLoad(true);
     setPriceFilter(event.target.value);
@@ -570,8 +553,7 @@ const Home = () => {
             value={search}
             onChange={(event) => {
               setSearch(event.target.value);
-              setLastEvaluatedKeys({});
-              setExhaustedShards({});
+              setCurrentPage(1);
               setData([]);
               setInitialLoad(true);
               if (!event.target.value.trim()) {

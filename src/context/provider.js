@@ -14,9 +14,6 @@ const Provider = ({ children }) => {
   const [location, setLocation] = useState({ state: null, district: null });
   const [search, setSearch] = useState("");
   const [filterList, setFilterList] = useState([]);
-  const [lastEvaluatedKeys, setLastEvaluatedKeys] = useState({});
-  const [exhaustedShards, setExhaustedShards] = useState({});
-  const [lastEvaluatedKey, setLastEvaluatedKey] = useState(null);
   const [adLastEvaluatedKey, setAdLastEvaluatedKey] = useState(null);
   const [favLastEvaluatedKey, setFavLastEvaluatedKey] = useState(null);
   const [chatLastEvaluatedKey, setChatLastEvaluatedKey] = useState(null);
@@ -40,17 +37,18 @@ const Provider = ({ children }) => {
   const [iChatInitialLoad, setIChatInitialLoad] = useState(true);
   const [detailData, setDetailData] = useState([]);
   const [unreadChatCount, setUnreadChatCount] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   return (
     <Context.Provider
       value={{
+        currentPage,
+        setCurrentPage,
         count,
         setCount,
         unreadChatCount,
         setUnreadChatCount,
         detailData,
         setDetailData,
-        exhaustedShards,
-        setExhaustedShards,
         contactInitialLoad,
         setContactInitialLoad,
         iChatInitialLoad,
@@ -71,10 +69,6 @@ const Provider = ({ children }) => {
         setPriceFilter,
         search,
         setSearch,
-        lastEvaluatedKey,
-        setLastEvaluatedKey,
-        lastEvaluatedKeys,
-        setLastEvaluatedKeys,
         hasMore,
         setHasMore,
         filterList,
