@@ -543,7 +543,7 @@ const Home = () => {
     setInitialLoad(true);
     setPriceFilter(event.target.value);
   };
-
+  const [open, setOpen] = useState(false);
   return (
     <Layout
       style={{
@@ -623,6 +623,9 @@ const Home = () => {
               }}
               placeholder="Search by category"
               treeDefaultExpandAll
+              onDropdownVisibleChange={(open) => {
+                setOpen(open);
+              }}
               onChange={(value) => {
                 setCategory(value);
                 const leaf = isLeafNode(value, options);
@@ -749,7 +752,7 @@ const Home = () => {
             height: "100%",
             background: "#F9FAFB",
             borderRadius: "0px",
-            overflowY: "scroll",
+            overflowY: open ? "hidden" : "scroll",
             overflowX: "hidden",
             paddingBottom: "60px",
           }}
