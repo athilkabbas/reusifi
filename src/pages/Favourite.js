@@ -498,7 +498,7 @@ const Favourites = () => {
                             bodyStyle={{ padding: "15px 0px 0px 0px" }}
                             style={{
                               borderRadius: "12px",
-                              boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+                              // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                               padding: "10px",
                             }}
                             onClick={() => {

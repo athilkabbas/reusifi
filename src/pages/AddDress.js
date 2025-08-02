@@ -488,7 +488,7 @@ const AddDress = () => {
                 <Space.Compact size="large">
                   <Input
                     style={{
-                      boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+                      // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                       width: !isMobile ? "50vw" : "85vw",
                       marginTop: "30px",
                     }}
@@ -501,7 +501,7 @@ const AddDress = () => {
                 <Space.Compact size="large">
                   <TextArea
                     style={{
-                      boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+                      // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                       width: !isMobile ? "50vw" : "85vw",
                     }}
                     onChange={(value) => handleChange(value, "description")}
@@ -521,7 +521,7 @@ const AddDress = () => {
                     showSearch
                     style={{
                       width: 190,
-                      boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+                      // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                     }}
                     value={form.state}
                     placeholder="Select State"
@@ -543,7 +543,7 @@ const AddDress = () => {
                       showSearch
                       style={{
                         width: 190,
-                        boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+                        // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                       }}
                       value={form.district}
                       placeholder="Select District"
@@ -560,7 +560,7 @@ const AddDress = () => {
                 <Space.Compact size="large">
                   <Input
                     style={{
-                      boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+                      // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                       width: !isMobile ? "50vw" : "85vw",
                     }}
                     prefix="₹"

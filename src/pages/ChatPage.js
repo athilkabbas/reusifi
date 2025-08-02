@@ -717,7 +717,7 @@ const ChatPage = () => {
                         <Card
                           style={{
                             borderRadius: "12px",
-                            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+                            // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                             height: "150px",
                             width: !isMobile ? "50vw" : "calc(100vw - 50px)",
                             backgroundColor:

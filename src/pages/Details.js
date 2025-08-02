@@ -531,7 +531,7 @@ const Details = () => {
                           arrows
                           style={{
                             borderRadius: "12px",
-                            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+                            // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                             width: 300,
                             height: 400,
                           }}
@@ -600,7 +600,7 @@ const Details = () => {
                         size="small"
                         style={{
                           width: isMobile ? "calc(100vw - 50px)" : "40vw",
-                          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+                          // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                         }}
                         bordered
                         title=""

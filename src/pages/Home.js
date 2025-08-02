@@ -339,7 +339,9 @@ const Home = () => {
       let results;
       if (search.trim()) {
         results = await callApi(
-          `https://api.reusifi.com/prod/getProductsSearch?&page=${encodeURIComponent(
+          `https://api.reusifi.com/prod/getProductsSearch?&search=${encodeURIComponent(
+            search.trim()
+          )}&page=${encodeURIComponent(
             currentPage
           )}&perPage=${encodeURIComponent(limit)}`,
           "GET"
@@ -566,7 +568,7 @@ const Home = () => {
             style={{
               width: search.trim() ? "60vw" : "90vw",
               height: "fit-content",
-              boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+              // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
               borderRadius: "7px",
             }}
           />
@@ -586,7 +588,7 @@ const Home = () => {
               showSearch
               style={{
                 width: !isMobile ? "20vw" : "35vw",
-                boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+                // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                 borderRadius: "7px",
                 visibility: !search.trim() ? "hidden" : "visible",
               }}
@@ -635,7 +637,7 @@ const Home = () => {
           <Text strong>Price</Text>
           &nbsp; &nbsp;
           <Radio.Group
-            style={{ boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" }}
+            // style={{ boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" }}
             buttonStyle="solid"
             onChange={onChangePriceFilter}
             value={priceFilter}
@@ -694,7 +696,7 @@ const Home = () => {
                             bodyStyle={{ padding: "15px 0px 0px 0px" }}
                             style={{
                               borderRadius: "12px",
-                              boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+                              // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                               padding: "10px",
                             }}
                             onClick={() => {
