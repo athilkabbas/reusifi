@@ -306,7 +306,7 @@ const Home = () => {
         });
       } else {
         setFilterList([...filterList, selectedItem["item"]["uuid"]]);
-        setFavData((prevValue) => [...prevValue, selectedItem]);
+        setFavData((prevValue) => [selectedItem, ...prevValue]);
       }
       setHandleFavLoading(false);
     } catch (err) {
