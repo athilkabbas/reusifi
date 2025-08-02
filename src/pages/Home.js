@@ -610,6 +610,7 @@ const Home = () => {
                 width: category ? "60vw" : "90vw",
                 borderRadius: "7px",
                 height: "fit-content",
+                overscrollBehavior: "contain",
               }}
               value={category || null}
               styles={{
