@@ -544,7 +544,6 @@ const Home = () => {
     setPriceFilter(event.target.value);
   };
   const [open, setOpen] = useState(false);
-  const [popupOpen, setPopUpOpen] = useState(false);
   return (
     <Layout
       style={{
@@ -624,12 +623,11 @@ const Home = () => {
               }}
               placeholder="Search by category"
               treeDefaultExpandAll
-              onDropdownVisibleChange={(open) => {
-                setOpen(open);
-                document.body.style.overscrollBehaviorY = open ? "none" : "";
+              onClick={() => {
+                setOpen((open) => !open);
+                document.body.style.overscrollBehaviorY = !open ? "none" : "";
               }}
-              open={popupOpen}
-              onClick={() => setPopUpOpen((value) => !value)}
+              open={open}
               onChange={(value) => {
                 setCategory(value);
                 const leaf = isLeafNode(value, options);
