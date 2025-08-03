@@ -626,13 +626,23 @@ const Home = () => {
               onClick={() => {
                 setOpen((prevOpen) => {
                   const newOpen = !prevOpen;
-                  document.body.style.overscrollBehaviorY = newOpen
-                    ? "none"
-                    : "";
-                  document.body.style.overflow = newOpen ? "hidden" : "";
-                  document.documentElement.style.overflow = newOpen
-                    ? "hidden"
-                    : "";
+                  if (newOpen) {
+                    const scrollY = window.scrollY;
+                    document.body.style.position = "fixed";
+                    document.body.style.top = `-${scrollY}px`;
+                    document.body.style.left = "0";
+                    document.body.style.right = "0";
+                    document.body.style.overflow = "hidden";
+                  } else {
+                    const scrollY =
+                      parseInt(document.body.style.top || "0") * -1;
+                    document.body.style.position = "";
+                    document.body.style.top = "";
+                    document.body.style.left = "";
+                    document.body.style.right = "";
+                    document.body.style.overflow = "";
+                    window.scrollTo(0, scrollY);
+                  }
                   return newOpen;
                 });
               }}
