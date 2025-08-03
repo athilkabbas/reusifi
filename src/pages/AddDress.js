@@ -598,7 +598,6 @@ const AddDress = () => {
                       // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                       width: !isMobile ? "50vw" : "85vw",
                       marginTop: "30px",
-                      border: "2px solid",
                     }}
                     onChange={(value) => handleChange(value, "title")}
                     placeholder="Title"
@@ -611,7 +610,6 @@ const AddDress = () => {
                     style={{
                       // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                       width: !isMobile ? "50vw" : "85vw",
-                      border: "2px solid",
                     }}
                     onChange={(value) => handleChange(value, "description")}
                     autoSize={{ minRows: 8, maxRows: 8 }}
@@ -625,7 +623,6 @@ const AddDress = () => {
                     style={{
                       // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                       width: !isMobile ? "50vw" : "85vw",
-                      border: "1px solid",
                       borderRadius: "9px",
                     }}
                     showSearch={{ filter }}
@@ -644,7 +641,6 @@ const AddDress = () => {
                     style={{
                       // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                       width: !isMobile ? "50vw" : "85vw",
-                      border: "1px solid",
                       borderRadius: "9px",
                     }}
                     showSearch={{ filter }}
@@ -709,7 +705,6 @@ const AddDress = () => {
                     style={{
                       // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                       width: !isMobile ? "50vw" : "85vw",
-                      border: "2px solid",
                     }}
                     prefix="₹"
                     onChange={(value) => handleChange(value, "price")}
@@ -728,7 +723,6 @@ const AddDress = () => {
                     onChange={handleChangeImage}
                     maxCount={6}
                     multiple
-                    style={{ border: "2px solid", borderRadius: "11px" }}
                   >
                     {fileList.length >= 6 ? null : uploadButton}
                   </Upload>

@@ -615,7 +615,6 @@ const Home = () => {
                 width: category ? "60vw" : "90vw",
                 borderRadius: "7px",
                 height: "fit-content",
-                border: "2px solid",
               }}
               value={category || null}
               styles={{
@@ -680,7 +679,6 @@ const Home = () => {
                 height: "fit-content",
                 // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                 borderRadius: "7px",
-                border: "2px solid",
               }}
             />
           )}
