@@ -624,8 +624,17 @@ const Home = () => {
               placeholder="Search by category"
               treeDefaultExpandAll
               onClick={() => {
-                setOpen((open) => !open);
-                document.body.style.overscrollBehaviorY = !open ? "none" : "";
+                setOpen((prevOpen) => {
+                  const newOpen = !prevOpen;
+                  document.body.style.overscrollBehaviorY = newOpen
+                    ? "none"
+                    : "";
+                  document.body.style.overflow = newOpen ? "hidden" : "";
+                  document.documentElement.style.overflow = newOpen
+                    ? "hidden"
+                    : "";
+                  return newOpen;
+                });
               }}
               open={open}
               onChange={(value) => {
