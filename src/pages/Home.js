@@ -543,6 +543,7 @@ const Home = () => {
     setInitialLoad(true);
     setPriceFilter(event.target.value);
   };
+  const treeSelectRef = useRef(null);
   const [open, setOpen] = useState(false);
   return (
     <Layout
@@ -591,6 +592,12 @@ const Home = () => {
         <Space.Compact size="large" style={{ height: "fit-content" }}>
           {inputChecked ? (
             <TreeSelect
+              ref={treeSelectRef}
+              onPopupScroll={() => {
+                if (treeSelectRef.current) {
+                  treeSelectRef.current.nativeElement.blur();
+                }
+              }}
               prefix={
                 <Switch
                   style={{ background: "#6366F1" }}
@@ -626,23 +633,9 @@ const Home = () => {
               onClick={() => {
                 setOpen((prevOpen) => {
                   const newOpen = !prevOpen;
-                  if (newOpen) {
-                    const scrollY = window.scrollY;
-                    document.body.style.position = "fixed";
-                    document.body.style.top = `-${scrollY}px`;
-                    document.body.style.left = "0";
-                    document.body.style.right = "0";
-                    document.body.style.overflow = "hidden";
-                  } else {
-                    const scrollY =
-                      parseInt(document.body.style.top || "0") * -1;
-                    document.body.style.position = "";
-                    document.body.style.top = "";
-                    document.body.style.left = "";
-                    document.body.style.right = "";
-                    document.body.style.overflow = "";
-                    window.scrollTo(0, scrollY);
-                  }
+                  document.body.style.overscrollBehaviorY = newOpen
+                    ? "none"
+                    : "";
                   return newOpen;
                 });
               }}
@@ -773,7 +766,7 @@ const Home = () => {
             height: "100%",
             background: "#F9FAFB",
             borderRadius: "0px",
-            overflowY: open ? "hidden" : "scroll",
+            overflowY: "scroll",
             overflowX: "hidden",
             paddingBottom: "60px",
           }}
