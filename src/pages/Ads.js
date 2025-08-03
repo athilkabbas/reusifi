@@ -371,7 +371,7 @@ const Ads = () => {
               minWidth: 0,
               justifyContent: "space-around",
               flex: 1,
-              background: "#6366F1",
+              background: "#52c41a",
             }}
           />
         </Header>
@@ -447,7 +447,7 @@ const Ads = () => {
                                         <LoadingOutlined
                                           style={{
                                             fontSize: 48,
-                                            color: "#6366F1",
+                                            color: "#52c41a",
                                           }}
                                           spin
                                         />
@@ -577,7 +577,7 @@ const Ads = () => {
               minWidth: 0,
               justifyContent: "space-around",
               flex: 1,
-              background: "#6366F1",
+              background: "#52c41a",
             }}
           />
         </Footer>

@@ -573,7 +573,7 @@ const Home = () => {
               minWidth: 0,
               justifyContent: "space-around",
               flex: 1,
-              background: "#6366F1",
+              background: "#52c41a",
             }}
           />
         </Header>
@@ -625,7 +625,7 @@ const Home = () => {
               }
               prefix={
                 <Switch
-                  style={{ background: "#6366F1" }}
+                  style={{ background: "#237804" }}
                   defaultChecked
                   onChange={(checked) => {
                     setCategory("");
@@ -681,6 +681,7 @@ const Home = () => {
             <Input
               prefix={
                 <Switch
+                  style={{ background: "#52c41a" }}
                   onChange={(checked) => {
                     setSearch("");
                     setCategory("");
@@ -863,7 +864,7 @@ const Home = () => {
                                         <LoadingOutlined
                                           style={{
                                             fontSize: 48,
-                                            color: "#6366F1",
+                                            color: "#52c41a",
                                           }}
                                           spin
                                         />
@@ -922,7 +923,7 @@ const Home = () => {
                                     <span
                                       style={{
                                         fontSize: "15px",
-                                        color: "#4B5563",
+                                        color: "#237804",
                                       }}
                                     >
                                       ₹{item["item"]["price"]}
@@ -1029,7 +1030,7 @@ const Home = () => {
               minWidth: 0,
               justifyContent: "space-around",
               flex: 1,
-              background: "#6366F1",
+              background: "#52c41a",
             }}
           />
         </Footer>
@@ -1038,7 +1039,7 @@ const Home = () => {
         <Spin
           fullscreen
           indicator={
-            <LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />
+            <LoadingOutlined style={{ fontSize: 48, color: "#52c41a" }} spin />
           }
         />
       )}

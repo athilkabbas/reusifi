@@ -435,7 +435,7 @@ const Details = () => {
               minWidth: 0,
               justifyContent: "space-around",
               flex: 1,
-              background: "#6366F1",
+              background: "#52c41a",
             }}
           />
         </Header>
@@ -518,7 +518,7 @@ const Details = () => {
                                 <Spin
                                   indicator={
                                     <LoadingOutlined
-                                      style={{ fontSize: 48, color: "#6366F1" }}
+                                      style={{ fontSize: 48, color: "#52c41a" }}
                                       spin
                                     />
                                   }
@@ -580,7 +580,7 @@ const Details = () => {
                                       <LoadingOutlined
                                         style={{
                                           fontSize: 48,
-                                          color: "#6366F1",
+                                          color: "#52c41a",
                                         }}
                                         spin
                                       />
@@ -663,7 +663,7 @@ const Details = () => {
                               cancelText="No"
                             >
                               <Button
-                                style={{ background: "#10B981" }}
+                                style={{ background: "#52c41a" }}
                                 type="primary"
                               >
                                 Chat
@@ -671,7 +671,7 @@ const Details = () => {
                             </Popconfirm>
                           ) : (
                             <Button
-                              style={{ background: "#10B981" }}
+                              style={{ background: "#52c41a" }}
                               onClick={() => {
                                 navigate("/chat", {
                                   state: { recipient: item },
@@ -723,7 +723,7 @@ const Details = () => {
               justifyContent: "space-around",
               flex: 1,
               minWidth: 0,
-              background: "#6366F1",
+              background: "#52c41a",
             }}
           />
         </Footer>
@@ -732,7 +732,7 @@ const Details = () => {
         <Spin
           fullscreen
           indicator={
-            <LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />
+            <LoadingOutlined style={{ fontSize: 48, color: "#52c41a" }} spin />
           }
         />
       )}

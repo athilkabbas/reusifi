@@ -663,7 +663,7 @@ const ChatPage = () => {
               minWidth: 0,
               justifyContent: "space-around",
               flex: 1,
-              background: "#6366F1",
+              background: "#52c41a",
             }}
           />
         </Header>
@@ -721,7 +721,7 @@ const ChatPage = () => {
                             height: "150px",
                             width: !isMobile ? "50vw" : "calc(100vw - 10px)",
                             backgroundColor:
-                              item.read === "false" ? "#e0e7ff" : "#ffffff",
+                              item.read === "false" ? "#d9f7be" : "#ffffff",
                           }}
                           onClick={() => {
                             if (item.blocked) {
@@ -768,7 +768,9 @@ const ChatPage = () => {
                                       }}
                                     >
                                       <Space>
-                                        <MenuOutlined />
+                                        <MenuOutlined
+                                          style={{ color: "#52c41a" }}
+                                        />
                                       </Space>
                                     </a>
                                   </Dropdown>
@@ -786,7 +788,9 @@ const ChatPage = () => {
                                       }}
                                     >
                                       <Space>
-                                        <MenuOutlined />
+                                        <MenuOutlined
+                                          style={{ color: "#52c41a" }}
+                                        />
                                       </Space>
                                     </a>
                                   </Dropdown>
@@ -858,7 +862,7 @@ const ChatPage = () => {
                                       <LoadingOutlined
                                         style={{
                                           fontSize: 48,
-                                          color: "#6366F1",
+                                          color: "#52c41a",
                                         }}
                                         spin
                                       />
@@ -938,7 +942,7 @@ const ChatPage = () => {
             items={items}
             style={{
               minWidth: 0,
-              background: "#6366F1",
+              background: "#52c41a",
               justifyContent: "space-around",
               flex: 1,
             }}
@@ -949,7 +953,7 @@ const ChatPage = () => {
         <Spin
           fullscreen
           indicator={
-            <LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />
+            <LoadingOutlined style={{ fontSize: 48, color: "#52c41a" }} spin />
           }
         />
       )}

@@ -72,7 +72,7 @@
 }
 
 .ant-menu-dark .ant-menu-item-selected {
-  background-color: #4f46e5 !important; /* selected item background */
+  background-color: #389e0d !important; /* selected item background  selected*/
   color: white !important; /* selected item text */
 }
 
@@ -81,11 +81,11 @@
 }
 
 .ant-menu-overflow-item-rest.ant-menu-submenu {
-  background: #6366f1 !important;
+  background: #52c41a !important;
 }
 
 .ant-menu-overflow-item-rest.ant-menu-submenu:hover {
-  background: #4f46e5 !important; /* optional hover color */
+  background: #389e0d !important; /* optional hover color  selected*/
 }
 
 /* Match submenu style with menu item */
@@ -125,17 +125,22 @@
   border-radius: 0 !important;
 }
 
-/* Highlight on hover/focus (no gap) */
+/* Highlight on hover/focus (no gap)  selected*/
 .ant-menu-submenu-popup .ant-menu-item:hover,
 .ant-menu-submenu-popup .ant-menu-item-active,
 .ant-menu-submenu-popup .ant-menu-item-selected {
-  background-color: #4f46e5 !important;
+  background-color: #389e0d !important;
+  color: white !important;
+}
+
+.ant-menu-dark .ant-menu-submenu-selected {
+  background-color: #389e0d !important;
   color: white !important;
 }
 
 .ant-radio-button-wrapper-checked {
   /* your styles for the checked radio button */
-  background: #6366f1 !important;
+  background: #52c41a !important;
 }
 
 /* For most browsers */
@@ -160,4 +165,53 @@
 .ant-select-dropdown {
   overscroll-behavior: contain !important;
   touch-action: pan-y;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.hero-section {
+  background: linear-gradient(135deg, #f6ffed 0%, #f0f9ff 100%);
+  min-height: 300px;
+}
+
+.stats-section {
+  background: #ffffff;
+}
+
+.features-section {
+  background: #fafafa;
+}
+
+.cta-section {
+  background: #52c41a;
+}
+
+.ant-card-hoverable:hover {
+  transform: translateY(-4px);
+  transition: all 0.3s ease;
+}
+
+.category-card {
+  transition: all 0.3s ease;
+}
+
+.category-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2rem !important;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem !important;
+  }
 }

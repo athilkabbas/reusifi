@@ -566,7 +566,7 @@ const AddDress = () => {
               minWidth: 0,
               justifyContent: "space-around",
               flex: 1,
-              background: "#6366F1",
+              background: "#52c41a",
             }}
           />
         </Header>
@@ -754,7 +754,7 @@ const AddDress = () => {
                 >
                   {count < 5 && (
                     <Button
-                      style={{ background: "#10B981" }}
+                      style={{ background: "#52c41a" }}
                       onClick={handleSubmit}
                       type="primary"
                       disabled={count >= 5 ? true : false}
@@ -810,7 +810,7 @@ const AddDress = () => {
               justifyContent: "space-around",
               flex: 1,
               minWidth: 0,
-              background: "#6366F1",
+              background: "#52c41a",
             }}
           />
         </Footer>
@@ -819,7 +819,7 @@ const AddDress = () => {
         <Spin
           fullscreen
           indicator={
-            <LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />
+            <LoadingOutlined style={{ fontSize: 48, color: "#52c41a" }} spin />
           }
         />
       )}

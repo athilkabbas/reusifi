@@ -444,7 +444,7 @@ const Favourites = () => {
               minWidth: 0,
               justifyContent: "space-around",
               flex: 1,
-              background: "#6366F1",
+              background: "#52c41a",
             }}
           />
         </Header>
@@ -524,7 +524,7 @@ const Favourites = () => {
                                         <LoadingOutlined
                                           style={{
                                             fontSize: 48,
-                                            color: "#6366F1",
+                                            color: "#52c41a",
                                           }}
                                           spin
                                         />
@@ -674,7 +674,7 @@ const Favourites = () => {
               minWidth: 0,
               justifyContent: "space-around",
               flex: 1,
-              background: "#6366F1",
+              background: "#52c41a",
             }}
           />
         </Footer>
@@ -683,7 +683,7 @@ const Favourites = () => {
         <Spin
           fullscreen
           indicator={
-            <LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />
+            <LoadingOutlined style={{ fontSize: 48, color: "#52c41a" }} spin />
           }
         />
       )}

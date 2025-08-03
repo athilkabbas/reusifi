@@ -217,7 +217,7 @@ const Contact = () => {
               minWidth: 0,
               justifyContent: "space-around",
               flex: 1,
-              background: "#6366F1",
+              background: "#52c41a",
             }}
           />
         </Header>
@@ -274,7 +274,7 @@ const Contact = () => {
               justifyContent: "space-around",
               flex: 1,
               minWidth: 0,
-              background: "#6366F1",
+              background: "#52c41a",
             }}
           />
         </Footer>

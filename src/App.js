@@ -24,6 +24,7 @@ import { Context } from "./context/provider";
 
 import "./App.css";
 import CheckRender from "./helpers/checkRender";
+import ReusifiLanding from "./pages/landingPage";
 
 Amplify.configure(awsconfig);
 
@@ -143,23 +144,24 @@ function AppWithSession() {
   }, []);
 
   if (checked && !isSignedIn) {
-    signInWithRedirect();
-    return (
-      <div
-        style={{
-          display: "flex",
-          height: "100dvh",
-          justifyContent: "center",
-          alignItems: "center",
-          fontSize: "1.5rem",
-          color: "#6366F1",
-          fontWeight: "600",
-          backgroundColor: "#F5F7FF",
-        }}
-      >
-        Redirecting to sign in...
-      </div>
-    );
+    return <ReusifiLanding />;
+    // signInWithRedirect();
+    // return (
+    //   <div
+    //     style={{
+    //       display: "flex",
+    //       height: "100dvh",
+    //       justifyContent: "center",
+    //       alignItems: "center",
+    //       fontSize: "1.5rem",
+    //       color: "#52c41a",
+    //       fontWeight: "600",
+    //       backgroundColor: "#F5F7FF",
+    //     }}
+    //   >
+    //     Redirecting to sign in...
+    //   </div>
+    // );
   }
   return (
     <>
@@ -195,7 +197,7 @@ function AppWithSession() {
         <Spin
           fullscreen
           indicator={
-            <LoadingOutlined style={{ fontSize: 48, color: "#6366F1" }} spin />
+            <LoadingOutlined style={{ fontSize: 48, color: "#52c41a" }} spin />
           }
         />
       )}
