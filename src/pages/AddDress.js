@@ -478,7 +478,7 @@ const AddDress = () => {
         email: form.email.toLowerCase(),
         price: parseInt(form.price),
         category: form.category.toLowerCase(),
-        subCategory: form.category.toLowerCase(),
+        subCategory: form.subCategory.toLowerCase(),
         thumbnailS3Keys,
         viewingS3Keys,
       };
