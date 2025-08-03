@@ -512,7 +512,7 @@ const Favourites = () => {
                                 {!loadedImages[item["item"]["uuid"]] && (
                                   <div
                                     style={{
-                                      height: "250px",
+                                      maxHeight: "250px",
                                       display: "flex",
                                       justifyContent: "center",
                                       alignItems: "center",

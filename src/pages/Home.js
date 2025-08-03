@@ -601,6 +601,7 @@ const Home = () => {
                 ) {
                   document.activeElement.blur();
                 }
+                document.body.style.overscrollBehaviorY = "none";
               }}
               suffixIcon={
                 open ? (
@@ -616,7 +617,6 @@ const Home = () => {
                     onClick={(e) => {
                       e.stopPropagation();
                       setOpen(true);
-                      document.body.style.overscrollBehaviorY = "none";
                     }}
                   />
                 )
@@ -627,10 +627,15 @@ const Home = () => {
                   defaultChecked
                   onChange={(checked) => {
                     setCategory("");
+                    setSearch("");
                     setLocation({ state: "", district: "" });
                     setPriceFilter("");
                     setDistricts([]);
                     setInputChecked(checked);
+                    setOpen(false);
+                    setInitialLoad(true);
+                    setCurrentPage(1);
+                    document.body.style.overscrollBehaviorY = "";
                   }}
                 ></Switch>
               }
@@ -655,10 +660,11 @@ const Home = () => {
               treeDefaultExpandAll
               onClick={() => {
                 setOpen(true);
-                document.body.style.overscrollBehaviorY = "none";
               }}
               open={open}
               onChange={(value) => {
+                console.log(value);
+                setOpen(false);
                 setCategory(value);
                 const leaf = isLeafNode(value, options);
                 setSubCategory(leaf);
@@ -674,10 +680,14 @@ const Home = () => {
                 <Switch
                   onChange={(checked) => {
                     setSearch("");
+                    setCategory("");
                     setLocation({ state: "", district: "" });
                     setPriceFilter("");
                     setDistricts([]);
                     setInputChecked(checked);
+                    setInitialLoad(true);
+                    setCurrentPage(1);
+                    setOpen(true);
                   }}
                 ></Switch>
               }
@@ -861,7 +871,7 @@ const Home = () => {
                                   src={item["images"][0]}
                                   alt={item["item"]["title"]}
                                   style={{
-                                    height: "260px",
+                                    maxHeight: "260px",
                                     objectFit: "contain",
                                     display: loadedImages[item["item"]["uuid"]]
                                       ? "block"
