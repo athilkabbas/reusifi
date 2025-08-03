@@ -618,6 +618,7 @@ const Home = () => {
                     onClick={(e) => {
                       e.stopPropagation();
                       setOpen(true);
+                      document.body.style.overscrollBehaviorY = "none";
                     }}
                   />
                 )
@@ -690,6 +691,7 @@ const Home = () => {
                     setInitialLoad(true);
                     setCurrentPage(1);
                     setOpen(true);
+                    document.body.style.overscrollBehaviorY = "none";
                   }}
                 ></Switch>
               }
