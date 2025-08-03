@@ -591,11 +591,11 @@ const Home = () => {
         <Space.Compact size="large" style={{ height: "fit-content" }}>
           {inputChecked ? (
             <TreeSelect
-              // onPopupScroll={() => {
-              //   if (document.activeElement instanceof HTMLElement) {
-              //     document.activeElement.blur();
-              //   }
-              // }}
+              onPopupScroll={() => {
+                if (document.activeElement instanceof HTMLElement) {
+                  document.activeElement.blur();
+                }
+              }}
               prefix={
                 <Switch
                   style={{ background: "#6366F1" }}

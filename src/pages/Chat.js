@@ -769,7 +769,7 @@ const Chat = () => {
               onChange={(event) => handleChange(event.target.value)}
               placeholder="Enter message"
               value={messageValue}
-              style={{ border: "2px solid", overscrollBehavior: "contain" }}
+              style={{ border: "2px solid" }}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   if (e.shiftKey || isMobile || window.innerWidth < 1200) {
@@ -780,11 +780,11 @@ const Chat = () => {
                   }
                 }
               }}
-              // onTouchMove={() => {
-              //   if (textAreaRef.current) {
-              //     textAreaRef.current.blur();
-              //   }
-              // }}
+              onTouchMove={() => {
+                if (textAreaRef.current) {
+                  textAreaRef.current.blur();
+                }
+              }}
             />
             <Button
               style={{
