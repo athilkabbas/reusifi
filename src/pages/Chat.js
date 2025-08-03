@@ -769,6 +769,7 @@ const Chat = () => {
               onChange={(event) => handleChange(event.target.value)}
               placeholder="Enter message"
               value={messageValue}
+              style={{ border: "2px solid" }}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   if (e.shiftKey || isMobile || window.innerWidth < 1200) {
