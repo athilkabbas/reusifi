@@ -887,7 +887,7 @@ const Chat = () => {
                             style={{
                               display: "flex",
                               flexDirection: "column",
-                              background: "#E0E7FF",
+                              background: "#d9f7be",
                               borderRadius: "16px 16px 16px 4px",
                               padding: "10px",
                               maxWidth: "80vw", // prevent overflow

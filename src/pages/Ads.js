@@ -420,6 +420,7 @@ const Ads = () => {
                       <>
                         <List.Item key={item["item"]["uuid"]}>
                           <Card
+                            style={{ height: "325px" }}
                             hoverable
                             bodyStyle={{ padding: "10px 10px 10px 10px" }}
                             onClick={() => {
@@ -477,52 +478,43 @@ const Ads = () => {
                           >
                             <Card.Meta
                               description={
-                                <>
-                                  <div
-                                    style={{
-                                      display: "-webkit-box",
-                                      WebkitLineClamp: 2,
-                                      WebkitBoxOrient: "vertical",
-                                      overflow: "hidden",
-                                      textOverflow: "ellipsis",
-                                    }}
-                                  >
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    gap: "5px",
+                                  }}
+                                >
+                                  <div>
                                     <span
                                       style={{
-                                        fontSize: "16px",
+                                        fontSize: "13px",
                                         color: "#111827",
+                                        display: "-webkit-box",
+                                        WebkitLineClamp: 1,
+                                        WebkitBoxOrient: "vertical",
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
+                                        fontWeight: "300",
                                       }}
                                     >
                                       {capitalize(item["item"]["title"])}
                                     </span>
                                   </div>
-                                  <div
-                                    style={{
-                                      whiteSpace: "nowrap",
-                                      textOverflow: "ellipsis",
-                                      overflow: "hidden",
-                                    }}
-                                  >
+                                  <div style={{ display: "flex" }}>
                                     <span
                                       style={{
                                         fontSize: "15px",
-                                        color: "#4B5563",
+                                        color: "#237804",
+                                        whiteSpace: "nowrap",
+                                        textOverflow: "ellipsis",
+                                        overflow: "hidden",
                                       }}
                                     >
                                       ₹{item["item"]["price"]}
                                     </span>
                                   </div>
-                                  <div
-                                    style={{
-                                      display: "flex",
-                                      visibility: "hidden",
-                                    }}
-                                  >
-                                    <HeartFilled
-                                      style={{ color: "#10B981" }}
-                                    ></HeartFilled>
-                                  </div>
-                                </>
+                                </div>
                               }
                             />
                           </Card>

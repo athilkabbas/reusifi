@@ -25,6 +25,7 @@ import {
 } from "@ant-design/icons";
 import { useIsMobile } from "../hooks/windowSize";
 import { callApi } from "../helpers/api";
+import { EllipsisVertical } from "lucide-react";
 const IconText = ["Home", "Sell", "Chats", "My Ads", "Favourites", ""];
 
 const menuItems = [
@@ -721,7 +722,7 @@ const ChatPage = () => {
                             height: "150px",
                             width: !isMobile ? "50vw" : "calc(100vw - 10px)",
                             backgroundColor:
-                              item.read === "false" ? "#d9f7be" : "#ffffff",
+                              item.read === "false" ? "#f6ffed" : "#ffffff",
                           }}
                           onClick={() => {
                             if (item.blocked) {
@@ -752,7 +753,14 @@ const ChatPage = () => {
                                   paddingRight: "70px",
                                 }}
                               >
-                                <span>{capitalize(item.title)}</span>
+                                <span
+                                  style={{
+                                    fontSize: "15px",
+                                    fontWeight: "300",
+                                  }}
+                                >
+                                  {capitalize(item.title)}
+                                </span>
                               </Col>
                               <Col>
                                 {!item.blocked && (
@@ -768,8 +776,11 @@ const ChatPage = () => {
                                       }}
                                     >
                                       <Space>
-                                        <MenuOutlined
-                                          style={{ color: "#52c41a" }}
+                                        <EllipsisVertical
+                                          style={{
+                                            color: "grey",
+                                            scale: "0.9",
+                                          }}
                                         />
                                       </Space>
                                     </a>
@@ -788,8 +799,11 @@ const ChatPage = () => {
                                       }}
                                     >
                                       <Space>
-                                        <MenuOutlined
-                                          style={{ color: "#52c41a" }}
+                                        <EllipsisVertical
+                                          style={{
+                                            color: "grey",
+                                            scale: "0.9",
+                                          }}
                                         />
                                       </Space>
                                     </a>
@@ -830,7 +844,15 @@ const ChatPage = () => {
                                     }}
                                   />
                                 )}
-                                <span>{item.message}</span>
+                                <span
+                                  style={{
+                                    fontSize: "13px",
+                                    fontWeight:
+                                      item.read === "false" ? "600" : "300",
+                                  }}
+                                >
+                                  {item.message}
+                                </span>
                               </div>
                               <div style={{ fontSize: "10px" }}>
                                 {formatChatTimestamp(item.timestamp)}{" "}

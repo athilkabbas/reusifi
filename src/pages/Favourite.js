@@ -494,6 +494,7 @@ const Favourites = () => {
                       <>
                         <List.Item key={item["item"]["uuid"]}>
                           <Card
+                            style={{ height: "325px" }}
                             hoverable
                             bodyStyle={{ padding: "10px 10px 10px 10px" }}
                             onClick={() => {
@@ -554,20 +555,24 @@ const Favourites = () => {
                           >
                             <Card.Meta
                               description={
-                                <>
-                                  <div
-                                    style={{
-                                      display: "-webkit-box",
-                                      WebkitLineClamp: 2,
-                                      WebkitBoxOrient: "vertical",
-                                      overflow: "hidden",
-                                      textOverflow: "ellipsis",
-                                    }}
-                                  >
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    gap: "5px",
+                                  }}
+                                >
+                                  <div>
                                     <span
                                       style={{
-                                        fontSize: "16px",
+                                        fontSize: "13px",
                                         color: "#111827",
+                                        display: "-webkit-box",
+                                        WebkitLineClamp: 1,
+                                        WebkitBoxOrient: "vertical",
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
+                                        fontWeight: "300",
                                       }}
                                     >
                                       {capitalize(item["item"]["title"])}
@@ -575,21 +580,21 @@ const Favourites = () => {
                                   </div>
                                   <div
                                     style={{
-                                      whiteSpace: "nowrap",
-                                      textOverflow: "ellipsis",
-                                      overflow: "hidden",
+                                      display: "flex",
+                                      justifyContent: "space-between",
                                     }}
                                   >
                                     <span
                                       style={{
                                         fontSize: "15px",
-                                        color: "#4B5563",
+                                        color: "#237804",
+                                        whiteSpace: "nowrap",
+                                        textOverflow: "ellipsis",
+                                        overflow: "hidden",
                                       }}
                                     >
                                       ₹{item["item"]["price"]}
                                     </span>
-                                  </div>
-                                  {item["item"]["email"] !== user.userId && (
                                     <div
                                       onClick={(event) => {
                                         handleFav(
@@ -604,7 +609,8 @@ const Favourites = () => {
                                       }}
                                       style={{
                                         display: "flex",
-                                        justifyContent: "end",
+                                        padding: "3px",
+                                        scale: "1.2",
                                       }}
                                     >
                                       {filterList.includes(
@@ -618,8 +624,8 @@ const Favourites = () => {
                                         item["item"]["uuid"]
                                       ) && <HeartOutlined></HeartOutlined>}
                                     </div>
-                                  )}
-                                </>
+                                  </div>
+                                </div>
                               }
                             />
                           </Card>

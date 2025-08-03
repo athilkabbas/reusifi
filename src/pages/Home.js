@@ -580,6 +580,8 @@ const Home = () => {
               justifyContent: "space-around",
               flex: 1,
               background: "#52c41a",
+              fontSize: "13px",
+              fontWeight: "300",
             }}
           />
         </Header>
@@ -887,8 +889,8 @@ const Home = () => {
                       <>
                         <List.Item key={item["item"]["uuid"]}>
                           <Card
+                            style={{ height: "325px" }}
                             bodyStyle={{ padding: "10px 10px 10px 10px" }}
-                            hoverable
                             onClick={() => {
                               setScrollPosition(
                                 scrollableDivRef.current.scrollTop
@@ -947,20 +949,24 @@ const Home = () => {
                           >
                             <Card.Meta
                               description={
-                                <>
-                                  <div
-                                    style={{
-                                      display: "-webkit-box",
-                                      WebkitLineClamp: 2,
-                                      WebkitBoxOrient: "vertical",
-                                      overflow: "hidden",
-                                      textOverflow: "ellipsis",
-                                    }}
-                                  >
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    gap: "5px",
+                                  }}
+                                >
+                                  <div>
                                     <span
                                       style={{
-                                        fontSize: "16px",
+                                        fontSize: "13px",
+                                        fontWeight: "300",
                                         color: "#111827",
+                                        display: "-webkit-box",
+                                        WebkitLineClamp: 1,
+                                        WebkitBoxOrient: "vertical",
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
                                       }}
                                     >
                                       {capitalize(item["item"]["title"])}
@@ -968,21 +974,21 @@ const Home = () => {
                                   </div>
                                   <div
                                     style={{
-                                      whiteSpace: "nowrap",
-                                      textOverflow: "ellipsis",
-                                      overflow: "hidden",
+                                      display: "flex",
+                                      justifyContent: "space-between",
                                     }}
                                   >
                                     <span
                                       style={{
+                                        whiteSpace: "nowrap",
+                                        textOverflow: "ellipsis",
+                                        overflow: "hidden",
                                         fontSize: "15px",
                                         color: "#237804",
                                       }}
                                     >
                                       ₹{item["item"]["price"]}
                                     </span>
-                                  </div>
-                                  {item["item"]["email"] !== user.userId && (
                                     <div
                                       onClick={(event) => {
                                         handleFav(
@@ -996,39 +1002,32 @@ const Home = () => {
                                         event.stopPropagation();
                                       }}
                                       style={{
+                                        paddingRight: "3px",
                                         display: "flex",
-                                        justifyContent: "end",
+                                        scale: "1.2",
                                       }}
                                     >
                                       {filterList.includes(
                                         item["item"]["uuid"]
                                       ) && (
                                         <HeartFilled
-                                          style={{ color: "#E0245E" }}
+                                          style={{
+                                            color: "#E0245E",
+                                          }}
                                         ></HeartFilled>
                                       )}
                                       {!filterList.includes(
                                         item["item"]["uuid"]
                                       ) && (
                                         <HeartFilled
-                                          style={{ color: "#9CA3AF" }}
+                                          style={{
+                                            color: "#9CA3AF",
+                                          }}
                                         ></HeartFilled>
                                       )}
                                     </div>
-                                  )}
-                                  {item["item"]["email"] === user.userId && (
-                                    <div
-                                      style={{
-                                        display: "flex",
-                                        visibility: "hidden",
-                                      }}
-                                    >
-                                      <HeartFilled
-                                        style={{ color: "#E0245E" }}
-                                      ></HeartFilled>
-                                    </div>
-                                  )}
-                                </>
+                                  </div>
+                                </div>
                               }
                             />
                           </Card>
@@ -1084,6 +1083,8 @@ const Home = () => {
               justifyContent: "space-around",
               flex: 1,
               background: "#52c41a",
+              fontSize: "13px",
+              fontWeight: "300",
             }}
           />
         </Footer>

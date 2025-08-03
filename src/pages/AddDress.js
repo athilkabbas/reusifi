@@ -750,7 +750,9 @@ const AddDress = () => {
                   )}
                 </Space.Compact>
                 <Space.Compact size="large">
-                  <Text>Max 6 images</Text>
+                  <span style={{ fontSize: "13px", fontWeight: "300" }}>
+                    Max 6 images
+                  </span>
                 </Space.Compact>
                 <Space.Compact
                   size="large"
@@ -773,9 +775,9 @@ const AddDress = () => {
                 </Space.Compact>
                 <Space.Compact size="large">
                   {count < 5 && (
-                    <Text>
+                    <span style={{ fontSize: "13px", fontWeight: "300" }}>
                       The ad will get deleted automatically after 30 days
-                    </Text>
+                    </span>
                   )}
                 </Space.Compact>
                 <Space.Compact size="large">
