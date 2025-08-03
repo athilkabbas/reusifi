@@ -27,6 +27,8 @@ import {
   HeartFilled,
   LoadingOutlined,
   MenuOutlined,
+  UpOutlined,
+  DownOutlined,
 } from "@ant-design/icons";
 import { Input, Select, Space, Empty } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -592,10 +594,33 @@ const Home = () => {
           {inputChecked ? (
             <TreeSelect
               onPopupScroll={() => {
-                if (document.activeElement instanceof HTMLElement) {
+                if (
+                  document.activeElement instanceof HTMLElement &&
+                  isMobile &&
+                  window.innerWidth < 1200
+                ) {
                   document.activeElement.blur();
                 }
               }}
+              suffixIcon={
+                open ? (
+                  <UpOutlined
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setOpen(false);
+                      document.body.style.overscrollBehaviorY = "";
+                    }}
+                  />
+                ) : (
+                  <DownOutlined
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setOpen(true);
+                      document.body.style.overscrollBehaviorY = "none";
+                    }}
+                  />
+                )
+              }
               prefix={
                 <Switch
                   style={{ background: "#6366F1" }}
@@ -629,13 +654,8 @@ const Home = () => {
               placeholder="Search by category"
               treeDefaultExpandAll
               onClick={() => {
-                setOpen((prevOpen) => {
-                  const newOpen = !prevOpen;
-                  document.body.style.overscrollBehaviorY = newOpen
-                    ? "none"
-                    : "";
-                  return newOpen;
-                });
+                setOpen(true);
+                document.body.style.overscrollBehaviorY = "none";
               }}
               open={open}
               onChange={(value) => {
