@@ -904,10 +904,19 @@ export const districtMap = () => {
 };
 
 export const locationsCascader = locations.states.map((stateData) => ({
-  value: stateData.state.toLowerCase().replace(/\s/g, "-"),
+  value: stateData.state,
   label: stateData.state,
   children: stateData.districts.map((district) => ({
-    value: district.toLowerCase().replace(/\s/g, "-"),
+    value: district,
+    label: district,
+  })),
+}));
+
+export const locationsTreeSelect = locations.states.map((stateData) => ({
+  value: stateData.state,
+  label: stateData.state,
+  children: stateData.districts.map((district) => ({
+    value: `${stateData.state}-${district}`,
     label: district,
   })),
 }));

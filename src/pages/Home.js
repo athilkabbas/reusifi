@@ -35,7 +35,12 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { List, Skeleton, Radio } from "antd";
 import { Card, Typography } from "antd";
 import { getCurrentUser, signInWithRedirect, signOut } from "@aws-amplify/auth";
-import { states, districtMap } from "../helpers/locations";
+import {
+  states,
+  districtMap,
+  locationsCascader,
+  locationsTreeSelect,
+} from "../helpers/locations";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
 import { callApi } from "../helpers/api";
@@ -546,6 +551,7 @@ const Home = () => {
     setPriceFilter(event.target.value);
   };
   const [open, setOpen] = useState(false);
+  const [locationOpen, setLocationOpen] = useState(false);
   return (
     <Layout
       style={{
@@ -590,7 +596,14 @@ const Home = () => {
           // background: "#F9FAFB",
         }}
       >
-        <Space.Compact size="large" style={{ height: "fit-content" }}>
+        <Space.Compact
+          size="large"
+          style={{
+            height: "fit-content",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
           {inputChecked ? (
             <TreeSelect
               onPopupScroll={() => {
@@ -625,7 +638,7 @@ const Home = () => {
               }
               prefix={
                 <Switch
-                  style={{ background: "#237804" }}
+                  style={{ background: "#389e0d" }}
                   defaultChecked
                   onChange={(checked) => {
                     setCategory("");
@@ -644,7 +657,7 @@ const Home = () => {
               showSearch
               allowClear
               style={{
-                width: category ? "60vw" : "90vw",
+                width: "calc(100vw - 15px)",
                 borderRadius: "7px",
                 height: "fit-content",
               }}
@@ -710,63 +723,103 @@ const Home = () => {
               }}
               placeholder="Search"
               style={{
-                width: search.trim() ? "60vw" : "90vw",
+                width: "calc(100vw - 15px)",
                 height: "fit-content",
                 // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                 borderRadius: "7px",
               }}
             />
           )}
-          <Space.Compact
-            size="large"
-            style={{
-              display: !search.trim() && !category ? "none" : "flex",
-              flexDirection: !isMobile ? "row" : "column",
-            }}
-          >
-            <Select
-              onChange={(value) => {
-                handleChange(value, "state");
-                let districts = districtMap();
-                setDistricts(districts[value]);
-              }}
-              showSearch
-              style={{
-                width: !isMobile ? "20vw" : "35vw",
-                // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-                borderRadius: "7px",
-              }}
-              value={location.state || null}
-              placeholder="State"
-              optionFilterProp="label"
-              filterSort={(optionA, optionB) =>
-                (optionA?.label ?? "")
-                  .toLowerCase()
-                  .localeCompare((optionB?.label ?? "").toLowerCase())
+        </Space.Compact>
+        <Space.Compact
+          size="large"
+          style={{
+            display: !search.trim() && !category ? "none" : "flex",
+            flexDirection: "row",
+          }}
+        >
+          <TreeSelect
+            onPopupScroll={() => {
+              if (
+                document.activeElement instanceof HTMLElement &&
+                (isMobile ||
+                  window.visualViewport?.innerWidth < 1200 ||
+                  window.innerWidth < 1200)
+              ) {
+                document.activeElement.blur();
               }
-              options={states}
-            />
-            {districts.length > 0 && (
-              <Select
-                onChange={(value) => {
-                  handleChange(value, "district");
-                }}
-                showSearch
-                style={{
-                  width: !isMobile ? "20vw" : "35vw",
-                }}
-                value={location.district || null}
-                placeholder="District"
-                optionFilterProp="label"
-                filterSort={(optionA, optionB) =>
-                  (optionA?.label ?? "")
-                    .toLowerCase()
-                    .localeCompare((optionB?.label ?? "").toLowerCase())
-                }
-                options={districts}
-              />
-            )}
-          </Space.Compact>
+              document.body.style.overscrollBehaviorY = "none";
+            }}
+            suffixIcon={
+              locationOpen ? (
+                <UpOutlined
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setLocationOpen(false);
+                    document.body.style.overscrollBehaviorY = "";
+                  }}
+                />
+              ) : (
+                <DownOutlined
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setLocationOpen(true);
+                    document.body.style.overscrollBehaviorY = "none";
+                  }}
+                />
+              )
+            }
+            showSearch
+            allowClear
+            style={{
+              width: "calc(100vw - 200px)",
+              borderRadius: "7px",
+              height: "fit-content",
+            }}
+            value={location.district || location.state || null}
+            styles={{
+              popup: {
+                root: {
+                  maxHeight: 400,
+                  overflow: "auto",
+                  overscrollBehavior: "contain",
+                },
+              },
+            }}
+            placeholder="Location"
+            treeDefaultExpandAll
+            onClick={() => {
+              document.body.style.overscrollBehaviorY = "none";
+              setLocationOpen(true);
+            }}
+            open={locationOpen}
+            onChange={(value) => {
+              if (!value) {
+                setLocation({ state: "", district: "" });
+                setCurrentPage(1);
+                setData([]);
+                setInitialLoad(true);
+                return;
+              }
+              const [statePart, ...districtParts] = value.split("-");
+              const isDistrict = districtParts.length > 0;
+              if (isDistrict) {
+                setLocation({
+                  state: statePart,
+                  district: districtParts.join("-"),
+                });
+              } else {
+                setLocation({ state: value, district: "" });
+              }
+              setCurrentPage(1);
+              setData([]);
+              setInitialLoad(true);
+              setTimeout(() => {
+                setLocationOpen(false);
+              }, 0);
+            }}
+            treeData={locationsTreeSelect}
+          />
         </Space.Compact>
         <Space.Compact
           size="large"

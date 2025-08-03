@@ -258,9 +258,17 @@ const AddDress = () => {
       if (type === "title" || type === "description" || type === "price") {
         return { ...prevValue, [type]: value.target.value };
       } else if (type === "location") {
-        return { ...prevValue, state: value[0], district: value[1] };
-      } else if (type === "location" || type === "category") {
-        return { ...prevValue, category: value[0], subCategory: value[1] };
+        return {
+          ...prevValue,
+          state: value?.[0] || "",
+          district: value?.[1] || "",
+        };
+      } else if (type === "category") {
+        return {
+          ...prevValue,
+          category: value?.[0] || "",
+          subCategory: value?.[1] || "",
+        };
       }
       return { ...prevValue, [type]: value };
     });
