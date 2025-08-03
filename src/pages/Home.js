@@ -596,8 +596,9 @@ const Home = () => {
               onPopupScroll={() => {
                 if (
                   document.activeElement instanceof HTMLElement &&
-                  isMobile &&
-                  window.innerWidth < 1200
+                  (isMobile ||
+                    window.visualViewport?.innerWidth < 1200 ||
+                    window.innerWidth < 1200)
                 ) {
                   document.activeElement.blur();
                 }
@@ -663,14 +664,15 @@ const Home = () => {
               }}
               open={open}
               onChange={(value) => {
-                console.log(value);
-                setOpen(false);
                 setCategory(value);
                 const leaf = isLeafNode(value, options);
                 setSubCategory(leaf);
                 setCurrentPage(1);
                 setData([]);
                 setInitialLoad(true);
+                setTimeout(() => {
+                  setOpen(false);
+                }, 0);
               }}
               treeData={options}
             />
