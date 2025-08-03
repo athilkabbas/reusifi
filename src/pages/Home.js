@@ -543,7 +543,6 @@ const Home = () => {
     setInitialLoad(true);
     setPriceFilter(event.target.value);
   };
-  const treeSelectRef = useRef(null);
   const [open, setOpen] = useState(false);
   return (
     <Layout
@@ -592,12 +591,11 @@ const Home = () => {
         <Space.Compact size="large" style={{ height: "fit-content" }}>
           {inputChecked ? (
             <TreeSelect
-              ref={treeSelectRef}
-              onPopupScroll={() => {
-                if (treeSelectRef.current) {
-                  treeSelectRef.current.nativeElement.blur();
-                }
-              }}
+              // onPopupScroll={() => {
+              //   if (document.activeElement instanceof HTMLElement) {
+              //     document.activeElement.blur();
+              //   }
+              // }}
               prefix={
                 <Switch
                   style={{ background: "#6366F1" }}
