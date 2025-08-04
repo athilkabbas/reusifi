@@ -56,12 +56,6 @@ const MenuWrapper = ({
       case "5":
         navigate("/favourite");
         break;
-      case "6-1":
-        navigate("/contact");
-        break;
-      case "6-2":
-        signOut();
-        break;
     }
   };
 
@@ -71,7 +65,6 @@ const MenuWrapper = ({
     MessageFilled,
     ProductFilled,
     HeartFilled,
-    MenuOutlined,
   ];
 
   const outlinedIcons = [
@@ -80,11 +73,9 @@ const MenuWrapper = ({
     MessageOutlined,
     ProductOutlined,
     HeartOutlined,
-    MenuOutlined,
   ];
 
   let keyIndex = parseInt(defaultSelectedKeys[0]);
-  console.log(keyIndex);
   if (keyIndex !== 0) {
     outlinedIcons.splice(keyIndex - 1, 1, filledIcons[keyIndex - 1]);
   }
@@ -97,16 +88,13 @@ const MenuWrapper = ({
           style={{
             display: "flex",
             flexDirection: "column",
-            fontSize: 10,
-            height: "60px",
-            justifyContent: "center",
           }}
         >
           <span style={{ marginTop: "5px", color: "#389e0d", scale: "1.4" }}>
             {React.createElement(icon)}
           </span>
           <span
-            style={{ fontSize: "10px", marginTop: "5px", color: "#389e0d" }}
+            style={{ fontSize: "10px", marginTop: "10px", color: "#389e0d" }}
           >
             {IconText[index]}
           </span>
@@ -118,9 +106,6 @@ const MenuWrapper = ({
           style={{
             display: "flex",
             flexDirection: "row",
-            fontSize: 10,
-            height: "60px",
-            alignItems: "center",
           }}
         >
           <span style={{ marginTop: "5px", color: "#389e0d" }}>
@@ -144,28 +129,6 @@ const MenuWrapper = ({
         key: String(index + 1),
         icon: <Badge dot={unreadChatCount}>{divHtml}</Badge>,
       };
-    } else if (index === 5) {
-      return {
-        key: String(index + 1),
-        icon: divHtml,
-        children: [
-          {
-            key: "6-1",
-            label: <span style={{ color: "#389e0d" }}>Contact</span>,
-            icon:
-              keyIndex === 6 ? (
-                <MailFilled style={{ color: "#389e0d" }} />
-              ) : (
-                <MailOutlined style={{ color: "#389e0d" }} />
-              ),
-          },
-          {
-            key: "6-2",
-            label: <span style={{ color: "#389e0d" }}>Sign Out</span>,
-            icon: <LogoutOutlined style={{ color: "#389e0d" }} />,
-          },
-        ],
-      };
     }
     return {
       key: String(index + 1),
@@ -180,12 +143,9 @@ const MenuWrapper = ({
       defaultSelectedKeys={defaultSelectedKeys}
       items={items}
       style={{
-        width: "100vw",
-        justifyContent: "space-around",
         display: "flex",
         background: "white",
-        fontSize: "13px",
-        fontWeight: "300",
+        width: "100vw",
       }}
     />
   );
