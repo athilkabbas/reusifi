@@ -64,7 +64,7 @@ const MenuWrapper = ({
           flexDirection: isMobile ? "column" : "row",
           alignItems: "center",
           justifyContent: "center",
-          height: "100%",
+          height: "60px",
         }}
       >
         <span
@@ -105,8 +105,9 @@ const MenuWrapper = ({
       style={{
         display: "flex",
         background: "white",
-        width: "100%",
-        height: "100%",
+        width: "100dvw",
+        height: "60px",
+        padding: "0px 10px 0px 10px",
       }}
     />
   );

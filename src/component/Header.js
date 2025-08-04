@@ -8,8 +8,6 @@ const HeaderWrapper = ({ children }) => {
         padding: "0px",
         height: "60px",
         zIndex: 1,
-        paddingInline: "env(safe-area-inset-left) env(safe-area-inset-right)",
-        boxSizing: "border-box",
       }}
     >
       {children}
