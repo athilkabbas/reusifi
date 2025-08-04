@@ -16,6 +16,7 @@ import {
   Switch,
   TreeSelect,
 } from "antd";
+import { EllipsisVertical } from "lucide-react";
 import {
   HomeFilled,
   UploadOutlined,
@@ -581,6 +582,7 @@ const Home = () => {
             setScrollPosition={setScrollPosition}
             scrollableDivRef={scrollableDivRef}
             defaultSelectedKeys={["1"]}
+            isMobile={isMobile}
           />
         </HeaderWrapper>
       )}
@@ -589,147 +591,147 @@ const Home = () => {
         direction="vertical"
         style={{
           padding: "10px",
-          // background: "white",
-          // position: "sticky",
-          // top: "0px",
-          // zIndex: 1,
-          // background: "#F9FAFB",
         }}
       >
-        <Space.Compact
-          size="large"
-          style={{
-            height: "fit-content",
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          {inputChecked ? (
-            <TreeSelect
-              onPopupScroll={() => {
-                if (
-                  document.activeElement instanceof HTMLElement &&
-                  (isMobile ||
-                    window.visualViewport?.innerWidth < 1200 ||
-                    window.innerWidth < 1200)
-                ) {
-                  document.activeElement.blur();
+        <Space>
+          <Space.Compact
+            size="large"
+            style={{
+              height: "fit-content",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            {inputChecked ? (
+              <TreeSelect
+                onPopupScroll={() => {
+                  if (
+                    document.activeElement instanceof HTMLElement &&
+                    (isMobile ||
+                      window.visualViewport?.innerWidth < 1200 ||
+                      window.innerWidth < 1200)
+                  ) {
+                    document.activeElement.blur();
+                  }
+                  document.body.style.overscrollBehaviorY = "none";
+                }}
+                suffixIcon={
+                  open ? (
+                    <UpOutlined
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setOpen(false);
+                        document.body.style.overscrollBehaviorY = "";
+                      }}
+                    />
+                  ) : (
+                    <DownOutlined
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setOpen(true);
+                        document.body.style.overscrollBehaviorY = "none";
+                      }}
+                    />
+                  )
                 }
-                document.body.style.overscrollBehaviorY = "none";
-              }}
-              suffixIcon={
-                open ? (
-                  <UpOutlined
-                    onClick={(e) => {
-                      e.stopPropagation();
+                prefix={
+                  <Switch
+                    style={{ background: "#52c41a" }}
+                    defaultChecked
+                    onChange={(checked) => {
+                      setCategory("");
+                      setSearch("");
+                      setLocation({ state: "", district: "" });
+                      setPriceFilter("");
+                      setDistricts([]);
+                      setInputChecked(checked);
                       setOpen(false);
+                      setInitialLoad(true);
+                      setCurrentPage(1);
                       document.body.style.overscrollBehaviorY = "";
                     }}
-                  />
-                ) : (
-                  <DownOutlined
-                    onClick={(e) => {
-                      e.stopPropagation();
+                  ></Switch>
+                }
+                showSearch
+                allowClear
+                style={{
+                  width: "calc(100vw - 50px)",
+                  borderRadius: "7px",
+                  height: "fit-content",
+                }}
+                value={category || null}
+                styles={{
+                  popup: {
+                    root: {
+                      maxHeight: 400,
+                      overflow: "auto",
+                      overscrollBehavior: "contain",
+                    },
+                  },
+                }}
+                placeholder="Search by category"
+                treeDefaultExpandAll
+                onClick={() => {
+                  setOpen(true);
+                }}
+                open={open}
+                onChange={(value) => {
+                  setCategory(value);
+                  const leaf = isLeafNode(value, options);
+                  setSubCategory(leaf);
+                  setCurrentPage(1);
+                  setData([]);
+                  setInitialLoad(true);
+                  setTimeout(() => {
+                    setOpen(false);
+                  }, 0);
+                }}
+                treeData={options}
+              />
+            ) : (
+              <Input
+                prefix={
+                  <Switch
+                    onChange={(checked) => {
+                      setSearch("");
+                      setCategory("");
+                      setLocation({ state: "", district: "" });
+                      setPriceFilter("");
+                      setDistricts([]);
+                      setInputChecked(checked);
+                      setInitialLoad(true);
+                      setCurrentPage(1);
                       setOpen(true);
                       document.body.style.overscrollBehaviorY = "none";
                     }}
-                  />
-                )
-              }
-              prefix={
-                <Switch
-                  style={{ background: "#52c41a" }}
-                  defaultChecked
-                  onChange={(checked) => {
-                    setCategory("");
-                    setSearch("");
-                    setLocation({ state: "", district: "" });
-                    setPriceFilter("");
-                    setDistricts([]);
-                    setInputChecked(checked);
-                    setOpen(false);
-                    setInitialLoad(true);
-                    setCurrentPage(1);
-                    document.body.style.overscrollBehaviorY = "";
-                  }}
-                ></Switch>
-              }
-              showSearch
-              allowClear
-              style={{
-                width: "calc(100vw - 15px)",
-                borderRadius: "7px",
-                height: "fit-content",
-              }}
-              value={category || null}
-              styles={{
-                popup: {
-                  root: {
-                    maxHeight: 400,
-                    overflow: "auto",
-                    overscrollBehavior: "contain",
-                  },
-                },
-              }}
-              placeholder="Search by category"
-              treeDefaultExpandAll
-              onClick={() => {
-                setOpen(true);
-              }}
-              open={open}
-              onChange={(value) => {
-                setCategory(value);
-                const leaf = isLeafNode(value, options);
-                setSubCategory(leaf);
-                setCurrentPage(1);
-                setData([]);
-                setInitialLoad(true);
-                setTimeout(() => {
-                  setOpen(false);
-                }, 0);
-              }}
-              treeData={options}
-            />
-          ) : (
-            <Input
-              prefix={
-                <Switch
-                  onChange={(checked) => {
-                    setSearch("");
-                    setCategory("");
-                    setLocation({ state: "", district: "" });
-                    setPriceFilter("");
-                    setDistricts([]);
-                    setInputChecked(checked);
-                    setInitialLoad(true);
-                    setCurrentPage(1);
-                    setOpen(true);
-                    document.body.style.overscrollBehaviorY = "none";
-                  }}
-                ></Switch>
-              }
-              value={search}
-              onChange={(event) => {
-                setSearch(event.target.value);
-                setCurrentPage(1);
-                setData([]);
-                setInitialLoad(true);
-                if (!event.target.value.trim()) {
-                  setLocation({ state: "", district: "" });
-                  setPriceFilter("");
-                  setDistricts([]);
+                  ></Switch>
                 }
-              }}
-              placeholder="Search"
-              style={{
-                width: "calc(100vw - 15px)",
-                height: "fit-content",
-                // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-                borderRadius: "7px",
-              }}
-            />
-          )}
-        </Space.Compact>
+                value={search}
+                onChange={(event) => {
+                  setSearch(event.target.value);
+                  setCurrentPage(1);
+                  setData([]);
+                  setInitialLoad(true);
+                  if (!event.target.value.trim()) {
+                    setLocation({ state: "", district: "" });
+                    setPriceFilter("");
+                    setDistricts([]);
+                  }
+                }}
+                placeholder="Search"
+                style={{
+                  width: "calc(100vw - 50px)",
+                  height: "fit-content",
+                  // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+                  borderRadius: "7px",
+                }}
+              />
+            )}
+          </Space.Compact>
+          <Space.Compact>
+            <EllipsisVertical style={{ color: "grey", marginTop: "7px" }} />
+          </Space.Compact>
+        </Space>
         <Space.Compact
           size="large"
           style={{
@@ -1062,6 +1064,7 @@ const Home = () => {
             setScrollPosition={setScrollPosition}
             scrollableDivRef={scrollableDivRef}
             defaultSelectedKeys={["1"]}
+            isMobile={isMobile}
           />
         </FooterWrapper>
       )}

@@ -428,7 +428,7 @@ const Details = () => {
             height: "50px",
           }}
         >
-          <MenuWrapper defaultSelectedKeys={["0"]} />
+          <MenuWrapper defaultSelectedKeys={["0"]} isMobile={isMobile} />
         </HeaderWrapper>
       )}
       <Content>
@@ -694,7 +694,7 @@ const Details = () => {
       </Content>
       {isMobile && (
         <FooterWrapper>
-          <MenuWrapper defaultSelectedKeys={["0"]} />
+          <MenuWrapper defaultSelectedKeys={["0"]} isMobile={isMobile} />
         </FooterWrapper>
       )}
       {(unblockLoading || deleteLoading) && (

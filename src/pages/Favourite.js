@@ -441,6 +441,7 @@ const Favourites = () => {
             setScrollPosition={setFavScrollPosition}
             scrollableDivRef={scrollableDivRef}
             defaultSelectedKeys={["5"]}
+            isMobile={isMobile}
           />
         </HeaderWrapper>
       )}
@@ -658,6 +659,7 @@ const Favourites = () => {
             setScrollPosition={setFavScrollPosition}
             scrollableDivRef={scrollableDivRef}
             defaultSelectedKeys={["5"]}
+            isMobile={isMobile}
           />
         </FooterWrapper>
       )}

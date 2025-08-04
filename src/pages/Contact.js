@@ -210,7 +210,7 @@ const Contact = () => {
             height: "50px",
           }}
         >
-          <MenuWrapper defaultSelectedKeys={["6-1"]} />
+          <MenuWrapper defaultSelectedKeys={["6-1"]} isMobile={isMobile} />
         </HeaderWrapper>
       )}
       <Content style={{ padding: "0 15px" }}>
@@ -243,7 +243,7 @@ const Contact = () => {
       </Content>
       {isMobile && (
         <FooterWrapper>
-          <MenuWrapper defaultSelectedKeys={["6-1"]} />
+          <MenuWrapper defaultSelectedKeys={["6-1"]} isMobile={isMobile} />
         </FooterWrapper>
       )}
     </Layout>

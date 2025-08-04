@@ -368,6 +368,7 @@ const Ads = () => {
             setScrollPosition={setAdScrollPosition}
             scrollableDivRef={scrollableDivRef}
             defaultSelectedKeys={["4"]}
+            isMobile={isMobile}
           />
         </HeaderWrapper>
       )}
@@ -547,6 +548,7 @@ const Ads = () => {
             setScrollPosition={setAdScrollPosition}
             scrollableDivRef={scrollableDivRef}
             defaultSelectedKeys={["4"]}
+            isMobile={isMobile}
           />
         </FooterWrapper>
       )}

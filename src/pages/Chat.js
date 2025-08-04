@@ -735,6 +735,7 @@ const Chat = () => {
             setScrollPosition={setScrollPosition}
             scrollableDivRef={scrollableDivRef}
             defaultSelectedKeys={["0"]}
+            isMobile={isMobile}
           />
         </HeaderWrapper>
       )}
@@ -939,6 +940,7 @@ const Chat = () => {
             setScrollPosition={setScrollPosition}
             scrollableDivRef={scrollableDivRef}
             defaultSelectedKeys={["0"]}
+            isMobile={isMobile}
           />
         </FooterWrapper>
       )}
