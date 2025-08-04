@@ -5,7 +5,7 @@ const awsmobile = {
   aws_user_pools_web_client_id: "7jeltl9uu4apdfugbmo1cub7ti",
   oauth: {
     domain: "auth.reusifi.com",
-    scope: ["openid", "email", "profile"],
+    scope: ["openid", "email", "profile", "phone"],
     redirectSignIn:
       "https://www.reusifi.com/,https://reusifi.com/,http://localhost:3000/",
     redirectSignOut:

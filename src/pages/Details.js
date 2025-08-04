@@ -605,7 +605,7 @@ const Details = () => {
                         column={1}
                         size="small"
                         style={{
-                          width: isMobile ? "calc(100vw - 50px)" : "40vw",
+                          width: isMobile ? "calc(100dvw - 50px)" : "40vw",
                           fontSize: "13px",
                           fontWeight: "300",
                           // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",

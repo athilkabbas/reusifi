@@ -15,6 +15,7 @@ import {
   Modal,
   Switch,
   TreeSelect,
+  Dropdown,
 } from "antd";
 import { EllipsisVertical } from "lucide-react";
 import {
@@ -34,6 +35,7 @@ import {
   ProductOutlined,
   HeartOutlined,
   HomeOutlined,
+  MailOutlined,
 } from "@ant-design/icons";
 import { Input, Select, Space, Empty } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -287,6 +289,14 @@ const Home = () => {
     data,
   ]);
 
+  const handleMenuClick = ({ key }) => {
+    if (key === "1") {
+      navigate("/contact");
+    } else if (key === "2") {
+      signOut();
+    }
+  };
+
   const handleChange = (value, type) => {
     setData([]);
     setCurrentPage(1);
@@ -532,7 +542,26 @@ const Home = () => {
       }
     }
   }, [user, initialLoad, limit, search, category]);
-
+  const subMenuItems = [
+    {
+      key: "1",
+      label: "Contact",
+      icon: (
+        <MailOutlined
+          style={{ color: "#389e0d", fontSize: isMobile ? "10px" : "15px" }}
+        />
+      ),
+    },
+    {
+      key: "2",
+      label: "Sign Out",
+      icon: (
+        <LogoutOutlined
+          style={{ color: "#389e0d", fontSize: isMobile ? "10px" : "15px" }}
+        />
+      ),
+    },
+  ];
   const navigate = useNavigate();
   const handleNavigation = async (event) => {
     setScrollPosition(scrollableDivRef.current.scrollTop);
@@ -655,7 +684,7 @@ const Home = () => {
                 showSearch
                 allowClear
                 style={{
-                  width: "calc(100vw - 50px)",
+                  width: "calc(100dvw - 50px)",
                   borderRadius: "7px",
                   height: "fit-content",
                 }}
@@ -720,7 +749,7 @@ const Home = () => {
                 }}
                 placeholder="Search"
                 style={{
-                  width: "calc(100vw - 50px)",
+                  width: "calc(100dvw - 50px)",
                   height: "fit-content",
                   // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                   borderRadius: "7px",
@@ -729,7 +758,15 @@ const Home = () => {
             )}
           </Space.Compact>
           <Space.Compact>
-            <EllipsisVertical style={{ color: "grey", marginTop: "7px" }} />
+            <Dropdown menu={{ items: subMenuItems, onClick: handleMenuClick }}>
+              <a onClick={(e) => e.preventDefault()}>
+                <Space>
+                  <EllipsisVertical
+                    style={{ color: "grey", marginTop: "7px" }}
+                  />
+                </Space>
+              </a>
+            </Dropdown>
           </Space.Compact>
         </Space>
         <Space.Compact
@@ -773,7 +810,7 @@ const Home = () => {
             showSearch
             allowClear
             style={{
-              width: "calc(100vw - 200px)",
+              width: "calc(100dvw - 200px)",
               borderRadius: "7px",
               height: "fit-content",
             }}

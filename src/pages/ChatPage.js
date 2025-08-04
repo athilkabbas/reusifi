@@ -716,7 +716,7 @@ const ChatPage = () => {
                             borderRadius: "12px",
                             // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                             height: "150px",
-                            width: !isMobile ? "50vw" : "calc(100vw - 10px)",
+                            width: !isMobile ? "50vw" : "calc(100dvw - 10px)",
                             backgroundColor:
                               item.read === "false" ? "#f6ffed" : "#ffffff",
                           }}
