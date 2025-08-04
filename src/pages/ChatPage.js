@@ -28,6 +28,7 @@ import { callApi } from "../helpers/api";
 import { EllipsisVertical } from "lucide-react";
 import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
+import HeaderWrapper from "../component/Header";
 const IconText = ["Home", "Sell", "Chats", "My Ads", "Favourites", ""];
 
 const menuItems = [
@@ -648,7 +649,7 @@ const ChatPage = () => {
       }}
     >
       {!isMobile && (
-        <Header
+        <HeaderWrapper
           style={{
             display: "flex",
             alignItems: "center",
@@ -656,20 +657,12 @@ const ChatPage = () => {
             height: "50px",
           }}
         >
-          <Menu
-            onClick={(event) => handleNavigation(event)}
-            theme="dark"
-            mode="horizontal"
+          <MenuWrapper
+            setScrollPosition={setChatScrollPosition}
+            scrollableDivRef={scrollableDivRef}
             defaultSelectedKeys={["3"]}
-            items={items}
-            style={{
-              minWidth: 0,
-              justifyContent: "space-around",
-              flex: 1,
-              background: "#52c41a",
-            }}
           />
-        </Header>
+        </HeaderWrapper>
       )}
       <Content>
         <div

@@ -51,6 +51,7 @@ import { callApi } from "../helpers/api";
 import { options } from "./AddDress";
 import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
+import HeaderWrapper from "../component/Header";
 const IconText = ["Home", "Sell", "Chats", "My Ads", "Favourites", ""];
 const { Text } = Typography;
 const capitalize = (str) => {
@@ -575,30 +576,13 @@ const Home = () => {
       }}
     >
       {!isMobile && (
-        <Header
-          style={{
-            display: "flex",
-            alignItems: "center",
-            padding: "0px",
-            height: "50px",
-          }}
-        >
-          <Menu
-            onClick={(event) => handleNavigation(event)}
-            theme="dark"
-            mode="horizontal"
+        <HeaderWrapper>
+          <MenuWrapper
+            setScrollPosition={setScrollPosition}
+            scrollableDivRef={scrollableDivRef}
             defaultSelectedKeys={["1"]}
-            items={items}
-            style={{
-              minWidth: 0,
-              justifyContent: "space-around",
-              flex: 1,
-              background: "#52c41a",
-              fontSize: "13px",
-              fontWeight: "300",
-            }}
           />
-        </Header>
+        </HeaderWrapper>
       )}
       <Space
         size="small"

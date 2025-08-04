@@ -28,6 +28,7 @@ import { useIsMobile } from "../hooks/windowSize";
 import { callApi } from "../helpers/api";
 import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
+import HeaderWrapper from "../component/Header";
 const { Text } = Typography;
 const { TextArea } = Input;
 const IconText = ["Home", "Sell", "Chats", "My Ads", "Favourites", ""];
@@ -558,7 +559,7 @@ const AddDress = () => {
       }}
     >
       {!isMobile && (
-        <Header
+        <HeaderWrapper
           style={{
             display: "flex",
             alignItems: "center",
@@ -566,20 +567,8 @@ const AddDress = () => {
             height: "50px",
           }}
         >
-          <Menu
-            onClick={(event) => handleNavigation(event)}
-            theme="dark"
-            mode="horizontal"
-            defaultSelectedKeys={["2"]}
-            items={items}
-            style={{
-              minWidth: 0,
-              justifyContent: "space-around",
-              flex: 1,
-              background: "#52c41a",
-            }}
-          />
-        </Header>
+          <MenuWrapper defaultSelectedKeys={["2"]} />
+        </HeaderWrapper>
       )}
       <Content>
         <div

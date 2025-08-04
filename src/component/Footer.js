@@ -1,4 +1,3 @@
-import MenuWrapper from "./Menu";
 import { Layout } from "antd";
 
 const FooterWrapper = ({ children }) => {

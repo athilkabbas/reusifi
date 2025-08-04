@@ -100,12 +100,9 @@ const MenuWrapper = ({
             fontSize: 10,
             height: "60px",
             justifyContent: "center",
-            width: "100%",
           }}
         >
-          <span
-            style={{ fontSize: "16px", marginTop: "0px", color: "#389e0d" }}
-          >
+          <span style={{ marginTop: "5px", color: "#389e0d", scale: "1.4" }}>
             {React.createElement(icon)}
           </span>
           <span
@@ -123,13 +120,10 @@ const MenuWrapper = ({
             flexDirection: "row",
             fontSize: 10,
             height: "60px",
-            justifyContent: "center",
-            width: "20px",
+            alignItems: "center",
           }}
         >
-          <span
-            style={{ fontSize: "20px", marginTop: "0px", color: "#389e0d" }}
-          >
+          <span style={{ marginTop: "5px", color: "#389e0d" }}>
             {React.createElement(icon)}
           </span>
           <span

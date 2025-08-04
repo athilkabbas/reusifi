@@ -30,6 +30,7 @@ import { useIsMobile } from "../hooks/windowSize";
 import { callApi } from "../helpers/api";
 import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
+import HeaderWrapper from "../component/Header";
 const { TextArea } = Input;
 const IconText = ["Home", "Sell", "Chats", "My Ads", "Favourites", ""];
 const { Header, Content, Footer } = Layout;
@@ -722,7 +723,7 @@ const Chat = () => {
       }}
     >
       {!isMobile && (
-        <Header
+        <HeaderWrapper
           style={{
             display: "flex",
             alignItems: "center",
@@ -730,20 +731,12 @@ const Chat = () => {
             height: "50px",
           }}
         >
-          <Menu
-            onClick={(event) => handleNavigation(event)}
-            theme="dark"
-            mode="horizontal"
+          <MenuWrapper
+            setScrollPosition={setScrollPosition}
+            scrollableDivRef={scrollableDivRef}
             defaultSelectedKeys={["0"]}
-            items={items}
-            style={{
-              minWidth: 0,
-              justifyContent: "space-around",
-              flex: 1,
-              background: "#52c41a",
-            }}
           />
-        </Header>
+        </HeaderWrapper>
       )}
       <Content>
         <div

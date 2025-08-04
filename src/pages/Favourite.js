@@ -28,6 +28,7 @@ import { useIsMobile } from "../hooks/windowSize";
 import { callApi } from "../helpers/api";
 import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
+import HeaderWrapper from "../component/Header";
 const IconText = ["Home", "Sell", "Chats", "My Ads", "Favourites", ""];
 const capitalize = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -428,7 +429,7 @@ const Favourites = () => {
       }}
     >
       {!isMobile && (
-        <Header
+        <HeaderWrapper
           style={{
             display: "flex",
             alignItems: "center",
@@ -436,20 +437,12 @@ const Favourites = () => {
             height: "50px",
           }}
         >
-          <Menu
-            onClick={(event) => handleNavigation(event)}
-            theme="dark"
-            mode="horizontal"
+          <MenuWrapper
+            setScrollPosition={setFavScrollPosition}
+            scrollableDivRef={scrollableDivRef}
             defaultSelectedKeys={["5"]}
-            items={items}
-            style={{
-              minWidth: 0,
-              justifyContent: "space-around",
-              flex: 1,
-              background: "#52c41a",
-            }}
           />
-        </Header>
+        </HeaderWrapper>
       )}
       <Content>
         <div

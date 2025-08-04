@@ -56,6 +56,29 @@
   display: none; /* Chrome, Safari, Opera */
 }
 
+.ant-menu-horizontal > .ant-menu-submenu > .ant-menu-submenu-title {
+  height: 60px !important; /* Match your Menu height */
+  line-height: 60px !important;
+  padding: 0 12px !important; /* Or tweak as needed */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.ant-menu-horizontal {
+  display: flex !important;
+}
+
+.ant-menu-horizontal > .ant-menu-item,
+.ant-menu-horizontal > .ant-menu-submenu {
+  flex: 1 !important;
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  padding: 0 !important;
+}
+
 /* Make each slide take only needed width */
 .ant-carousel .slick-slide {
   flex: 0 0 auto !important; /* prevent stretching */
