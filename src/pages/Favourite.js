@@ -26,6 +26,8 @@ import { getCurrentUser, signInWithRedirect, signOut } from "@aws-amplify/auth";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
 import { callApi } from "../helpers/api";
+import MenuWrapper from "../component/Menu";
+import FooterWrapper from "../component/Footer";
 const IconText = ["Home", "Sell", "Chats", "My Ads", "Favourites", ""];
 const capitalize = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -617,7 +619,7 @@ const Favourites = () => {
                                         item["item"]["uuid"]
                                       ) && (
                                         <HeartFilled
-                                          style={{ color: "#E0245E" }}
+                                          style={{ color: "#52c41a" }}
                                         ></HeartFilled>
                                       )}
                                       {!filterList.includes(
@@ -658,32 +660,13 @@ const Favourites = () => {
         </div>
       </Content>
       {isMobile && (
-        <Footer
-          style={{
-            position: "fixed",
-            bottom: 0,
-            zIndex: 1,
-            width: "100vw",
-            display: "flex",
-            alignItems: "center",
-            padding: "0px",
-            height: "50px",
-          }}
-        >
-          <Menu
-            onClick={(event) => handleNavigation(event)}
-            theme="dark"
-            mode="horizontal"
+        <FooterWrapper>
+          <MenuWrapper
+            setScrollPosition={setFavScrollPosition}
+            scrollableDivRef={scrollableDivRef}
             defaultSelectedKeys={["5"]}
-            items={items}
-            style={{
-              minWidth: 0,
-              justifyContent: "space-around",
-              flex: 1,
-              background: "#52c41a",
-            }}
           />
-        </Footer>
+        </FooterWrapper>
       )}
       {handleFavLoading && (
         <Spin

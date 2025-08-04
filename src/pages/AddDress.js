@@ -26,6 +26,8 @@ import {
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
 import { callApi } from "../helpers/api";
+import MenuWrapper from "../component/Menu";
+import FooterWrapper from "../component/Footer";
 const { Text } = Typography;
 const { TextArea } = Input;
 const IconText = ["Home", "Sell", "Chats", "My Ads", "Favourites", ""];
@@ -797,33 +799,9 @@ const AddDress = () => {
         </div>
       </Content>
       {isMobile && (
-        <Footer
-          style={{
-            position: "fixed",
-            bottom: 0,
-            zIndex: 1,
-            width: "100vw",
-            display: "flex",
-            alignItems: "center",
-            padding: "0px",
-            height: "50px",
-          }}
-        >
-          <div className="demo-logo" />
-          <Menu
-            onClick={(event) => handleNavigation(event)}
-            theme="dark"
-            mode="horizontal"
-            defaultSelectedKeys={["2"]}
-            items={items}
-            style={{
-              justifyContent: "space-around",
-              flex: 1,
-              minWidth: 0,
-              background: "#52c41a",
-            }}
-          />
-        </Footer>
+        <FooterWrapper>
+          <MenuWrapper defaultSelectedKeys={["2"]} />
+        </FooterWrapper>
       )}
       {submitLoading && (
         <Spin

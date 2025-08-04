@@ -28,6 +28,8 @@ import {
 import { useLocation } from "react-router-dom";
 import { useIsMobile } from "../hooks/windowSize";
 import { callApi } from "../helpers/api";
+import MenuWrapper from "../component/Menu";
+import FooterWrapper from "../component/Footer";
 const { TextArea } = Input;
 const IconText = ["Home", "Sell", "Chats", "My Ads", "Favourites", ""];
 const { Header, Content, Footer } = Layout;
@@ -939,33 +941,13 @@ const Chat = () => {
         </div>
       </Content>
       {isMobile && (
-        <Footer
-          style={{
-            position: "fixed",
-            bottom: 0,
-            zIndex: 1,
-            display: "flex",
-            alignItems: "center",
-            padding: "0px",
-            width: "100vw",
-            height: "50px",
-          }}
-        >
-          <div className="demo-logo" />
-          <Menu
-            onClick={(event) => handleNavigation(event)}
-            theme="dark"
-            mode="horizontal"
+        <FooterWrapper>
+          <MenuWrapper
+            setScrollPosition={setScrollPosition}
+            scrollableDivRef={scrollableDivRef}
             defaultSelectedKeys={["0"]}
-            items={items}
-            style={{
-              justifyContent: "space-around",
-              flex: 1,
-              minWidth: 0,
-              background: "#52c41a",
-            }}
           />
-        </Footer>
+        </FooterWrapper>
       )}
       <div ref={bottomRef}></div>
       {(socketLoading || checkSession) && (

@@ -29,6 +29,10 @@ import {
   MenuOutlined,
   UpOutlined,
   DownOutlined,
+  MessageOutlined,
+  ProductOutlined,
+  HeartOutlined,
+  HomeOutlined,
 } from "@ant-design/icons";
 import { Input, Select, Space, Empty } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -45,6 +49,8 @@ import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
 import { callApi } from "../helpers/api";
 import { options } from "./AddDress";
+import MenuWrapper from "../component/Menu";
+import FooterWrapper from "../component/Footer";
 const IconText = ["Home", "Sell", "Chats", "My Ads", "Favourites", ""];
 const { Text } = Typography;
 const capitalize = (str) => {
@@ -87,11 +93,11 @@ const Home = () => {
   const isMobile = useIsMobile();
 
   const items = [
-    HomeFilled,
+    HomeOutlined,
     UploadOutlined,
-    MessageFilled,
-    ProductFilled,
-    HeartFilled,
+    MessageOutlined,
+    ProductOutlined,
+    HeartOutlined,
     MenuOutlined,
   ].map((icon, index) => {
     let divHtml;
@@ -101,8 +107,10 @@ const Home = () => {
           style={{
             display: "flex",
             flexDirection: "column",
-            alignItems: "center",
             fontSize: 10,
+            height: "50px",
+            justifyContent: "center",
+            width: "100%",
           }}
         >
           <span style={{ fontSize: "16px", marginTop: "0px" }}>
@@ -119,8 +127,10 @@ const Home = () => {
           style={{
             display: "flex",
             flexDirection: "row",
-            alignItems: "center",
             fontSize: 10,
+            height: "50px",
+            justifyContent: "center",
+            width: "20px",
           }}
         >
           <span style={{ fontSize: "20px", marginTop: "0px" }}>
@@ -137,7 +147,11 @@ const Home = () => {
     if (index === 2) {
       return {
         key: String(index + 1),
-        icon: <Badge dot={unreadChatCount}>{divHtml}</Badge>,
+        icon: (
+          <div style={{ position: "relative", bottom: "6px" }}>
+            <Badge dot={unreadChatCount}>{divHtml}</Badge>
+          </div>
+        ),
       };
     } else if (index === 5) {
       return {
@@ -640,7 +654,7 @@ const Home = () => {
               }
               prefix={
                 <Switch
-                  style={{ background: "#389e0d" }}
+                  style={{ background: "#52c41a" }}
                   defaultChecked
                   onChange={(checked) => {
                     setCategory("");
@@ -696,7 +710,6 @@ const Home = () => {
             <Input
               prefix={
                 <Switch
-                  style={{ background: "#52c41a" }}
                   onChange={(checked) => {
                     setSearch("");
                     setCategory("");
@@ -1012,7 +1025,7 @@ const Home = () => {
                                       ) && (
                                         <HeartFilled
                                           style={{
-                                            color: "#E0245E",
+                                            color: "#52c41a",
                                           }}
                                         ></HeartFilled>
                                       )}
@@ -1060,34 +1073,13 @@ const Home = () => {
         </div>
       </Content>
       {isMobile && (
-        <Footer
-          style={{
-            position: "fixed",
-            bottom: 0,
-            zIndex: 1,
-            width: "100vw",
-            display: "flex",
-            alignItems: "center",
-            height: "50px",
-            padding: "0px",
-          }}
-        >
-          <Menu
-            onClick={(event) => handleNavigation(event)}
-            theme="dark"
-            mode="horizontal"
+        <FooterWrapper>
+          <MenuWrapper
+            setScrollPosition={setScrollPosition}
+            scrollableDivRef={scrollableDivRef}
             defaultSelectedKeys={["1"]}
-            items={items}
-            style={{
-              minWidth: 0,
-              justifyContent: "space-around",
-              flex: 1,
-              background: "#52c41a",
-              fontSize: "13px",
-              fontWeight: "300",
-            }}
           />
-        </Footer>
+        </FooterWrapper>
       )}
       {handleFavLoading && (
         <Spin

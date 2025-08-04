@@ -26,6 +26,8 @@ import {
 import { useIsMobile } from "../hooks/windowSize";
 import { callApi } from "../helpers/api";
 import { EllipsisVertical } from "lucide-react";
+import MenuWrapper from "../component/Menu";
+import FooterWrapper from "../component/Footer";
 const IconText = ["Home", "Sell", "Chats", "My Ads", "Favourites", ""];
 
 const menuItems = [
@@ -943,33 +945,13 @@ const ChatPage = () => {
         </div>
       </Content>
       {isMobile && (
-        <Footer
-          style={{
-            position: "fixed",
-            bottom: 0,
-            zIndex: 1,
-            width: "100vw",
-            display: "flex",
-            alignItems: "center",
-            height: "50px",
-            padding: "0px",
-          }}
-        >
-          <div className="demo-logo" />
-          <Menu
-            onClick={(event) => handleNavigation(event)}
-            theme="dark"
-            mode="horizontal"
+        <FooterWrapper>
+          <MenuWrapper
+            setScrollPosition={setChatScrollPosition}
+            scrollableDivRef={scrollableDivRef}
             defaultSelectedKeys={["3"]}
-            items={items}
-            style={{
-              minWidth: 0,
-              background: "#52c41a",
-              justifyContent: "space-around",
-              flex: 1,
-            }}
           />
-        </Footer>
+        </FooterWrapper>
       )}
       {menuLoading && (
         <Spin
