@@ -11,6 +11,7 @@ const FooterWrapper = ({ children }) => {
         width: "100dvw",
         height: "60px",
         padding: "0px",
+        paddingInline: "env(safe-area-inset-left) env(safe-area-inset-right)",
       }}
     >
       {children}
