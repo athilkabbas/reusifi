@@ -567,7 +567,7 @@ const AddDress = () => {
             height: "50px",
           }}
         >
-          <MenuWrapper defaultSelectedKeys={["2"]} isMobile={isMobile} />
+          <MenuWrapper defaultSelectedKeys={["3"]} isMobile={isMobile} />
         </HeaderWrapper>
       )}
       <Content>
@@ -789,7 +789,7 @@ const AddDress = () => {
       </Content>
       {isMobile && (
         <FooterWrapper>
-          <MenuWrapper defaultSelectedKeys={["2"]} isMobile={isMobile} />
+          <MenuWrapper defaultSelectedKeys={["3"]} isMobile={isMobile} />
         </FooterWrapper>
       )}
       {submitLoading && (

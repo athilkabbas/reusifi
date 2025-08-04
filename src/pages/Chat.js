@@ -719,6 +719,7 @@ const Chat = () => {
       style={{
         height: "100dvh",
         background: "#F9FAFB",
+        overflow: "scroll",
       }}
     >
       {!isMobile && (
@@ -745,7 +746,7 @@ const Chat = () => {
             borderRadius: "0px",
             display: "flex",
             flexDirection: "column-reverse",
-            height: "calc(100% - 50px)",
+            height: "calc(100% - 60px)",
             width: "100%",
             position: "fixed",
           }}

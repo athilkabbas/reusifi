@@ -660,7 +660,7 @@ const ChatPage = () => {
           <MenuWrapper
             setScrollPosition={setChatScrollPosition}
             scrollableDivRef={scrollableDivRef}
-            defaultSelectedKeys={["3"]}
+            defaultSelectedKeys={["2"]}
             isMobile={isMobile}
           />
         </HeaderWrapper>
@@ -943,7 +943,7 @@ const ChatPage = () => {
           <MenuWrapper
             setScrollPosition={setChatScrollPosition}
             scrollableDivRef={scrollableDivRef}
-            defaultSelectedKeys={["3"]}
+            defaultSelectedKeys={["2"]}
             isMobile={isMobile}
           />
         </FooterWrapper>

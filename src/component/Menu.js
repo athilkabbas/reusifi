@@ -32,7 +32,7 @@ const MenuWrapper = ({
       setScrollPosition(scrollableDivRef.current.scrollTop);
     }
 
-    const routes = ["/", "/addProduct", "/chatPage", "/ads", "/favourite"];
+    const routes = ["/", "/chatPage", "/addProduct", "/ads", "/favourite"];
     navigate(routes[parseInt(event.key) - 1]);
   };
 
