@@ -719,7 +719,6 @@ const Chat = () => {
       style={{
         height: "100dvh",
         background: "#F9FAFB",
-        overflow: "hidden",
       }}
     >
       {!isMobile && (
@@ -775,11 +774,11 @@ const Chat = () => {
                   }
                 }
               }}
-              onTouchMove={() => {
-                if (textAreaRef.current) {
-                  textAreaRef.current.blur();
-                }
-              }}
+              // onTouchMove={() => {
+              //   if (textAreaRef.current) {
+              //     textAreaRef.current.blur();
+              //   }
+              // }}
             />
             <Button
               style={{
