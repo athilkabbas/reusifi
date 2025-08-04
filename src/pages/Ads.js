@@ -1,38 +1,21 @@
-import React, {
-  Fragment,
-  useEffect,
-  useState,
-  useRef,
-  useContext,
-} from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { Layout, Menu, Spin, theme, Modal } from "antd";
-import {
-  HomeFilled,
-  UploadOutlined,
-  MessageFilled,
-  LogoutOutlined,
-  ProductFilled,
-  LoadingOutlined,
-  MailFilled,
-  HeartFilled,
-  MenuOutlined,
-} from "@ant-design/icons";
+import { Layout, Spin, Modal } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { List, Skeleton, Empty } from "antd";
 import { Card, Badge } from "antd";
-import { getCurrentUser, signInWithRedirect, signOut } from "@aws-amplify/auth";
+import { getCurrentUser, signInWithRedirect } from "@aws-amplify/auth";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
 import { callApi } from "../helpers/api";
 import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
-const IconText = ["Home", "Sell", "Chats", "My Ads", "Favourites", ""];
 const capitalize = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
-const { Header, Content, Footer } = Layout;
+const { Content } = Layout;
 const Ads = () => {
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
@@ -50,7 +33,6 @@ const Ads = () => {
     adLastEvaluatedKey,
     setAdLastEvaluatedKey,
     setUnreadChatCount,
-    unreadChatCount,
   } = useContext(Context);
   const isModalVisibleRef = useRef(false);
   const errorSessionConfig = {

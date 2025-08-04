@@ -1,35 +1,22 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
 import { Col, message, Row, Spin } from "antd";
-import { Input } from "antd";
 import { useNavigate } from "react-router-dom";
-import { Badge } from "antd";
 import { Layout, Menu, theme, Modal } from "antd";
 import { Image } from "antd";
-import { getCurrentUser, signInWithRedirect, signOut } from "@aws-amplify/auth";
+import { getCurrentUser, signInWithRedirect } from "@aws-amplify/auth";
 import { List } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Card, Skeleton } from "antd";
 import { Dropdown, Space } from "antd";
 import { Context } from "../context/provider";
 import { Empty } from "antd";
-import {
-  HomeFilled,
-  UploadOutlined,
-  MessageFilled,
-  LogoutOutlined,
-  MenuOutlined,
-  MailFilled,
-  HeartFilled,
-  ProductFilled,
-  LoadingOutlined,
-} from "@ant-design/icons";
+import { LoadingOutlined } from "@ant-design/icons";
 import { useIsMobile } from "../hooks/windowSize";
 import { callApi } from "../helpers/api";
 import { EllipsisVertical } from "lucide-react";
 import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
-const IconText = ["Home", "Sell", "Chats", "My Ads", "Favourites", ""];
 
 const menuItems = [
   {
@@ -56,16 +43,13 @@ const menuItemsBlocked = [
     label: "Delete",
   },
 ];
-const { Header, Content, Footer } = Layout;
+const { Content } = Layout;
 const ChatPage = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [menuLoading, setMenuLoading] = useState(false);
   const scrollableDivRef = useRef(null);
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
   const [chatLoading, setChatLoading] = useState(false);
   const {
     chatScrollPosition,
@@ -78,7 +62,6 @@ const ChatPage = () => {
     chatHasMore,
     chatLastEvaluatedKey,
     setChatLastEvaluatedKey,
-    unreadChatCount,
     setUnreadChatCount,
   } = useContext(Context);
   const [loadedImages, setLoadedImages] = useState({});
@@ -132,15 +115,6 @@ const ChatPage = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, [chatHasMore]);
 
-  //  useEffect(() => {
-  //       if (scrollableDivRef.current  &&  !loading && !chatLoading) {
-  //         const el = scrollableDivRef.current;
-  //         if (el.scrollHeight <= el.clientHeight && chatHasMore && limit) {
-  //           getChats();
-  //         }
-  //       }
-  //     }, [loading,chatData,chatLoading,limit]);
-
   useEffect(() => {
     if (scrollableDivRef.current && !loading && !chatLoading) {
       requestAnimationFrame(() => {
@@ -151,13 +125,6 @@ const ChatPage = () => {
     }
   }, [chatScrollPosition, loading, chatData, chatLoading]);
 
-  // useEffect(() => {
-  //   if (data.length > 0) {
-  //     setInitialLoad(false);
-  //   } else {
-  //     setInitialLoad(true);
-  //   }
-  // }, []);
   const isModalVisibleRef = useRef(false);
   const errorSessionConfig = {
     title: "Session has expired.",
@@ -339,20 +306,6 @@ const ChatPage = () => {
         });
         message.success("Chat deleted");
       }
-      //  await callApi(`https://api.reusifi.com/prod/getChatsRead?userId1=${
-      //               encodeURIComponent(user.userId)
-      //             }&userId2=${encodeURIComponent(userId2)}&productId=${chatData[index].productId}&read=${encodeURIComponent(true)}`,'GET')
-      //              const getChatCount = await  callApi(`https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(user.userId)}&count=${encodeURIComponent(true)}`,'GET')
-      //             setUnreadChatCount(getChatCount.data.count)
-      // setChatData((chatData) => {
-      //     return chatData.map((item) => {
-      //       let conversationId = [user.userId, userId2].sort().join(`#${chatData[index].productId}#`);
-      //       if (item.conversationId === conversationId) {
-      //         return { ...item, read: "true" };
-      //       }
-      //       return item;
-      //     });
-      //   });
       setMenuLoading(false);
     } catch (err) {
       setMenuLoading(false);

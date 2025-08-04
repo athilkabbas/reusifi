@@ -1,30 +1,15 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
-import { Badge } from "antd";
-import { Layout, Menu, theme, Space, Skeleton, Typography, Modal } from "antd";
-import {
-  HomeFilled,
-  UploadOutlined,
-  MessageFilled,
-  LogoutOutlined,
-  ProductFilled,
-  MailFilled,
-  HeartFilled,
-  MenuOutlined,
-} from "@ant-design/icons";
-import { getCurrentUser, signInWithRedirect, signOut } from "@aws-amplify/auth";
+import { Layout, Space, Skeleton, Typography, Modal } from "antd";
+import { getCurrentUser, signInWithRedirect } from "@aws-amplify/auth";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
 import { callApi } from "../helpers/api";
 import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
-const IconText = ["Home", "Sell", "Chats", "My Ads", "Favourites", ""];
-const { Content, Footer, Header } = Layout;
+const { Content } = Layout;
 const { Text } = Typography;
 const Contact = () => {
-  const navigate = useNavigate();
   const isMobile = useIsMobile();
   const isModalVisibleRef = useRef(false);
   const errorSessionConfig = {
@@ -51,12 +36,8 @@ const Contact = () => {
   };
   const [loading, setLoading] = useState(false);
 
-  const {
-    contactInitialLoad,
-    setContactInitialLoad,
-    unreadChatCount,
-    setUnreadChatCount,
-  } = useContext(Context);
+  const { contactInitialLoad, setContactInitialLoad, setUnreadChatCount } =
+    useContext(Context);
 
   useEffect(() => {
     const getChatCount = async () => {

@@ -2,27 +2,16 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { Skeleton, Space, Spin } from "antd";
 import { Input } from "antd";
 import { useNavigate } from "react-router-dom";
-import { Select, Cascader } from "antd";
-import { Layout, Menu, theme, Modal } from "antd";
-import { states, districtMap } from "../helpers/locations";
+import { Cascader } from "antd";
+import { Layout, theme, Modal } from "antd";
 import { locationsCascader } from "../helpers/locations";
 import { PlusOutlined } from "@ant-design/icons";
 import { Image, Upload, Typography, message } from "antd";
 import { Button, Badge } from "antd";
 import axios from "axios";
-import { getCurrentUser, signInWithRedirect, signOut } from "@aws-amplify/auth";
+import { getCurrentUser, signInWithRedirect } from "@aws-amplify/auth";
 import imageCompression from "browser-image-compression";
-import {
-  HomeFilled,
-  UploadOutlined,
-  MessageFilled,
-  LogoutOutlined,
-  ProductFilled,
-  MailFilled,
-  HeartFilled,
-  LoadingOutlined,
-  MenuOutlined,
-} from "@ant-design/icons";
+import { LoadingOutlined } from "@ant-design/icons";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
 import { callApi } from "../helpers/api";
@@ -31,8 +20,7 @@ import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
 const { Text } = Typography;
 const { TextArea } = Input;
-const IconText = ["Home", "Sell", "Chats", "My Ads", "Favourites", ""];
-const { Header, Content, Footer } = Layout;
+const { Content } = Layout;
 const getBase64 = (file) =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -157,7 +145,6 @@ const AddDress = () => {
     setAdLastEvaluatedKey,
     addProductInitialLoad,
     setAddProductInitialLoad,
-    unreadChatCount,
     setUnreadChatCount,
   } = useContext(Context);
   const isMobile = useIsMobile();
@@ -552,52 +539,6 @@ const AddDress = () => {
                     options={locationsCascader}
                   ></Cascader>
                 </Space.Compact>
-                {/* <Space.Compact size="large">
-                  <Select
-                    onChange={(value) => {
-                      handleChange(value, "state");
-                      let districts = districtMap();
-                      setDistricts(districts[value]);
-                    }}
-                    showSearch
-                    style={{
-                      width: 190,
-                      // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-                    }}
-                    value={form.state}
-                    placeholder="Select State"
-                    optionFilterProp="label"
-                    filterSort={(optionA, optionB) =>
-                      (optionA?.label ?? "")
-                        .toLowerCase()
-                        .localeCompare((optionB?.label ?? "").toLowerCase())
-                    }
-                    options={states}
-                  />
-                </Space.Compact> */}
-                {/* {districts.length > 0 && (
-                  <Space.Compact size="large">
-                    <Select
-                      onChange={(value) => {
-                        handleChange(value, "district");
-                      }}
-                      showSearch
-                      style={{
-                        width: 190,
-                        // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-                      }}
-                      value={form.district}
-                      placeholder="Select District"
-                      optionFilterProp="label"
-                      filterSort={(optionA, optionB) =>
-                        (optionA?.label ?? "")
-                          .toLowerCase()
-                          .localeCompare((optionB?.label ?? "").toLowerCase())
-                      }
-                      options={districts}
-                    />
-                  </Space.Compact>
-                )} */}
                 <Space.Compact size="large">
                   <Input
                     style={{

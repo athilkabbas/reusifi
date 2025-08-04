@@ -1,53 +1,21 @@
-import React, {
-  Fragment,
-  useEffect,
-  useState,
-  useRef,
-  useContext,
-} from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Badge,
-  Layout,
-  Menu,
-  Spin,
-  message,
-  Modal,
-  Switch,
-  TreeSelect,
-  Dropdown,
-} from "antd";
+import { Layout, Spin, Modal, Switch, TreeSelect, Dropdown } from "antd";
 import { EllipsisVertical } from "lucide-react";
 import {
-  HomeFilled,
-  UploadOutlined,
-  MessageFilled,
   LogoutOutlined,
-  SearchOutlined,
-  ProductFilled,
-  MailFilled,
   HeartFilled,
   LoadingOutlined,
-  MenuOutlined,
   UpOutlined,
   DownOutlined,
-  MessageOutlined,
-  ProductOutlined,
-  HeartOutlined,
-  HomeOutlined,
   MailOutlined,
 } from "@ant-design/icons";
-import { Input, Select, Space, Empty } from "antd";
+import { Input, Space, Empty } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { List, Skeleton, Radio } from "antd";
 import { Card, Typography } from "antd";
 import { getCurrentUser, signInWithRedirect, signOut } from "@aws-amplify/auth";
-import {
-  states,
-  districtMap,
-  locationsCascader,
-  locationsTreeSelect,
-} from "../helpers/locations";
+import { locationsTreeSelect } from "../helpers/locations";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
 import { callApi } from "../helpers/api";
@@ -55,12 +23,11 @@ import { options } from "./AddDress";
 import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
-const IconText = ["Home", "Sell", "Chats", "My Ads", "Favourites", ""];
 const { Text } = Typography;
 const capitalize = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
-const { Header, Content, Footer } = Layout;
+const { Content } = Layout;
 const Home = () => {
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
@@ -89,7 +56,6 @@ const Home = () => {
     filterList,
     setFilterList,
     setFavData,
-    unreadChatCount,
     setUnreadChatCount,
   } = useContext(Context);
   const [handleFavLoading, setHandleFavLoading] = useState(false);
@@ -164,16 +130,6 @@ const Home = () => {
   const handleImageLoad = (uuid) => {
     setLoadedImages((prev) => ({ ...prev, [uuid]: true }));
   };
-
-  // useEffect(() => {
-  //   if (scrollableDivRef.current && !chatLoading && !favLoading && !handleFavLoading && !loading) {
-  //     const el = scrollableDivRef.current;
-  //     if (el.scrollHeight <= el.clientHeight && hasMore && limit) {
-  //       loadMoreData();
-  //     }
-  //   }
-  // }, [chatLoading,favLoading,handleFavLoading,loading,data,limit]);
-
   useEffect(() => {
     const getUser = async () => {
       const currentUser = await getCurrentUser();

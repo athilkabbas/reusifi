@@ -1,30 +1,17 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
 import { Spin } from "antd";
 import { Input } from "antd";
-import { useNavigate } from "react-router-dom";
-import { Badge } from "antd";
-import { Layout, Menu, Modal } from "antd";
+import { Layout, Modal } from "antd";
 import { Button } from "antd";
 import {
   fetchAuthSession,
   getCurrentUser,
   signInWithRedirect,
-  signOut,
 } from "@aws-amplify/auth";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Skeleton, Space, Typography } from "antd";
 import { Context } from "../context/provider";
-import {
-  HomeFilled,
-  UploadOutlined,
-  MessageFilled,
-  ProductFilled,
-  MailFilled,
-  HeartFilled,
-  LogoutOutlined,
-  LoadingOutlined,
-  MenuOutlined,
-} from "@ant-design/icons";
+import { LoadingOutlined } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
 import { useIsMobile } from "../hooks/windowSize";
 import { callApi } from "../helpers/api";
@@ -32,15 +19,13 @@ import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
 const { TextArea } = Input;
-const IconText = ["Home", "Sell", "Chats", "My Ads", "Favourites", ""];
-const { Header, Content, Footer } = Layout;
+const { Content } = Layout;
 const Chat = () => {
   const [ichatData, setIChatData] = useState([]);
   const location = useLocation();
   const { recipient } = location.state || "";
   const { conversationId, productId } = location.state;
   const [messageValue, setMessageValue] = useState("");
-  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [ws, setWs] = useState("");
   const [reconnect, setReconnect] = useState(false);
@@ -82,7 +67,6 @@ const Chat = () => {
     setChatData,
     setChatLastEvaluatedKey,
     setIChatInitialLoad,
-    unreadChatCount,
     setUnreadChatCount,
   } = useContext(Context);
   const [chatLoading, setChatLoading] = useState(false);
@@ -483,25 +467,6 @@ const Chat = () => {
     }
   }, [user, limit, conversationId, recipient, productId, moreWidth]);
 
-  // useEffect(() => {
-  //   if (
-  //     token && user && limit &&
-  //     user.userId &&
-  //     ((recipient && recipient["item"]["email"]) || conversationId) && !iChatInitialLoad
-  //   ) {
-  //     getChats();
-  //   }
-  // }, [user, recipient, conversationId,token,limit]);
-
-  // useEffect(() => {
-  //   if (scrollableDivRef.current && !loading && !chatLoading) {
-  //     const el = scrollableDivRef.current;
-  //     if (el.scrollHeight <= el.clientHeight && hasMore && limit) {
-  //       getChats();
-  //     }
-  //   }
-  // }, [ichatData,loading,chatLoading,limit]);
-
   useEffect(() => {
     if (scrollableDivRef.current && !loading && !chatLoading)
       requestAnimationFrame(() => {
@@ -525,17 +490,6 @@ const Chat = () => {
           recipient["item"]["title"],
           recipient["images"][0]
         );
-        // setChatData((chatData) => {
-        //   return chatData.map((item) => {
-        //     let conversationId = [user.userId, recipient["item"]["email"]]
-        //       .sort()
-        //       .join(`#${recipient["item"]["uuid"]}#`);
-        //     if (item.conversationId === conversationId) {
-        //       return { ...item, message: messageValue };
-        //     }
-        //     return item;
-        //   });
-        // });
       } else if (conversationId) {
         let userIds = conversationId.split("#");
         userIds.splice(1, 1);
@@ -547,14 +501,6 @@ const Chat = () => {
           }
         }
         sendMessage(messageValue, userId2, user.userId, productId);
-        // setChatData((chatData) => {
-        //   return chatData.map((item) => {
-        //     if (item.conversationId === conversationId) {
-        //       return { ...item, message: messageValue };
-        //     }
-        //     return item;
-        //   });
-        // });
       }
       setIChatData((prevValue) => [
         {
@@ -673,11 +619,6 @@ const Chat = () => {
                   }
                 }
               }}
-              // onTouchMove={() => {
-              //   if (textAreaRef.current) {
-              //     textAreaRef.current.blur();
-              //   }
-              // }}
             />
             <Button
               style={{

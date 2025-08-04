@@ -1,34 +1,20 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { Skeleton, Spin, Descriptions } from "antd";
-import { Input } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import { Badge } from "antd";
 import { Layout, Menu, message, Modal, Popconfirm } from "antd";
 import { Image, Space } from "antd";
 import { Button, Typography } from "antd";
 import { Carousel } from "antd";
-import {
-  HomeFilled,
-  UploadOutlined,
-  MessageFilled,
-  LogoutOutlined,
-  MailFilled,
-  HeartFilled,
-  ProductFilled,
-  LoadingOutlined,
-  MenuOutlined,
-} from "@ant-design/icons";
-import { getCurrentUser, signInWithRedirect, signOut } from "@aws-amplify/auth";
+import { LoadingOutlined } from "@ant-design/icons";
+import { getCurrentUser, signInWithRedirect } from "@aws-amplify/auth";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
 import { callApi } from "../helpers/api";
 import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
-const IconText = ["Home", "Sell", "Chats", "My Ads", "Favourites", ""];
-const { TextArea } = Input;
-const { Header, Content, Footer } = Layout;
+const { Content } = Layout;
 const Details = () => {
   const location = useLocation();
   const isMobile = useIsMobile();
@@ -52,7 +38,6 @@ const Details = () => {
     setCount,
     detailData,
     setDetailData,
-    unreadChatCount,
     setUnreadChatCount,
   } = useContext(Context);
   const isModalVisibleRef = useRef(false);
@@ -153,32 +138,6 @@ const Details = () => {
       }
     }
   }, [user, item]);
-
-  // useEffect(() => {
-  //   const getData = async () => {
-  //     try {
-  //       setLoading(true);
-  //       const result = await callApi(`https://api.reusifi.com/prod/getProductsId?id=${encodeURIComponent(item["item"]["uuid"])}`,'GET')
-  //       setLoading(false);
-  //       setDetailData(result.data)
-  //       if(result.data.length === 0){
-  //         Modal.info(infoConfig)
-  //       }
-  //     } catch (err) {
-  //       setLoading(false);
-  //        if(err?.status === 401){
-  //         Modal.error(errorSessionConfig)
-  //       }
-  //       else{
-  //         Modal.error(errorConfig)
-  //       }
-  //       console.log(err);
-  //     }
-  //   };
-  //   if (item) {
-  //     getData();
-  //   }
-  // }, [item]);
 
   const handleChat = async () => {
     try {
