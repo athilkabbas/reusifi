@@ -15,7 +15,7 @@ import {
 } from "@ant-design/icons";
 import { Context } from "../context/provider";
 
-const IconText = ["Home", "Sell", "Chats", "My Ads", "Favourites"];
+const IconText = ["Home", "Chats", "Sell", "My Ads", "Favourites"];
 
 const MenuWrapper = ({
   setScrollPosition,
@@ -38,15 +38,15 @@ const MenuWrapper = ({
 
   const filledIcons = [
     HomeFilled,
-    PlusCircleFilled,
     MessageFilled,
+    PlusCircleFilled,
     ProductFilled,
     HeartFilled,
   ];
   const outlinedIcons = [
     HomeOutlined,
-    PlusCircleOutlined,
     MessageOutlined,
+    PlusCircleOutlined,
     ProductOutlined,
     HeartOutlined,
   ];
