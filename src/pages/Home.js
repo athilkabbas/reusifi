@@ -96,90 +96,6 @@ const Home = () => {
 
   const isMobile = useIsMobile();
 
-  const items = [
-    HomeOutlined,
-    UploadOutlined,
-    MessageOutlined,
-    ProductOutlined,
-    HeartOutlined,
-    MenuOutlined,
-  ].map((icon, index) => {
-    let divHtml;
-    if (isMobile) {
-      divHtml = (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            fontSize: 10,
-            height: "50px",
-            justifyContent: "center",
-            width: "100%",
-          }}
-        >
-          <span style={{ fontSize: "16px", marginTop: "0px" }}>
-            {React.createElement(icon)}
-          </span>
-          <span style={{ fontSize: "10px", marginTop: "5px" }}>
-            {IconText[index]}
-          </span>
-        </div>
-      );
-    } else {
-      divHtml = (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            fontSize: 10,
-            height: "50px",
-            justifyContent: "center",
-            width: "20px",
-          }}
-        >
-          <span style={{ fontSize: "20px", marginTop: "0px" }}>
-            {React.createElement(icon)}
-          </span>
-          <span
-            style={{ fontSize: "15px", marginTop: "5px", marginLeft: "5px" }}
-          >
-            {IconText[index]}
-          </span>
-        </div>
-      );
-    }
-    if (index === 2) {
-      return {
-        key: String(index + 1),
-        icon: (
-          <div style={{ position: "relative", bottom: "6px" }}>
-            <Badge dot={unreadChatCount}>{divHtml}</Badge>
-          </div>
-        ),
-      };
-    } else if (index === 5) {
-      return {
-        key: String(index + 1),
-        icon: divHtml,
-        children: [
-          {
-            key: "6-1",
-            label: "Contact",
-            icon: React.createElement(MailFilled),
-          },
-          {
-            key: "6-2",
-            label: "Sign out",
-            icon: React.createElement(LogoutOutlined),
-          },
-        ],
-      };
-    }
-    return {
-      key: String(index + 1),
-      icon: divHtml,
-    };
-  });
   const [loadedImages, setLoadedImages] = useState({});
 
   const calculateLimit = () => {
@@ -563,32 +479,6 @@ const Home = () => {
     },
   ];
   const navigate = useNavigate();
-  const handleNavigation = async (event) => {
-    setScrollPosition(scrollableDivRef.current.scrollTop);
-    switch (event.key) {
-      case "1":
-        navigate("/");
-        break;
-      case "2":
-        navigate("/addProduct");
-        break;
-      case "3":
-        navigate("/chatPage");
-        break;
-      case "4":
-        navigate("/ads");
-        break;
-      case "5":
-        navigate("/favourite");
-        break;
-      case "6-1":
-        navigate("/contact");
-        break;
-      case "6-2":
-        signOut();
-        break;
-    }
-  };
   const onChangePriceFilter = (event) => {
     setCurrentPage(1);
     setData([]);

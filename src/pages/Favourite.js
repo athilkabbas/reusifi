@@ -59,82 +59,6 @@ const Favourites = () => {
     setUnreadChatCount,
   } = useContext(Context);
 
-  const items = [
-    HomeFilled,
-    UploadOutlined,
-    MessageFilled,
-    ProductFilled,
-    HeartFilled,
-    MenuOutlined,
-  ].map((icon, index) => {
-    let divHtml;
-    if (isMobile) {
-      divHtml = (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            fontSize: 10,
-          }}
-        >
-          <span style={{ fontSize: "16px", marginTop: "0px" }}>
-            {React.createElement(icon)}
-          </span>
-          <span style={{ fontSize: "10px", marginTop: "5px" }}>
-            {IconText[index]}
-          </span>
-        </div>
-      );
-    } else {
-      divHtml = (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            fontSize: 10,
-          }}
-        >
-          <span style={{ fontSize: "20px", marginTop: "0px" }}>
-            {React.createElement(icon)}
-          </span>
-          <span
-            style={{ fontSize: "15px", marginTop: "5px", marginLeft: "5px" }}
-          >
-            {IconText[index]}
-          </span>
-        </div>
-      );
-    }
-    if (index === 2) {
-      return {
-        key: String(index + 1),
-        icon: <Badge dot={unreadChatCount}>{divHtml}</Badge>,
-      };
-    } else if (index === 5) {
-      return {
-        key: String(index + 1),
-        icon: divHtml,
-        children: [
-          {
-            key: "6-1",
-            label: "Contact",
-            icon: React.createElement(MailFilled),
-          },
-          {
-            key: "6-2",
-            label: "Sign out",
-            icon: React.createElement(LogoutOutlined),
-          },
-        ],
-      };
-    }
-    return {
-      key: String(index + 1),
-      icon: divHtml,
-    };
-  });
   const isModalVisibleRef = useRef(false);
   const errorSessionConfig = {
     title: "Session has expired.",
@@ -390,32 +314,6 @@ const Favourites = () => {
   }, [user, favInitialLoad, limit]);
 
   const navigate = useNavigate();
-  const handleNavigation = async (event) => {
-    setFavScrollPosition(scrollableDivRef.current.scrollTop);
-    switch (event.key) {
-      case "1":
-        navigate("/");
-        break;
-      case "2":
-        navigate("/addProduct");
-        break;
-      case "3":
-        navigate("/chatPage");
-        break;
-      case "4":
-        navigate("/ads");
-        break;
-      case "5":
-        navigate("/favourite");
-        break;
-      case "6-1":
-        navigate("/contact");
-        break;
-      case "6-2":
-        signOut();
-        break;
-    }
-  };
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
