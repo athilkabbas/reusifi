@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Layout, Spin, theme, Modal } from "antd";
 import { HeartOutlined, HeartFilled, LoadingOutlined } from "@ant-design/icons";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { List, Skeleton, Empty } from "antd";
+import { List, Skeleton, Empty, Row, Col } from "antd";
 import { Card, Space } from "antd";
 import { getCurrentUser, signInWithRedirect } from "@aws-amplify/auth";
 import { Context } from "../context/provider";
@@ -357,10 +357,10 @@ const Favourites = () => {
                   grid={{
                     xs: 2,
                     sm: 3,
-                    md: 3,
-                    lg: 4,
-                    xl: 4,
-                    xxl: 6,
+                    md: 4,
+                    lg: 5,
+                    xl: 6,
+                    xxl: 7,
                     gutter: 10,
                   }}
                   dataSource={favData}
@@ -522,16 +522,26 @@ const Favourites = () => {
                 </div>
               ))}
             {(loading || chatLoading || favLoading) && (
-              <Space wrap>
-                {Array.from({ length: limit }).map(() => {
+              <Row gutter={[10, 10]}>
+                {Array.from({ length: limit }).map((_, index) => {
                   return (
-                    <Skeleton.Node
-                      style={{ height: "300px", width: "185px" }}
-                      active
-                    />
+                    <Col
+                      key={index}
+                      xs={12}
+                      sm={8}
+                      md={6}
+                      lg={5}
+                      xl={4}
+                      xxl={4}
+                    >
+                      <Skeleton.Node
+                        style={{ height: "300px", width: "186px" }}
+                        active
+                      />
+                    </Col>
                   );
                 })}
-              </Space>
+              </Row>
             )}
           </InfiniteScroll>
         </div>

@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { Skeleton, Spin, Descriptions } from "antd";
+import { Skeleton, Spin, Descriptions, Col } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { Layout, Menu, message, Modal, Popconfirm } from "antd";
 import { Image, Space } from "antd";
-import { Button, Typography } from "antd";
+import { Button, Typography, Row } from "antd";
 import { Carousel } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { getCurrentUser, signInWithRedirect } from "@aws-amplify/auth";
@@ -544,22 +544,24 @@ const Details = () => {
               </>
             )}
           {(loading || chatLoading || chatProductLoading) && (
-            <Space
-              size="large"
-              direction="vertical"
-              style={{ display: "flex", alignItems: "center", padding: "20px" }}
-            >
-              <Skeleton.Node
-                style={{ height: "400px", width: "300px" }}
-                active
-              />
-              <Space>
-                <Skeleton.Node
-                  style={{ height: "400px", width: "300px" }}
-                  active
-                />
-              </Space>
-            </Space>
+            <Row gutter={[10, 10]} style={{ padding: "20px" }}>
+              <Col key={0} xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                  <Skeleton.Node
+                    style={{ height: "400px", width: "300px" }}
+                    active
+                  />
+                </div>
+              </Col>
+              <Col key={1} xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                  <Skeleton.Node
+                    style={{ height: "400px", width: "300px" }}
+                    active
+                  />
+                </div>
+              </Col>
+            </Row>
           )}
         </div>
       </Content>

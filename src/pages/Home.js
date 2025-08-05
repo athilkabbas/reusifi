@@ -10,8 +10,10 @@ import {
   Drawer,
   Divider,
   Button,
+  Row,
+  Col,
 } from "antd";
-import { EllipsisVertical } from "lucide-react";
+import { EllipsisVertical, Settings2 } from "lucide-react";
 import {
   LogoutOutlined,
   HeartFilled,
@@ -19,8 +21,6 @@ import {
   UpOutlined,
   DownOutlined,
   MailOutlined,
-  FilterOutlined,
-  DeleteOutlined,
   CloseCircleOutlined,
 } from "@ant-design/icons";
 import { LocateFixed } from "lucide-react";
@@ -28,7 +28,12 @@ import { Input, Space, Empty } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { List, Skeleton, Radio } from "antd";
 import { Card, Typography } from "antd";
-import { getCurrentUser, signInWithRedirect, signOut } from "@aws-amplify/auth";
+import {
+  getCurrentUser,
+  signInWithRedirect,
+  signOut,
+  fetchUserAttributes,
+} from "@aws-amplify/auth";
 import { locationsTreeSelect } from "../helpers/locations";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
@@ -45,6 +50,7 @@ const { Content } = Layout;
 const Home = () => {
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
+  const [attributes, setAttributes] = useState(null);
   const timer = useRef(null);
   const [districts, setDistricts] = useState([]);
   const scrollableDivRef = useRef(null);
@@ -148,6 +154,9 @@ const Home = () => {
     const getUser = async () => {
       const currentUser = await getCurrentUser();
       setUser(currentUser);
+      // const attributes = await fetchUserAttributes();
+      // console.log(attributes);
+      // setAttributes(attributes);
     };
     getUser();
   }, []);
@@ -179,7 +188,7 @@ const Home = () => {
     if (key === "1") {
       navigate("/contact");
     } else if (key === "2") {
-      signOut();
+      signOut({ global: true });
     }
   };
 
@@ -515,7 +524,7 @@ const Home = () => {
               }}
               placeholder="Search"
               style={{
-                width: "calc(100dvw - 50px)",
+                width: "calc(100dvw - 70px)",
                 height: "fit-content",
                 // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                 borderRadius: "7px",
@@ -523,19 +532,21 @@ const Home = () => {
             />
           </Space.Compact>
           <Space.Compact>
-            {/* <Dropdown menu={{ items: subMenuItems, onClick: handleMenuClick }}>
-              <a onClick={(e) => e.preventDefault()}>
-                <Space>
-                  <EllipsisVertical
-                    style={{ color: "grey", marginTop: "7px" }}
-                  />
-                </Space>
-              </a>
-            </Dropdown> */}
-            <FilterOutlined
-              style={{ transform: "scale(1.5)", color: "#52c41a" }}
-              onClick={showDrawer}
-            />
+            <Space size={0}>
+              <Settings2
+                style={{ transform: "scale(1)", color: "#9CA3AF" }}
+                onClick={showDrawer}
+              />
+              <Dropdown
+                menu={{ items: subMenuItems, onClick: handleMenuClick }}
+              >
+                <a onClick={(e) => e.preventDefault()}>
+                  <Space>
+                    <EllipsisVertical style={{ color: "#9CA3AF" }} />
+                  </Space>
+                </a>
+              </Dropdown>
+            </Space>
             <Drawer
               title="Filters"
               closable={{ "aria-label": "Close Button" }}
@@ -811,10 +822,10 @@ const Home = () => {
                   grid={{
                     xs: 2,
                     sm: 3,
-                    md: 3,
-                    lg: 4,
-                    xl: 4,
-                    xxl: 6,
+                    md: 4,
+                    lg: 5,
+                    xl: 6,
+                    xxl: 7,
                     gutter: 10,
                   }}
                   dataSource={data}
@@ -823,7 +834,7 @@ const Home = () => {
                       <>
                         <List.Item key={item["item"]["uuid"]}>
                           <Card
-                            style={{ height: "325px" }}
+                            style={{ height: "325px", width: "186px" }}
                             bodyStyle={{ padding: "10px 10px 10px 10px" }}
                             onClick={() => {
                               setScrollPosition(
@@ -983,16 +994,26 @@ const Home = () => {
                 </div>
               ))}
             {(loading || chatLoading || favLoading) && (
-              <Space wrap>
-                {Array.from({ length: limit }).map(() => {
+              <Row gutter={[10, 10]}>
+                {Array.from({ length: limit }).map((_, index) => {
                   return (
-                    <Skeleton.Node
-                      style={{ height: "300px", width: "185px" }}
-                      active
-                    />
+                    <Col
+                      key={index}
+                      xs={12}
+                      sm={8}
+                      md={6}
+                      lg={5}
+                      xl={4}
+                      xxl={4}
+                    >
+                      <Skeleton.Node
+                        style={{ height: "300px", width: "186px" }}
+                        active
+                      />
+                    </Col>
                   );
                 })}
-              </Space>
+              </Row>
             )}
           </InfiniteScroll>
         </div>

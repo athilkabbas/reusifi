@@ -4,7 +4,7 @@ import { Layout, Spin, Modal } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { List, Skeleton, Empty } from "antd";
-import { Card, Badge, Space } from "antd";
+import { Card, Badge, Space, Row, Col } from "antd";
 import { getCurrentUser, signInWithRedirect } from "@aws-amplify/auth";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
@@ -283,10 +283,10 @@ const Ads = () => {
                   grid={{
                     xs: 2,
                     sm: 3,
-                    md: 3,
-                    lg: 4,
-                    xl: 4,
-                    xxl: 6,
+                    md: 4,
+                    lg: 5,
+                    xl: 6,
+                    xxl: 7,
                     gutter: 10,
                   }}
                   dataSource={adData}
@@ -411,16 +411,26 @@ const Ads = () => {
                 </div>
               ))}
             {(loading || chatLoading) && (
-              <Space wrap>
-                {Array.from({ length: limit }).map(() => {
+              <Row gutter={[10, 10]}>
+                {Array.from({ length: limit }).map((_, index) => {
                   return (
-                    <Skeleton.Node
-                      style={{ height: "300px", width: "185px" }}
-                      active
-                    />
+                    <Col
+                      key={index}
+                      xs={12}
+                      sm={8}
+                      md={6}
+                      lg={5}
+                      xl={4}
+                      xxl={4}
+                    >
+                      <Skeleton.Node
+                        style={{ height: "300px", width: "186px" }}
+                        active
+                      />
+                    </Col>
                   );
                 })}
-              </Space>
+              </Row>
             )}
           </InfiniteScroll>
         </div>

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { Skeleton, Space, Spin } from "antd";
+import { Col, Skeleton, Space, Spin } from "antd";
 import { Input } from "antd";
 import { useNavigate } from "react-router-dom";
 import { Cascader } from "antd";
@@ -7,7 +7,7 @@ import { Layout, theme, Modal } from "antd";
 import { locationsCascader } from "../helpers/locations";
 import { PlusOutlined } from "@ant-design/icons";
 import { Image, Upload, Typography, message } from "antd";
-import { Button, Badge } from "antd";
+import { Button, Badge, Row } from "antd";
 import axios from "axios";
 import { getCurrentUser, signInWithRedirect } from "@aws-amplify/auth";
 import imageCompression from "browser-image-compression";
@@ -617,18 +617,28 @@ const AddDress = () => {
             </>
           )}
           {(loading || chatLoading) && (
-            <Space direction="vertical" size={30} style={{ padding: "20px" }}>
-              {Array.from({ length: 10 }).map(() => {
+            <Row gutter={[30, 30]} style={{ padding: "20px" }}>
+              {Array.from({ length: 10 }).map((_, index) => {
                 return (
-                  <Skeleton.Input
-                    style={{
-                      width: !isMobile ? "50dvw" : "90dvw",
-                    }}
-                    active
-                  />
+                  <Col
+                    key={index}
+                    xs={24}
+                    sm={24}
+                    md={24}
+                    lg={24}
+                    xl={24}
+                    xxl={24}
+                  >
+                    <Skeleton.Input
+                      style={{
+                        width: !isMobile ? "50dvw" : "90dvw",
+                      }}
+                      active
+                    />
+                  </Col>
                 );
               })}
-            </Space>
+            </Row>
           )}
         </div>
       </Content>

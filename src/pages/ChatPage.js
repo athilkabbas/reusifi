@@ -620,7 +620,7 @@ const ChatPage = () => {
                                       <Space>
                                         <EllipsisVertical
                                           style={{
-                                            color: "grey",
+                                            color: "#9CA3AF",
                                             scale: "0.9",
                                           }}
                                         />
@@ -643,7 +643,7 @@ const ChatPage = () => {
                                       <Space>
                                         <EllipsisVertical
                                           style={{
-                                            color: "grey",
+                                            color: "#9CA3AF",
                                             scale: "0.9",
                                           }}
                                         />
@@ -762,19 +762,29 @@ const ChatPage = () => {
               />
             )}
             {(loading || chatLoading) && (
-              <Space wrap>
-                {Array.from({ length: limit }).map(() => {
+              <Row gutter={[10, 10]}>
+                {Array.from({ length: limit }).map((_, index) => {
                   return (
-                    <Skeleton.Node
-                      style={{
-                        height: "150px",
-                        width: !isMobile ? "50dvw" : "calc(100dvw - 10px)",
-                      }}
-                      active
-                    />
+                    <Col
+                      key={index}
+                      xs={24}
+                      sm={24}
+                      md={24}
+                      lg={24}
+                      xl={24}
+                      xxl={24}
+                    >
+                      <Skeleton.Node
+                        style={{
+                          height: "150px",
+                          width: !isMobile ? "50dvw" : "calc(100dvw - 10px)",
+                        }}
+                        active
+                      />
+                    </Col>
                   );
                 })}
-              </Space>
+              </Row>
             )}
             {chatData.length === 0 && !loading && !chatLoading && (
               <div
