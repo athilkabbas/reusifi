@@ -8,6 +8,8 @@ import {
   TreeSelect,
   Dropdown,
   Drawer,
+  Divider,
+  Button,
 } from "antd";
 import { EllipsisVertical } from "lucide-react";
 import {
@@ -18,7 +20,10 @@ import {
   DownOutlined,
   MailOutlined,
   FilterOutlined,
+  DeleteOutlined,
+  CloseCircleOutlined,
 } from "@ant-design/icons";
+import { LocateFixed } from "lucide-react";
 import { Input, Space, Empty } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { List, Skeleton, Radio } from "antd";
@@ -274,6 +279,7 @@ const Home = () => {
   const [inputChecked, setInputChecked] = useState(false);
   const [category, setCategory] = useState("");
   const [subCategory, setSubCategory] = useState(false);
+  const [apply, setApply] = useState(false);
   const loadMoreData = async () => {
     try {
       const scrollPosition = scrollableDivRef.current.scrollTop;
@@ -346,6 +352,7 @@ const Home = () => {
       clearTimeout(timer.current);
     }
     if (
+      apply &&
       limit &&
       initialLoad &&
       (search.trim() ||
@@ -363,10 +370,10 @@ const Home = () => {
         clearTimeout(timer.current);
       }
     };
-  }, [search, location, priceFilter, limit, category]);
+  }, [search, location, priceFilter, limit, category, apply]);
 
   useEffect(() => {
-    if (user && initialLoad && limit && !search.trim() && !category) {
+    if (user && initialLoad && limit && !search.trim() && !category && !apply) {
       try {
         setChatLoading(true);
         setFavLoading(true);
@@ -422,7 +429,7 @@ const Home = () => {
         return;
       }
     }
-  }, [user, initialLoad, limit, search, category]);
+  }, [user, initialLoad, limit, search, category, apply]);
   const subMenuItems = [
     {
       key: "1",
@@ -445,9 +452,6 @@ const Home = () => {
   ];
   const navigate = useNavigate();
   const onChangePriceFilter = (event) => {
-    setCurrentPage(1);
-    setData([]);
-    setInitialLoad(true);
     setPriceFilter(event.target.value);
   };
   const [open, setOpen] = useState(false);
@@ -458,6 +462,8 @@ const Home = () => {
   };
   const onClose = () => {
     setOpen(false);
+    setLocationOpen(false);
+    document.body.style.overscrollBehaviorY = "";
     setDrawerOpen(false);
   };
   return (
@@ -479,7 +485,7 @@ const Home = () => {
         </HeaderWrapper>
       )}
       <Space
-        size="small"
+        size="large"
         direction="vertical"
         style={{
           padding: "10px",
@@ -537,188 +543,240 @@ const Home = () => {
               open={drawerOpen}
               width={"100dvw"}
             >
-              <TreeSelect
-                onPopupScroll={() => {
-                  if (
-                    document.activeElement instanceof HTMLElement &&
-                    (isMobile ||
-                      window.visualViewport?.innerWidth < 1200 ||
-                      window.innerWidth < 1200)
-                  ) {
-                    document.activeElement.blur();
-                  }
-                  document.body.style.overscrollBehaviorY = "none";
-                }}
-                suffixIcon={
-                  open ? (
-                    <UpOutlined
-                      onClick={(e) => {
-                        e.stopPropagation();
+              <Space size="middle" direction="vertical">
+                <Divider plain>Category</Divider>
+                <Space.Compact size="large">
+                  <TreeSelect
+                    onPopupScroll={() => {
+                      if (
+                        document.activeElement instanceof HTMLElement &&
+                        (isMobile ||
+                          window.visualViewport?.innerWidth < 1200 ||
+                          window.innerWidth < 1200)
+                      ) {
+                        document.activeElement.blur();
+                      }
+                      document.body.style.overscrollBehaviorY = "none";
+                    }}
+                    suffixIcon={
+                      open ? (
+                        <UpOutlined
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setOpen(false);
+                            document.body.style.overscrollBehaviorY = "";
+                          }}
+                        />
+                      ) : (
+                        <DownOutlined
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setOpen(true);
+                            document.body.style.overscrollBehaviorY = "none";
+                          }}
+                        />
+                      )
+                    }
+                    showSearch
+                    allowClear
+                    style={{
+                      width: "calc(100dvw - 50px)",
+                      borderRadius: "7px",
+                      height: "fit-content",
+                    }}
+                    value={category || null}
+                    styles={{
+                      popup: {
+                        root: {
+                          maxHeight: 400,
+                          overflow: "auto",
+                          overscrollBehavior: "contain",
+                        },
+                      },
+                    }}
+                    placeholder="Search by category"
+                    treeDefaultExpandAll
+                    onClick={() => {
+                      setOpen(true);
+                    }}
+                    open={open}
+                    onChange={(value) => {
+                      setCategory(value);
+                      const leaf = isLeafNode(value, options);
+                      setSubCategory(leaf);
+                      setTimeout(() => {
                         setOpen(false);
-                        document.body.style.overscrollBehaviorY = "";
+                      }, 0);
+                    }}
+                    treeData={options}
+                  />
+                </Space.Compact>
+                <Divider plain>Location</Divider>
+                <Space.Compact size="large">
+                  <TreeSelect
+                    onPopupScroll={() => {
+                      if (
+                        document.activeElement instanceof HTMLElement &&
+                        (isMobile ||
+                          window.visualViewport?.innerWidth < 1200 ||
+                          window.innerWidth < 1200)
+                      ) {
+                        document.activeElement.blur();
+                      }
+                      document.body.style.overscrollBehaviorY = "none";
+                    }}
+                    suffixIcon={
+                      locationOpen ? (
+                        <UpOutlined
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setLocationOpen(false);
+                            document.body.style.overscrollBehaviorY = "";
+                          }}
+                        />
+                      ) : (
+                        <DownOutlined
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setLocationOpen(true);
+                            document.body.style.overscrollBehaviorY = "none";
+                          }}
+                        />
+                      )
+                    }
+                    showSearch
+                    allowClear
+                    style={{
+                      width: "calc(100dvw - 200px)",
+                      borderRadius: "7px",
+                      height: "fit-content",
+                    }}
+                    value={location.district || location.state || null}
+                    styles={{
+                      popup: {
+                        root: {
+                          maxHeight: 400,
+                          overflow: "auto",
+                          overscrollBehavior: "contain",
+                        },
+                      },
+                    }}
+                    placeholder="Location"
+                    treeDefaultExpandAll
+                    onClick={() => {
+                      document.body.style.overscrollBehaviorY = "none";
+                      setLocationOpen(true);
+                    }}
+                    open={locationOpen}
+                    onChange={(value) => {
+                      if (!value) {
+                        setLocation({ state: "", district: "" });
+                        return;
+                      }
+                      const [statePart, ...districtParts] = value.split("-");
+                      const isDistrict = districtParts.length > 0;
+                      if (isDistrict) {
+                        setLocation({
+                          state: statePart,
+                          district: districtParts.join("-"),
+                        });
+                      } else {
+                        setLocation({ state: value, district: "" });
+                      }
+                      setTimeout(() => {
+                        setLocationOpen(false);
+                      }, 0);
+                    }}
+                    treeData={locationsTreeSelect}
+                  />
+                </Space.Compact>
+                &nbsp;&nbsp;or
+                <Space.Compact size="large">
+                  <Button>
+                    <LocateFixed />
+                    Use your location
+                  </Button>
+                </Space.Compact>
+                <Divider plain>Price</Divider>
+                <Space size="small">
+                  <Space.Compact size="large">
+                    <Radio.Group
+                      // style={{ boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" }}
+                      buttonStyle="solid"
+                      onChange={onChangePriceFilter}
+                      value={priceFilter}
+                      size="large"
+                    >
+                      <Radio.Button value={"asc"}>Low to High</Radio.Button>
+                      <Radio.Button value={"desc"}>High to Low</Radio.Button>
+                    </Radio.Group>
+                  </Space.Compact>
+                  <CloseCircleOutlined onClick={() => setPriceFilter("")} />
+                </Space>
+                &nbsp;&nbsp;or
+                <Space.Compact size="large">
+                  <Space size="large">
+                    <Space.Compact size="large">
+                      <Input
+                        placeholder="min"
+                        style={{ width: "150px" }}
+                      ></Input>
+                    </Space.Compact>
+                    <Space.Compact size="large">
+                      <Input
+                        placeholder="max"
+                        style={{ width: "150px" }}
+                      ></Input>
+                    </Space.Compact>
+                  </Space>
+                </Space.Compact>
+                <Space
+                  size="middle"
+                  style={{ display: "flex", justifyContent: "center" }}
+                >
+                  <Space.Compact
+                    size="large"
+                    style={{ display: "flex", justifyContent: "center" }}
+                  >
+                    <Button
+                      style={{ background: "#52c41a" }}
+                      onClick={() => {
+                        setSearch("");
+                        setLocation({ state: "", district: "" });
+                        setPriceFilter("");
+                        setCategory("");
+                        setCurrentPage(1);
+                        setData([]);
+                        setInitialLoad(true);
+                        setApply(false);
                       }}
-                    />
-                  ) : (
-                    <DownOutlined
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setOpen(true);
-                        document.body.style.overscrollBehaviorY = "none";
+                      type="primary"
+                    >
+                      Clear
+                    </Button>
+                  </Space.Compact>
+                  <Space.Compact
+                    size="large"
+                    style={{ display: "flex", justifyContent: "center" }}
+                  >
+                    <Button
+                      style={{ background: "#52c41a" }}
+                      onClick={() => {
+                        setCurrentPage(1);
+                        setData([]);
+                        setInitialLoad(true);
+                        setApply(true);
                       }}
-                    />
-                  )
-                }
-                showSearch
-                allowClear
-                style={{
-                  width: "calc(100dvw - 50px)",
-                  borderRadius: "7px",
-                  height: "fit-content",
-                }}
-                value={category || null}
-                styles={{
-                  popup: {
-                    root: {
-                      maxHeight: 400,
-                      overflow: "auto",
-                      overscrollBehavior: "contain",
-                    },
-                  },
-                }}
-                placeholder="Search by category"
-                treeDefaultExpandAll
-                onClick={() => {
-                  setOpen(true);
-                }}
-                open={open}
-                onChange={(value) => {
-                  setCategory(value);
-                  const leaf = isLeafNode(value, options);
-                  setSubCategory(leaf);
-                  setCurrentPage(1);
-                  setData([]);
-                  setInitialLoad(true);
-                  setTimeout(() => {
-                    setOpen(false);
-                  }, 0);
-                }}
-                treeData={options}
-              />
-              <p>Some contents...</p>
-              <p>Some contents...</p>
+                      type="primary"
+                    >
+                      Apply
+                    </Button>
+                  </Space.Compact>
+                </Space>
+              </Space>
             </Drawer>
           </Space.Compact>
         </Space>
-        <Space.Compact
-          size="large"
-          style={{
-            display: !search.trim() && !category ? "none" : "flex",
-            flexDirection: "row",
-          }}
-        >
-          <TreeSelect
-            onPopupScroll={() => {
-              if (
-                document.activeElement instanceof HTMLElement &&
-                (isMobile ||
-                  window.visualViewport?.innerWidth < 1200 ||
-                  window.innerWidth < 1200)
-              ) {
-                document.activeElement.blur();
-              }
-              document.body.style.overscrollBehaviorY = "none";
-            }}
-            suffixIcon={
-              locationOpen ? (
-                <UpOutlined
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setLocationOpen(false);
-                    document.body.style.overscrollBehaviorY = "";
-                  }}
-                />
-              ) : (
-                <DownOutlined
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setLocationOpen(true);
-                    document.body.style.overscrollBehaviorY = "none";
-                  }}
-                />
-              )
-            }
-            showSearch
-            allowClear
-            style={{
-              width: "calc(100dvw - 200px)",
-              borderRadius: "7px",
-              height: "fit-content",
-            }}
-            value={location.district || location.state || null}
-            styles={{
-              popup: {
-                root: {
-                  maxHeight: 400,
-                  overflow: "auto",
-                  overscrollBehavior: "contain",
-                },
-              },
-            }}
-            placeholder="Location"
-            treeDefaultExpandAll
-            onClick={() => {
-              document.body.style.overscrollBehaviorY = "none";
-              setLocationOpen(true);
-            }}
-            open={locationOpen}
-            onChange={(value) => {
-              if (!value) {
-                setLocation({ state: "", district: "" });
-                setCurrentPage(1);
-                setData([]);
-                setInitialLoad(true);
-                return;
-              }
-              const [statePart, ...districtParts] = value.split("-");
-              const isDistrict = districtParts.length > 0;
-              if (isDistrict) {
-                setLocation({
-                  state: statePart,
-                  district: districtParts.join("-"),
-                });
-              } else {
-                setLocation({ state: value, district: "" });
-              }
-              setCurrentPage(1);
-              setData([]);
-              setInitialLoad(true);
-              setTimeout(() => {
-                setLocationOpen(false);
-              }, 0);
-            }}
-            treeData={locationsTreeSelect}
-          />
-        </Space.Compact>
-        <Space.Compact
-          size="large"
-          style={{
-            padding: "10px",
-            display: !search.trim() && !category ? "none" : "flex",
-            alignItems: "center",
-          }}
-        >
-          <Text strong>Price</Text>
-          &nbsp; &nbsp;
-          <Radio.Group
-            // style={{ boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" }}
-            buttonStyle="solid"
-            onChange={onChangePriceFilter}
-            value={priceFilter}
-          >
-            <Radio.Button value={"asc"}>Low to High</Radio.Button>
-            <Radio.Button value={"desc"}>High to Low</Radio.Button>
-          </Radio.Group>
-        </Space.Compact>
       </Space>
       <Content>
         <div

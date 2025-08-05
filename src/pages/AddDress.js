@@ -464,7 +464,7 @@ const AddDress = () => {
             borderRadius: "0px",
             overflow: "scroll",
             height: "100%",
-            paddingBottom: "60px",
+            paddingBottom: "70px",
           }}
         >
           {!loading && !chatLoading && user && (
@@ -585,12 +585,21 @@ const AddDress = () => {
                     Max 6 images
                   </span>
                 </Space.Compact>
+                <Space.Compact size="large">
+                  {count < 5 && (
+                    <span style={{ fontSize: "13px", fontWeight: "300" }}>
+                      The ad will get deleted automatically after 30 days
+                    </span>
+                  )}
+                </Space.Compact>
+                <Space.Compact size="large">
+                  {count >= 5 && <Text>Max 5 ads</Text>}
+                </Space.Compact>
                 <Space.Compact
                   size="large"
                   style={{
                     display: "flex",
                     justifyContent: !isMobile ? "flex-start" : "center",
-                    marginTop: "30px",
                   }}
                 >
                   {count < 5 && (
@@ -603,16 +612,6 @@ const AddDress = () => {
                       Submit
                     </Button>
                   )}
-                </Space.Compact>
-                <Space.Compact size="large">
-                  {count < 5 && (
-                    <span style={{ fontSize: "13px", fontWeight: "300" }}>
-                      The ad will get deleted automatically after 30 days
-                    </span>
-                  )}
-                </Space.Compact>
-                <Space.Compact size="large">
-                  {count >= 5 && <Text>Max 5 ads</Text>}
                 </Space.Compact>
               </Space>
             </>

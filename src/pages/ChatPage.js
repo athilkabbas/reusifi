@@ -21,12 +21,10 @@ import HeaderWrapper from "../component/Header";
 const menuItems = [
   {
     key: "1",
-    danger: true,
     label: "Block",
   },
   {
     key: "2",
-    danger: true,
     label: "Delete",
   },
 ];
@@ -34,12 +32,10 @@ const menuItems = [
 const menuItemsBlocked = [
   {
     key: "1",
-    danger: false,
     label: "Unblock",
   },
   {
     key: "2",
-    danger: true,
     label: "Delete",
   },
 ];
@@ -332,7 +328,7 @@ const ChatPage = () => {
         }}
       >
         {menuItems.map((item) => (
-          <Menu.Item key={item.key} danger={item.danger}>
+          <Menu.Item style={{ color: "#52c41a" }} key={item.key}>
             {item.label}
           </Menu.Item>
         ))}
@@ -387,7 +383,7 @@ const ChatPage = () => {
         }}
       >
         {menuItemsBlocked.map((item) => (
-          <Menu.Item key={item.key} danger={item.danger}>
+          <Menu.Item style={{ color: "#52c41a" }} key={item.key}>
             {item.label}
           </Menu.Item>
         ))}

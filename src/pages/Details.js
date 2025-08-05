@@ -298,7 +298,7 @@ const Details = () => {
             overflowY: "scroll",
             height: "100%",
             overflowX: "hidden",
-            paddingBottom: "60px",
+            paddingBottom: "70px",
           }}
         >
           {!loading &&
@@ -491,7 +491,10 @@ const Details = () => {
                             okText="Yes"
                             cancelText="No"
                           >
-                            <Button danger type="primary">
+                            <Button
+                              style={{ background: "#52c41a" }}
+                              type="primary"
+                            >
                               Delete
                             </Button>
                           </Popconfirm>
