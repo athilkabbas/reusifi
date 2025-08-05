@@ -680,7 +680,7 @@ const Chat = () => {
                               background: "#E5E7EB",
                               borderRadius: "16px 16px 4px 16px",
                               padding: "10px",
-                              maxWidth: "80vw", // prevent it from overflowing
+                              maxWidth: "80dvw", // prevent it from overflowing
                             }}
                           >
                             <div
@@ -725,7 +725,7 @@ const Chat = () => {
                               background: "#d9f7be",
                               borderRadius: "16px 16px 16px 4px",
                               padding: "10px",
-                              maxWidth: "80vw", // prevent overflow
+                              maxWidth: "80dvw", // prevent overflow
                             }}
                           >
                             <div
@@ -763,6 +763,7 @@ const Chat = () => {
               )}
               {(loading || chatLoading) && (
                 <Skeleton
+                  style={{ padding: "20px" }}
                   paragraph={{
                     rows: 4,
                   }}

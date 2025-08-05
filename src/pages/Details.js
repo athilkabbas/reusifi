@@ -463,7 +463,7 @@ const Details = () => {
                         column={1}
                         size="small"
                         style={{
-                          width: isMobile ? "calc(100dvw - 50px)" : "40vw",
+                          width: isMobile ? "calc(100dvw - 50px)" : "40dvw",
                           fontSize: "13px",
                           fontWeight: "300",
                           // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
@@ -544,12 +544,22 @@ const Details = () => {
               </>
             )}
           {(loading || chatLoading || chatProductLoading) && (
-            <Skeleton
-              paragraph={{
-                rows: 8,
-              }}
-              active
-            />
+            <Space
+              size="large"
+              direction="vertical"
+              style={{ display: "flex", alignItems: "center", padding: "20px" }}
+            >
+              <Skeleton.Node
+                style={{ height: "400px", width: "300px" }}
+                active
+              />
+              <Space>
+                <Skeleton.Node
+                  style={{ height: "400px", width: "300px" }}
+                  active
+                />
+              </Space>
+            </Space>
           )}
         </div>
       </Content>

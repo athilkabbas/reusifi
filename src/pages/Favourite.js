@@ -4,7 +4,7 @@ import { Layout, Spin, theme, Modal } from "antd";
 import { HeartOutlined, HeartFilled, LoadingOutlined } from "@ant-design/icons";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { List, Skeleton, Empty } from "antd";
-import { Card } from "antd";
+import { Card, Space } from "antd";
 import { getCurrentUser, signInWithRedirect } from "@aws-amplify/auth";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
@@ -522,12 +522,16 @@ const Favourites = () => {
                 </div>
               ))}
             {(loading || chatLoading || favLoading) && (
-              <Skeleton
-                paragraph={{
-                  rows: 4,
-                }}
-                active
-              />
+              <Space wrap>
+                {Array.from({ length: limit }).map(() => {
+                  return (
+                    <Skeleton.Node
+                      style={{ height: "300px", width: "185px" }}
+                      active
+                    />
+                  );
+                })}
+              </Space>
             )}
           </InfiniteScroll>
         </div>

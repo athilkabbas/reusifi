@@ -481,7 +481,7 @@ const AddDress = () => {
                   <Input
                     style={{
                       // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-                      width: !isMobile ? "50vw" : "85vw",
+                      width: !isMobile ? "50dvw" : "85dvw",
                       marginTop: "30px",
                     }}
                     onChange={(value) => handleChange(value, "title")}
@@ -494,7 +494,7 @@ const AddDress = () => {
                   <TextArea
                     style={{
                       // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-                      width: !isMobile ? "50vw" : "85vw",
+                      width: !isMobile ? "50dvw" : "85dvw",
                     }}
                     onChange={(value) => handleChange(value, "description")}
                     autoSize={{ minRows: 8, maxRows: 8 }}
@@ -507,7 +507,7 @@ const AddDress = () => {
                   <Cascader
                     style={{
                       // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-                      width: !isMobile ? "50vw" : "85vw",
+                      width: !isMobile ? "50dvw" : "85dvw",
                       borderRadius: "9px",
                     }}
                     showSearch={{ filter }}
@@ -525,7 +525,7 @@ const AddDress = () => {
                   <Cascader
                     style={{
                       // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-                      width: !isMobile ? "50vw" : "85vw",
+                      width: !isMobile ? "50dvw" : "85dvw",
                       borderRadius: "9px",
                     }}
                     showSearch={{ filter }}
@@ -543,7 +543,7 @@ const AddDress = () => {
                   <Input
                     style={{
                       // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-                      width: !isMobile ? "50vw" : "85vw",
+                      width: !isMobile ? "50dvw" : "85dvw",
                     }}
                     prefix="₹"
                     onChange={(value) => handleChange(value, "price")}
@@ -617,12 +617,18 @@ const AddDress = () => {
             </>
           )}
           {(loading || chatLoading) && (
-            <Skeleton
-              paragraph={{
-                rows: 8,
-              }}
-              active
-            />
+            <Space direction="vertical" size={30} style={{ padding: "20px" }}>
+              {Array.from({ length: 10 }).map(() => {
+                return (
+                  <Skeleton.Input
+                    style={{
+                      width: !isMobile ? "50dvw" : "90dvw",
+                    }}
+                    active
+                  />
+                );
+              })}
+            </Space>
           )}
         </div>
       </Content>

@@ -983,12 +983,16 @@ const Home = () => {
                 </div>
               ))}
             {(loading || chatLoading || favLoading) && (
-              <Skeleton
-                paragraph={{
-                  rows: 4,
-                }}
-                active
-              />
+              <Space wrap>
+                {Array.from({ length: limit }).map(() => {
+                  return (
+                    <Skeleton.Node
+                      style={{ height: "300px", width: "185px" }}
+                      active
+                    />
+                  );
+                })}
+              </Space>
             )}
           </InfiniteScroll>
         </div>
