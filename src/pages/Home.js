@@ -1,6 +1,14 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { Layout, Spin, Modal, Switch, TreeSelect, Dropdown } from "antd";
+import {
+  Layout,
+  Spin,
+  Modal,
+  Switch,
+  TreeSelect,
+  Dropdown,
+  Drawer,
+} from "antd";
 import { EllipsisVertical } from "lucide-react";
 import {
   LogoutOutlined,
@@ -9,6 +17,7 @@ import {
   UpOutlined,
   DownOutlined,
   MailOutlined,
+  FilterOutlined,
 } from "@ant-design/icons";
 import { Input, Space, Empty } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -442,7 +451,15 @@ const Home = () => {
     setPriceFilter(event.target.value);
   };
   const [open, setOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const [locationOpen, setLocationOpen] = useState(false);
+  const showDrawer = () => {
+    setDrawerOpen(true);
+  };
+  const onClose = () => {
+    setOpen(false);
+    setDrawerOpen(false);
+  };
   return (
     <Layout
       style={{
@@ -477,7 +494,49 @@ const Home = () => {
               justifyContent: "center",
             }}
           >
-            {inputChecked ? (
+            <Input
+              value={search}
+              onChange={(event) => {
+                setSearch(event.target.value);
+                setCurrentPage(1);
+                setData([]);
+                setInitialLoad(true);
+                if (!event.target.value.trim()) {
+                  setLocation({ state: "", district: "" });
+                  setPriceFilter("");
+                  setDistricts([]);
+                }
+              }}
+              placeholder="Search"
+              style={{
+                width: "calc(100dvw - 50px)",
+                height: "fit-content",
+                // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+                borderRadius: "7px",
+              }}
+            />
+          </Space.Compact>
+          <Space.Compact>
+            {/* <Dropdown menu={{ items: subMenuItems, onClick: handleMenuClick }}>
+              <a onClick={(e) => e.preventDefault()}>
+                <Space>
+                  <EllipsisVertical
+                    style={{ color: "grey", marginTop: "7px" }}
+                  />
+                </Space>
+              </a>
+            </Dropdown> */}
+            <FilterOutlined
+              style={{ transform: "scale(1.5)", color: "#52c41a" }}
+              onClick={showDrawer}
+            />
+            <Drawer
+              title="Filters"
+              closable={{ "aria-label": "Close Button" }}
+              onClose={onClose}
+              open={drawerOpen}
+              width={"100dvw"}
+            >
               <TreeSelect
                 onPopupScroll={() => {
                   if (
@@ -508,24 +567,6 @@ const Home = () => {
                       }}
                     />
                   )
-                }
-                prefix={
-                  <Switch
-                    style={{ background: "#52c41a" }}
-                    defaultChecked
-                    onChange={(checked) => {
-                      setCategory("");
-                      setSearch("");
-                      setLocation({ state: "", district: "" });
-                      setPriceFilter("");
-                      setDistricts([]);
-                      setInputChecked(checked);
-                      setOpen(false);
-                      setInitialLoad(true);
-                      setCurrentPage(1);
-                      document.body.style.overscrollBehaviorY = "";
-                    }}
-                  ></Switch>
                 }
                 showSearch
                 allowClear
@@ -563,56 +604,9 @@ const Home = () => {
                 }}
                 treeData={options}
               />
-            ) : (
-              <Input
-                prefix={
-                  <Switch
-                    onChange={(checked) => {
-                      setSearch("");
-                      setCategory("");
-                      setLocation({ state: "", district: "" });
-                      setPriceFilter("");
-                      setDistricts([]);
-                      setInputChecked(checked);
-                      setInitialLoad(true);
-                      setCurrentPage(1);
-                      setOpen(true);
-                      document.body.style.overscrollBehaviorY = "none";
-                    }}
-                  ></Switch>
-                }
-                value={search}
-                onChange={(event) => {
-                  setSearch(event.target.value);
-                  setCurrentPage(1);
-                  setData([]);
-                  setInitialLoad(true);
-                  if (!event.target.value.trim()) {
-                    setLocation({ state: "", district: "" });
-                    setPriceFilter("");
-                    setDistricts([]);
-                  }
-                }}
-                placeholder="Search"
-                style={{
-                  width: "calc(100dvw - 50px)",
-                  height: "fit-content",
-                  // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-                  borderRadius: "7px",
-                }}
-              />
-            )}
-          </Space.Compact>
-          <Space.Compact>
-            <Dropdown menu={{ items: subMenuItems, onClick: handleMenuClick }}>
-              <a onClick={(e) => e.preventDefault()}>
-                <Space>
-                  <EllipsisVertical
-                    style={{ color: "grey", marginTop: "7px" }}
-                  />
-                </Space>
-              </a>
-            </Dropdown>
+              <p>Some contents...</p>
+              <p>Some contents...</p>
+            </Drawer>
           </Space.Compact>
         </Space>
         <Space.Compact
