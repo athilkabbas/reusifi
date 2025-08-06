@@ -427,19 +427,30 @@ const Home = () => {
   const subMenuItems = [
     {
       key: "1",
-      label: "Contact",
+      label: (
+        <span style={{ fontSize: "13px", fontWeight: "300" }}>Contact</span>
+      ),
       icon: (
         <MailOutlined
-          style={{ color: "#389e0d", fontSize: isMobile ? "10px" : "15px" }}
+          style={{
+            color: "#389e0d",
+            fontSize: isMobile ? "10px" : "15px",
+          }}
         />
       ),
     },
     {
       key: "2",
-      label: "Sign Out",
+      label: (
+        <span style={{ fontSize: "13px", fontWeight: "300" }}>Sign Out</span>
+      ),
       icon: (
         <LogoutOutlined
-          style={{ color: "#389e0d", fontSize: isMobile ? "10px" : "15px" }}
+          style={{
+            color: "#389e0d",
+            fontSize: isMobile ? "10px" : "15px",
+            fontWeight: "300",
+          }}
         />
       ),
     },
@@ -691,7 +702,7 @@ const Home = () => {
                 </Space.Compact>
                 &nbsp;&nbsp;or
                 <Space.Compact size="large">
-                  <Button>
+                  <Button style={{ fontSize: "13px", fontWeight: "300" }}>
                     <LocateFixed />
                     Use your location
                   </Button>
@@ -706,8 +717,18 @@ const Home = () => {
                       value={priceFilter}
                       size="large"
                     >
-                      <Radio.Button value={"asc"}>Low to High</Radio.Button>
-                      <Radio.Button value={"desc"}>High to Low</Radio.Button>
+                      <Radio.Button
+                        style={{ fontSize: "13px", fontWeight: "300" }}
+                        value={"asc"}
+                      >
+                        Low to High
+                      </Radio.Button>
+                      <Radio.Button
+                        style={{ fontSize: "13px", fontWeight: "300" }}
+                        value={"desc"}
+                      >
+                        High to Low
+                      </Radio.Button>
                     </Radio.Group>
                   </Space.Compact>
                   <CloseCircleOutlined onClick={() => setPriceFilter("")} />
@@ -743,7 +764,11 @@ const Home = () => {
                         !priceFilter &&
                         Object.values(location).every((value) => !value)
                       }
-                      style={{ background: "#52c41a" }}
+                      style={{
+                        background: "#52c41a",
+                        fontSize: "13px",
+                        fontWeight: "300",
+                      }}
                       onClick={() => {
                         setSearch("");
                         setLocation({ state: "", district: "" });
@@ -771,7 +796,11 @@ const Home = () => {
                         !priceFilter &&
                         Object.values(location).every((value) => !value)
                       }
-                      style={{ background: "#52c41a" }}
+                      style={{
+                        background: "#52c41a",
+                        fontSize: "13px",
+                        fontWeight: "300",
+                      }}
                       onClick={() => {
                         setCurrentPage(1);
                         setData([]);

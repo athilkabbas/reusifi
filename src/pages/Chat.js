@@ -609,6 +609,8 @@ const Chat = () => {
                 background: "#52c41a",
                 display: "flex",
                 alignSelf: "flex-end",
+                fontSize: "13px",
+                fontWeight: "300",
               }}
               type="primary"
               onClick={() => handleSubmit()}

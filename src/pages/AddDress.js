@@ -5,13 +5,13 @@ import { useNavigate } from "react-router-dom";
 import { Cascader } from "antd";
 import { Layout, theme, Modal } from "antd";
 import { locationsCascader } from "../helpers/locations";
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined, UploadOutlined } from "@ant-design/icons";
 import { Image, Upload, Typography, message } from "antd";
 import { Button, Badge, Row } from "antd";
 import axios from "axios";
 import { signInWithRedirect } from "@aws-amplify/auth";
 import imageCompression from "browser-image-compression";
-import { LoadingOutlined } from "@ant-design/icons";
+import { LoadingOutlined, UpOutlined, DownOutlined } from "@ant-design/icons";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
 import { callApi } from "../helpers/api";
@@ -403,28 +403,39 @@ const AddDress = () => {
       (option) =>
         option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1
     );
-  const uploadButton = (
-    <button
-      style={{
-        border: 0,
-        background: "none",
-      }}
-      type="button"
-    >
-      <PlusOutlined />
-      <div
-        style={{
-          marginTop: 8,
-        }}
-      >
-        Upload
-      </div>
-    </button>
-  );
 
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
+  const [pincode, setPincode] = useState("");
+  const [address, setAddress] = useState("");
+  const [postCodeLoading, setPostCodeLoading] = useState(false);
+  const fetchPincodeDetails = async () => {
+    setPostCodeLoading(true);
+    const data = await callApi(
+      `https://api.reusifi.com/prod/getLocation?pincode=${encodeURIComponent(
+        pincode
+      )}`,
+      "GET"
+    );
+    setPostCodeLoading(false);
+    setAddress(data.data.results[0].formatted_address);
+  };
+  const handlePincode = (e) => {
+    const value = e.target.value;
+    setPincode(value);
+    if (!value) {
+      setAddress("");
+    }
+  };
+  const [open, setOpen] = useState(false);
+  const uploadRef = useRef(null);
+  const submitRef = useRef(null);
+  const scrollToRef = (ref) => {
+    if (ref?.current) {
+      ref.current?.nativeElement.scrollIntoView({
+        behavior: "auto",
+        block: "end",
+      });
+    }
+  };
   return (
     <Layout
       style={{
@@ -505,11 +516,39 @@ const AddDress = () => {
                     placeholder={"Category"}
                     onChange={(value) => {
                       handleChange(value, "category");
+                      setTimeout(() => {
+                        setOpen(false);
+                      });
                     }}
+                    onClick={() => {
+                      setOpen(true);
+                      document.body.style.overscrollBehaviorY = "none";
+                      scrollToRef(uploadRef);
+                    }}
+                    open={open}
                     options={options}
+                    suffixIcon={
+                      open ? (
+                        <UpOutlined
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setOpen(false);
+                            document.body.style.overscrollBehaviorY = "";
+                          }}
+                        />
+                      ) : (
+                        <DownOutlined
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setOpen(true);
+                            document.body.style.overscrollBehaviorY = "none";
+                          }}
+                        />
+                      )
+                    }
                   ></Cascader>
                 </Space.Compact>
-                <Space.Compact size="large">
+                {/* <Space.Compact size="large">
                   <Cascader
                     style={{
                       // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
@@ -526,6 +565,32 @@ const AddDress = () => {
                     }}
                     options={locationsCascader}
                   ></Cascader>
+                </Space.Compact> */}
+                <Space.Compact size="large">
+                  <Input
+                    value={pincode}
+                    onChange={handlePincode}
+                    placeholder="Pincode"
+                  ></Input>
+                  <Button
+                    loading={postCodeLoading}
+                    disabled={!pincode}
+                    type="primary"
+                    style={{
+                      background: "#52c41a",
+                      fontSize: "13px",
+                      fontWeight: "300",
+                    }}
+                    onClick={fetchPincodeDetails}
+                  >
+                    Check Pincode
+                  </Button>
+                </Space.Compact>
+                <Space.Compact
+                  size="large"
+                  style={{ display: pincode && address ? "block" : "none" }}
+                >
+                  <Input value={address} placeholder="Address" readOnly></Input>
                 </Space.Compact>
                 <Space.Compact size="large">
                   <Input
@@ -541,38 +606,53 @@ const AddDress = () => {
                   />
                 </Space.Compact>
                 <Space.Compact size="large">
-                  <Upload
-                    accept="image/png,image/jpeg"
-                    listType="picture-card"
-                    fileList={fileList}
-                    onPreview={handlePreview}
-                    beforeUpload={() => false}
-                    onChange={handleChangeImage}
-                    maxCount={6}
-                    multiple
-                  >
-                    {fileList.length >= 6 ? null : uploadButton}
-                  </Upload>
-                  {previewImage && (
-                    <Image
-                      wrapperStyle={{
-                        display: "none",
+                  <Space size="large" direction="vertical">
+                    <Upload
+                      ref={uploadRef}
+                      accept="image/png,image/jpeg"
+                      listType="picture"
+                      fileList={fileList}
+                      onPreview={handlePreview}
+                      beforeUpload={() => false}
+                      onChange={handleChangeImage}
+                      maxCount={6}
+                      multiple
+                      onClick={() => {
+                        scrollToRef(uploadRef);
                       }}
-                      preview={{
-                        visible: previewOpen,
-                        onVisibleChange: (visible) => setPreviewOpen(visible),
-                        afterOpenChange: (visible) =>
-                          !visible && setPreviewImage(""),
-                      }}
-                      src={previewImage}
-                    />
-                  )}
+                    >
+                      <Button
+                        style={{
+                          color: "black",
+                          fontSize: "13px",
+                          fontWeight: "300",
+                        }}
+                        icon={<UploadOutlined />}
+                      >
+                        Upload (Max: 6)
+                      </Button>
+                    </Upload>
+                    {previewImage && (
+                      <Image
+                        wrapperStyle={{
+                          display: "none",
+                        }}
+                        preview={{
+                          visible: previewOpen,
+                          onVisibleChange: (visible) => setPreviewOpen(visible),
+                          afterOpenChange: (visible) =>
+                            !visible && setPreviewImage(""),
+                        }}
+                        src={previewImage}
+                      />
+                    )}
+                  </Space>
                 </Space.Compact>
-                <Space.Compact size="large">
+                {/* <Space.Compact size="large">
                   <span style={{ fontSize: "13px", fontWeight: "300" }}>
                     Max 6 images
                   </span>
-                </Space.Compact>
+                </Space.Compact> */}
                 <Space.Compact size="large">
                   {count < 5 && (
                     <span style={{ fontSize: "13px", fontWeight: "300" }}>
@@ -592,7 +672,12 @@ const AddDress = () => {
                 >
                   {count < 5 && (
                     <Button
-                      style={{ background: "#52c41a" }}
+                      ref={submitRef}
+                      style={{
+                        background: "#52c41a",
+                        fontSize: "13px",
+                        fontWeight: "300",
+                      }}
                       onClick={handleSubmit}
                       type="primary"
                       disabled={count >= 5 ? true : false}

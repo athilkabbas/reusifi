@@ -328,7 +328,10 @@ const ChatPage = () => {
         }}
       >
         {menuItems.map((item) => (
-          <Menu.Item style={{ color: "#52c41a" }} key={item.key}>
+          <Menu.Item
+            style={{ color: "#52c41a", fontSize: "13px", fontWeight: "300" }}
+            key={item.key}
+          >
             {item.label}
           </Menu.Item>
         ))}

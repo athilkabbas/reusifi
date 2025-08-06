@@ -484,7 +484,11 @@ const Details = () => {
                             cancelText="No"
                           >
                             <Button
-                              style={{ background: "#52c41a" }}
+                              style={{
+                                background: "#52c41a",
+                                fontSize: "13px",
+                                fontWeight: "300",
+                              }}
                               type="primary"
                             >
                               Delete
@@ -509,7 +513,11 @@ const Details = () => {
                               cancelText="No"
                             >
                               <Button
-                                style={{ background: "#52c41a" }}
+                                style={{
+                                  background: "#52c41a",
+                                  fontSize: "13px",
+                                  fontWeight: "300",
+                                }}
                                 type="primary"
                               >
                                 Chat
@@ -517,7 +525,11 @@ const Details = () => {
                             </Popconfirm>
                           ) : (
                             <Button
-                              style={{ background: "#52c41a" }}
+                              style={{
+                                background: "#52c41a",
+                                fontSize: "13px",
+                                fontWeight: "300",
+                              }}
                               onClick={() => {
                                 navigate("/chat", {
                                   state: { recipient: item },
