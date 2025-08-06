@@ -77,7 +77,6 @@ function AppWithSession() {
           );
 
           socket.onopen = () => {
-            console.log("Connected to the WebSocket");
             setSocketLoading(false);
             if (reconnectTimeout) {
               clearTimeout(reconnectTimeout);
@@ -90,7 +89,7 @@ function AppWithSession() {
               reconnectTimeout = setTimeout(() => {
                 fetchNotifications();
                 reconnectTimeout = null;
-              }, 1000);
+              }, 3000);
             }
           };
 
@@ -107,7 +106,7 @@ function AppWithSession() {
               reconnectTimeout = setTimeout(() => {
                 fetchNotifications();
                 reconnectTimeout = null;
-              }, 1000);
+              }, 3000);
             }
           };
         } else {

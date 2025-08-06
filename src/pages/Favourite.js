@@ -269,7 +269,6 @@ const Favourites = () => {
             } else {
               Modal.error(errorConfig);
             }
-            console.error(err);
           })
           .finally(() => {
             setChatLoading(false);

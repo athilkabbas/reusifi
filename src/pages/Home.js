@@ -139,6 +139,7 @@ const Home = () => {
         setData([]);
         setCurrentPage(1);
         setInitialLoad(true);
+        setLoadedImages({});
         updateLimit();
       }
       prevWidth = currentWidth;
@@ -361,13 +362,13 @@ const Home = () => {
       clearTimeout(timer.current);
     }
     if (
-      apply &&
       limit &&
       initialLoad &&
       (search.trim() ||
-        category ||
-        Object.values(location).some((value) => value) ||
-        priceFilter)
+        (apply &&
+          (category ||
+            Object.values(location).some((value) => value) ||
+            priceFilter)))
     ) {
       setLoading(true);
       timer.current = setTimeout(() => {
@@ -382,7 +383,7 @@ const Home = () => {
   }, [search, location, priceFilter, limit, category, apply]);
 
   useEffect(() => {
-    if (user && initialLoad && limit && !search.trim() && !category && !apply) {
+    if (user && initialLoad && limit && !search.trim() && !apply) {
       try {
         setChatLoading(true);
         setFavLoading(true);
@@ -412,7 +413,6 @@ const Home = () => {
             } else {
               Modal.error(errorConfig);
             }
-            console.log(err);
           })
           .finally(() => {
             setChatLoading(false);
@@ -500,7 +500,7 @@ const Home = () => {
           padding: "10px",
         }}
       >
-        <Space>
+        <Space size="middle">
           <Space.Compact
             size="large"
             style={{
@@ -516,6 +516,7 @@ const Home = () => {
                 setCurrentPage(1);
                 setData([]);
                 setInitialLoad(true);
+                setLoadedImages({});
                 if (!event.target.value.trim()) {
                   setLocation({ state: "", district: "" });
                   setPriceFilter("");
@@ -524,7 +525,7 @@ const Home = () => {
               }}
               placeholder="Search"
               style={{
-                width: "calc(100dvw - 70px)",
+                width: "calc(100dvw - 100px)",
                 height: "fit-content",
                 // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                 borderRadius: "7px",
@@ -532,12 +533,13 @@ const Home = () => {
             />
           </Space.Compact>
           <Space.Compact>
-            <Space size={0}>
+            <Space>
               <Settings2
                 style={{ transform: "scale(1)", color: "#9CA3AF" }}
                 onClick={showDrawer}
               />
               <Dropdown
+                trigger={["click"]}
                 menu={{ items: subMenuItems, onClick: handleMenuClick }}
               >
                 <a onClick={(e) => e.preventDefault()}>
@@ -750,6 +752,11 @@ const Home = () => {
                     style={{ display: "flex", justifyContent: "center" }}
                   >
                     <Button
+                      disabled={
+                        !category &&
+                        !priceFilter &&
+                        Object.values(location).every((value) => !value)
+                      }
                       style={{ background: "#52c41a" }}
                       onClick={() => {
                         setSearch("");
@@ -759,6 +766,7 @@ const Home = () => {
                         setCurrentPage(1);
                         setData([]);
                         setInitialLoad(true);
+                        setLoadedImages({});
                         setApply(false);
                       }}
                       type="primary"
@@ -771,11 +779,17 @@ const Home = () => {
                     style={{ display: "flex", justifyContent: "center" }}
                   >
                     <Button
+                      disabled={
+                        !category &&
+                        !priceFilter &&
+                        Object.values(location).every((value) => !value)
+                      }
                       style={{ background: "#52c41a" }}
                       onClick={() => {
                         setCurrentPage(1);
                         setData([]);
                         setInitialLoad(true);
+                        setLoadedImages({});
                         setApply(true);
                       }}
                       type="primary"

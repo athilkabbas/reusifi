@@ -202,7 +202,6 @@ const Ads = () => {
             } else {
               Modal.error(errorConfig);
             }
-            console.error(err);
           })
           .finally(() => {
             setChatLoading(false);

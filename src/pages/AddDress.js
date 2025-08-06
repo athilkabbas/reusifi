@@ -217,7 +217,6 @@ const AddDress = () => {
             } else {
               Modal.error(errorConfig);
             }
-            console.error(err);
           })
           .finally(() => {
             setChatLoading(false);

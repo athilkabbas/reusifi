@@ -188,7 +188,6 @@ const Chat = () => {
           setWs(socket);
 
           socket.onopen = () => {
-            console.log("Connected to the WebSocket");
             setSocketLoading(false);
             if (reconnectTimeout) {
               clearTimeout(reconnectTimeout);
@@ -203,13 +202,12 @@ const Chat = () => {
                   fetchUser();
                 }
                 reconnectTimeout = null;
-              }, 1000);
+              }, 3000);
             }
           };
 
           socket.onmessage = async (event) => {
             if (!socket || socket.readyState !== WebSocket.OPEN) return; // Guard
-            console.log("Message from server:", event);
             const data = JSON.parse(event.data);
             setIChatData((prevValue) => [
               {
@@ -254,14 +252,13 @@ const Chat = () => {
           };
 
           socket.onclose = () => {
-            console.log("Disconnected from WebSocket");
             if (!reconnectTimeout) {
               reconnectTimeout = setTimeout(() => {
                 if (productId || (recipient && recipient["item"]["uuid"])) {
                   fetchUser();
                 }
                 reconnectTimeout = null;
-              }, 1000);
+              }, 3000);
             }
           };
         } else {

@@ -464,7 +464,6 @@ const ChatPage = () => {
             } else {
               Modal.error(errorConfig);
             }
-            console.error(err);
           })
           .finally(() => {
             setChatLoading(false);
