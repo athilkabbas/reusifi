@@ -5,7 +5,7 @@ import { HeartOutlined, HeartFilled, LoadingOutlined } from "@ant-design/icons";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { List, Skeleton, Empty, Row, Col } from "antd";
 import { Card, Space } from "antd";
-import { getCurrentUser, signInWithRedirect } from "@aws-amplify/auth";
+import { signInWithRedirect } from "@aws-amplify/auth";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
 import { callApi } from "../helpers/api";
@@ -18,7 +18,6 @@ const capitalize = (str) => {
 const { Content } = Layout;
 const Favourites = () => {
   const [loading, setLoading] = useState(false);
-  const [user, setUser] = useState(null);
   const scrollableDivRef = useRef(null);
   const [chatLoading, setChatLoading] = useState(false);
   const [favLoading, setFavLoading] = useState(false);
@@ -38,6 +37,7 @@ const Favourites = () => {
     setFavLastEvaluatedKey,
     favLastEvaluatedKey,
     setUnreadChatCount,
+    user,
   } = useContext(Context);
 
   const isModalVisibleRef = useRef(false);
@@ -109,14 +109,6 @@ const Favourites = () => {
   const handleImageLoad = (uuid) => {
     setLoadedImages((prev) => ({ ...prev, [uuid]: true }));
   };
-
-  useEffect(() => {
-    const getUser = async () => {
-      const currentUser = await getCurrentUser();
-      setUser(currentUser);
-    };
-    getUser();
-  }, []);
 
   // useEffect(() => {
   //   if (scrollableDivRef.current  &&  !loading && !handleFavLoading && !chatLoading && !favLoading) {

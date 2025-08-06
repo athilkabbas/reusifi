@@ -5,7 +5,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { List, Skeleton, Empty } from "antd";
 import { Card, Badge, Space, Row, Col } from "antd";
-import { getCurrentUser, signInWithRedirect } from "@aws-amplify/auth";
+import { signInWithRedirect } from "@aws-amplify/auth";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
 import { callApi } from "../helpers/api";
@@ -18,7 +18,6 @@ const capitalize = (str) => {
 const { Content } = Layout;
 const Ads = () => {
   const [loading, setLoading] = useState(false);
-  const [user, setUser] = useState(null);
   const scrollableDivRef = useRef(null);
   const [chatLoading, setChatLoading] = useState(false);
   const {
@@ -33,6 +32,7 @@ const Ads = () => {
     adLastEvaluatedKey,
     setAdLastEvaluatedKey,
     setUnreadChatCount,
+    user,
   } = useContext(Context);
   const isModalVisibleRef = useRef(false);
   const errorSessionConfig = {
@@ -104,23 +104,6 @@ const Ads = () => {
   const handleImageLoad = (uuid) => {
     setLoadedImages((prev) => ({ ...prev, [uuid]: true }));
   };
-
-  useEffect(() => {
-    const getUser = async () => {
-      const currentUser = await getCurrentUser();
-      setUser(currentUser);
-    };
-    getUser();
-  }, []);
-
-  // useEffect(() => {
-  //   if (scrollableDivRef.current && !loading && !chatLoading) {
-  //     const el = scrollableDivRef.current;
-  //     if (el.scrollHeight <= el.clientHeight && adHasMore && limit) {
-  //       loadMoreData();
-  //     }
-  //   }
-  // }, [loading,adData,chatLoading,limit]);
 
   useEffect(() => {
     if (scrollableDivRef.current && !loading && !chatLoading) {

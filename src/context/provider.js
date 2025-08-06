@@ -38,9 +38,15 @@ const Provider = ({ children }) => {
   const [detailData, setDetailData] = useState([]);
   const [unreadChatCount, setUnreadChatCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+  const [user, setUser] = useState(null);
+  const [email, setEmail] = useState(null);
   return (
     <Context.Provider
       value={{
+        email,
+        setEmail,
+        user,
+        setUser,
         currentPage,
         setCurrentPage,
         count,

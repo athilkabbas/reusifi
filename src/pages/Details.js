@@ -7,7 +7,7 @@ import { Image, Space } from "antd";
 import { Button, Typography, Row } from "antd";
 import { Carousel } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
-import { getCurrentUser, signInWithRedirect } from "@aws-amplify/auth";
+import { signInWithRedirect } from "@aws-amplify/auth";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
 import { callApi } from "../helpers/api";
@@ -20,7 +20,6 @@ const Details = () => {
   const isMobile = useIsMobile();
   const [loading, setLoading] = useState(false);
   const { item, ad } = location.state || "";
-  const [user, setUser] = useState(null);
   const [chatLoading, setChatLoading] = useState(false);
   const [chatProductLoading, setChatProductLoading] = useState(false);
   const [chatProduct, setChatProduct] = useState(false);
@@ -39,6 +38,7 @@ const Details = () => {
     detailData,
     setDetailData,
     setUnreadChatCount,
+    user,
   } = useContext(Context);
   const isModalVisibleRef = useRef(false);
   const errorSessionConfig = {
@@ -65,14 +65,6 @@ const Details = () => {
   };
 
   const { Text } = Typography;
-
-  useEffect(() => {
-    const getUser = async () => {
-      const currentUser = await getCurrentUser();
-      setUser(currentUser);
-    };
-    getUser();
-  }, []);
 
   useEffect(() => {
     if (user && item) {

@@ -3,7 +3,7 @@ import { Col, message, Row, Spin } from "antd";
 import { useNavigate } from "react-router-dom";
 import { Layout, Menu, theme, Modal } from "antd";
 import { Image } from "antd";
-import { getCurrentUser, signInWithRedirect } from "@aws-amplify/auth";
+import { signInWithRedirect } from "@aws-amplify/auth";
 import { List } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Card, Skeleton } from "antd";
@@ -42,7 +42,6 @@ const menuItemsBlocked = [
 const { Content } = Layout;
 const ChatPage = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [menuLoading, setMenuLoading] = useState(false);
   const scrollableDivRef = useRef(null);
@@ -59,6 +58,7 @@ const ChatPage = () => {
     chatLastEvaluatedKey,
     setChatLastEvaluatedKey,
     setUnreadChatCount,
+    user,
   } = useContext(Context);
   const [loadedImages, setLoadedImages] = useState({});
   const handleImageLoad = (uuid) => {
@@ -428,13 +428,6 @@ const ChatPage = () => {
       return;
     }
   };
-  useEffect(() => {
-    const fetchUser = async () => {
-      const currentUser = await getCurrentUser();
-      setUser(currentUser);
-    };
-    fetchUser();
-  }, []);
 
   useEffect(() => {
     if (user && user.userId && chatInitialLoad && limit) {

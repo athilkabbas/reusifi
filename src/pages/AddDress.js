@@ -9,7 +9,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import { Image, Upload, Typography, message } from "antd";
 import { Button, Badge, Row } from "antd";
 import axios from "axios";
-import { getCurrentUser, signInWithRedirect } from "@aws-amplify/auth";
+import { signInWithRedirect } from "@aws-amplify/auth";
 import imageCompression from "browser-image-compression";
 import { LoadingOutlined } from "@ant-design/icons";
 import { Context } from "../context/provider";
@@ -125,18 +125,6 @@ export const options = [
 ];
 
 const AddDress = () => {
-  const [user, setUser] = useState(null);
-  const [form, setForm] = useState({
-    title: "",
-    description: "",
-    category: "",
-    subCategory: "",
-    state: null,
-    district: null,
-    email: "",
-    images: [],
-    price: null,
-  });
   const {
     count,
     setCount,
@@ -146,7 +134,20 @@ const AddDress = () => {
     addProductInitialLoad,
     setAddProductInitialLoad,
     setUnreadChatCount,
+    user,
   } = useContext(Context);
+
+  const [form, setForm] = useState({
+    title: "",
+    description: "",
+    category: "",
+    subCategory: "",
+    state: null,
+    district: null,
+    email: user.userId,
+    images: [],
+    price: null,
+  });
   const isMobile = useIsMobile();
   const isModalVisibleRef = useRef(false);
   const errorSessionConfig = {
@@ -171,17 +172,6 @@ const AddDress = () => {
       window.location.reload();
     },
   };
-
-  useEffect(() => {
-    const getUser = async () => {
-      let currentUser = await getCurrentUser();
-      setForm((prevValue) => {
-        return { ...prevValue, email: currentUser.userId };
-      });
-      setUser(currentUser);
-    };
-    getUser();
-  }, []);
 
   useEffect(() => {
     if (user && addProductInitialLoad) {

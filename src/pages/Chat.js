@@ -3,11 +3,7 @@ import { Spin } from "antd";
 import { Input } from "antd";
 import { Layout, Modal } from "antd";
 import { Button } from "antd";
-import {
-  fetchAuthSession,
-  getCurrentUser,
-  signInWithRedirect,
-} from "@aws-amplify/auth";
+import { fetchAuthSession, signInWithRedirect } from "@aws-amplify/auth";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Skeleton, Space, Typography } from "antd";
 import { Context } from "../context/provider";
@@ -26,7 +22,6 @@ const Chat = () => {
   const { recipient } = location.state || "";
   const { conversationId, productId } = location.state;
   const [messageValue, setMessageValue] = useState("");
-  const [user, setUser] = useState(null);
   const [ws, setWs] = useState("");
   const [reconnect, setReconnect] = useState(false);
   const [lastEvaluatedKey, setLastEvaluatedKey] = useState(null);
@@ -68,6 +63,7 @@ const Chat = () => {
     setChatLastEvaluatedKey,
     setIChatInitialLoad,
     setUnreadChatCount,
+    user,
   } = useContext(Context);
   const [chatLoading, setChatLoading] = useState(false);
   const [socketLoading, setSocketLoading] = useState(false);
@@ -154,14 +150,6 @@ const Chat = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, [hasMore]);
 
-  // useEffect(() => {
-  //   if (data.length > 0) {
-  //     setInitialLoad(false);
-  //   } else {
-  //     setInitialLoad(true);
-  //   }
-  // }, []);
-
   useEffect(() => {
     let socket = null;
     let reconnectTimeout = null;
@@ -177,8 +165,7 @@ const Chat = () => {
         if (tokens?.idToken) {
           token = tokens.idToken;
           setCheckSession(false);
-          const currentUser = await getCurrentUser();
-          setUser(currentUser);
+          const currentUser = user;
           setSocketLoading(true);
           socket = new WebSocket(
             `wss://apichat.reusifi.com/production?userId=${

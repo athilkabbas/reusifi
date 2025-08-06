@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { Layout, Space, Skeleton, Typography, Modal } from "antd";
-import { getCurrentUser, signInWithRedirect } from "@aws-amplify/auth";
+import { signInWithRedirect } from "@aws-amplify/auth";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
 import { callApi } from "../helpers/api";
@@ -36,14 +36,18 @@ const Contact = () => {
   };
   const [loading, setLoading] = useState(false);
 
-  const { contactInitialLoad, setContactInitialLoad, setUnreadChatCount } =
-    useContext(Context);
+  const {
+    contactInitialLoad,
+    setContactInitialLoad,
+    setUnreadChatCount,
+    user,
+  } = useContext(Context);
 
   useEffect(() => {
     const getChatCount = async () => {
       try {
         setLoading(true);
-        const currentUser = await getCurrentUser();
+        const currentUser = user;
         const result = await callApi(
           `https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(
             currentUser.userId

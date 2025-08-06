@@ -3,12 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LoadingOutlined } from "@ant-design/icons";
 import { Amplify } from "aws-amplify";
 import awsconfig from "./aws-exports";
-import {
-  signInWithRedirect,
-  getCurrentUser,
-  fetchAuthSession,
-  signOut,
-} from "@aws-amplify/auth";
+import { getCurrentUser, fetchAuthSession } from "@aws-amplify/auth";
 
 import AddDress from "./pages/AddDress";
 import Layout from "./pages/Layout";
@@ -45,6 +40,8 @@ function AppWithSession() {
     setChatInitialLoad,
     setChatData,
     setChatLastEvaluatedKey,
+    setUser,
+    setEmail,
   } = useContext(Context);
   const [socketLoading, setSocketLoading] = useState(false);
   useEffect(() => {
@@ -70,7 +67,10 @@ function AppWithSession() {
           setIsSignedIn(true);
           setCheckSession(false);
           setChecked(true);
+          const decoded = JSON.parse(atob(token.toString().split(".")[1]));
           const currentUser = await getCurrentUser();
+          setUser(currentUser);
+          setEmail(decoded.email);
           setSocketLoading(true);
           socket = new WebSocket(
             `wss://apichat.reusifi.com/production?userId=${currentUser.userId}&token=${token}`
@@ -113,6 +113,7 @@ function AppWithSession() {
           throw new Error();
         }
       } catch (err) {
+        console.log(err);
         setSocketLoading(false);
         setIsSignedIn(false);
         setCheckSession(false);
@@ -144,23 +145,6 @@ function AppWithSession() {
 
   if (checked && !isSignedIn) {
     return <ReusifiLanding />;
-    // signInWithRedirect();
-    // return (
-    //   <div
-    //     style={{
-    //       display: "flex",
-    //       height: "100dvh",
-    //       justifyContent: "center",
-    //       alignItems: "center",
-    //       fontSize: "1.5rem",
-    //       color: "#52c41a",
-    //       fontWeight: "600",
-    //       backgroundColor: "#F5F7FF",
-    //     }}
-    //   >
-    //     Redirecting to sign in...
-    //   </div>
-    // );
   }
   return (
     <>

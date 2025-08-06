@@ -28,12 +28,7 @@ import { Input, Space, Empty } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { List, Skeleton, Radio } from "antd";
 import { Card, Typography } from "antd";
-import {
-  getCurrentUser,
-  signInWithRedirect,
-  signOut,
-  fetchUserAttributes,
-} from "@aws-amplify/auth";
+import { signInWithRedirect, signOut } from "@aws-amplify/auth";
 import { locationsTreeSelect } from "../helpers/locations";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
@@ -49,7 +44,6 @@ const capitalize = (str) => {
 const { Content } = Layout;
 const Home = () => {
   const [loading, setLoading] = useState(false);
-  const [user, setUser] = useState(null);
   const [attributes, setAttributes] = useState(null);
   const timer = useRef(null);
   const [districts, setDistricts] = useState([]);
@@ -77,6 +71,7 @@ const Home = () => {
     setFilterList,
     setFavData,
     setUnreadChatCount,
+    user,
   } = useContext(Context);
   const [handleFavLoading, setHandleFavLoading] = useState(false);
 
@@ -151,16 +146,6 @@ const Home = () => {
   const handleImageLoad = (uuid) => {
     setLoadedImages((prev) => ({ ...prev, [uuid]: true }));
   };
-  useEffect(() => {
-    const getUser = async () => {
-      const currentUser = await getCurrentUser();
-      setUser(currentUser);
-      // const attributes = await fetchUserAttributes();
-      // console.log(attributes);
-      // setAttributes(attributes);
-    };
-    getUser();
-  }, []);
 
   useEffect(() => {
     if (
