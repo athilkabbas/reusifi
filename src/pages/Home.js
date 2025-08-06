@@ -13,7 +13,7 @@ import {
   Row,
   Col,
 } from "antd";
-import { EllipsisVertical, Settings2 } from "lucide-react";
+import { EllipsisVertical, Settings2, Search } from "lucide-react";
 import {
   LogoutOutlined,
   HeartFilled,
@@ -510,6 +510,7 @@ const Home = () => {
             }}
           >
             <Input
+              prefix={<Search style={{ color: "#9CA3AF" }} />}
               value={search}
               onChange={(event) => {
                 setSearch(event.target.value);
