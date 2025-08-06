@@ -768,6 +768,7 @@ const Home = () => {
                         setInitialLoad(true);
                         setLoadedImages({});
                         setApply(false);
+                        onClose();
                       }}
                       type="primary"
                     >
@@ -791,6 +792,7 @@ const Home = () => {
                         setInitialLoad(true);
                         setLoadedImages({});
                         setApply(true);
+                        onClose();
                       }}
                       type="primary"
                     >
