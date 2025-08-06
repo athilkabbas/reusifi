@@ -832,7 +832,10 @@ const Home = () => {
                   renderItem={(item) => {
                     return (
                       <>
-                        <List.Item key={item["item"]["uuid"]}>
+                        <List.Item
+                          key={item["item"]["uuid"]}
+                          style={{ display: "flex", justifyContent: "center" }}
+                        >
                           <Card
                             style={{ height: "325px", width: "186px" }}
                             bodyStyle={{ padding: "10px 10px 10px 10px" }}
@@ -1002,9 +1005,10 @@ const Home = () => {
                       xs={12}
                       sm={8}
                       md={6}
-                      lg={5}
+                      lg={4.8}
                       xl={4}
-                      xxl={4}
+                      xxl={3.4}
+                      style={{ display: "flex", justifyContent: "center" }}
                     >
                       <Skeleton.Node
                         style={{ height: "300px", width: "186px" }}

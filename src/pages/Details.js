@@ -556,7 +556,10 @@ const Details = () => {
               <Col key={1} xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
                 <div style={{ display: "flex", justifyContent: "center" }}>
                   <Skeleton.Node
-                    style={{ height: "400px", width: "300px" }}
+                    style={{
+                      height: "400px",
+                      width: isMobile ? "calc(100dvw - 50px)" : "40dvw",
+                    }}
                     active
                   />
                 </div>

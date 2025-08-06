@@ -367,9 +367,12 @@ const Favourites = () => {
                   renderItem={(item) => {
                     return (
                       <>
-                        <List.Item key={item["item"]["uuid"]}>
+                        <List.Item
+                          key={item["item"]["uuid"]}
+                          style={{ display: "flex", justifyContent: "center" }}
+                        >
                           <Card
-                            style={{ height: "325px" }}
+                            style={{ height: "325px", width: "186px" }}
                             hoverable
                             bodyStyle={{ padding: "10px 10px 10px 10px" }}
                             onClick={() => {
@@ -388,7 +391,7 @@ const Favourites = () => {
                                 {!loadedImages[item["item"]["uuid"]] && (
                                   <div
                                     style={{
-                                      maxHeight: "250px",
+                                      height: "250px",
                                       display: "flex",
                                       justifyContent: "center",
                                       alignItems: "center",
@@ -412,7 +415,7 @@ const Favourites = () => {
                                   src={item["images"][0]}
                                   alt={item["item"]["title"]}
                                   style={{
-                                    height: "260px",
+                                    maxHeight: "260px",
                                     objectFit: "contain",
                                     display: loadedImages[item["item"]["uuid"]]
                                       ? "block"
@@ -533,6 +536,7 @@ const Favourites = () => {
                       lg={5}
                       xl={4}
                       xxl={4}
+                      style={{ display: "flex", justifyContent: "center" }}
                     >
                       <Skeleton.Node
                         style={{ height: "300px", width: "186px" }}
