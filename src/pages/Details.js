@@ -544,7 +544,7 @@ const Details = () => {
               </>
             )}
           {(loading || chatLoading || chatProductLoading) && (
-            <Row gutter={[10, 10]} style={{ padding: "20px" }}>
+            <Row gutter={[10, 10]}>
               <Col key={0} xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
                 <div style={{ display: "flex", justifyContent: "center" }}>
                   <Skeleton.Node
