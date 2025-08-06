@@ -92,7 +92,7 @@ const Contact = () => {
           <MenuWrapper defaultSelectedKeys={["6-1"]} isMobile={isMobile} />
         </HeaderWrapper>
       )}
-      <Content style={{ padding: "0 15px" }}>
+      <Content>
         <div
           style={{
             background: "#F9FAFB",
@@ -100,7 +100,7 @@ const Contact = () => {
             overflowY: "scroll",
             height: "100%",
             overflowX: "hidden",
-            paddingBottom: "60px",
+            padding: "15px 15px 70px 15px",
           }}
         >
           {!loading && (

@@ -516,13 +516,12 @@ const ChatPage = () => {
           id="scrollableDiv"
           ref={scrollableDivRef}
           style={{
-            padding: "15px 5px",
+            padding: "15px 15px 70px 15px",
             height: "100%",
             background: "#F9FAFB",
             borderRadius: "0px",
             overflowY: "scroll",
             overflowX: "hidden",
-            paddingBottom: "60px",
           }}
         >
           <InfiniteScroll
@@ -561,7 +560,7 @@ const ChatPage = () => {
                             borderRadius: "12px",
                             // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                             height: "150px",
-                            width: !isMobile ? "50dvw" : "calc(100dvw - 10px)",
+                            width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
                             backgroundColor:
                               item.read === "false" ? "#f6ffed" : "#ffffff",
                           }}

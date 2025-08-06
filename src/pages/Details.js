@@ -298,7 +298,7 @@ const Details = () => {
             overflowY: "scroll",
             height: "100%",
             overflowX: "hidden",
-            paddingBottom: "70px",
+            padding: "15px 15px 70px 15px",
           }}
         >
           {!loading &&

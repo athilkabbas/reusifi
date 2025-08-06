@@ -463,7 +463,7 @@ const AddDress = () => {
             borderRadius: "0px",
             overflow: "scroll",
             height: "100%",
-            paddingBottom: "70px",
+            padding: "15px 15px 70px 15px",
           }}
         >
           {!loading && !chatLoading && user && (
@@ -472,7 +472,6 @@ const AddDress = () => {
                 size="large"
                 direction="vertical"
                 style={{
-                  padding: "20px",
                   display: "flex",
                 }}
               >
@@ -480,7 +479,7 @@ const AddDress = () => {
                   <Input
                     style={{
                       // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-                      width: !isMobile ? "50dvw" : "85dvw",
+                      width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
                       marginTop: "30px",
                     }}
                     onChange={(value) => handleChange(value, "title")}
@@ -493,7 +492,7 @@ const AddDress = () => {
                   <TextArea
                     style={{
                       // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-                      width: !isMobile ? "50dvw" : "85dvw",
+                      width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
                     }}
                     onChange={(value) => handleChange(value, "description")}
                     autoSize={{ minRows: 8, maxRows: 8 }}
@@ -506,7 +505,7 @@ const AddDress = () => {
                   <Cascader
                     style={{
                       // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-                      width: !isMobile ? "50dvw" : "85dvw",
+                      width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
                       borderRadius: "9px",
                     }}
                     showSearch={{ filter }}
@@ -524,7 +523,7 @@ const AddDress = () => {
                   <Cascader
                     style={{
                       // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-                      width: !isMobile ? "50dvw" : "85dvw",
+                      width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
                       borderRadius: "9px",
                     }}
                     showSearch={{ filter }}
@@ -542,7 +541,7 @@ const AddDress = () => {
                   <Input
                     style={{
                       // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-                      width: !isMobile ? "50dvw" : "85dvw",
+                      width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
                     }}
                     prefix="₹"
                     onChange={(value) => handleChange(value, "price")}

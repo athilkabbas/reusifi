@@ -329,13 +329,12 @@ const Favourites = () => {
           id="scrollableDiv"
           ref={scrollableDivRef}
           style={{
-            padding: "15px 5px",
             height: "100%",
             background: "#F9FAFB",
             borderRadius: "0px",
             overflowY: "scroll",
             overflowX: "hidden",
-            paddingBottom: "60px",
+            padding: "15px 15px 70px 15px",
           }}
         >
           <InfiniteScroll

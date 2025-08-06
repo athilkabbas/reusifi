@@ -497,7 +497,7 @@ const Home = () => {
         size="large"
         direction="vertical"
         style={{
-          padding: "10px",
+          padding: "15px",
         }}
       >
         <Space size="middle">
@@ -812,13 +812,12 @@ const Home = () => {
           id="scrollableDiv"
           ref={scrollableDivRef}
           style={{
-            padding: 5,
             height: "100%",
             background: "#F9FAFB",
             borderRadius: "0px",
             overflowY: "scroll",
             overflowX: "hidden",
-            paddingBottom: "60px",
+            padding: "15px 15px 70px 15px",
           }}
         >
           <InfiniteScroll
