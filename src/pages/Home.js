@@ -511,7 +511,7 @@ const Home = () => {
         setLocationLabels(data.data);
         setLocationLoading(false);
       } catch (err) {}
-    }, 500);
+    }, 300);
   };
   return (
     <Layout
