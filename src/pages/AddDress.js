@@ -345,7 +345,6 @@ const AddDress = () => {
       });
     }
   };
-  console.log(form);
   return (
     <Layout
       style={{

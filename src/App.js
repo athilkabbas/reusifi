@@ -113,7 +113,6 @@ function AppWithSession() {
           throw new Error();
         }
       } catch (err) {
-        console.log(err);
         setSocketLoading(false);
         setIsSignedIn(false);
         setCheckSession(false);
