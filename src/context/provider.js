@@ -11,7 +11,7 @@ const Provider = ({ children }) => {
   const [favHasMore, setFavHasMore] = useState(false);
   const [chatHasMore, setChatHasMore] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
-  const [location, setLocation] = useState({ state: "", district: "" });
+  const [location, setLocation] = useState("");
   const [search, setSearch] = useState("");
   const [filterList, setFilterList] = useState([]);
   const [adLastEvaluatedKey, setAdLastEvaluatedKey] = useState(null);

@@ -12,6 +12,7 @@ import {
   Button,
   Row,
   Col,
+  Select,
 } from "antd";
 import { EllipsisVertical, Settings2, Search } from "lucide-react";
 import {
@@ -471,6 +472,48 @@ const Home = () => {
     document.body.style.overscrollBehaviorY = "";
     setDrawerOpen(false);
   };
+  const locationTimer = useRef(null);
+  const handleLocationSelect = async (value, options) => {
+    try {
+      const data = await callApi(
+        `https://api.reusifi.com/prod/getLocation?placeId=${encodeURIComponent(
+          options.placeId
+        )}`,
+        "GET"
+      );
+      setLocation(data.data.join(","));
+    } catch (err) {
+      // message.info("Pincode not found");
+    }
+  };
+  const [locationLabels, setLocationLabels] = useState([]);
+  const [locationLabel, setLocationLabel] = useState("");
+  const [locationLoading, setLocationLoading] = useState(false);
+  const handleLocation = (value) => {
+    setLocationLoading(true);
+    if (locationTimer.current) {
+      clearTimeout(locationTimer.current);
+    }
+    if (!value) {
+      setTimeout(() => {
+        setLocationLabels([]);
+        setLocationLoading(false);
+      }, 0);
+      return;
+    }
+    locationTimer.current = setTimeout(async () => {
+      try {
+        const data = await callApi(
+          `https://api.reusifi.com/prod/getLocationAutocomplete?location=${encodeURIComponent(
+            value
+          )}`,
+          "GET"
+        );
+        setLocationLabels(data.data);
+        setLocationLoading(false);
+      } catch (err) {}
+    }, 500);
+  };
   return (
     <Layout
       style={{
@@ -554,7 +597,9 @@ const Home = () => {
               width={"100dvw"}
             >
               <Space size="middle" direction="vertical">
-                <Divider plain>Category</Divider>
+                <Divider style={{ fontSize: "15px", fontWeight: "300" }} plain>
+                  Category
+                </Divider>
                 <Space.Compact size="large">
                   <TreeSelect
                     onPopupScroll={() => {
@@ -604,7 +649,7 @@ const Home = () => {
                         },
                       },
                     }}
-                    placeholder="Search by category"
+                    placeholder="Category"
                     treeDefaultExpandAll
                     onClick={() => {
                       setOpen(true);
@@ -621,8 +666,10 @@ const Home = () => {
                     treeData={options}
                   />
                 </Space.Compact>
-                <Divider plain>Location</Divider>
-                <Space.Compact size="large">
+                <Divider style={{ fontSize: "15px", fontWeight: "300" }} plain>
+                  Location
+                </Divider>
+                {/* <Space.Compact size="large">
                   <TreeSelect
                     onPopupScroll={() => {
                       if (
@@ -699,7 +746,55 @@ const Home = () => {
                     }}
                     treeData={locationsTreeSelect}
                   />
-                </Space.Compact>
+                </Space.Compact> */}
+                {
+                  <Space.Compact size="large">
+                    <Select
+                      style={{ width: "calc(100dvw - 50px)" }}
+                      showSearch
+                      allowClear
+                      onSearch={(value) => {
+                        handleLocation(value);
+                      }}
+                      onChange={(value) => {
+                        if (!value) {
+                          setLocation("");
+                        }
+                      }}
+                      // value={locationLabel || null}
+                      placeholder="Location"
+                      notFoundContent={
+                        locationLoading ? (
+                          <Spin
+                            size="small"
+                            indicator={
+                              <LoadingOutlined
+                                style={{
+                                  color: "#52c41a",
+                                }}
+                                spin
+                              />
+                            }
+                          />
+                        ) : (
+                          <Empty />
+                        )
+                      }
+                      onSelect={(value, options) => {
+                        handleLocationSelect(value, options);
+                      }}
+                      // onChange={(value) => {
+                      //   setLocationLabel(value);
+                      // }}
+                      options={(locationLabels || []).map((item) => ({
+                        value: item.Address.Label,
+                        label: item.Address.Label,
+                        key: item.PlaceId,
+                        placeId: item.PlaceId,
+                      }))}
+                    ></Select>
+                  </Space.Compact>
+                }
                 &nbsp;&nbsp;or
                 <Space.Compact size="large">
                   <Button style={{ fontSize: "13px", fontWeight: "300" }}>
@@ -707,7 +802,9 @@ const Home = () => {
                     Use your location
                   </Button>
                 </Space.Compact>
-                <Divider plain>Price</Divider>
+                <Divider style={{ fontSize: "15px", fontWeight: "300" }} plain>
+                  Price
+                </Divider>
                 <Space size="small">
                   <Space.Compact size="large">
                     <Radio.Group
@@ -759,11 +856,7 @@ const Home = () => {
                     style={{ display: "flex", justifyContent: "center" }}
                   >
                     <Button
-                      disabled={
-                        !category &&
-                        !priceFilter &&
-                        Object.values(location).every((value) => !value)
-                      }
+                      disabled={!category && !priceFilter && !location}
                       style={{
                         background: "#52c41a",
                         fontSize: "13px",
@@ -791,11 +884,7 @@ const Home = () => {
                     style={{ display: "flex", justifyContent: "center" }}
                   >
                     <Button
-                      disabled={
-                        !category &&
-                        !priceFilter &&
-                        Object.values(location).every((value) => !value)
-                      }
+                      disabled={!category && !priceFilter && !location}
                       style={{
                         background: "#52c41a",
                         fontSize: "13px",
