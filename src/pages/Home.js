@@ -487,7 +487,6 @@ const Home = () => {
     }
   };
   const [locationLabels, setLocationLabels] = useState([]);
-  const [locationLabel, setLocationLabel] = useState("");
   const [locationLoading, setLocationLoading] = useState(false);
   const handleLocation = (value) => {
     setLocationLoading(true);
@@ -758,6 +757,7 @@ const Home = () => {
                       }}
                       onChange={(value) => {
                         if (!value) {
+                          setLocationLabels([]);
                           setLocation("");
                         }
                       }}
@@ -864,7 +864,8 @@ const Home = () => {
                       }}
                       onClick={() => {
                         setSearch("");
-                        setLocation({ state: "", district: "" });
+                        setLocation("");
+                        setLocationLabels("");
                         setPriceFilter("");
                         setCategory("");
                         setCurrentPage(1);
