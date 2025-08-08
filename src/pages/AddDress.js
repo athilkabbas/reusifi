@@ -18,6 +18,7 @@ import { callApi } from "../helpers/api";
 import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
+import { options } from "../helpers/categories";
 const { Text } = Typography;
 const { TextArea } = Input;
 const { Content } = Layout;
@@ -28,101 +29,6 @@ const getBase64 = (file) =>
     reader.onload = () => resolve(reader.result);
     reader.onerror = (error) => reject(error);
   });
-
-export const options = [
-  {
-    value: "electronics",
-    label: "Electronics",
-    children: [
-      { value: "mobile-phones", label: "Mobile Phones" },
-      { value: "laptops-computers", label: "Laptops & Computers" },
-      { value: "tablets", label: "Tablets" },
-      { value: "tvs-monitors", label: "TVs & Monitors" },
-      { value: "cameras", label: "Cameras" },
-      { value: "audio-headphones", label: "Audio & Headphones" },
-      { value: "gaming-consoles", label: "Gaming Consoles" },
-      { value: "wearables", label: "Wearables" },
-      { value: "accessories-cables", label: "Accessories & Cables" },
-    ],
-  },
-  {
-    value: "home-furniture",
-    label: "Home & Furniture",
-    children: [
-      { value: "sofas-chairs", label: "Sofas & Chairs" },
-      { value: "tables-desks", label: "Tables & Desks" },
-      { value: "beds-mattresses", label: "Beds & Mattresses" },
-      { value: "storage", label: "Storage (Wardrobes, Shelves)" },
-      { value: "home-decor", label: "Home Decor" },
-      { value: "kitchen-appliances", label: "Kitchen Appliances" },
-      { value: "lighting", label: "Lighting" },
-    ],
-  },
-  {
-    value: "vehicles",
-    label: "Vehicles",
-    children: [
-      { value: "cars", label: "Cars" },
-      { value: "motorbikes-scooters", label: "Motorbikes & Scooters" },
-      { value: "bicycles", label: "Bicycles" },
-      { value: "auto-parts", label: "Auto Parts & Accessories" },
-    ],
-  },
-  {
-    value: "fashion",
-    label: "Fashion",
-    children: [
-      { value: "mens-clothing", label: "Men’s Clothing" },
-      { value: "womens-clothing", label: "Women’s Clothing" },
-      { value: "footwear", label: "Footwear" },
-      { value: "bags-luggage", label: "Bags & Luggage" },
-      { value: "watches-jewelry", label: "Watches & Jewelry" },
-    ],
-  },
-  {
-    value: "books-education",
-    label: "Books & Education",
-    children: [
-      { value: "textbooks", label: "Textbooks" },
-      { value: "exam-materials", label: "Exam Materials" },
-      { value: "novels", label: "Novels" },
-      { value: "study-furniture", label: "Study Tables/Chairs" },
-      { value: "stationery", label: "Stationery" },
-    ],
-  },
-  {
-    value: "kids-toys",
-    label: "Kids & Toys",
-    children: [
-      { value: "toys-games", label: "Toys & Games" },
-      { value: "baby-gear", label: "Baby Gear" },
-      { value: "kids-clothing", label: "Kids’ Clothing" },
-      { value: "strollers-cribs", label: "Strollers & Cribs" },
-    ],
-  },
-  {
-    value: "jobs-services",
-    label: "Jobs & Services",
-    children: [
-      { value: "part-time-jobs", label: "Part-Time Jobs" },
-      { value: "freelance-services", label: "Freelance Services" },
-      { value: "tuitions-classes", label: "Tuitions & Classes" },
-      { value: "home-services", label: "Home Services" },
-    ],
-  },
-  {
-    value: "others",
-    label: "Others",
-    children: [
-      { value: "pet-supplies", label: "Pet Supplies" },
-      { value: "sports-equipment", label: "Sports Equipment" },
-      { value: "musical-instruments", label: "Musical Instruments" },
-      { value: "tools-machinery", label: "Tools & Machinery" },
-      { value: "collectibles-antiques", label: "Collectibles & Antiques" },
-      { value: "miscellaneous", label: "Miscellaneous" },
-    ],
-  },
-];
 
 const AddDress = () => {
   const {
@@ -142,8 +48,6 @@ const AddDress = () => {
     description: "",
     category: "",
     subCategory: "",
-    state: null,
-    district: null,
     email: user.userId,
     images: [],
     price: null,
@@ -239,8 +143,7 @@ const AddDress = () => {
       } else if (type === "location") {
         return {
           ...prevValue,
-          state: value?.[0] || "",
-          district: value?.[1] || "",
+          location: value,
         };
       } else if (type === "category") {
         return {
@@ -409,20 +312,26 @@ const AddDress = () => {
   const [postCodeLoading, setPostCodeLoading] = useState(false);
   const fetchPincodeDetails = async () => {
     setPostCodeLoading(true);
-    const data = await callApi(
-      `https://api.reusifi.com/prod/getLocation?pincode=${encodeURIComponent(
-        pincode
-      )}`,
-      "GET"
-    );
-    setPostCodeLoading(false);
-    setAddress(data.data.results[0].formatted_address);
+    try {
+      const data = await callApi(
+        `https://api.reusifi.com/prod/getLocation?pincode=${encodeURIComponent(
+          pincode
+        )}`,
+        "GET"
+      );
+      setPostCodeLoading(false);
+      setAddress(data.data.Address.Label);
+      handleChange(data.data.Position.join(","), "location");
+    } catch (err) {
+      message.info("Pincode not found");
+    }
   };
   const handlePincode = (e) => {
     const value = e.target.value;
     setPincode(value);
     if (!value) {
       setAddress("");
+      handleChange(value, "location");
     }
   };
   const [open, setOpen] = useState(false);
@@ -436,6 +345,7 @@ const AddDress = () => {
       });
     }
   };
+  console.log(form);
   return (
     <Layout
       style={{
@@ -465,6 +375,8 @@ const AddDress = () => {
             overflow: "scroll",
             height: "100%",
             padding: "15px 15px 70px 15px",
+            display: "flex",
+            justifyContent: "center",
           }}
         >
           {!loading && !chatLoading && user && (
@@ -478,6 +390,7 @@ const AddDress = () => {
               >
                 <Space.Compact size="large">
                   <Input
+                    allowClear
                     style={{
                       // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                       width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
@@ -491,6 +404,7 @@ const AddDress = () => {
                 </Space.Compact>
                 <Space.Compact size="large">
                   <TextArea
+                    allowClear
                     style={{
                       // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                       width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
@@ -510,9 +424,9 @@ const AddDress = () => {
                       borderRadius: "9px",
                     }}
                     showSearch={{ filter }}
-                    onSearch={(value) => {
-                      handleChange(value, "location");
-                    }}
+                    // onSearch={(value) => {
+                    //   handleChange(value, "category");
+                    // }}
                     placeholder={"Category"}
                     onChange={(value) => {
                       handleChange(value, "category");
@@ -571,6 +485,7 @@ const AddDress = () => {
                     value={pincode}
                     onChange={handlePincode}
                     placeholder="Pincode"
+                    allowClear
                   ></Input>
                   <Button
                     loading={postCodeLoading}
@@ -594,6 +509,7 @@ const AddDress = () => {
                 </Space.Compact>
                 <Space.Compact size="large">
                   <Input
+                    allowClear
                     style={{
                       // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                       width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
@@ -667,7 +583,7 @@ const AddDress = () => {
                   size="large"
                   style={{
                     display: "flex",
-                    justifyContent: !isMobile ? "flex-start" : "center",
+                    justifyContent: "center",
                   }}
                 >
                   {count < 5 && (

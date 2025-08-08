@@ -33,7 +33,7 @@ import { locationsTreeSelect } from "../helpers/locations";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
 import { callApi } from "../helpers/api";
-import { options } from "./AddDress";
+import { options } from "../helpers/categories";
 import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";

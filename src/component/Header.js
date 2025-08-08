@@ -4,10 +4,10 @@ const HeaderWrapper = ({ children }) => {
   return (
     <Header
       style={{
-        display: "flex",
         padding: "0px",
         height: "60px",
         zIndex: 1,
+        width: "100dvw",
       }}
     >
       {children}
