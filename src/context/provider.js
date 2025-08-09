@@ -3,6 +3,9 @@ import React, { createContext, useState } from "react";
 export const Context = createContext();
 
 const Provider = ({ children }) => {
+  const [currentLocation, setCurrentLocation] = useState("");
+  const [currentLocationLabel, setCurrentLocationLabel] = useState("");
+  const [triggerLocation, setTriggerLocation] = useState(false);
   const [data, setData] = useState([]);
   const [initialLoad, setInitialLoad] = useState(true);
   const [count, setCount] = useState(0);
@@ -40,9 +43,18 @@ const Provider = ({ children }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [user, setUser] = useState(null);
   const [email, setEmail] = useState(null);
+  const [locationAccessLoading, setLocationAccessLoading] = useState(false);
   return (
     <Context.Provider
       value={{
+        locationAccessLoading,
+        setLocationAccessLoading,
+        currentLocationLabel,
+        setCurrentLocationLabel,
+        triggerLocation,
+        setTriggerLocation,
+        currentLocation,
+        setCurrentLocation,
         email,
         setEmail,
         user,

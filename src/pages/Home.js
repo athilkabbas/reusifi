@@ -73,11 +73,16 @@ const Home = () => {
     setFavData,
     setUnreadChatCount,
     user,
+    currentLocation,
+    setCurrentLocation,
+    setTriggerLocation,
+    currentLocationLabel,
+    locationAccessLoading,
+    setCurrentLocationLabel,
   } = useContext(Context);
   const [handleFavLoading, setHandleFavLoading] = useState(false);
 
   const isMobile = useIsMobile();
-
   const [loadedImages, setLoadedImages] = useState({});
 
   const calculateLimit = () => {
@@ -108,6 +113,15 @@ const Home = () => {
       isModalVisibleRef.current = false;
       signInWithRedirect();
     },
+  };
+  const locationInfoConfig = {
+    title: "Enable location access",
+    content:
+      "To enable location access, please click the location icon at the end of the browser’s address bar and allow location permission for this site.",
+    closable: false,
+    maskClosable: false,
+    okText: "Close",
+    onOk: () => {},
   };
   const errorConfig = {
     title: "An error has occurred.",
@@ -459,16 +473,19 @@ const Home = () => {
   const navigate = useNavigate();
   const onChangePriceFilter = (event) => {
     setPriceFilter(event.target.value);
+    setMinPrice("");
+    setMaxPrice("");
   };
   const [open, setOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [locationOpen, setLocationOpen] = useState(false);
+  const [locationLabel, setLocationLabel] = useState("");
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
   const showDrawer = () => {
     setDrawerOpen(true);
   };
   const onClose = () => {
     setOpen(false);
-    setLocationOpen(false);
     document.body.style.overscrollBehaviorY = "";
     setDrawerOpen(false);
   };
@@ -476,12 +493,15 @@ const Home = () => {
   const handleLocationSelect = async (value, options) => {
     try {
       const data = await callApi(
-        `https://api.reusifi.com/prod/getLocation?placeId=${encodeURIComponent(
+        `https://api.reusifi.com/prod/getLocationAutocomplete?placeId=${encodeURIComponent(
           options.placeId
         )}`,
         "GET"
       );
       setLocation(data.data.join(","));
+      setLocationLabel(value);
+      setCurrentLocation("");
+      setCurrentLocationLabel("");
     } catch (err) {
       // message.info("Pincode not found");
     }
@@ -752,6 +772,7 @@ const Home = () => {
                       style={{ width: "calc(100dvw - 50px)" }}
                       showSearch
                       allowClear
+                      value={locationLabel || null}
                       onSearch={(value) => {
                         handleLocation(value);
                       }}
@@ -760,6 +781,7 @@ const Home = () => {
                           setLocationLabels([]);
                           setLocation("");
                         }
+                        setLocationLabel(value);
                       }}
                       // value={locationLabel || null}
                       placeholder="Location"
@@ -797,10 +819,36 @@ const Home = () => {
                 }
                 &nbsp;&nbsp;or
                 <Space.Compact size="large">
-                  <Button style={{ fontSize: "13px", fontWeight: "300" }}>
+                  <Button
+                    loading={locationAccessLoading}
+                    style={{
+                      fontSize: "13px",
+                      fontWeight: "300",
+                      color: "#52c41a",
+                    }}
+                    onClick={() => {
+                      navigator.permissions
+                        .query({ name: "geolocation" })
+                        .then(function (result) {
+                          if (result.state === "denied") {
+                            // Location permission is denied
+                            Modal.info(locationInfoConfig);
+                          }
+                        });
+                      setLocation("");
+                      setLocationLabel("");
+                      setTriggerLocation((value) => !value);
+                    }}
+                  >
                     <LocateFixed />
                     Use your location
                   </Button>
+                </Space.Compact>
+                <Space.Compact
+                  size="large"
+                  style={{ display: currentLocationLabel ? "block" : "none" }}
+                >
+                  <Input value={currentLocationLabel || null}></Input>
                 </Space.Compact>
                 <Divider style={{ fontSize: "15px", fontWeight: "300" }} plain>
                   Price
@@ -835,12 +883,22 @@ const Home = () => {
                   <Space size="large">
                     <Space.Compact size="large">
                       <Input
+                        onChange={(event) => {
+                          setPriceFilter("");
+                          setMinPrice(event.target.value);
+                        }}
+                        value={minPrice || null}
                         placeholder="min"
                         style={{ width: "150px" }}
                       ></Input>
                     </Space.Compact>
                     <Space.Compact size="large">
                       <Input
+                        onChange={(event) => {
+                          setPriceFilter("");
+                          setMaxPrice(event.target.value);
+                        }}
+                        value={maxPrice || null}
                         placeholder="max"
                         style={{ width: "150px" }}
                       ></Input>
@@ -856,7 +914,14 @@ const Home = () => {
                     style={{ display: "flex", justifyContent: "center" }}
                   >
                     <Button
-                      disabled={!category && !priceFilter && !location}
+                      disabled={
+                        !category &&
+                        !priceFilter &&
+                        !location &&
+                        !currentLocation &&
+                        !minPrice &&
+                        !maxPrice
+                      }
                       style={{
                         background: "#52c41a",
                         fontSize: "13px",
@@ -866,12 +931,17 @@ const Home = () => {
                         setSearch("");
                         setLocation("");
                         setLocationLabels("");
+                        setLocationLabel("");
                         setPriceFilter("");
                         setCategory("");
                         setCurrentPage(1);
                         setData([]);
                         setInitialLoad(true);
                         setLoadedImages({});
+                        setCurrentLocation("");
+                        setCurrentLocationLabel("");
+                        setMinPrice("");
+                        setMaxPrice("");
                         setApply(false);
                         onClose();
                       }}
@@ -885,7 +955,14 @@ const Home = () => {
                     style={{ display: "flex", justifyContent: "center" }}
                   >
                     <Button
-                      disabled={!category && !priceFilter && !location}
+                      disabled={
+                        !category &&
+                        !priceFilter &&
+                        !location &&
+                        !currentLocation &&
+                        !minPrice &&
+                        !maxPrice
+                      }
                       style={{
                         background: "#52c41a",
                         fontSize: "13px",
