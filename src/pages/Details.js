@@ -247,13 +247,8 @@ const Details = () => {
     },
     {
       key: "5",
-      label: "State",
-      children: <p>{detailData?.[0]?.["item"]["state"]}</p>,
-    },
-    {
-      key: "6",
-      label: "District",
-      children: <p>{detailData?.[0]?.["item"]["district"]}</p>,
+      label: "location",
+      children: <p>{detailData?.[0]?.["item"]["locationLabel"]}</p>,
     },
     {
       key: "7",
