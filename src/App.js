@@ -44,7 +44,6 @@ function AppWithSession() {
     setUser,
     setEmail,
   } = useContext(Context);
-  useLocationComponent();
 
   const [socketLoading, setSocketLoading] = useState(false);
   useEffect(() => {

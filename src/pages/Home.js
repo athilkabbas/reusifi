@@ -38,12 +38,14 @@ import { options } from "../helpers/categories";
 import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
+import useLocationComponent from "../component/Location";
 const { Text } = Typography;
 const capitalize = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
 const { Content } = Layout;
 const Home = () => {
+  useLocationComponent();
   const [loading, setLoading] = useState(false);
   const [attributes, setAttributes] = useState(null);
   const timer = useRef(null);
@@ -79,6 +81,20 @@ const Home = () => {
     currentLocationLabel,
     locationAccessLoading,
     setCurrentLocationLabel,
+    setMaxPrice,
+    setMinPrice,
+    maxPrice,
+    minPrice,
+    setLocationLabel,
+    locationLabel,
+    category,
+    setCategory,
+    subCategory,
+    setSubCategory,
+    apply,
+    setApply,
+    setApplied,
+    applied,
   } = useContext(Context);
   const [handleFavLoading, setHandleFavLoading] = useState(false);
 
@@ -193,21 +209,6 @@ const Home = () => {
     }
   };
 
-  const handleChange = (value, type) => {
-    setData([]);
-    setCurrentPage(1);
-    setInitialLoad(true);
-    if (type === "state") {
-      setLocation((prevValue) => {
-        return { ...prevValue, [type]: value, district: "" };
-      });
-    } else {
-      setLocation((prevValue) => {
-        return { ...prevValue, [type]: value };
-      });
-    }
-  };
-
   const handleFav = async (selectedItem, favourite) => {
     try {
       setScrollPosition(scrollableDivRef.current.scrollTop);
@@ -286,25 +287,25 @@ const Home = () => {
     const node = findNode(treeData);
     return node ? !node.children || node.isLeaf === true : false;
   }
-  const [inputChecked, setInputChecked] = useState(false);
-  const [category, setCategory] = useState("");
-  const [subCategory, setSubCategory] = useState(false);
-  const [apply, setApply] = useState(false);
   const loadMoreData = async () => {
     try {
       const scrollPosition = scrollableDivRef.current.scrollTop;
       setLoading(true);
       let results;
-      if (search.trim() || category) {
+      if (search.trim() || apply || currentLocation) {
         results = await callApi(
           `https://api.reusifi.com/prod/getProductsSearch?&search=${encodeURIComponent(
             search.trim()
           )}&page=${encodeURIComponent(
             currentPage
-          )}&perPage=${encodeURIComponent(limit)}&state=${encodeURIComponent(
-            location.state
-          )}&district=${encodeURIComponent(
-            location.district
+          )}&perPage=${encodeURIComponent(limit)}&location=${encodeURIComponent(
+            location
+          )}&currentLocation=${encodeURIComponent(
+            currentLocation
+          )}&minPrice=${encodeURIComponent(
+            minPrice
+          )}&maxPrice=${encodeURIComponent(
+            maxPrice
           )}&sortByPrice=${encodeURIComponent(
             priceFilter
           )}&category=${encodeURIComponent(
@@ -339,6 +340,7 @@ const Home = () => {
       setLoading(false);
       setScrollPosition(scrollPosition);
       setInitialLoad(false);
+      setApplied(true);
     } catch (err) {
       setLoading(false);
       if (isModalVisibleRef.current) {
@@ -361,15 +363,7 @@ const Home = () => {
     if (timer.current) {
       clearTimeout(timer.current);
     }
-    if (
-      limit &&
-      initialLoad &&
-      (search.trim() ||
-        (apply &&
-          (category ||
-            Object.values(location).some((value) => value) ||
-            priceFilter)))
-    ) {
+    if (limit && initialLoad && (search.trim() || apply || currentLocation)) {
       setLoading(true);
       timer.current = setTimeout(() => {
         loadMoreData();
@@ -380,10 +374,17 @@ const Home = () => {
         clearTimeout(timer.current);
       }
     };
-  }, [search, location, priceFilter, limit, category, apply]);
+  }, [search, limit, apply, currentLocation]);
 
   useEffect(() => {
-    if (user && initialLoad && limit && !search.trim() && !apply) {
+    if (
+      user &&
+      initialLoad &&
+      limit &&
+      !search.trim() &&
+      !apply &&
+      !currentLocation
+    ) {
       try {
         setChatLoading(true);
         setFavLoading(true);
@@ -438,7 +439,7 @@ const Home = () => {
         return;
       }
     }
-  }, [user, initialLoad, limit, search, category, apply]);
+  }, [user, initialLoad, limit, search, apply, currentLocation]);
   const subMenuItems = [
     {
       key: "1",
@@ -475,12 +476,10 @@ const Home = () => {
     setPriceFilter(event.target.value);
     setMinPrice("");
     setMaxPrice("");
+    setApplied(false);
   };
   const [open, setOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [locationLabel, setLocationLabel] = useState("");
-  const [minPrice, setMinPrice] = useState("");
-  const [maxPrice, setMaxPrice] = useState("");
   const showDrawer = () => {
     setDrawerOpen(true);
   };
@@ -498,10 +497,11 @@ const Home = () => {
         )}`,
         "GET"
       );
-      setLocation(data.data.join(","));
+      setLocation(data.data.reverse().join(","));
       setLocationLabel(value);
       setCurrentLocation("");
       setCurrentLocationLabel("");
+      setApplied(false);
     } catch (err) {
       // message.info("Pincode not found");
     }
@@ -530,7 +530,9 @@ const Home = () => {
         );
         setLocationLabels(data.data);
         setLocationLoading(false);
-      } catch (err) {}
+      } catch (err) {
+        setLocationLoading(false);
+      }
     }, 300);
   };
   return (
@@ -576,11 +578,6 @@ const Home = () => {
                 setData([]);
                 setInitialLoad(true);
                 setLoadedImages({});
-                if (!event.target.value.trim()) {
-                  setLocation({ state: "", district: "" });
-                  setPriceFilter("");
-                  setDistricts([]);
-                }
               }}
               placeholder="Search"
               style={{
@@ -681,6 +678,7 @@ const Home = () => {
                       setTimeout(() => {
                         setOpen(false);
                       }, 0);
+                      setApplied(false);
                     }}
                     treeData={options}
                   />
@@ -688,84 +686,6 @@ const Home = () => {
                 <Divider style={{ fontSize: "15px", fontWeight: "300" }} plain>
                   Location
                 </Divider>
-                {/* <Space.Compact size="large">
-                  <TreeSelect
-                    onPopupScroll={() => {
-                      if (
-                        document.activeElement instanceof HTMLElement &&
-                        (isMobile ||
-                          window.visualViewport?.innerWidth < 1200 ||
-                          window.innerWidth < 1200)
-                      ) {
-                        document.activeElement.blur();
-                      }
-                      document.body.style.overscrollBehaviorY = "none";
-                    }}
-                    suffixIcon={
-                      locationOpen ? (
-                        <UpOutlined
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setLocationOpen(false);
-                            document.body.style.overscrollBehaviorY = "";
-                          }}
-                        />
-                      ) : (
-                        <DownOutlined
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setLocationOpen(true);
-                            document.body.style.overscrollBehaviorY = "none";
-                          }}
-                        />
-                      )
-                    }
-                    showSearch
-                    allowClear
-                    style={{
-                      width: "calc(100dvw - 200px)",
-                      borderRadius: "7px",
-                      height: "fit-content",
-                    }}
-                    value={location.district || location.state || null}
-                    styles={{
-                      popup: {
-                        root: {
-                          maxHeight: 400,
-                          overflow: "auto",
-                          overscrollBehavior: "contain",
-                        },
-                      },
-                    }}
-                    placeholder="Location"
-                    treeDefaultExpandAll
-                    onClick={() => {
-                      document.body.style.overscrollBehaviorY = "none";
-                      setLocationOpen(true);
-                    }}
-                    open={locationOpen}
-                    onChange={(value) => {
-                      if (!value) {
-                        setLocation({ state: "", district: "" });
-                        return;
-                      }
-                      const [statePart, ...districtParts] = value.split("-");
-                      const isDistrict = districtParts.length > 0;
-                      if (isDistrict) {
-                        setLocation({
-                          state: statePart,
-                          district: districtParts.join("-"),
-                        });
-                      } else {
-                        setLocation({ state: value, district: "" });
-                      }
-                      setTimeout(() => {
-                        setLocationOpen(false);
-                      }, 0);
-                    }}
-                    treeData={locationsTreeSelect}
-                  />
-                </Space.Compact> */}
                 {
                   <Space.Compact size="large">
                     <Select
@@ -782,9 +702,10 @@ const Home = () => {
                           setLocation("");
                         }
                         setLocationLabel(value);
+                        setApplied(false);
                       }}
-                      // value={locationLabel || null}
                       placeholder="Location"
+                      filterOption={false}
                       notFoundContent={
                         locationLoading ? (
                           <Spin
@@ -805,9 +726,6 @@ const Home = () => {
                       onSelect={(value, options) => {
                         handleLocationSelect(value, options);
                       }}
-                      // onChange={(value) => {
-                      //   setLocationLabel(value);
-                      // }}
                       options={(locationLabels || []).map((item) => ({
                         value: item.Address.Label,
                         label: item.Address.Label,
@@ -831,17 +749,17 @@ const Home = () => {
                         .query({ name: "geolocation" })
                         .then(function (result) {
                           if (result.state === "denied") {
-                            // Location permission is denied
                             Modal.info(locationInfoConfig);
                           }
                         });
                       setLocation("");
                       setLocationLabel("");
+                      setApplied(false);
                       setTriggerLocation((value) => !value);
                     }}
                   >
                     <LocateFixed />
-                    Use your location
+                    Use your current location
                   </Button>
                 </Space.Compact>
                 <Space.Compact
@@ -886,6 +804,7 @@ const Home = () => {
                         onChange={(event) => {
                           setPriceFilter("");
                           setMinPrice(event.target.value);
+                          setApplied(false);
                         }}
                         value={minPrice || null}
                         placeholder="min"
@@ -897,6 +816,7 @@ const Home = () => {
                         onChange={(event) => {
                           setPriceFilter("");
                           setMaxPrice(event.target.value);
+                          setApplied(false);
                         }}
                         value={maxPrice || null}
                         placeholder="max"
@@ -956,12 +876,13 @@ const Home = () => {
                   >
                     <Button
                       disabled={
-                        !category &&
-                        !priceFilter &&
-                        !location &&
-                        !currentLocation &&
-                        !minPrice &&
-                        !maxPrice
+                        (!category &&
+                          !priceFilter &&
+                          !location &&
+                          !currentLocation &&
+                          !minPrice &&
+                          !maxPrice) ||
+                        applied
                       }
                       style={{
                         background: "#52c41a",

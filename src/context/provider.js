@@ -44,9 +44,30 @@ const Provider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [email, setEmail] = useState(null);
   const [locationAccessLoading, setLocationAccessLoading] = useState(false);
+  const [locationLabel, setLocationLabel] = useState("");
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
+  const [category, setCategory] = useState("");
+  const [subCategory, setSubCategory] = useState(false);
+  const [apply, setApply] = useState(false);
+  const [applied, setApplied] = useState(false);
   return (
     <Context.Provider
       value={{
+        applied,
+        setApplied,
+        category,
+        setCategory,
+        subCategory,
+        setSubCategory,
+        apply,
+        setApply,
+        locationLabel,
+        setLocationLabel,
+        minPrice,
+        setMinPrice,
+        maxPrice,
+        setMaxPrice,
         locationAccessLoading,
         setLocationAccessLoading,
         currentLocationLabel,

@@ -6,6 +6,7 @@ import { Cascader } from "antd";
 import { Layout, theme, Modal } from "antd";
 import { locationsCascader } from "../helpers/locations";
 import { PlusOutlined, UploadOutlined } from "@ant-design/icons";
+import { LocateFixed } from "lucide-react";
 import { Image, Upload, Typography, message } from "antd";
 import { Button, Badge, Row } from "antd";
 import axios from "axios";
@@ -19,6 +20,7 @@ import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
 import { options } from "../helpers/categories";
+import useLocationComponent from "../component/Location";
 const { Text } = Typography;
 const { TextArea } = Input;
 const { Content } = Layout;
@@ -41,7 +43,13 @@ const AddDress = () => {
     setAddProductInitialLoad,
     setUnreadChatCount,
     user,
+    locationAccessLoading,
+    currentLocationLabel,
+    setTriggerLocation,
+    currentLocation,
   } = useContext(Context);
+
+  useLocationComponent();
 
   const [form, setForm] = useState({
     title: "",
@@ -77,6 +85,17 @@ const AddDress = () => {
     },
   };
 
+  const locationInfoConfig = {
+    title: "Enable location access",
+    content:
+      "To enable location access, please click the location icon at the end of the browser’s address bar and allow location permission for this site.",
+    closable: false,
+    maskClosable: false,
+    okText: "Close",
+    onOk: () => {},
+  };
+
+  console.log(form);
   useEffect(() => {
     if (user && addProductInitialLoad) {
       try {
@@ -131,8 +150,6 @@ const AddDress = () => {
       }
     }
   }, [user, addProductInitialLoad]);
-
-  const [districts, setDistricts] = useState([]);
   const handleChange = (value, type) => {
     if (type === "price" && !/^(|[1-9]\d*)$/.test(value.target.value)) {
       return;
@@ -180,6 +197,15 @@ const AddDress = () => {
     );
     setFileList(newFileList);
   };
+
+  useEffect(() => {
+    setForm((prevValue) => {
+      return {
+        ...prevValue,
+        location: currentLocation,
+      };
+    });
+  }, [currentLocation]);
 
   useEffect(() => {
     setForm((prevValue) => {
@@ -262,9 +288,8 @@ const AddDress = () => {
       const data = {
         title: form.title.trim().toLowerCase(),
         description: form.description.trim().toLowerCase(),
-        state: form.state.toLowerCase(),
-        district: form.district.toLowerCase(),
         email: form.email.toLowerCase(),
+        location: form.location,
         price: parseInt(form.price),
         category: form.category.toLowerCase(),
         subCategory: form.subCategory.toLowerCase(),
@@ -321,7 +346,7 @@ const AddDress = () => {
       );
       setPostCodeLoading(false);
       setAddress(data.data.Address.Label);
-      handleChange(data.data.Position.join(","), "location");
+      handleChange(data.data.Position.reverse().join(","), "location");
     } catch (err) {
       message.info("Pincode not found");
     }
@@ -349,7 +374,7 @@ const AddDress = () => {
     <Layout
       style={{
         height: "100dvh",
-        overflow: "hidden",
+        overflowX: "hidden",
         background: "#F9FAFB",
       }}
     >
@@ -499,6 +524,38 @@ const AddDress = () => {
                   >
                     Check Pincode
                   </Button>
+                </Space.Compact>
+                &nbsp;&nbsp;or
+                <Space.Compact size="large">
+                  <Button
+                    loading={locationAccessLoading}
+                    style={{
+                      fontSize: "13px",
+                      fontWeight: "300",
+                      color: "#52c41a",
+                    }}
+                    onClick={() => {
+                      navigator.permissions
+                        .query({ name: "geolocation" })
+                        .then(function (result) {
+                          if (result.state === "denied") {
+                            Modal.info(locationInfoConfig);
+                          }
+                        });
+                      setAddress("");
+                      console.log("athil");
+                      setTriggerLocation((value) => !value);
+                    }}
+                  >
+                    <LocateFixed />
+                    Use your current location
+                  </Button>
+                </Space.Compact>
+                <Space.Compact
+                  size="large"
+                  style={{ display: currentLocationLabel ? "block" : "none" }}
+                >
+                  <Input value={currentLocationLabel || null}></Input>
                 </Space.Compact>
                 <Space.Compact
                   size="large"
