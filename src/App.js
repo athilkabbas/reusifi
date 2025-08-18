@@ -20,7 +20,6 @@ import { Context } from "./context/provider";
 import "./App.css";
 import CheckRender from "./helpers/checkRender";
 import ReusifiLanding from "./pages/landingPage";
-import useLocationComponent from "./component/Location";
 
 Amplify.configure(awsconfig);
 
