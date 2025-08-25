@@ -35,6 +35,8 @@ function AppWithSession() {
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [checkSession, setCheckSession] = useState(false);
   const [checked, setChecked] = useState(false);
+  const socketRef = useRef(null);
+  const reconnectTimeoutRef = useRef(null);
   const {
     setUnreadChatCount,
     setChatInitialLoad,
@@ -46,67 +48,62 @@ function AppWithSession() {
 
   const [socketLoading, setSocketLoading] = useState(false);
   useEffect(() => {
-    window.addEventListener("pageshow", function (event) {
-      if (event.persisted) {
-        window.location.reload();
-      }
-    });
-  }, []);
-  useEffect(() => {
-    let socket = null;
-    let reconnectTimeout = null;
-
     const fetchNotifications = async () => {
-      let token = "";
-      let session;
       try {
         setCheckSession(true);
-        session = await fetchAuthSession();
+        const session = await fetchAuthSession();
         const tokens = session.tokens;
+
         if (tokens?.idToken) {
-          token = tokens.idToken;
+          const token = tokens.idToken.toString();
           setIsSignedIn(true);
           setCheckSession(false);
           setChecked(true);
-          const decoded = JSON.parse(atob(token.toString().split(".")[1]));
+
+          const decoded = JSON.parse(atob(token.split(".")[1]));
           const currentUser = await getCurrentUser();
           setUser(currentUser);
           setEmail(decoded.email);
           setSocketLoading(true);
-          socket = new WebSocket(
+
+          socketRef.current = new WebSocket(
             `wss://apichat.reusifi.com/production?userId=${currentUser.userId}&token=${token}`
           );
 
-          socket.onopen = () => {
+          socketRef.current.onopen = () => {
             setSocketLoading(false);
-            if (reconnectTimeout) {
-              clearTimeout(reconnectTimeout);
-              reconnectTimeout = null;
+            if (reconnectTimeoutRef.current) {
+              clearTimeout(reconnectTimeoutRef.current);
+              reconnectTimeoutRef.current = null;
             }
           };
 
-          socket.onerror = (err) => {
-            if (!reconnectTimeout) {
-              reconnectTimeout = setTimeout(() => {
+          socketRef.current.onerror = () => {
+            if (!reconnectTimeoutRef.current) {
+              reconnectTimeoutRef.current = setTimeout(() => {
                 fetchNotifications();
-                reconnectTimeout = null;
+                reconnectTimeoutRef.current = null;
               }, 3000);
             }
           };
 
-          socket.onmessage = async (event) => {
-            if (!socket || socket.readyState !== WebSocket.OPEN) return; // guard
+          socketRef.current.onmessage = () => {
+            if (
+              !socketRef.current ||
+              socketRef.current.readyState !== WebSocket.OPEN
+            )
+              return;
             setChatData([]);
             setChatLastEvaluatedKey(null);
             setChatInitialLoad(true);
             setUnreadChatCount(1);
           };
 
-          socket.onclose = () => {
-            if (!reconnectTimeout) {
-              reconnectTimeout = setTimeout(() => {
+          socketRef.current.onclose = () => {
+            if (!reconnectTimeoutRef.current) {
+              reconnectTimeoutRef.current = setTimeout(() => {
                 fetchNotifications();
-                reconnectTimeout = null;
+                reconnectTimeoutRef.current = null;
               }, 3000);
             }
           };
@@ -118,31 +115,29 @@ function AppWithSession() {
         setIsSignedIn(false);
         setCheckSession(false);
         setChecked(true);
-        return;
       }
     };
 
     fetchNotifications();
 
     return () => {
-      if (reconnectTimeout) {
-        clearTimeout(reconnectTimeout);
+      if (reconnectTimeoutRef.current) {
+        clearTimeout(reconnectTimeoutRef.current);
       }
-      if (socket) {
-        socket.onopen = null;
-        socket.onmessage = null;
-        socket.onerror = null;
-        socket.onclose = null;
+      if (socketRef.current) {
+        socketRef.current.onopen = null;
+        socketRef.current.onmessage = null;
+        socketRef.current.onerror = null;
+        socketRef.current.onclose = null;
         if (
-          socket.readyState === WebSocket.OPEN ||
-          socket.readyState === WebSocket.CONNECTING
+          socketRef.current.readyState === WebSocket.OPEN ||
+          socketRef.current.readyState === WebSocket.CONNECTING
         ) {
-          socket.close();
+          socketRef.current.close();
         }
       }
     };
   }, []);
-
   if (checked && !isSignedIn) {
     return <ReusifiLanding />;
   }

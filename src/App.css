@@ -46,16 +46,6 @@
   background: #52c41a !important;
 }
 
-/* For most browsers */
-.hide-scrollbar {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE 10+ */
-}
-
-.hide-scrollbar::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
-}
-
 /* Make all top-level menu items (including submenus) take equal space */
 .ant-menu-horizontal > .ant-menu-item {
   flex: 1 !important;

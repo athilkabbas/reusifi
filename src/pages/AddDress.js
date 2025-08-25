@@ -95,7 +95,6 @@ const AddDress = () => {
     onOk: () => {},
   };
 
-  console.log(form);
   useEffect(() => {
     if (user && addProductInitialLoad) {
       try {
@@ -392,15 +391,13 @@ const AddDress = () => {
       )}
       <Content>
         <div
-          className="hide-scrollbar overflow-auto"
           style={{
             background: "#F9FAFB",
             borderRadius: "0px",
             overflow: "scroll",
-            height: "100%",
             padding: "15px 15px 70px 15px",
-            display: "flex",
-            justifyContent: "center",
+            height: "100%",
+            scrollbarWidth: "none",
           }}
         >
           {!loading && !chatLoading && user && (
@@ -410,6 +407,7 @@ const AddDress = () => {
                 direction="vertical"
                 style={{
                   display: "flex",
+                  alignItems: "center",
                 }}
               >
                 <Space.Compact size="large">
@@ -504,7 +502,13 @@ const AddDress = () => {
                     options={locationsCascader}
                   ></Cascader>
                 </Space.Compact> */}
-                <Space.Compact size="large">
+                <Space.Compact
+                  size="large"
+                  style={{
+                    // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+                    width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
+                  }}
+                >
                   <Input
                     value={pincode}
                     onChange={handlePincode}
@@ -533,6 +537,7 @@ const AddDress = () => {
                       fontSize: "13px",
                       fontWeight: "300",
                       color: "#52c41a",
+                      width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
                     }}
                     onClick={() => {
                       navigator.permissions
@@ -543,7 +548,7 @@ const AddDress = () => {
                           }
                         });
                       setAddress("");
-                      console.log("athil");
+                      setPincode("");
                       setTriggerLocation((value) => !value);
                     }}
                   >
@@ -551,18 +556,28 @@ const AddDress = () => {
                     Use your current location
                   </Button>
                 </Space.Compact>
-                <Space.Compact
-                  size="large"
-                  style={{ display: currentLocationLabel ? "block" : "none" }}
-                >
-                  <Input value={currentLocationLabel || null}></Input>
-                </Space.Compact>
-                <Space.Compact
-                  size="large"
-                  style={{ display: pincode && address ? "block" : "none" }}
-                >
-                  <Input value={address} placeholder="Address" readOnly></Input>
-                </Space.Compact>
+                {currentLocationLabel && !address && (
+                  <Space.Compact size="large">
+                    <Input
+                      style={{
+                        width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
+                      }}
+                      value={currentLocationLabel}
+                    />
+                  </Space.Compact>
+                )}
+                {pincode && address && (
+                  <Space.Compact size="large">
+                    <Input
+                      style={{
+                        width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
+                      }}
+                      value={address}
+                      placeholder="Address"
+                      readOnly
+                    />
+                  </Space.Compact>
+                )}
                 <Space.Compact size="large">
                   <Input
                     allowClear
@@ -598,6 +613,7 @@ const AddDress = () => {
                           color: "black",
                           fontSize: "13px",
                           fontWeight: "300",
+                          width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
                         }}
                         icon={<UploadOutlined />}
                       >
@@ -673,6 +689,7 @@ const AddDress = () => {
                     lg={24}
                     xl={24}
                     xxl={24}
+                    style={{ display: "flex", justifyContent: "center" }}
                   >
                     <Skeleton.Input
                       style={{

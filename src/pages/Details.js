@@ -278,13 +278,13 @@ const Details = () => {
       )}
       <Content>
         <div
-          className="hide-scrollbar overflow-auto"
           style={{
             background: "#F9FAFB",
             borderRadius: "0px",
             overflowY: "scroll",
             height: "100%",
             overflowX: "hidden",
+            scrollbarWidth: "none",
             padding: "15px 15px 70px 15px",
           }}
         >
@@ -444,7 +444,7 @@ const Details = () => {
                       )}
                     </Image.PreviewGroup>
                   </Space.Compact>
-                  {Object.values(loadedImages).some((item) => item) && (
+                  {Object.values(loadedImages).every((item) => item) && (
                     <Space.Compact size="large">
                       <Descriptions
                         column={1}
@@ -461,7 +461,7 @@ const Details = () => {
                       />
                     </Space.Compact>
                   )}
-                  {Object.values(loadedImages).some((item) => item) && (
+                  {Object.values(loadedImages).every((item) => item) && (
                     <>
                       {ad && (
                         <Space.Compact
@@ -542,7 +542,10 @@ const Details = () => {
                 </Space>
               </>
             )}
-          {(loading || chatLoading || chatProductLoading) && (
+          {(loading ||
+            chatLoading ||
+            chatProductLoading ||
+            !Object.values(loadedImages).every((item) => item)) && (
             <Row gutter={[10, 10]}>
               <Col key={0} xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
                 <div style={{ display: "flex", justifyContent: "center" }}>

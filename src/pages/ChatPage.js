@@ -508,7 +508,6 @@ const ChatPage = () => {
       )}
       <Content>
         <div
-          className="hide-scrollbar overflow-auto"
           id="scrollableDiv"
           ref={scrollableDivRef}
           style={{
@@ -518,8 +517,7 @@ const ChatPage = () => {
             borderRadius: "0px",
             overflowY: "scroll",
             overflowX: "hidden",
-            display: "flex",
-            justifyContent: "center",
+            scrollbarWidth: "none",
           }}
         >
           <InfiniteScroll
@@ -552,7 +550,10 @@ const ChatPage = () => {
                   }
                   return (
                     <>
-                      <List.Item key={item.timestamp}>
+                      <List.Item
+                        key={item.timestamp}
+                        style={{ display: "flex", justifyContent: "center" }}
+                      >
                         <Card
                           style={{
                             borderRadius: "12px",
@@ -769,6 +770,7 @@ const ChatPage = () => {
                       lg={24}
                       xl={24}
                       xxl={24}
+                      style={{ display: "flex", justifyContent: "center" }}
                     >
                       <Skeleton.Node
                         style={{

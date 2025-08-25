@@ -49,7 +49,6 @@ const Provider = ({ children }) => {
   const [maxPrice, setMaxPrice] = useState("");
   const [category, setCategory] = useState("");
   const [subCategory, setSubCategory] = useState(false);
-  const [apply, setApply] = useState(false);
   const [applied, setApplied] = useState(false);
   return (
     <Context.Provider
@@ -60,8 +59,6 @@ const Provider = ({ children }) => {
         setCategory,
         subCategory,
         setSubCategory,
-        apply,
-        setApply,
         locationLabel,
         setLocationLabel,
         minPrice,

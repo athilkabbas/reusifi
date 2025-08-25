@@ -22,7 +22,6 @@ const Chat = () => {
   const { recipient } = location.state || "";
   const { conversationId, productId } = location.state;
   const [messageValue, setMessageValue] = useState("");
-  const [ws, setWs] = useState("");
   const [reconnect, setReconnect] = useState(false);
   const [lastEvaluatedKey, setLastEvaluatedKey] = useState(null);
   const bottomRef = useRef(null); // To reference the bottom of the chat container
@@ -30,6 +29,8 @@ const Chat = () => {
   const [loading, setLoading] = useState(false);
   const scrollableDivRef = useRef(null);
   const [scrollPosition, setScrollPosition] = useState(0);
+  const socketRef = useRef(null);
+  const reconnectTimeoutRef = useRef(null);
   const { Text } = Typography;
   const sendMessage = (
     message,
@@ -40,8 +41,8 @@ const Chat = () => {
     image
   ) => {
     try {
-      if (ws) {
-        ws.send(
+      if (socketRef.current) {
+        socketRef.current.send(
           JSON.stringify({
             action: "sendMessage",
             recipientUserId: recipientUserId,
@@ -151,52 +152,52 @@ const Chat = () => {
   }, [hasMore]);
 
   useEffect(() => {
-    let socket = null;
-    let reconnectTimeout = null;
-
     const fetchUser = async () => {
-      let token = "";
-      let session;
       try {
         setCheckSession(true);
-        session = await fetchAuthSession();
+        const session = await fetchAuthSession();
         const tokens = session.tokens;
 
         if (tokens?.idToken) {
-          token = tokens.idToken;
+          const token = tokens.idToken.toString();
           setCheckSession(false);
+
           const currentUser = user;
           setSocketLoading(true);
-          socket = new WebSocket(
+
+          socketRef.current = new WebSocket(
             `wss://apichat.reusifi.com/production?userId=${
               currentUser.userId
             }&productId=${productId || recipient?.item?.uuid}&token=${token}`
           );
-          setWs(socket);
 
-          socket.onopen = () => {
+          socketRef.current.onopen = () => {
             setSocketLoading(false);
-            if (reconnectTimeout) {
-              clearTimeout(reconnectTimeout);
-              reconnectTimeout = null;
+            if (reconnectTimeoutRef.current) {
+              clearTimeout(reconnectTimeoutRef.current);
+              reconnectTimeoutRef.current = null;
             }
           };
 
-          socket.onerror = (err) => {
-            if (!reconnectTimeout) {
-              reconnectTimeout = setTimeout(() => {
-                if (productId || (recipient && recipient["item"]["uuid"])) {
+          socketRef.current.onerror = () => {
+            if (!reconnectTimeoutRef.current) {
+              reconnectTimeoutRef.current = setTimeout(() => {
+                if (productId || recipient?.item?.uuid) {
                   fetchUser();
                 }
-                reconnectTimeout = null;
+                reconnectTimeoutRef.current = null;
               }, 3000);
             }
           };
 
-          socket.onmessage = async (event) => {
-            if (!socket || socket.readyState !== WebSocket.OPEN) return; // Guard
+          socketRef.current.onmessage = async (event) => {
+            if (
+              !socketRef.current ||
+              socketRef.current.readyState !== WebSocket.OPEN
+            )
+              return;
             const data = JSON.parse(event.data);
-            setIChatData((prevValue) => [
+            setIChatData((prev) => [
               {
                 message: data.message,
                 timestamp: data.timestamp,
@@ -204,10 +205,10 @@ const Chat = () => {
                 senderId: data.senderUserId,
                 productId: data.productId,
               },
-              ...prevValue,
+              ...prev,
             ]);
+
             try {
-              // setLoading(true);
               await callApi(
                 `https://api.reusifi.com/prod/getChatsRead?userId1=${encodeURIComponent(
                   data.recipientUserId
@@ -216,15 +217,11 @@ const Chat = () => {
                 }&read=${encodeURIComponent(true)}`,
                 "GET"
               );
-              // setLoading(false);
               setChatData([]);
               setChatLastEvaluatedKey(null);
               setChatInitialLoad(true);
             } catch (err) {
-              // setLoading(false);
-              if (isModalVisibleRef.current) {
-                return;
-              }
+              if (isModalVisibleRef.current) return;
               isModalVisibleRef.current = true;
               if (err?.status === 401) {
                 Modal.error(errorSessionConfig);
@@ -234,53 +231,49 @@ const Chat = () => {
                   content: err.message + "chat read",
                 });
               }
-              return;
             }
           };
 
-          socket.onclose = () => {
-            if (!reconnectTimeout) {
-              reconnectTimeout = setTimeout(() => {
-                if (productId || (recipient && recipient["item"]["uuid"])) {
+          socketRef.current.onclose = () => {
+            if (!reconnectTimeoutRef.current) {
+              reconnectTimeoutRef.current = setTimeout(() => {
+                if (productId || recipient?.item?.uuid) {
                   fetchUser();
                 }
-                reconnectTimeout = null;
+                reconnectTimeoutRef.current = null;
               }, 3000);
             }
           };
         } else {
           throw new Error();
         }
-      } catch (err) {
+      } catch {
         setSocketLoading(false);
         setCheckSession(false);
-        if (isModalVisibleRef.current) {
-          return;
-        }
+        if (isModalVisibleRef.current) return;
         isModalVisibleRef.current = true;
         Modal.error(errorSessionConfig);
-        return;
       }
     };
 
-    if (productId || (recipient && recipient["item"]["uuid"])) {
+    if (productId || recipient?.item?.uuid) {
       fetchUser();
     }
 
     return () => {
-      if (reconnectTimeout) {
-        clearTimeout(reconnectTimeout);
+      if (reconnectTimeoutRef.current) {
+        clearTimeout(reconnectTimeoutRef.current);
       }
-      if (socket) {
-        socket.onopen = null;
-        socket.onmessage = null;
-        socket.onerror = null;
-        socket.onclose = null;
+      if (socketRef.current) {
+        socketRef.current.onopen = null;
+        socketRef.current.onmessage = null;
+        socketRef.current.onerror = null;
+        socketRef.current.onclose = null;
         if (
-          socket.readyState === WebSocket.OPEN ||
-          socket.readyState === WebSocket.CONNECTING
+          socketRef.current.readyState === WebSocket.OPEN ||
+          socketRef.current.readyState === WebSocket.CONNECTING
         ) {
-          socket.close();
+          socketRef.current.close();
         }
       }
     };
@@ -619,7 +612,6 @@ const Chat = () => {
             </Button>
           </Space.Compact>
           <div
-            className="hide-scrollbar overflow-auto"
             id="scrollableDiv"
             ref={scrollableDivRef}
             style={{
@@ -628,6 +620,7 @@ const Chat = () => {
               display: "flex",
               overflowY: "auto",
               flexDirection: "column-reverse",
+              scrollbarWidth: "none",
               width: "100%",
             }}
           >

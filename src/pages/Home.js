@@ -4,7 +4,6 @@ import {
   Layout,
   Spin,
   Modal,
-  Switch,
   TreeSelect,
   Dropdown,
   Drawer,
@@ -28,7 +27,7 @@ import { LocateFixed } from "lucide-react";
 import { Input, Space, Empty } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { List, Skeleton, Radio } from "antd";
-import { Card, Typography } from "antd";
+import { Card } from "antd";
 import { signInWithRedirect, signOut } from "@aws-amplify/auth";
 import { locationsTreeSelect } from "../helpers/locations";
 import { Context } from "../context/provider";
@@ -39,7 +38,6 @@ import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
 import useLocationComponent from "../component/Location";
-const { Text } = Typography;
 const capitalize = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
@@ -47,9 +45,7 @@ const { Content } = Layout;
 const Home = () => {
   useLocationComponent();
   const [loading, setLoading] = useState(false);
-  const [attributes, setAttributes] = useState(null);
   const timer = useRef(null);
-  const [districts, setDistricts] = useState([]);
   const scrollableDivRef = useRef(null);
   const [chatLoading, setChatLoading] = useState(false);
   const [favLoading, setFavLoading] = useState(false);
@@ -91,8 +87,6 @@ const Home = () => {
     setCategory,
     subCategory,
     setSubCategory,
-    apply,
-    setApply,
     setApplied,
     applied,
   } = useContext(Context);
@@ -292,7 +286,7 @@ const Home = () => {
       const scrollPosition = scrollableDivRef.current.scrollTop;
       setLoading(true);
       let results;
-      if (search.trim() || apply || currentLocation) {
+      if (search.trim() || applied || currentLocation) {
         results = await callApi(
           `https://api.reusifi.com/prod/getProductsSearch?&search=${encodeURIComponent(
             search.trim()
@@ -363,7 +357,7 @@ const Home = () => {
     if (timer.current) {
       clearTimeout(timer.current);
     }
-    if (limit && initialLoad && (search.trim() || apply || currentLocation)) {
+    if (limit && initialLoad && (search.trim() || applied || currentLocation)) {
       setLoading(true);
       timer.current = setTimeout(() => {
         loadMoreData();
@@ -374,7 +368,7 @@ const Home = () => {
         clearTimeout(timer.current);
       }
     };
-  }, [search, limit, apply, currentLocation]);
+  }, [search, limit, applied, currentLocation]);
 
   useEffect(() => {
     if (
@@ -382,7 +376,7 @@ const Home = () => {
       initialLoad &&
       limit &&
       !search.trim() &&
-      !apply &&
+      !applied &&
       !currentLocation
     ) {
       try {
@@ -439,7 +433,7 @@ const Home = () => {
         return;
       }
     }
-  }, [user, initialLoad, limit, search, apply, currentLocation]);
+  }, [user, initialLoad, limit, search, applied, currentLocation]);
   const subMenuItems = [
     {
       key: "1",
@@ -612,7 +606,11 @@ const Home = () => {
               open={drawerOpen}
               width={"100dvw"}
             >
-              <Space size="middle" direction="vertical">
+              <Space
+                size="middle"
+                direction="vertical"
+                style={{ display: "flex", alignItems: "center" }}
+              >
                 <Divider style={{ fontSize: "15px", fontWeight: "300" }} plain>
                   Category
                 </Divider>
@@ -651,7 +649,7 @@ const Home = () => {
                     showSearch
                     allowClear
                     style={{
-                      width: "calc(100dvw - 50px)",
+                      width: !isMobile ? "50dvw" : "calc(100dvw - 50px)",
                       borderRadius: "7px",
                       height: "fit-content",
                     }}
@@ -689,7 +687,9 @@ const Home = () => {
                 {
                   <Space.Compact size="large">
                     <Select
-                      style={{ width: "calc(100dvw - 50px)" }}
+                      style={{
+                        width: !isMobile ? "50dvw" : "calc(100dvw - 50px)",
+                      }}
                       showSearch
                       allowClear
                       value={locationLabel || null}
@@ -743,6 +743,7 @@ const Home = () => {
                       fontSize: "13px",
                       fontWeight: "300",
                       color: "#52c41a",
+                      width: !isMobile ? "50dvw" : "calc(100dvw - 50px)",
                     }}
                     onClick={() => {
                       navigator.permissions
@@ -766,7 +767,12 @@ const Home = () => {
                   size="large"
                   style={{ display: currentLocationLabel ? "block" : "none" }}
                 >
-                  <Input value={currentLocationLabel || null}></Input>
+                  <Input
+                    style={{
+                      width: !isMobile ? "50dvw" : "calc(100dvw - 50px)",
+                    }}
+                    value={currentLocationLabel || null}
+                  ></Input>
                 </Space.Compact>
                 <Divider style={{ fontSize: "15px", fontWeight: "300" }} plain>
                   Price
@@ -862,7 +868,7 @@ const Home = () => {
                         setCurrentLocationLabel("");
                         setMinPrice("");
                         setMaxPrice("");
-                        setApply(false);
+                        setApplied(false);
                         onClose();
                       }}
                       type="primary"
@@ -894,7 +900,7 @@ const Home = () => {
                         setData([]);
                         setInitialLoad(true);
                         setLoadedImages({});
-                        setApply(true);
+                        setApplied(true);
                         onClose();
                       }}
                       type="primary"
@@ -910,7 +916,6 @@ const Home = () => {
       </Space>
       <Content>
         <div
-          className="hide-scrollbar overflow-auto"
           id="scrollableDiv"
           ref={scrollableDivRef}
           style={{
@@ -919,6 +924,7 @@ const Home = () => {
             borderRadius: "0px",
             overflowY: "scroll",
             overflowX: "hidden",
+            scrollbarWidth: "none",
             padding: "15px 15px 70px 15px",
           }}
         >

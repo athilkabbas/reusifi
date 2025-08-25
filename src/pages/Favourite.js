@@ -317,7 +317,6 @@ const Favourites = () => {
       )}
       <Content>
         <div
-          className="hide-scrollbar overflow-auto"
           id="scrollableDiv"
           ref={scrollableDivRef}
           style={{
@@ -326,6 +325,7 @@ const Favourites = () => {
             borderRadius: "0px",
             overflowY: "scroll",
             overflowX: "hidden",
+            scrollbarWidth: "none",
             padding: "15px 15px 70px 15px",
           }}
         >
@@ -363,7 +363,6 @@ const Favourites = () => {
                         >
                           <Card
                             style={{ height: "325px", width: "186px" }}
-                            hoverable
                             bodyStyle={{ padding: "10px 10px 10px 10px" }}
                             onClick={() => {
                               setFavScrollPosition(
