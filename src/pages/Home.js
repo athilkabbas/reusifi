@@ -664,7 +664,6 @@ const Home = () => {
                       },
                     }}
                     placeholder="Category"
-                    treeDefaultExpandAll
                     onClick={() => {
                       setOpen(true);
                     }}
