@@ -634,6 +634,13 @@ const Home = () => {
                         // Lock scroll when dropdown opens
                         document.body.style.overscrollBehavior = "none";
                         document.body.style.touchAction = "none"; // optional, helps iOS
+                        // On mobile, blur the input to prevent keyboard from shifting the page
+                        if (
+                          /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+                        ) {
+                          const active = document.activeElement;
+                          if (active instanceof HTMLElement) active.blur();
+                        }
                       } else {
                         // Unlock scroll when dropdown closes
                         document.body.style.overscrollBehavior = "";
