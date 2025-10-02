@@ -451,20 +451,14 @@ const AddDress = () => {
                           ) {
                             const popup = e.currentTarget;
                             const scrollTop = popup.scrollTop;
-
-                            // Close keyboard without causing scroll jump
-                            requestAnimationFrame(() => {
-                              try {
-                                document.activeElement.blur({
-                                  preventScroll: true,
-                                });
-                              } catch {
-                                document.activeElement.blur();
-                              }
-
-                              // Restore popup scroll
-                              popup.scrollTop = scrollTop;
-                            });
+                            try {
+                              document.activeElement.blur({
+                                preventScroll: true,
+                              });
+                            } catch {
+                              document.activeElement.blur();
+                            }
+                            popup.scrollTop = scrollTop;
                           }
 
                           document.body.style.overscrollBehaviorY = "none";
