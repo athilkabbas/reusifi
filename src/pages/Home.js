@@ -616,33 +616,27 @@ const Home = () => {
                 </Divider>
                 <Space.Compact size="large">
                   <TreeSelect
-                    onPopupScroll={() => {
+                    onPopupScroll={(e) => {
                       if (
                         document.activeElement instanceof HTMLElement &&
                         (isMobile ||
                           window.visualViewport?.innerWidth < 1200 ||
                           window.innerWidth < 1200)
                       ) {
-                        // Save page scroll
-                        const scrollY = window.scrollY;
+                        const popup = e.currentTarget; // scrollable popup div
+                        const scrollTop = popup.scrollTop; // save scroll
 
-                        // Hide keyboard
-                        if (document.activeElement.blur.length === 0) {
-                          document.activeElement.blur(); // fallback
-                        } else {
-                          try {
-                            document.activeElement.blur({
-                              preventScroll: true,
-                            });
-                          } catch {
-                            document.activeElement.blur();
-                          }
+                        // blur input
+                        try {
+                          document.activeElement.blur({ preventScroll: true });
+                        } catch {
+                          document.activeElement.blur();
                         }
 
-                        // Restore scroll after keyboard hides
-                        setTimeout(() => {
-                          window.scrollTo(0, scrollY);
-                        }, 50); // 50ms is usually enough for keyboard animation
+                        // restore popup scroll
+                        requestAnimationFrame(() => {
+                          popup.scrollTop = scrollTop;
+                        });
                       }
                       document.body.style.overscrollBehaviorY = "none";
                     }}
