@@ -616,33 +616,40 @@ const Home = () => {
                 </Divider>
                 <Space.Compact size="large">
                   <TreeSelect
-                    onPopupScroll={(e) => {
-                      if (
-                        document.activeElement instanceof HTMLElement &&
-                        (isMobile ||
-                          window.visualViewport?.width < 1200 ||
-                          window.innerWidth < 1200)
-                      ) {
-                        const popup = e.currentTarget;
-                        const scrollTop = popup.scrollTop;
+                    popupRender={(menu) => (
+                      <div
+                        onTouchMove={(e) => {
+                          if (
+                            document.activeElement instanceof HTMLElement &&
+                            (isMobile ||
+                              window.visualViewport?.width < 1200 ||
+                              window.innerWidth < 1200)
+                          ) {
+                            const scrollTop = e.currentTarget.scrollTop;
 
-                        // Blur the input to close the keyboard
-                        setTimeout(() => {
-                          try {
-                            document.activeElement.blur({
-                              preventScroll: true,
+                            // Close keyboard safely
+                            requestAnimationFrame(() => {
+                              try {
+                                document.activeElement.blur({
+                                  preventScroll: true,
+                                });
+                              } catch {
+                                document.activeElement.blur();
+                              }
+
+                              e.currentTarget.scrollTop = scrollTop;
                             });
-                          } catch {
-                            document.activeElement.blur();
                           }
-                        }, 0);
-
-                        // Restore popup scroll immediately
-                        popup.scrollTop = scrollTop;
-                      }
-
-                      document.body.style.overscrollBehaviorY = "none";
-                    }}
+                        }}
+                        style={{
+                          maxHeight: 400,
+                          overflow: "auto",
+                          overscrollBehavior: "contain",
+                        }}
+                      >
+                        {menu}
+                      </div>
+                    )}
                     suffixIcon={
                       open ? (
                         <UpOutlined
