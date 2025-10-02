@@ -623,7 +623,11 @@ const Home = () => {
                           window.visualViewport?.width < 1200 ||
                           window.innerWidth < 1200)
                       ) {
-                        setTimeout(() => {
+                        const popup = e.currentTarget;
+                        const scrollTop = popup.scrollTop;
+
+                        // Close keyboard without causing scroll jump
+                        requestAnimationFrame(() => {
                           try {
                             document.activeElement.blur({
                               preventScroll: true,
@@ -631,7 +635,10 @@ const Home = () => {
                           } catch {
                             document.activeElement.blur();
                           }
-                        }, 100);
+
+                          // Restore popup scroll
+                          popup.scrollTop = scrollTop;
+                        });
                       }
 
                       document.body.style.overscrollBehaviorY = "none";
@@ -695,6 +702,33 @@ const Home = () => {
                 {
                   <Space.Compact size="large">
                     <Select
+                      onPopupScroll={(e) => {
+                        if (
+                          document.activeElement instanceof HTMLElement &&
+                          (isMobile ||
+                            window.visualViewport?.width < 1200 ||
+                            window.innerWidth < 1200)
+                        ) {
+                          const popup = e.currentTarget;
+                          const scrollTop = popup.scrollTop;
+
+                          // Close keyboard without causing scroll jump
+                          requestAnimationFrame(() => {
+                            try {
+                              document.activeElement.blur({
+                                preventScroll: true,
+                              });
+                            } catch {
+                              document.activeElement.blur();
+                            }
+
+                            // Restore popup scroll
+                            popup.scrollTop = scrollTop;
+                          });
+                        }
+
+                        document.body.style.overscrollBehaviorY = "none";
+                      }}
                       style={{
                         width: !isMobile ? "50dvw" : "calc(100dvw - 50px)",
                       }}

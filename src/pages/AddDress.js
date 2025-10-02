@@ -440,6 +440,39 @@ const AddDress = () => {
                 </Space.Compact>
                 <Space.Compact size="large">
                   <Cascader
+                    popupRender={(menu) => (
+                      <div
+                        onScroll={(e) => {
+                          if (
+                            document.activeElement instanceof HTMLElement &&
+                            (isMobile ||
+                              window.visualViewport?.width < 1200 ||
+                              window.innerWidth < 1200)
+                          ) {
+                            const popup = e.currentTarget;
+                            const scrollTop = popup.scrollTop;
+
+                            // Close keyboard without causing scroll jump
+                            requestAnimationFrame(() => {
+                              try {
+                                document.activeElement.blur({
+                                  preventScroll: true,
+                                });
+                              } catch {
+                                document.activeElement.blur();
+                              }
+
+                              // Restore popup scroll
+                              popup.scrollTop = scrollTop;
+                            });
+                          }
+
+                          document.body.style.overscrollBehaviorY = "none";
+                        }}
+                      >
+                        {menu}
+                      </div>
+                    )}
                     style={{
                       // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                       width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
