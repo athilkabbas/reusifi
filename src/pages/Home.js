@@ -623,10 +623,6 @@ const Home = () => {
                           window.visualViewport?.width < 1200 ||
                           window.innerWidth < 1200)
                       ) {
-                        const popup = e.currentTarget;
-                        const scrollTop = popup.scrollTop;
-
-                        // Blur the input to close the keyboard
                         setTimeout(() => {
                           try {
                             document.activeElement.blur({
@@ -635,7 +631,6 @@ const Home = () => {
                           } catch {
                             document.activeElement.blur();
                           }
-                          popup.scrollTop = scrollTop;
                         }, 100);
                       }
 
