@@ -616,16 +616,29 @@ const Home = () => {
                 </Divider>
                 <Space.Compact size="large">
                   <TreeSelect
-                    onPopupScroll={() => {
-                      if (
-                        document.activeElement instanceof HTMLElement &&
-                        (isMobile ||
-                          window.visualViewport?.innerWidth < 1200 ||
-                          window.innerWidth < 1200)
-                      ) {
-                        document.activeElement.blur();
+                    // onPopupScroll={() => {
+                    //   if (
+                    //     document.activeElement instanceof HTMLElement &&
+                    //     (isMobile ||
+                    //       window.visualViewport?.innerWidth < 1200 ||
+                    //       window.innerWidth < 1200)
+                    //   ) {
+                    //     document.activeElement.blur();
+                    //   }
+                    //   document.body.style.overscrollBehaviorY = "none";
+                    // }}
+                    onOpenChange={(visible) => {
+                      setOpen(visible);
+
+                      if (visible) {
+                        // Lock scroll when dropdown opens
+                        document.body.style.overscrollBehavior = "none";
+                        document.body.style.touchAction = "none"; // optional, helps iOS
+                      } else {
+                        // Unlock scroll when dropdown closes
+                        document.body.style.overscrollBehavior = "";
+                        document.body.style.touchAction = "";
                       }
-                      document.body.style.overscrollBehaviorY = "none";
                     }}
                     suffixIcon={
                       open ? (
