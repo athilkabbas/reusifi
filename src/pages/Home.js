@@ -626,8 +626,8 @@ const Home = () => {
                         const popup = e.currentTarget;
                         const scrollTop = popup.scrollTop;
 
-                        // Close the keyboard without causing scroll jump
-                        requestAnimationFrame(() => {
+                        // Blur the input to close the keyboard
+                        setTimeout(() => {
                           try {
                             document.activeElement.blur({
                               preventScroll: true,
@@ -635,10 +635,10 @@ const Home = () => {
                           } catch {
                             document.activeElement.blur();
                           }
+                        }, 0);
 
-                          // Restore popup scroll after keyboard closes
-                          popup.scrollTop = scrollTop;
-                        });
+                        // Restore popup scroll immediately
+                        popup.scrollTop = scrollTop;
                       }
 
                       document.body.style.overscrollBehaviorY = "none";
