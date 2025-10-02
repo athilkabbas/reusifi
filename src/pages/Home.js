@@ -620,24 +620,27 @@ const Home = () => {
                       if (
                         document.activeElement instanceof HTMLElement &&
                         (isMobile ||
-                          window.visualViewport?.innerWidth < 1200 ||
+                          window.visualViewport?.width < 1200 ||
                           window.innerWidth < 1200)
                       ) {
-                        const popup = e.currentTarget; // scrollable popup div
-                        const scrollTop = popup.scrollTop; // save scroll
+                        const popup = e.currentTarget;
+                        const scrollTop = popup.scrollTop;
 
-                        // blur input
-                        try {
-                          document.activeElement.blur({ preventScroll: true });
-                        } catch {
-                          document.activeElement.blur();
-                        }
-
-                        // restore popup scroll
+                        // Close the keyboard without causing scroll jump
                         requestAnimationFrame(() => {
+                          try {
+                            document.activeElement.blur({
+                              preventScroll: true,
+                            });
+                          } catch {
+                            document.activeElement.blur();
+                          }
+
+                          // Restore popup scroll after keyboard closes
                           popup.scrollTop = scrollTop;
                         });
                       }
+
                       document.body.style.overscrollBehaviorY = "none";
                     }}
                     suffixIcon={
