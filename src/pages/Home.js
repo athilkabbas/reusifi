@@ -635,7 +635,11 @@ const Home = () => {
                         document.body.style.overscrollBehavior = "none";
                         document.body.style.touchAction = "none"; // optional, helps iOS
                         // On mobile, blur the input to prevent keyboard from shifting the page
-                        if (isMobile && window.innerWidth < 1200) {
+                        if (
+                          isMobile ||
+                          window.visualViewport?.innerWidth < 1200 ||
+                          window.innerWidth < 1200
+                        ) {
                           const active = document.activeElement;
                           if (active instanceof HTMLElement) active.blur();
                         }
