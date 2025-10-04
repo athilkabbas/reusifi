@@ -362,12 +362,14 @@ const AddDress = () => {
   const uploadRef = useRef(null);
   const submitRef = useRef(null);
   const scrollToRef = (ref) => {
-    if (ref?.current) {
-      ref.current?.nativeElement.scrollIntoView({
-        behavior: "auto",
-        block: "end",
-      });
-    }
+    setTimeout(() => {
+      if (ref?.current) {
+        ref.current?.nativeElement.scrollIntoView({
+          behavior: "auto",
+          block: "end",
+        });
+      }
+    }, 0);
   };
   return (
     <Layout
