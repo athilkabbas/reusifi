@@ -617,32 +617,17 @@ const Home = () => {
                 </Divider>
                 <Space.Compact size="large">
                   <TreeSelect
-                    onPopupScroll={async (e) => {
-                      if (
-                        document.activeElement instanceof HTMLElement &&
-                        (isMobile ||
-                          window.visualViewport?.width < 1200 ||
-                          window.innerWidth < 1200)
-                      ) {
-                        const popup = e.currentTarget;
-                        const scrollTop = popup.scrollTop;
-
-                        try {
-                          document.activeElement.blur({ preventScroll: true });
-                        } catch {
-                          document.activeElement.blur();
-                        }
-
-                        await new Promise((resolve) => {
-                          setTimeout(() => {
-                            resolve();
-                          }, 500);
-                        });
-                        popup.scrollTop = scrollTop;
-                      }
-
-                      document.body.style.overscrollBehaviorY = "none";
-                    }}
+                    popupRender={(menu) => (
+                      <div
+                        style={{
+                          maxHeight: 400,
+                          overflow: "auto",
+                          overscrollBehavior: "contain",
+                        }}
+                      >
+                        {menu}
+                      </div>
+                    )}
                     suffixIcon={
                       open ? (
                         <UpOutlined
@@ -682,6 +667,7 @@ const Home = () => {
                     placeholder="Category"
                     onClick={() => {
                       setOpen(true);
+                      document.body.style.overscrollBehaviorY = "none";
                     }}
                     open={open}
                     onChange={(value) => {
