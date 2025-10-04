@@ -20,7 +20,6 @@ import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
 import { options } from "../helpers/categories";
-import useLocationComponent from "../component/Location";
 const { Text } = Typography;
 const { TextArea } = Input;
 const { Content } = Layout;
@@ -48,8 +47,6 @@ const AddDress = () => {
     setTriggerLocation,
     currentLocation,
   } = useContext(Context);
-
-  useLocationComponent();
 
   const [form, setForm] = useState({
     title: "",
