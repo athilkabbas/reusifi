@@ -616,6 +616,9 @@ const AddDress = () => {
                     prefix="₹"
                     onChange={(value) => handleChange(value, "price")}
                     placeholder="Price"
+                    onClick={() => {
+                      scrollToBottom();
+                    }}
                     value={form.price}
                     maxLength={15}
                   />
@@ -663,7 +666,6 @@ const AddDress = () => {
                     )}
                   </Space>
                 </Space.Compact>
-                <div ref={bottomRef}></div>
                 {/* <Space.Compact size="large">
                   <span style={{ fontSize: "13px", fontWeight: "300" }}>
                     Max 6 images
@@ -702,6 +704,7 @@ const AddDress = () => {
                     </Button>
                   )}
                 </Space.Compact>
+                <div ref={bottomRef}></div>
               </Space>
             </>
           )}
