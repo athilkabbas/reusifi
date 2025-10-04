@@ -530,26 +530,6 @@ const Home = () => {
     }, 300);
   };
 
-  const waitForKeyboardClose = async () => {
-    if (!window.visualViewport) return;
-    const targetHeight = window.visualViewport.height;
-
-    return new Promise((resolve) => {
-      let settled = false;
-      const check = () => {
-        // Consider keyboard closed if height is close to target
-        if (Math.abs(window.visualViewport.height - targetHeight) < 5) {
-          if (!settled) {
-            settled = true;
-            resolve();
-          }
-        } else {
-          requestAnimationFrame(check);
-        }
-      };
-      check();
-    });
-  };
   return (
     <Layout
       style={{
@@ -653,7 +633,11 @@ const Home = () => {
                           document.activeElement.blur();
                         }
 
-                        await waitForKeyboardClose();
+                        await new Promise((resolve) => {
+                          setTimeout(() => {
+                            resolve();
+                          }, 500);
+                        });
                         popup.scrollTop = scrollTop;
                       }
 
