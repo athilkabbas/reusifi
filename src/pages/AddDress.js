@@ -360,9 +360,11 @@ const AddDress = () => {
   const bottomRef = useRef(null);
 
   const scrollToBottom = () => {
-    if (bottomRef?.current) {
-      bottomRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
-    }
+    setTimeout(() => {
+      if (bottomRef?.current) {
+        bottomRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
+      }
+    }, 300);
   };
   return (
     <Layout
