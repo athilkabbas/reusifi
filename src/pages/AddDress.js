@@ -192,6 +192,7 @@ const AddDress = () => {
       (file) => file.size / 1024 / 1024 <= 30
     );
     setFileList(newFileList);
+    scrollToBottom();
   };
 
   useEffect(() => {
@@ -634,9 +635,6 @@ const AddDress = () => {
                       onChange={handleChangeImage}
                       maxCount={6}
                       multiple
-                      onClick={() => {
-                        scrollToBottom();
-                      }}
                     >
                       <Button
                         style={{
