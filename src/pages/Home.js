@@ -474,7 +474,6 @@ const Home = () => {
   };
   const [open, setOpen] = useState(false);
   const [sOpen, setSopen] = useState(false);
-  const [currLocationApplied, setCurrLocationApplied] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const showDrawer = () => {
     setDrawerOpen(true);
@@ -798,7 +797,7 @@ const Home = () => {
                         setTimeout(() => {
                           document.body.style.overscrollBehaviorY = "";
                           setSopen(false);
-                        }, 50);
+                        }, 0);
                       }}
                       options={(locationLabels || []).map((item) => ({
                         value: item.Address.Label,
@@ -830,7 +829,6 @@ const Home = () => {
                       setLocation("");
                       setLocationLabel("");
                       setApplied(false);
-                      setCurrLocationApplied(true);
                       setTriggerLocation((value) => !value);
                     }}
                   >
@@ -841,10 +839,7 @@ const Home = () => {
                 <Space.Compact
                   size="large"
                   style={{
-                    display:
-                      currLocationApplied && currentLocationLabel
-                        ? "block"
-                        : "none",
+                    display: currentLocationLabel ? "block" : "none",
                   }}
                 >
                   <Input
