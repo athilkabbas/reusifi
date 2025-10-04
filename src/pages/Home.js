@@ -624,6 +624,20 @@ const Home = () => {
                           overflow: "auto",
                           overscrollBehavior: "contain",
                         }}
+                        onTouchStart={() => {
+                          if (
+                            (isMobile || window.innerWidth < 1200) &&
+                            document.activeElement instanceof HTMLElement
+                          ) {
+                            try {
+                              document.activeElement.blur({
+                                preventScroll: true,
+                              });
+                            } catch {
+                              document.activeElement.blur();
+                            }
+                          }
+                        }}
                       >
                         {menu}
                       </div>
@@ -655,19 +669,9 @@ const Home = () => {
                       height: "fit-content",
                     }}
                     value={category || null}
-                    styles={{
-                      popup: {
-                        root: {
-                          maxHeight: 400,
-                          overflow: "auto",
-                          overscrollBehavior: "contain",
-                        },
-                      },
-                    }}
                     placeholder="Category"
                     onClick={() => {
                       setOpen(true);
-                      document.body.style.overscrollBehaviorY = "none";
                     }}
                     open={open}
                     onChange={(value) => {
