@@ -39,6 +39,9 @@ const useLocationComponent = () => {
       (err) => {
         setError(err.message);
         setLocationAccessLoading(false);
+      },
+      {
+        enableHighAccuracy: false,
       }
     );
   }, [triggerLocation]);
