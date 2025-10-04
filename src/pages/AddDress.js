@@ -20,6 +20,7 @@ import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
 import { options } from "../helpers/categories";
+import useLocationComponent from "../component/Location";
 const { Text } = Typography;
 const { TextArea } = Input;
 const { Content } = Layout;
@@ -48,6 +49,7 @@ const AddDress = () => {
     currentLocation,
   } = useContext(Context);
 
+  useLocationComponent();
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -192,7 +194,9 @@ const AddDress = () => {
       (file) => file.size / 1024 / 1024 <= 30
     );
     setFileList(newFileList);
-    scrollToBottom();
+    if (file.status === "done" || file.status === undefined) {
+      scrollToBottom();
+    }
   };
 
   useEffect(() => {
@@ -484,11 +488,11 @@ const AddDress = () => {
                       setTimeout(() => {
                         setOpen(false);
                       });
+                      scrollToBottom();
                     }}
                     onClick={() => {
                       setOpen(true);
                       document.body.style.overscrollBehaviorY = "none";
-                      scrollToBottom();
                     }}
                     open={open}
                     options={options}
@@ -543,6 +547,9 @@ const AddDress = () => {
                     onChange={handlePincode}
                     placeholder="Pincode"
                     allowClear
+                    onClick={() => {
+                      scrollToBottom();
+                    }}
                   ></Input>
                   <Button
                     loading={postCodeLoading}
