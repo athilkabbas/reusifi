@@ -473,12 +473,14 @@ const Home = () => {
     setApplied(false);
   };
   const [open, setOpen] = useState(false);
+  const [sOpen, setSopen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const showDrawer = () => {
     setDrawerOpen(true);
   };
   const onClose = () => {
     setOpen(false);
+    setSopen(false);
     document.body.style.overscrollBehaviorY = "";
     setDrawerOpen(false);
   };
@@ -624,11 +626,14 @@ const Home = () => {
                           overflow: "auto",
                           overscrollBehavior: "contain",
                         }}
-                        onTouchStart={() => {
+                        onTouchStart={(e) => {
                           if (
                             (isMobile || window.innerWidth < 1200) &&
                             document.activeElement instanceof HTMLElement
                           ) {
+                            const popup = e.currentTarget;
+                            const scrollTop = popup.scrollTop;
+
                             try {
                               document.activeElement.blur({
                                 preventScroll: true,
@@ -636,6 +641,9 @@ const Home = () => {
                             } catch {
                               document.activeElement.blur();
                             }
+                            requestAnimationFrame(() => {
+                              popup.scrollTop = scrollTop;
+                            });
                           }
                         }}
                       >
@@ -693,28 +701,37 @@ const Home = () => {
                 {
                   <Space.Compact size="large">
                     <Select
-                      onPopupScroll={(e) => {
-                        if (
-                          document.activeElement instanceof HTMLElement &&
-                          (isMobile ||
-                            window.visualViewport?.width < 1200 ||
-                            window.innerWidth < 1200)
-                        ) {
-                          const popup = e.currentTarget;
-                          const scrollTop = popup.scrollTop;
+                      popupRender={(menu) => (
+                        <div
+                          style={{
+                            maxHeight: 400,
+                            overflow: "auto",
+                            overscrollBehavior: "contain",
+                          }}
+                          onTouchStart={(e) => {
+                            if (
+                              (isMobile || window.innerWidth < 1200) &&
+                              document.activeElement instanceof HTMLElement
+                            ) {
+                              const popup = e.currentTarget;
+                              const scrollTop = popup.scrollTop;
 
-                          try {
-                            document.activeElement.blur({
-                              preventScroll: true,
-                            });
-                          } catch {
-                            document.activeElement.blur();
-                          }
-                          popup.scrollTop = scrollTop;
-                        }
-
-                        document.body.style.overscrollBehaviorY = "none";
-                      }}
+                              try {
+                                document.activeElement.blur({
+                                  preventScroll: true,
+                                });
+                              } catch {
+                                document.activeElement.blur();
+                              }
+                              requestAnimationFrame(() => {
+                                popup.scrollTop = scrollTop;
+                              });
+                            }
+                          }}
+                        >
+                          {menu}
+                        </div>
+                      )}
                       style={{
                         width: !isMobile ? "50dvw" : "calc(100dvw - 50px)",
                       }}
@@ -751,6 +768,30 @@ const Home = () => {
                           <Empty />
                         )
                       }
+                      onClick={() => {
+                        setSopen(true);
+                        document.body.style.overscrollBehaviorY = "none";
+                      }}
+                      suffixIcon={
+                        sOpen ? (
+                          <UpOutlined
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSopen(false);
+                              document.body.style.overscrollBehaviorY = "";
+                            }}
+                          />
+                        ) : (
+                          <DownOutlined
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSopen(true);
+                              document.body.style.overscrollBehaviorY = "none";
+                            }}
+                          />
+                        )
+                      }
+                      open={sOpen}
                       onSelect={(value, options) => {
                         handleLocationSelect(value, options);
                       }}

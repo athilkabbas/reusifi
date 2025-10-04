@@ -442,15 +442,19 @@ const AddDress = () => {
                   <Cascader
                     popupRender={(menu) => (
                       <div
-                        onScroll={(e) => {
+                        style={{
+                          maxHeight: 400,
+                          overflow: "auto",
+                          overscrollBehavior: "contain",
+                        }}
+                        onTouchStart={(e) => {
                           if (
-                            document.activeElement instanceof HTMLElement &&
-                            (isMobile ||
-                              window.visualViewport?.width < 1200 ||
-                              window.innerWidth < 1200)
+                            (isMobile || window.innerWidth < 1200) &&
+                            document.activeElement instanceof HTMLElement
                           ) {
                             const popup = e.currentTarget;
                             const scrollTop = popup.scrollTop;
+
                             try {
                               document.activeElement.blur({
                                 preventScroll: true,
@@ -458,10 +462,10 @@ const AddDress = () => {
                             } catch {
                               document.activeElement.blur();
                             }
-                            popup.scrollTop = scrollTop;
+                            requestAnimationFrame(() => {
+                              popup.scrollTop = scrollTop;
+                            });
                           }
-
-                          document.body.style.overscrollBehaviorY = "none";
                         }}
                       >
                         {menu}
