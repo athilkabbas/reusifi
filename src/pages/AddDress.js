@@ -334,6 +334,7 @@ const AddDress = () => {
   const [pincode, setPincode] = useState("");
   const [address, setAddress] = useState("");
   const [postCodeLoading, setPostCodeLoading] = useState(false);
+  const [currLocationApplied, setCurrLocationApplied] = useState(false);
   const fetchPincodeDetails = async () => {
     setPostCodeLoading(true);
     try {
@@ -580,6 +581,7 @@ const AddDress = () => {
                         });
                       setAddress("");
                       setPincode("");
+                      setCurrLocationApplied(true);
                       setTriggerLocation((value) => !value);
                     }}
                   >
@@ -587,7 +589,7 @@ const AddDress = () => {
                     Use your current location
                   </Button>
                 </Space.Compact>
-                {currentLocationLabel && !address && (
+                {currLocationApplied && currentLocationLabel && !address && (
                   <Space.Compact size="large">
                     <Input
                       style={{
