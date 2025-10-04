@@ -29,7 +29,7 @@ const useLocationComponent = () => {
             )}`,
             "GET"
           );
-          setCurrentLocationLabel(data.data.Address.Label);
+          setCurrentLocationLabel(data.data.Address.District);
           setLocationAccessLoading(false);
         } catch (err) {
           setLocationAccessLoading(false);
@@ -39,9 +39,6 @@ const useLocationComponent = () => {
       (err) => {
         setError(err.message);
         setLocationAccessLoading(false);
-      },
-      {
-        enableHighAccuracy: false,
       }
     );
   }, [triggerLocation]);
