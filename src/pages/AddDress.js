@@ -356,17 +356,13 @@ const AddDress = () => {
     }
   };
   const [open, setOpen] = useState(false);
-  const uploadRef = useRef(null);
   const submitRef = useRef(null);
-  const scrollToRef = (ref) => {
-    setTimeout(() => {
-      if (ref?.current) {
-        ref.current?.nativeElement.scrollIntoView({
-          behavior: "auto",
-          block: "end",
-        });
-      }
-    }, 0);
+  const bottomRef = useRef(null);
+
+  const scrollToBottom = () => {
+    if (bottomRef?.current) {
+      bottomRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
+    }
   };
   return (
     <Layout
@@ -489,7 +485,7 @@ const AddDress = () => {
                     onClick={() => {
                       setOpen(true);
                       document.body.style.overscrollBehaviorY = "none";
-                      scrollToRef(uploadRef);
+                      scrollToBottom();
                     }}
                     open={open}
                     options={options}
@@ -625,7 +621,6 @@ const AddDress = () => {
                 <Space.Compact size="large">
                   <Space size="large" direction="vertical">
                     <Upload
-                      ref={uploadRef}
                       accept="image/png,image/jpeg"
                       listType="picture"
                       fileList={fileList}
@@ -635,7 +630,7 @@ const AddDress = () => {
                       maxCount={6}
                       multiple
                       onClick={() => {
-                        scrollToRef(uploadRef);
+                        scrollToBottom();
                       }}
                     >
                       <Button
@@ -666,6 +661,7 @@ const AddDress = () => {
                     )}
                   </Space>
                 </Space.Compact>
+                <div ref={bottomRef}></div>
                 {/* <Space.Compact size="large">
                   <span style={{ fontSize: "13px", fontWeight: "300" }}>
                     Max 6 images

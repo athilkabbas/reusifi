@@ -24,7 +24,7 @@ const Chat = () => {
   const [messageValue, setMessageValue] = useState("");
   const [reconnect, setReconnect] = useState(false);
   const [lastEvaluatedKey, setLastEvaluatedKey] = useState(null);
-  const bottomRef = useRef(null); // To reference the bottom of the chat container
+  const bottomRef = useRef(null);
   const [hasMore, setHasMore] = useState(false);
   const [loading, setLoading] = useState(false);
   const scrollableDivRef = useRef(null);
