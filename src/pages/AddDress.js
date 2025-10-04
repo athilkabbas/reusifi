@@ -488,7 +488,6 @@ const AddDress = () => {
                       setTimeout(() => {
                         setOpen(false);
                       });
-                      scrollToBottom();
                     }}
                     onClick={() => {
                       setOpen(true);
@@ -547,9 +546,6 @@ const AddDress = () => {
                     onChange={handlePincode}
                     placeholder="Pincode"
                     allowClear
-                    onClick={() => {
-                      scrollToBottom();
-                    }}
                   ></Input>
                   <Button
                     loading={postCodeLoading}
