@@ -672,6 +672,7 @@ const Home = () => {
                     placeholder="Category"
                     onClick={() => {
                       setOpen(true);
+                      document.body.style.overscrollBehaviorY = "none";
                     }}
                     open={open}
                     onChange={(value) => {
