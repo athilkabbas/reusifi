@@ -616,7 +616,7 @@ const Home = () => {
                 </Divider>
                 <Space.Compact size="large">
                   <TreeSelect
-                    onPopupScroll={(e) => {
+                    onPopupScroll={async (e) => {
                       if (
                         document.activeElement instanceof HTMLElement &&
                         (isMobile ||
@@ -625,14 +625,28 @@ const Home = () => {
                       ) {
                         const popup = e.currentTarget;
                         const scrollTop = popup.scrollTop;
-
                         try {
-                          document.activeElement.blur({
-                            preventScroll: true,
-                          });
+                          document.activeElement.blur({ preventScroll: true });
                         } catch {
                           document.activeElement.blur();
                         }
+                        if (window.visualViewport) {
+                          const initialHeight = window.visualViewport.height;
+                          await new Promise((resolve) => {
+                            const check = () => {
+                              if (
+                                window.visualViewport.height === initialHeight
+                              ) {
+                                resolve();
+                              } else {
+                                requestAnimationFrame(check);
+                              }
+                            };
+                            check();
+                          });
+                        }
+
+                        // Restore popup scroll after keyboard fully closes
                         popup.scrollTop = scrollTop;
                       }
 
