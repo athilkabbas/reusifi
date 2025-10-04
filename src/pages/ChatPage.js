@@ -734,7 +734,7 @@ const ChatPage = () => {
                               <Image
                                 preview={true}
                                 src={item.image}
-                                alt={item.title}
+                                alt={"No Longer Available"}
                                 style={{
                                   display: loadedImages[item.productId]
                                     ? "block"
