@@ -8,11 +8,13 @@ const useLocationComponent = () => {
     triggerLocation,
     setCurrentLocationLabel,
     setLocationAccessLoading,
+    currentLocationLabel,
+    currLocRemoved,
   } = useContext(Context);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!navigator.geolocation) {
+    if (!navigator.geolocation || currLocRemoved || currentLocationLabel) {
       setError("Geolocation is not supported by your browser");
       return;
     }
@@ -46,7 +48,7 @@ const useLocationComponent = () => {
       },
       { enableHighAccuracy: false }
     );
-  }, [triggerLocation]);
+  }, [triggerLocation, currentLocationLabel]);
 };
 
 export default useLocationComponent;

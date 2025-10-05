@@ -47,6 +47,9 @@ const AddDress = () => {
     currentLocationLabel,
     setTriggerLocation,
     currentLocation,
+    setCurrentLocationLabel,
+    setCurrentLocation,
+    setCurrLocRemoved,
   } = useContext(Context);
 
   useLocationComponent();
@@ -581,6 +584,7 @@ const AddDress = () => {
                 &nbsp;&nbsp;or
                 <Space.Compact size="large">
                   <Button
+                    disabled={currentLocationLabel}
                     loading={locationAccessLoading}
                     style={{
                       fontSize: "13px",
@@ -598,6 +602,7 @@ const AddDress = () => {
                         });
                       setAddress("");
                       setPincode("");
+                      setCurrLocRemoved(false);
                       setTriggerLocation((value) => !value);
                     }}
                   >
@@ -608,6 +613,14 @@ const AddDress = () => {
                 {currentLocationLabel && !address && (
                   <Space.Compact size="large">
                     <Input
+                      onChange={(e) => {
+                        if (!e.target.value) {
+                          setCurrentLocationLabel("");
+                          setCurrentLocation("");
+                          setCurrLocRemoved(true);
+                        }
+                      }}
+                      allowClear
                       style={{
                         width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
                       }}
@@ -618,6 +631,7 @@ const AddDress = () => {
                 {pincode && address && (
                   <Space.Compact size="large">
                     <Input
+                      allowClear
                       style={{
                         width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
                       }}

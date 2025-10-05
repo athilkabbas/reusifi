@@ -50,9 +50,12 @@ const Provider = ({ children }) => {
   const [category, setCategory] = useState("");
   const [subCategory, setSubCategory] = useState(false);
   const [applied, setApplied] = useState(false);
+  const [currLocRemoved, setCurrLocRemoved] = useState(false);
   return (
     <Context.Provider
       value={{
+        currLocRemoved,
+        setCurrLocRemoved,
         applied,
         setApplied,
         category,

@@ -89,10 +89,10 @@ const Home = () => {
     setSubCategory,
     setApplied,
     applied,
+    currLocRemoved,
+    setCurrLocRemoved,
   } = useContext(Context);
   const [handleFavLoading, setHandleFavLoading] = useState(false);
-
-  const [currLocRemoved, setCurrLocRemoved] = useState(false);
 
   const isMobile = useIsMobile();
   const [loadedImages, setLoadedImages] = useState({});
@@ -876,6 +876,7 @@ const Home = () => {
                   &nbsp;&nbsp;or
                   <Space.Compact size="large">
                     <Button
+                      disabled={currentLocationLabel}
                       loading={locationAccessLoading}
                       style={{
                         fontSize: "13px",
@@ -894,6 +895,7 @@ const Home = () => {
                         setLocation("");
                         setLocationLabel("");
                         setApplied(false);
+                        setCurrLocRemoved(false);
                         setTriggerLocation((value) => !value);
                       }}
                     >
