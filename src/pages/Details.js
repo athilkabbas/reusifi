@@ -96,6 +96,10 @@ const Details = () => {
             setUnreadChatCount(chatResult.data.count);
             setDetailData(result.data);
             setChatProduct(chatProductResult.data);
+            if (result.data.length === 0) {
+              message.info("Ad no longer available");
+              navigate(-1);
+            }
           })
           .catch((err) => {
             if (isModalVisibleRef.current) {

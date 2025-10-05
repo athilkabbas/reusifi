@@ -29,7 +29,11 @@ const useLocationComponent = () => {
             )}`,
             "GET"
           );
-          setCurrentLocationLabel(data.data.Address.District);
+          setCurrentLocationLabel(
+            data.data.Address.Street ||
+              data.data.Address.District ||
+              data.data.Address.Locality
+          );
           setLocationAccessLoading(false);
         } catch (err) {
           setLocationAccessLoading(false);

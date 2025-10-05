@@ -58,6 +58,8 @@ const AddDress = () => {
     email: user.userId,
     images: [],
     price: null,
+    location: "",
+    locationLabel: "",
   });
   const isMobile = useIsMobile();
   const isModalVisibleRef = useRef(false);
@@ -149,17 +151,15 @@ const AddDress = () => {
     }
   }, [user, addProductInitialLoad]);
   const handleChange = (value, type) => {
-    if (type === "price" && !/^(|[1-9]\d*)$/.test(value.target.value)) {
+    if (
+      type === "price" &&
+      !/^(|0|[1-9]\d*)(\.\d{0,2})?$/.test(value.target.value)
+    ) {
       return;
     }
     setForm((prevValue) => {
       if (type === "title" || type === "description" || type === "price") {
         return { ...prevValue, [type]: value.target.value };
-      } else if (type === "location") {
-        return {
-          ...prevValue,
-          location: value,
-        };
       } else if (type === "category") {
         return {
           ...prevValue,
@@ -204,6 +204,7 @@ const AddDress = () => {
       return {
         ...prevValue,
         location: currentLocation,
+        locationLabel: currentLocationLabel,
       };
     });
   }, [currentLocation]);
@@ -216,6 +217,7 @@ const AddDress = () => {
       };
     });
   }, [fileList]);
+
   const handleSubmit = async () => {
     const isValid = () => {
       if (!form.images || form.images.length === 0) return false;
@@ -290,8 +292,9 @@ const AddDress = () => {
         title: form.title.trim().toLowerCase(),
         description: form.description.trim().toLowerCase(),
         email: form.email.toLowerCase(),
-        location: form.location,
-        price: parseInt(form.price),
+        location: form.location.split(",").map(parseFloat),
+        locationLabel: form.locationLabel,
+        price: parseFloat(form.price).toFixed(2),
         category: form.category.toLowerCase(),
         subCategory: form.subCategory.toLowerCase(),
         thumbnailS3Keys,
@@ -327,6 +330,7 @@ const AddDress = () => {
       return;
     }
   };
+
   const filter = (inputValue, path) =>
     path.some(
       (option) =>
@@ -336,6 +340,7 @@ const AddDress = () => {
   const [pincode, setPincode] = useState("");
   const [address, setAddress] = useState("");
   const [postCodeLoading, setPostCodeLoading] = useState(false);
+
   const fetchPincodeDetails = async () => {
     setPostCodeLoading(true);
     try {
@@ -346,8 +351,18 @@ const AddDress = () => {
         "GET"
       );
       setPostCodeLoading(false);
-      setAddress(data.data.Address.Label);
+      setAddress(
+        data.data.Address.Street ||
+          data.data.Address.District ||
+          data.data.Address.Locality
+      );
       handleChange(data.data.Position.reverse().join(","), "location");
+      handleChange(
+        data.data.Address.Street ||
+          data.data.Address.District ||
+          data.data.Address.Locality,
+        "locationLabel"
+      );
     } catch (err) {
       message.info("Pincode not found");
     }
@@ -357,7 +372,6 @@ const AddDress = () => {
     setPincode(value);
     if (!value) {
       setAddress("");
-      handleChange(value, "location");
     }
   };
   const [open, setOpen] = useState(false);
@@ -442,6 +456,7 @@ const AddDress = () => {
                 </Space.Compact>
                 <Space.Compact size="large">
                   <Cascader
+                    placement="topLeft"
                     popupRender={(menu) => (
                       <div
                         style={{
