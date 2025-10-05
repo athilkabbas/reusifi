@@ -48,7 +48,7 @@ const useLocationComponent = () => {
       },
       { enableHighAccuracy: false }
     );
-  }, [triggerLocation, currentLocationLabel]);
+  }, [triggerLocation, currentLocationLabel, currLocRemoved]);
 };
 
 export default useLocationComponent;

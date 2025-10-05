@@ -368,6 +368,9 @@ const AddDress = () => {
           data.data.Address.Locality,
         "locationLabel"
       );
+      setCurrLocRemoved(true);
+      setCurrentLocationLabel("");
+      setCurrentLocation("");
     } catch (err) {
       message.info("Pincode not found");
     }

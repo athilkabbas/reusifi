@@ -538,6 +538,7 @@ const Home = () => {
       setLocationLabel(value);
       setCurrentLocation("");
       setCurrentLocationLabel("");
+      setCurrLocRemoved(true);
       setApplied(false);
     } catch (err) {
       // message.info("Pincode not found");
@@ -561,6 +562,7 @@ const Home = () => {
     { label: "ALL", value: "" },
   ];
   const [locationLoading, setLocationLoading] = useState(false);
+
   const handleLocation = (value) => {
     setLocationLoading(true);
     if (locationTimer.current) {
@@ -1110,6 +1112,7 @@ const Home = () => {
                         setLoadedImages({});
                         setCurrentLocation("");
                         setCurrentLocationLabel("");
+                        setCurrLocRemoved(true);
                         setMinPrice("");
                         setMaxPrice("");
                         setApplied(false);
