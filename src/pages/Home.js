@@ -37,7 +37,7 @@ import { options } from "../helpers/categories";
 import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
-import useLocationComponent from "../component/Location";
+import useLocationComponent from "../hooks/location";
 const capitalize = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
@@ -91,6 +91,8 @@ const Home = () => {
     applied,
   } = useContext(Context);
   const [handleFavLoading, setHandleFavLoading] = useState(false);
+
+  const [currLocRemoved, setCurrLocRemoved] = useState(false);
 
   const isMobile = useIsMobile();
   const [loadedImages, setLoadedImages] = useState({});
@@ -146,13 +148,17 @@ const Home = () => {
   };
   const [limit, setLimit] = useState(0); // default
 
-  const [radiusValue, setRadiusValue] = useState(currentLocation ? 50 : "");
+  const [radiusValue, setRadiusValue] = useState(
+    currentLocationLabel || locationLabel ? 50 : ""
+  );
 
   useEffect(() => {
-    if (currentLocation) {
+    if (currentLocationLabel || locationLabel) {
       setRadiusValue(50);
+    } else {
+      setRadiusValue("");
     }
-  }, [currentLocation]);
+  }, [currentLocationLabel, locationLabel]);
 
   useEffect(() => {
     let prevWidth = window.innerWidth;
@@ -368,7 +374,12 @@ const Home = () => {
     if (timer.current) {
       clearTimeout(timer.current);
     }
-    if (limit && initialLoad && (search.trim() || applied || currentLocation)) {
+    if (
+      !locationAccessLoading &&
+      limit &&
+      initialLoad &&
+      (search.trim() || applied || currentLocation)
+    ) {
       setLoading(true);
       timer.current = setTimeout(() => {
         loadMoreData();
@@ -379,7 +390,14 @@ const Home = () => {
         clearTimeout(timer.current);
       }
     };
-  }, [search, limit, applied, currentLocation, radiusValue]);
+  }, [
+    search,
+    limit,
+    applied,
+    currentLocation,
+    radiusValue,
+    locationAccessLoading,
+  ]);
 
   useEffect(() => {
     if (
@@ -388,7 +406,8 @@ const Home = () => {
       limit &&
       !search.trim() &&
       !applied &&
-      !currentLocation
+      !currentLocation &&
+      !locationAccessLoading
     ) {
       try {
         setChatLoading(true);
@@ -444,7 +463,15 @@ const Home = () => {
         return;
       }
     }
-  }, [user, initialLoad, limit, search, applied, currentLocation]);
+  }, [
+    user,
+    initialLoad,
+    limit,
+    search,
+    applied,
+    currentLocation,
+    locationAccessLoading,
+  ]);
   const subMenuItems = [
     {
       key: "1",
@@ -561,6 +588,8 @@ const Home = () => {
       }
     }, 300);
   };
+
+  console.log(applied, "athil");
 
   return (
     <Layout
@@ -785,7 +814,6 @@ const Home = () => {
                           setLocation("");
                         }
                         setLocationLabel(value);
-                        setApplied(false);
                       }}
                       placeholder="Location"
                       filterOption={false}
@@ -880,15 +908,25 @@ const Home = () => {
                     }}
                   >
                     <Input
+                      onChange={(e) => {
+                        if (!e.target.value) {
+                          setCurrentLocationLabel("");
+                          setCurrentLocation("");
+                          setApplied(false);
+                          setCurrLocRemoved(true);
+                        }
+                      }}
                       style={{
                         width: !isMobile ? "50dvw" : "calc(100dvw - 50px)",
                       }}
                       value={currentLocationLabel || null}
+                      allowClear
                     ></Input>
                   </Space.Compact>
                   <Space.Compact size="large">
                     <Input value="Radius" style={{ width: "20dvw" }} readOnly />
                     <Select
+                      disabled={!currentLocation && !location}
                       popupRender={(menu) => (
                         <div
                           style={{
@@ -952,6 +990,7 @@ const Home = () => {
                       open={rOpen}
                       onSelect={(value, options) => {
                         setRadiusValue(value);
+                        setApplied(false);
                         setTimeout(() => {
                           document.body.style.overscrollBehaviorY = "";
                           setRopen(false);
@@ -1072,6 +1111,7 @@ const Home = () => {
                         setMinPrice("");
                         setMaxPrice("");
                         setApplied(false);
+                        setRadiusValue("");
                         onClose();
                       }}
                       type="primary"
@@ -1089,6 +1129,7 @@ const Home = () => {
                           !priceFilter &&
                           !location &&
                           !currentLocation &&
+                          !currLocRemoved &&
                           !minPrice &&
                           !maxPrice) ||
                         applied
@@ -1359,7 +1400,7 @@ const Home = () => {
           />
         </FooterWrapper>
       )}
-      {handleFavLoading && (
+      {(handleFavLoading || locationAccessLoading) && (
         <Spin
           fullscreen
           indicator={
