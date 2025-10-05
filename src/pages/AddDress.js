@@ -200,13 +200,15 @@ const AddDress = () => {
   };
 
   useEffect(() => {
-    setForm((prevValue) => {
-      return {
-        ...prevValue,
-        location: currentLocation,
-        locationLabel: currentLocationLabel,
-      };
-    });
+    if (currentLocation) {
+      setForm((prevValue) => {
+        return {
+          ...prevValue,
+          location: currentLocation,
+          locationLabel: currentLocationLabel,
+        };
+      });
+    }
   }, [currentLocation]);
 
   useEffect(() => {

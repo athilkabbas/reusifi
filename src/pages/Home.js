@@ -127,7 +127,7 @@ const Home = () => {
   const locationInfoConfig = {
     title: "Enable location access",
     content:
-      "To enable location access, please click the location icon at the end of the browser’s address bar and allow location permission for this site.",
+      "To enable location access, please allow location permission for this site in the browser’s address bar",
     closable: false,
     maskClosable: false,
     okText: "Close",
@@ -145,6 +145,14 @@ const Home = () => {
     },
   };
   const [limit, setLimit] = useState(0); // default
+
+  const [radiusValue, setRadiusValue] = useState(currentLocation ? 50 : "");
+
+  useEffect(() => {
+    if (currentLocation) {
+      setRadiusValue(50);
+    }
+  }, [currentLocation]);
 
   useEffect(() => {
     let prevWidth = window.innerWidth;
@@ -281,6 +289,7 @@ const Home = () => {
     const node = findNode(treeData);
     return node ? !node.children || node.isLeaf === true : false;
   }
+
   const loadMoreData = async () => {
     try {
       const scrollPosition = scrollableDivRef.current.scrollTop;
@@ -304,7 +313,9 @@ const Home = () => {
             priceFilter
           )}&category=${encodeURIComponent(
             !subCategory ? category : ""
-          )}&subCategory=${encodeURIComponent(subCategory ? category : "")}`,
+          )}&subCategory=${encodeURIComponent(
+            subCategory ? category : ""
+          )}&radius=${encodeURIComponent(radiusValue)}`,
           "GET"
         );
       } else {
@@ -368,7 +379,7 @@ const Home = () => {
         clearTimeout(timer.current);
       }
     };
-  }, [search, limit, applied, currentLocation]);
+  }, [search, limit, applied, currentLocation, radiusValue]);
 
   useEffect(() => {
     if (
@@ -474,6 +485,7 @@ const Home = () => {
   };
   const [open, setOpen] = useState(false);
   const [sOpen, setSopen] = useState(false);
+  const [rOpen, setRopen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const showDrawer = () => {
     setDrawerOpen(true);
@@ -481,10 +493,12 @@ const Home = () => {
   const onClose = () => {
     setOpen(false);
     setSopen(false);
+    setRopen(false);
     document.body.style.overscrollBehaviorY = "";
     setDrawerOpen(false);
   };
   const locationTimer = useRef(null);
+
   const handleLocationSelect = async (value, options) => {
     try {
       const data = await callApi(
@@ -503,6 +517,22 @@ const Home = () => {
     }
   };
   const [locationLabels, setLocationLabels] = useState([]);
+  const radius = [
+    { label: "0.5 km", value: 0.5 },
+    { label: "1 km", value: 1 },
+    { label: "2 km", value: 2 },
+    { label: "3 km", value: 3 },
+    { label: "5 km", value: 5 },
+    { label: "10 km", value: 10 },
+    { label: "15 km", value: 15 },
+    { label: "20 km", value: 20 },
+    { label: "25 km", value: 25 },
+    { label: "50 km", value: 50 },
+    { label: "100 km", value: 100 },
+    { label: "250 km", value: 250 },
+    { label: "500 km", value: 500 },
+    { label: "ALL", value: "" },
+  ];
   const [locationLoading, setLocationLoading] = useState(false);
   const handleLocation = (value) => {
     setLocationLoading(true);
@@ -614,91 +644,99 @@ const Home = () => {
                 direction="vertical"
                 style={{ display: "flex", alignItems: "center" }}
               >
-                <Divider style={{ fontSize: "15px", fontWeight: "300" }} plain>
-                  Category
-                </Divider>
-                <Space.Compact size="large">
-                  <TreeSelect
-                    popupRender={(menu) => (
-                      <div
-                        style={{
-                          maxHeight: 400,
-                          overflow: "auto",
-                          overscrollBehavior: "contain",
-                        }}
-                        onTouchStart={(e) => {
-                          if (
-                            (isMobile || window.innerWidth < 1200) &&
-                            document.activeElement instanceof HTMLElement
-                          ) {
-                            const popup = e.currentTarget;
-                            const scrollTop = popup.scrollTop;
+                <Space size="small" direction="vertical">
+                  <Divider
+                    style={{ fontSize: "15px", fontWeight: "300" }}
+                    plain
+                  >
+                    Category
+                  </Divider>
+                  <Space.Compact size="large">
+                    <TreeSelect
+                      popupRender={(menu) => (
+                        <div
+                          style={{
+                            maxHeight: 400,
+                            overflow: "auto",
+                            overscrollBehavior: "contain",
+                          }}
+                          onTouchStart={(e) => {
+                            if (
+                              (isMobile || window.innerWidth < 1200) &&
+                              document.activeElement instanceof HTMLElement
+                            ) {
+                              const popup = e.currentTarget;
+                              const scrollTop = popup.scrollTop;
 
-                            try {
-                              document.activeElement.blur({
-                                preventScroll: true,
+                              try {
+                                document.activeElement.blur({
+                                  preventScroll: true,
+                                });
+                              } catch {
+                                document.activeElement.blur();
+                              }
+                              requestAnimationFrame(() => {
+                                popup.scrollTop = scrollTop;
                               });
-                            } catch {
-                              document.activeElement.blur();
                             }
-                            requestAnimationFrame(() => {
-                              popup.scrollTop = scrollTop;
-                            });
-                          }
-                        }}
-                      >
-                        {menu}
-                      </div>
-                    )}
-                    suffixIcon={
-                      open ? (
-                        <UpOutlined
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setOpen(false);
-                            document.body.style.overscrollBehaviorY = "";
                           }}
-                        />
-                      ) : (
-                        <DownOutlined
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setOpen(true);
-                            document.body.style.overscrollBehaviorY = "none";
-                          }}
-                        />
-                      )
-                    }
-                    showSearch
-                    allowClear
-                    style={{
-                      width: !isMobile ? "50dvw" : "calc(100dvw - 50px)",
-                      borderRadius: "7px",
-                      height: "fit-content",
-                    }}
-                    value={category || null}
-                    placeholder="Category"
-                    onClick={() => {
-                      setOpen(true);
-                      document.body.style.overscrollBehaviorY = "none";
-                    }}
-                    open={open}
-                    onChange={(value) => {
-                      setCategory(value);
-                      const leaf = isLeafNode(value, options);
-                      setSubCategory(leaf);
-                      setTimeout(() => {
-                        setOpen(false);
-                      }, 0);
-                      setApplied(false);
-                    }}
-                    treeData={options}
-                  />
-                </Space.Compact>
-                <Divider style={{ fontSize: "15px", fontWeight: "300" }} plain>
-                  Location
-                </Divider>
-                {
+                        >
+                          {menu}
+                        </div>
+                      )}
+                      suffixIcon={
+                        open ? (
+                          <UpOutlined
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setOpen(false);
+                              document.body.style.overscrollBehaviorY = "";
+                            }}
+                          />
+                        ) : (
+                          <DownOutlined
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setOpen(true);
+                              document.body.style.overscrollBehaviorY = "none";
+                            }}
+                          />
+                        )
+                      }
+                      showSearch
+                      allowClear
+                      style={{
+                        width: !isMobile ? "50dvw" : "calc(100dvw - 50px)",
+                        borderRadius: "7px",
+                        height: "fit-content",
+                      }}
+                      value={category || null}
+                      placeholder="Category"
+                      onClick={() => {
+                        setOpen(true);
+                        document.body.style.overscrollBehaviorY = "none";
+                      }}
+                      open={open}
+                      onChange={(value) => {
+                        setCategory(value);
+                        const leaf = isLeafNode(value, options);
+                        setSubCategory(leaf);
+                        setTimeout(() => {
+                          setOpen(false);
+                        }, 0);
+                        setApplied(false);
+                      }}
+                      treeData={options}
+                    />
+                  </Space.Compact>
+                </Space>
+                <Space size="small" direction="vertical">
+                  <Divider
+                    style={{ fontSize: "15px", fontWeight: "300" }}
+                    plain
+                  >
+                    Location
+                  </Divider>
                   <Space.Compact size="large">
                     <Select
                       popupRender={(menu) => (
@@ -807,105 +845,195 @@ const Home = () => {
                       }))}
                     ></Select>
                   </Space.Compact>
-                }
-                &nbsp;&nbsp;or
-                <Space.Compact size="large">
-                  <Button
-                    loading={locationAccessLoading}
+                  &nbsp;&nbsp;or
+                  <Space.Compact size="large">
+                    <Button
+                      loading={locationAccessLoading}
+                      style={{
+                        fontSize: "13px",
+                        fontWeight: "300",
+                        color: "#52c41a",
+                        width: !isMobile ? "20dvw" : "50dvw",
+                      }}
+                      onClick={() => {
+                        navigator.permissions
+                          .query({ name: "geolocation" })
+                          .then(function (result) {
+                            if (result.state === "denied") {
+                              Modal.info(locationInfoConfig);
+                            }
+                          });
+                        setLocation("");
+                        setLocationLabel("");
+                        setApplied(false);
+                        setTriggerLocation((value) => !value);
+                      }}
+                    >
+                      <LocateFixed />
+                      Use your current location
+                    </Button>
+                  </Space.Compact>
+                  <Space.Compact
+                    size="large"
                     style={{
-                      fontSize: "13px",
-                      fontWeight: "300",
-                      color: "#52c41a",
-                      width: !isMobile ? "50dvw" : "calc(100dvw - 50px)",
-                    }}
-                    onClick={() => {
-                      navigator.permissions
-                        .query({ name: "geolocation" })
-                        .then(function (result) {
-                          if (result.state === "denied") {
-                            Modal.info(locationInfoConfig);
-                          }
-                        });
-                      setLocation("");
-                      setLocationLabel("");
-                      setApplied(false);
-                      setTriggerLocation((value) => !value);
+                      display: currentLocationLabel ? "block" : "none",
                     }}
                   >
-                    <LocateFixed />
-                    Use your current location
-                  </Button>
-                </Space.Compact>
-                <Space.Compact
-                  size="large"
-                  style={{
-                    display: currentLocationLabel ? "block" : "none",
-                  }}
-                >
-                  <Input
-                    style={{
-                      width: !isMobile ? "50dvw" : "calc(100dvw - 50px)",
-                    }}
-                    value={currentLocationLabel || null}
-                  ></Input>
-                </Space.Compact>
-                <Divider style={{ fontSize: "15px", fontWeight: "300" }} plain>
-                  Price
-                </Divider>
-                <Space size="small">
-                  <Space.Compact size="large">
-                    <Radio.Group
-                      // style={{ boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" }}
-                      buttonStyle="solid"
-                      onChange={onChangePriceFilter}
-                      value={priceFilter}
-                      size="large"
-                    >
-                      <Radio.Button
-                        style={{ fontSize: "13px", fontWeight: "300" }}
-                        value={"asc"}
-                      >
-                        Low to High
-                      </Radio.Button>
-                      <Radio.Button
-                        style={{ fontSize: "13px", fontWeight: "300" }}
-                        value={"desc"}
-                      >
-                        High to Low
-                      </Radio.Button>
-                    </Radio.Group>
+                    <Input
+                      style={{
+                        width: !isMobile ? "50dvw" : "calc(100dvw - 50px)",
+                      }}
+                      value={currentLocationLabel || null}
+                    ></Input>
                   </Space.Compact>
-                  <CloseCircleOutlined onClick={() => setPriceFilter("")} />
+                  <Space.Compact size="large">
+                    <Input value="Radius" style={{ width: "20dvw" }} readOnly />
+                    <Select
+                      popupRender={(menu) => (
+                        <div
+                          style={{
+                            maxHeight: 400,
+                            overflow: "auto",
+                            overscrollBehavior: "contain",
+                          }}
+                          onTouchStart={(e) => {
+                            if (
+                              (isMobile || window.innerWidth < 1200) &&
+                              document.activeElement instanceof HTMLElement
+                            ) {
+                              const popup = e.currentTarget;
+                              const scrollTop = popup.scrollTop;
+
+                              try {
+                                document.activeElement.blur({
+                                  preventScroll: true,
+                                });
+                              } catch {
+                                document.activeElement.blur();
+                              }
+                              requestAnimationFrame(() => {
+                                popup.scrollTop = scrollTop;
+                              });
+                            }
+                          }}
+                        >
+                          {menu}
+                        </div>
+                      )}
+                      style={{
+                        width: !isMobile ? "10dvw" : "30dvw",
+                      }}
+                      value={radiusValue}
+                      placeholder="Radius"
+                      filterOption={false}
+                      onClick={() => {
+                        setRopen(true);
+                        document.body.style.overscrollBehaviorY = "none";
+                      }}
+                      suffixIcon={
+                        rOpen ? (
+                          <UpOutlined
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setRopen(false);
+                              document.body.style.overscrollBehaviorY = "";
+                            }}
+                          />
+                        ) : (
+                          <DownOutlined
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setRopen(true);
+                              document.body.style.overscrollBehaviorY = "none";
+                            }}
+                          />
+                        )
+                      }
+                      open={rOpen}
+                      onSelect={(value, options) => {
+                        setRadiusValue(value);
+                        setTimeout(() => {
+                          document.body.style.overscrollBehaviorY = "";
+                          setRopen(false);
+                        }, 0);
+                      }}
+                      options={(radius || []).map((item, index) => ({
+                        value: item.value,
+                        label: item.label,
+                        key: index,
+                      }))}
+                    ></Select>
+                  </Space.Compact>
                 </Space>
-                &nbsp;&nbsp;or
-                <Space.Compact size="large">
-                  <Space size="large">
+                <Space
+                  size="small"
+                  direction="vertical"
+                  style={{ width: !isMobile ? "50dvw" : "calc(100dvw - 50px)" }}
+                >
+                  <Divider
+                    style={{
+                      fontSize: "15px",
+                      fontWeight: "300",
+                    }}
+                    plain
+                  >
+                    Price
+                  </Divider>
+                  <Space size="small" style={{ width: "100%" }}>
                     <Space.Compact size="large">
-                      <Input
-                        onChange={(event) => {
-                          setPriceFilter("");
-                          setMinPrice(event.target.value);
-                          setApplied(false);
-                        }}
-                        value={minPrice || null}
-                        placeholder="min"
-                        style={{ width: "150px" }}
-                      ></Input>
+                      <Radio.Group
+                        // style={{ boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" }}
+                        buttonStyle="solid"
+                        onChange={onChangePriceFilter}
+                        value={priceFilter}
+                        size="large"
+                      >
+                        <Radio.Button
+                          style={{ fontSize: "13px", fontWeight: "300" }}
+                          value={"asc"}
+                        >
+                          Low to High
+                        </Radio.Button>
+                        <Radio.Button
+                          style={{ fontSize: "13px", fontWeight: "300" }}
+                          value={"desc"}
+                        >
+                          High to Low
+                        </Radio.Button>
+                      </Radio.Group>
                     </Space.Compact>
-                    <Space.Compact size="large">
-                      <Input
-                        onChange={(event) => {
-                          setPriceFilter("");
-                          setMaxPrice(event.target.value);
-                          setApplied(false);
-                        }}
-                        value={maxPrice || null}
-                        placeholder="max"
-                        style={{ width: "150px" }}
-                      ></Input>
-                    </Space.Compact>
+                    <CloseCircleOutlined onClick={() => setPriceFilter("")} />
                   </Space>
-                </Space.Compact>
+                  &nbsp;&nbsp;or
+                  <Space.Compact size="large">
+                    <Space size="large">
+                      <Space.Compact size="large">
+                        <Input
+                          onChange={(event) => {
+                            setPriceFilter("");
+                            setMinPrice(event.target.value);
+                            setApplied(false);
+                          }}
+                          value={minPrice || null}
+                          placeholder="min"
+                          style={{ width: "150px" }}
+                        ></Input>
+                      </Space.Compact>
+                      <Space.Compact size="large">
+                        <Input
+                          onChange={(event) => {
+                            setPriceFilter("");
+                            setMaxPrice(event.target.value);
+                            setApplied(false);
+                          }}
+                          value={maxPrice || null}
+                          placeholder="max"
+                          style={{ width: "150px" }}
+                        ></Input>
+                      </Space.Compact>
+                    </Space>
+                  </Space.Compact>
+                </Space>
                 <Space
                   size="middle"
                   style={{ display: "flex", justifyContent: "center" }}
