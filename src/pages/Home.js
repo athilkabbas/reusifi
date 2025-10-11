@@ -688,8 +688,9 @@ const Home = () => {
                             maxHeight: 400,
                             overflow: "auto",
                             overscrollBehavior: "contain",
-                            zIndex: 1050,
                             touchAction: "pan-y",
+                            position: "absolute",
+                            zIndex: 3000,
                           }}
                           onTouchMove={(e) => {
                             if (
@@ -779,8 +780,9 @@ const Home = () => {
                             maxHeight: 400,
                             overflow: "auto",
                             overscrollBehavior: "contain",
-                            zIndex: 1050,
                             touchAction: "pan-y",
+                            position: "absolute",
+                            zIndex: 3000,
                           }}
                           onTouchMove={(e) => {
                             if (
