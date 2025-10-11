@@ -387,11 +387,16 @@ const AddDress = () => {
   const bottomRef = useRef(null);
 
   const scrollToBottom = () => {
-    requestAnimationFrame(() => {
-      if (bottomRef?.current) {
-        bottomRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
-      }
-    });
+    setTimeout(() => {
+      requestAnimationFrame(() => {
+        if (bottomRef?.current) {
+          bottomRef.current.scrollIntoView({
+            behavior: "smooth",
+            block: "end",
+          });
+        }
+      });
+    }, 100);
   };
   return (
     <Layout
