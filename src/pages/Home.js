@@ -745,7 +745,9 @@ const Home = () => {
                       value={category || null}
                       placeholder="Category"
                       onClear={() => {
-                        setOpen(false);
+                        requestAnimationFrame(() => {
+                          setOpen(false);
+                        });
                       }}
                       onClick={(e) => {
                         setOpen(true);

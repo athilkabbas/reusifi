@@ -671,11 +671,10 @@ const AddDress = () => {
                           scrollToBottom();
                         }
                         prevHeight = currentHeight;
-                        setTimeout(() => {
-                          window.addEventListener("resize", handleResize);
-                        }, 100);
                       };
-                      window.addEventListener("resize", handleResize);
+                      window.addEventListener("resize", handleResize, {
+                        once: true,
+                      });
                     }}
                     value={form.price}
                     maxLength={15}
