@@ -691,7 +691,7 @@ const Home = () => {
                             overflow: "auto",
                             overscrollBehavior: "contain",
                           }}
-                          onTouchStart={(e) => {
+                          onTouchMove={(e) => {
                             if (
                               (isMobile || window.innerWidth < 1200) &&
                               document.activeElement instanceof HTMLElement
@@ -777,7 +777,7 @@ const Home = () => {
                             overflow: "auto",
                             overscrollBehavior: "contain",
                           }}
-                          onTouchStart={(e) => {
+                          onTouchMove={(e) => {
                             if (
                               (isMobile || window.innerWidth < 1200) &&
                               document.activeElement instanceof HTMLElement
@@ -938,7 +938,7 @@ const Home = () => {
                             overflow: "auto",
                             overscrollBehavior: "contain",
                           }}
-                          onTouchStart={(e) => {
+                          onTouchMove={(e) => {
                             if (
                               (isMobile || window.innerWidth < 1200) &&
                               document.activeElement instanceof HTMLElement
