@@ -685,10 +685,6 @@ const Home = () => {
                   </Divider>
                   <Space.Compact size="large">
                     <TreeSelect
-                      onBlur={() => {
-                        setOpen(false);
-                        document.body.style.overscrollBehaviorY = "";
-                      }}
                       popupRender={(menu) => (
                         <div
                           style={{
@@ -720,25 +716,25 @@ const Home = () => {
                           {menu}
                         </div>
                       )}
-                      // suffixIcon={
-                      //   open ? (
-                      //     <UpOutlined
-                      //       onClick={(e) => {
-                      //         e.stopPropagation();
-                      //         setOpen(false);
-                      //         document.body.style.overscrollBehaviorY = "";
-                      //       }}
-                      //     />
-                      //   ) : (
-                      //     <DownOutlined
-                      //       onClick={(e) => {
-                      //         e.stopPropagation();
-                      //         setOpen(true);
-                      //         document.body.style.overscrollBehaviorY = "none";
-                      //       }}
-                      //     />
-                      //   )
-                      // }
+                      suffixIcon={
+                        open ? (
+                          <UpOutlined
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setOpen(false);
+                              document.body.style.overscrollBehaviorY = "";
+                            }}
+                          />
+                        ) : (
+                          <DownOutlined
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setOpen(true);
+                              document.body.style.overscrollBehaviorY = "none";
+                            }}
+                          />
+                        )
+                      }
                       showSearch
                       allowClear
                       style={{
