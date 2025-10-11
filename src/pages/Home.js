@@ -752,9 +752,12 @@ const Home = () => {
                         setCategory(value);
                         const leaf = isLeafNode(value, options);
                         setSubCategory(leaf);
-                        setTimeout(() => {
+                        // setTimeout(() => {
+                        //   setOpen(false);
+                        // }, 0);
+                        requestAnimationFrame(() => {
                           setOpen(false);
-                        }, 0);
+                        });
                         setApplied(false);
                       }}
                       treeData={options}
