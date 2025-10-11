@@ -388,27 +388,14 @@ const AddDress = () => {
   const bottomRef = useRef(null);
 
   const scrollToBottom = () => {
-    if (Platform.isAndroid) {
-      setTimeout(() => {
-        requestAnimationFrame(() => {
-          if (bottomRef?.current) {
-            bottomRef.current.scrollIntoView({
-              behavior: "smooth",
-              block: "end",
-            });
-          }
+    requestAnimationFrame(() => {
+      if (bottomRef?.current) {
+        bottomRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "end",
         });
-      }, 100);
-    } else {
-      requestAnimationFrame(() => {
-        if (bottomRef?.current) {
-          bottomRef.current.scrollIntoView({
-            behavior: "smooth",
-            block: "end",
-          });
-        }
-      });
-    }
+      }
+    });
   };
   return (
     <Layout
@@ -527,7 +514,7 @@ const AddDress = () => {
                       handleChange(value, "category");
                       setTimeout(() => {
                         setOpen(false);
-                      });
+                      }, 0);
                     }}
                     onClick={() => {
                       setOpen(true);
