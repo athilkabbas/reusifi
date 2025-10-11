@@ -516,15 +516,9 @@ const AddDress = () => {
                       borderRadius: "9px",
                     }}
                     showSearch={{ filter }}
-                    // onSearch={(value) => {
-                    //   handleChange(value, "category");
-                    // }}
                     placeholder={"Category"}
                     onChange={(value) => {
                       handleChange(value, "category");
-                      // setTimeout(() => {
-                      //   setOpen(false);
-                      // }, 0);
                       requestAnimationFrame(() => {
                         setOpen(false);
                       });

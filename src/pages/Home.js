@@ -568,10 +568,6 @@ const Home = () => {
       clearTimeout(locationTimer.current);
     }
     if (!value) {
-      // setTimeout(() => {
-      //   setLocationLabels([]);
-      //   setLocationLoading(false);
-      // }, 0);
       requestAnimationFrame(() => {
         setLocationLabels([]);
         setLocationLoading(false);
@@ -756,9 +752,6 @@ const Home = () => {
                         const leaf = isLeafNode(value, options);
                         setSubCategory(leaf);
                         document.body.style.overscrollBehaviorY = "";
-                        // setTimeout(() => {
-                        //   setOpen(false);
-                        // }, 0);
                         requestAnimationFrame(() => {
                           document.body.style.overscrollBehaviorY = "";
                           setOpen(false);
@@ -875,10 +868,6 @@ const Home = () => {
                       open={sOpen}
                       onSelect={(value, options) => {
                         handleLocationSelect(value, options);
-                        // setTimeout(() => {
-                        //   document.body.style.overscrollBehaviorY = "";
-                        //   setSopen(false);
-                        // }, 0);
                         requestAnimationFrame(() => {
                           document.body.style.overscrollBehaviorY = "";
                           setSopen(false);
@@ -1015,10 +1004,6 @@ const Home = () => {
                       onSelect={(value, options) => {
                         setRadiusValue(value);
                         setApplied(false);
-                        // setTimeout(() => {
-                        //   document.body.style.overscrollBehaviorY = "";
-                        //   setRopen(false);
-                        // }, 0);
                         requestAnimationFrame(() => {
                           document.body.style.overscrollBehaviorY = "";
                           setRopen(false);
