@@ -681,7 +681,6 @@ const Home = () => {
                   </Divider>
                   <Space.Compact size="large">
                     <TreeSelect
-                      getPopupContainer={(trigger) => trigger.parentElement}
                       popupRender={(menu) => (
                         <div
                           style={{
@@ -771,7 +770,6 @@ const Home = () => {
                   </Divider>
                   <Space.Compact size="large">
                     <Select
-                      getPopupContainer={(trigger) => trigger.parentElement}
                       popupRender={(menu) => (
                         <div
                           style={{
