@@ -21,6 +21,7 @@ import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
 import { options } from "../helpers/categories";
 import useLocationComponent from "../hooks/location";
+import { Platform } from "../helpers/config";
 const { Text } = Typography;
 const { TextArea } = Input;
 const { Content } = Layout;
@@ -387,7 +388,18 @@ const AddDress = () => {
   const bottomRef = useRef(null);
 
   const scrollToBottom = () => {
-    setTimeout(() => {
+    if (Platform.isAndroid) {
+      setTimeout(() => {
+        requestAnimationFrame(() => {
+          if (bottomRef?.current) {
+            bottomRef.current.scrollIntoView({
+              behavior: "smooth",
+              block: "end",
+            });
+          }
+        });
+      }, 100);
+    } else {
       requestAnimationFrame(() => {
         if (bottomRef?.current) {
           bottomRef.current.scrollIntoView({
@@ -396,7 +408,7 @@ const AddDress = () => {
           });
         }
       });
-    }, 100);
+    }
   };
   return (
     <Layout
