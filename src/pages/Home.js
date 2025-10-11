@@ -685,37 +685,38 @@ const Home = () => {
                   </Divider>
                   <Space.Compact size="large">
                     <TreeSelect
-                      // popupRender={(menu) => (
-                      //   <div
-                      //     style={{
-                      //       maxHeight: 400,
-                      //       overflow: "auto",
-                      //       overscrollBehavior: "contain",
-                      //     }}
-                      //     onTouchMove={(e) => {
-                      //       if (
-                      //         (isMobile || window.innerWidth < 1200) &&
-                      //         document.activeElement instanceof HTMLElement
-                      //       ) {
-                      //         const popup = e.currentTarget;
-                      //         const scrollTop = popup.scrollTop;
+                      onBlur={() => setOpen(false)}
+                      popupRender={(menu) => (
+                        <div
+                          style={{
+                            maxHeight: 400,
+                            overflow: "auto",
+                            overscrollBehavior: "contain",
+                          }}
+                          onTouchMove={(e) => {
+                            if (
+                              (isMobile || window.innerWidth < 1200) &&
+                              document.activeElement instanceof HTMLElement
+                            ) {
+                              const popup = e.currentTarget;
+                              const scrollTop = popup.scrollTop;
 
-                      //         try {
-                      //           document.activeElement.blur({
-                      //             preventScroll: true,
-                      //           });
-                      //         } catch {
-                      //           document.activeElement.blur();
-                      //         }
-                      //         requestAnimationFrame(() => {
-                      //           popup.scrollTop = scrollTop;
-                      //         });
-                      //       }
-                      //     }}
-                      //   >
-                      //     {menu}
-                      //   </div>
-                      // )}
+                              try {
+                                document.activeElement.blur({
+                                  preventScroll: true,
+                                });
+                              } catch {
+                                document.activeElement.blur();
+                              }
+                              requestAnimationFrame(() => {
+                                popup.scrollTop = scrollTop;
+                              });
+                            }
+                          }}
+                        >
+                          {menu}
+                        </div>
+                      )}
                       // suffixIcon={
                       //   open ? (
                       //     <UpOutlined
@@ -745,10 +746,10 @@ const Home = () => {
                       value={category || null}
                       placeholder="Category"
                       onClick={(e) => {
-                        // setOpen(true);
+                        setOpen(true);
                         document.body.style.overscrollBehaviorY = "none";
                       }}
-                      // open={open}
+                      open={open}
                       onChange={(value) => {
                         setCategory(value);
                         const leaf = isLeafNode(value, options);
@@ -757,10 +758,10 @@ const Home = () => {
                         // setTimeout(() => {
                         //   setOpen(false);
                         // }, 0);
-                        // requestAnimationFrame(() => {
-                        //   document.body.style.overscrollBehaviorY = "";
-                        //   setOpen(false);
-                        // });
+                        requestAnimationFrame(() => {
+                          document.body.style.overscrollBehaviorY = "";
+                          setOpen(false);
+                        });
                         setApplied(false);
                       }}
                       treeData={options}
