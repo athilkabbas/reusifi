@@ -517,7 +517,10 @@ const AddDress = () => {
                         setOpen(false);
                       });
                     }}
-                    onClick={() => {
+                    onClick={(e) => {
+                      const isClearButton =
+                        e.target.closest(".ant-select-clear");
+                      if (isClearButton) return;
                       setOpen(true);
                       document.body.style.overscrollBehaviorY = "none";
                     }}

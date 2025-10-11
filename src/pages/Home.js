@@ -746,7 +746,10 @@ const Home = () => {
                       }}
                       value={category || null}
                       placeholder="Category"
-                      onClick={() => {
+                      onClick={(e) => {
+                        const isClearButton =
+                          e.target.closest(".ant-select-clear");
+                        if (isClearButton) return;
                         setOpen(true);
                         document.body.style.overscrollBehaviorY = "none";
                       }}
@@ -842,7 +845,10 @@ const Home = () => {
                           <Empty />
                         )
                       }
-                      onClick={() => {
+                      onClick={(e) => {
+                        const isClearButton =
+                          e.target.closest(".ant-select-clear");
+                        if (isClearButton) return;
                         setSopen(true);
                         document.body.style.overscrollBehaviorY = "none";
                       }}
@@ -978,7 +984,10 @@ const Home = () => {
                       value={radiusValue}
                       placeholder="Radius"
                       filterOption={false}
-                      onClick={() => {
+                      onClick={(e) => {
+                        const isClearButton =
+                          e.target.closest(".ant-select-clear");
+                        if (isClearButton) return;
                         setRopen(true);
                         document.body.style.overscrollBehaviorY = "none";
                       }}
