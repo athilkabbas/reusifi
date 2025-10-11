@@ -568,10 +568,14 @@ const Home = () => {
       clearTimeout(locationTimer.current);
     }
     if (!value) {
-      setTimeout(() => {
+      // setTimeout(() => {
+      //   setLocationLabels([]);
+      //   setLocationLoading(false);
+      // }, 0);
+      requestAnimationFrame(() => {
         setLocationLabels([]);
         setLocationLoading(false);
-      }, 0);
+      });
       return;
     }
     locationTimer.current = setTimeout(async () => {
@@ -864,10 +868,14 @@ const Home = () => {
                       open={sOpen}
                       onSelect={(value, options) => {
                         handleLocationSelect(value, options);
-                        setTimeout(() => {
+                        // setTimeout(() => {
+                        //   document.body.style.overscrollBehaviorY = "";
+                        //   setSopen(false);
+                        // }, 0);
+                        requestAnimationFrame(() => {
                           document.body.style.overscrollBehaviorY = "";
                           setSopen(false);
-                        }, 0);
+                        });
                       }}
                       options={(locationLabels || []).map((item) => ({
                         value: item.Address.Label,
@@ -997,10 +1005,14 @@ const Home = () => {
                       onSelect={(value, options) => {
                         setRadiusValue(value);
                         setApplied(false);
-                        setTimeout(() => {
+                        // setTimeout(() => {
+                        //   document.body.style.overscrollBehaviorY = "";
+                        //   setRopen(false);
+                        // }, 0);
+                        requestAnimationFrame(() => {
                           document.body.style.overscrollBehaviorY = "";
                           setRopen(false);
-                        }, 0);
+                        });
                       }}
                       options={(radius || []).map((item, index) => ({
                         value: item.value,

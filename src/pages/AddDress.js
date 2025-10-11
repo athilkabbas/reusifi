@@ -510,9 +510,12 @@ const AddDress = () => {
                     placeholder={"Category"}
                     onChange={(value) => {
                       handleChange(value, "category");
-                      setTimeout(() => {
+                      // setTimeout(() => {
+                      //   setOpen(false);
+                      // }, 0);
+                      requestAnimationFrame(() => {
                         setOpen(false);
-                      }, 0);
+                      });
                     }}
                     onClick={() => {
                       setOpen(true);
