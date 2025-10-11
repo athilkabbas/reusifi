@@ -679,10 +679,10 @@ const Home = () => {
                   >
                     Category
                   </Divider>
-                  <Space.Compact size="large" id="parent-container">
+                  <Space.Compact size="large" id="parent-container-treeSelect">
                     <TreeSelect
                       getPopupContainer={() =>
-                        document.getElementById("parent-container")
+                        document.getElementById("parent-container-treeSelect")
                       }
                       popupRender={(menu) => (
                         <div
@@ -691,7 +691,6 @@ const Home = () => {
                             overflow: "auto",
                             overscrollBehavior: "contain",
                             touchAction: "pan-y",
-                            zIndex: 3000,
                           }}
                           onTouchMove={(e) => {
                             if (
@@ -708,7 +707,6 @@ const Home = () => {
                                 } catch {
                                   document.activeElement.blur();
                                 }
-                                popup.style.zIndex = "3000";
                                 popup.scrollTop = scrollTop;
                               });
                             }
@@ -772,9 +770,11 @@ const Home = () => {
                   >
                     Location
                   </Divider>
-                  <Space.Compact size="large">
+                  <Space.Compact size="large" id="parent-container-select">
                     <Select
-                      getPopupContainer={(trigger) => trigger.parentElement}
+                      getPopupContainer={() =>
+                        document.getElementById("parent-container-select")
+                      }
                       popupRender={(menu) => (
                         <div
                           style={{
@@ -782,8 +782,6 @@ const Home = () => {
                             overflow: "auto",
                             overscrollBehavior: "contain",
                             touchAction: "pan-y",
-                            position: "absolute",
-                            zIndex: 3000,
                           }}
                           onTouchMove={(e) => {
                             if (
@@ -801,7 +799,6 @@ const Home = () => {
                                 } catch {
                                   document.activeElement.blur();
                                 }
-                                popup.style.zIndex = "1050";
                                 popup.scrollTop = scrollTop;
                               });
                             }
