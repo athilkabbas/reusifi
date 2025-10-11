@@ -746,11 +746,9 @@ const Home = () => {
                       placeholder="Category"
                       onClear={(e) => {
                         setTimeout(() => {
-                          requestAnimationFrame(() => {
-                            document.body.style.overscrollBehaviorY = "";
-                            setOpen(false);
-                          });
-                        }, 300);
+                          document.body.style.overscrollBehaviorY = "";
+                          setOpen(false);
+                        }, 100);
                       }}
                       onClick={(e) => {
                         setOpen(true);

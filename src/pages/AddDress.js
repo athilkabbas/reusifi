@@ -389,14 +389,12 @@ const AddDress = () => {
   const scrollToBottom = () => {
     if (Platform.isAndroid) {
       setTimeout(() => {
-        requestAnimationFrame(() => {
-          if (bottomRef?.current) {
-            bottomRef.current.scrollIntoView({
-              behavior: "smooth",
-              block: "end",
-            });
-          }
-        });
+        if (bottomRef?.current) {
+          bottomRef.current.scrollIntoView({
+            behavior: "smooth",
+            block: "end",
+          });
+        }
       }, 100);
     } else {
       requestAnimationFrame(() => {
