@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { Skeleton, Spin, Descriptions, Col } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import { Layout, Menu, message, Modal, Popconfirm } from "antd";
+import { Layout, message, Modal, Popconfirm } from "antd";
 import { Image, Space } from "antd";
 import { Button, Typography, Row } from "antd";
 import { Carousel } from "antd";

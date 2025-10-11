@@ -29,7 +29,6 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { List, Skeleton, Radio } from "antd";
 import { Card } from "antd";
 import { signInWithRedirect, signOut } from "@aws-amplify/auth";
-import { locationsTreeSelect } from "../helpers/locations";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
 import { callApi } from "../helpers/api";

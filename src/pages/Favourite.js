@@ -4,7 +4,7 @@ import { Layout, Spin, theme, Modal } from "antd";
 import { HeartOutlined, HeartFilled, LoadingOutlined } from "@ant-design/icons";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { List, Skeleton, Empty, Row, Col } from "antd";
-import { Card, Space } from "antd";
+import { Card } from "antd";
 import { signInWithRedirect } from "@aws-amplify/auth";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
