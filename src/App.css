@@ -113,8 +113,3 @@ body {
     font-size: 1rem !important;
   }
 }
-
-.parent-container {
-  position: relative; /* required for dropdown absolute positioning */
-  z-index: 2000; /* must be higher than other siblings */
-}

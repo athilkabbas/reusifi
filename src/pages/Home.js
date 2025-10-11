@@ -689,7 +689,6 @@ const Home = () => {
                             overflow: "auto",
                             overscrollBehavior: "contain",
                             touchAction: "pan-y",
-                            position: "absolute",
                             zIndex: 3000,
                           }}
                           onTouchMove={(e) => {
@@ -707,7 +706,7 @@ const Home = () => {
                                 } catch {
                                   document.activeElement.blur();
                                 }
-                                popup.style.zIndex = "1050";
+                                popup.style.zIndex = "3000";
                                 popup.scrollTop = scrollTop;
                               });
                             }
