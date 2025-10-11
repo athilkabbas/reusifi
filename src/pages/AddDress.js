@@ -671,7 +671,9 @@ const AddDress = () => {
                           scrollToBottom();
                         }
                         prevHeight = currentHeight;
-                        window.removeEventListener("resize", handleResize);
+                        setTimeout(() => {
+                          window.addEventListener("resize", handleResize);
+                        }, 100);
                       };
                       window.addEventListener("resize", handleResize);
                     }}
