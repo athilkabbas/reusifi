@@ -748,6 +748,11 @@ const Home = () => {
                         requestAnimationFrame(() => {
                           document.body.style.overscrollBehaviorY = "";
                           setOpen(false);
+                          const input =
+                            document.querySelector <
+                            HTMLInputElement >
+                            ".ant-select-selector input";
+                          input?.blur();
                         });
                       }}
                       onClick={(e) => {
