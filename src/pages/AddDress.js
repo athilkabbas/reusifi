@@ -660,7 +660,17 @@ const AddDress = () => {
                     onChange={(value) => handleChange(value, "price")}
                     placeholder="Price"
                     onClick={() => {
-                      scrollToBottom();
+                      let prevHeight = window.innerHeight;
+
+                      const handleResize = () => {
+                        const currentHeight = window.innerHeight;
+                        if (currentHeight < prevHeight) {
+                          scrollToBottom();
+                        }
+                        prevHeight = currentHeight;
+                        window.removeEventListener("resize", handleResize);
+                      };
+                      window.addEventListener("resize", handleResize);
                     }}
                     value={form.price}
                     maxLength={15}
