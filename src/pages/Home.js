@@ -689,6 +689,7 @@ const Home = () => {
                             overflow: "auto",
                             overscrollBehavior: "contain",
                             zIndex: 1050,
+                            touchAction: "pan-y",
                           }}
                           onTouchMove={(e) => {
                             if (
@@ -697,15 +698,15 @@ const Home = () => {
                             ) {
                               const popup = e.currentTarget;
                               const scrollTop = popup.scrollTop;
-
-                              try {
-                                document.activeElement.blur({
-                                  preventScroll: true,
-                                });
-                              } catch {
-                                document.activeElement.blur();
-                              }
                               requestAnimationFrame(() => {
+                                try {
+                                  document.activeElement.blur({
+                                    preventScroll: true,
+                                  });
+                                } catch {
+                                  document.activeElement.blur();
+                                }
+                                popup.style.zIndex = "1050";
                                 popup.scrollTop = scrollTop;
                               });
                             }
@@ -779,6 +780,7 @@ const Home = () => {
                             overflow: "auto",
                             overscrollBehavior: "contain",
                             zIndex: 1050,
+                            touchAction: "pan-y",
                           }}
                           onTouchMove={(e) => {
                             if (
@@ -788,14 +790,15 @@ const Home = () => {
                               const popup = e.currentTarget;
                               const scrollTop = popup.scrollTop;
 
-                              try {
-                                document.activeElement.blur({
-                                  preventScroll: true,
-                                });
-                              } catch {
-                                document.activeElement.blur();
-                              }
                               requestAnimationFrame(() => {
+                                try {
+                                  document.activeElement.blur({
+                                    preventScroll: true,
+                                  });
+                                } catch {
+                                  document.activeElement.blur();
+                                }
+                                popup.style.zIndex = "1050";
                                 popup.scrollTop = scrollTop;
                               });
                             }
