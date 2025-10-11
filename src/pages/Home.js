@@ -746,12 +746,21 @@ const Home = () => {
                       value={category || null}
                       placeholder="Category"
                       onClear={() => {
+                        const active = document.activeElement;
+                        if (active instanceof HTMLElement) {
+                          try {
+                            active.blur({ preventScroll: true });
+                          } catch {
+                            active.blur();
+                          }
+                        }
+
                         const closePopup = () => {
                           document.body.style.overscrollBehaviorY = "";
                           setOpen(false);
                         };
                         requestAnimationFrame(closePopup);
-                        setTimeout(closePopup, 50);
+                        setTimeout(closePopup, 100);
                       }}
                       onClick={(e) => {
                         setOpen(true);
