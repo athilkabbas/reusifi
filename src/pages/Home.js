@@ -744,7 +744,7 @@ const Home = () => {
                       }}
                       value={category || null}
                       placeholder="Category"
-                      onClear={(e) => {
+                      onClear={() => {
                         const active = document.activeElement;
                         if (active instanceof HTMLElement) {
                           try {
@@ -753,6 +753,20 @@ const Home = () => {
                             active.blur();
                           }
                         }
+                        const preventRefocus = (ev) => {
+                          ev.stopPropagation();
+                          ev.preventDefault();
+                          document.removeEventListener(
+                            "focusin",
+                            preventRefocus,
+                            true
+                          );
+                        };
+                        document.addEventListener(
+                          "focusin",
+                          preventRefocus,
+                          true
+                        );
                         requestAnimationFrame(() => {
                           document.body.style.overscrollBehaviorY = "";
                           setOpen(false);
