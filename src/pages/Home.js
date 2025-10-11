@@ -745,12 +745,21 @@ const Home = () => {
                       value={category || null}
                       placeholder="Category"
                       onClear={(e) => {
-                        setTimeout(() => {
+                        const active = document.activeElement;
+                        if (active instanceof HTMLElement) {
+                          try {
+                            active.blur({ preventScroll: true });
+                          } catch {
+                            active.blur();
+                          }
+                        }
+                        requestAnimationFrame(() => {
                           document.body.style.overscrollBehaviorY = "";
                           setOpen(false);
-                        }, 100);
+                        });
                       }}
                       onClick={(e) => {
+                        console.log(e.target, "athil");
                         setOpen(true);
                         document.body.style.overscrollBehaviorY = "none";
                       }}
