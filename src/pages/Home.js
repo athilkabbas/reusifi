@@ -685,7 +685,10 @@ const Home = () => {
                   </Divider>
                   <Space.Compact size="large">
                     <TreeSelect
-                      onBlur={() => setOpen(false)}
+                      onBlur={() => {
+                        setOpen(false);
+                        document.body.style.overscrollBehaviorY = "";
+                      }}
                       popupRender={(menu) => (
                         <div
                           style={{
