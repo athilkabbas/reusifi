@@ -685,12 +685,15 @@ const Home = () => {
                   </Divider>
                   <Space.Compact size="large">
                     <TreeSelect
+                      getPopupContainer={(trigger) => trigger.parentElement}
+                      popupStyle={{ position: "fixed" }}
                       popupRender={(menu) => (
                         <div
                           style={{
                             maxHeight: 400,
                             overflow: "auto",
                             overscrollBehavior: "contain",
+                            touchAction: "pan-y",
                           }}
                           onTouchMove={(e) => {
                             if (
