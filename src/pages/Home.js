@@ -716,25 +716,25 @@ const Home = () => {
                           {menu}
                         </div>
                       )}
-                      suffixIcon={
-                        open ? (
-                          <UpOutlined
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setOpen(false);
-                              document.body.style.overscrollBehaviorY = "";
-                            }}
-                          />
-                        ) : (
-                          <DownOutlined
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setOpen(true);
-                              document.body.style.overscrollBehaviorY = "none";
-                            }}
-                          />
-                        )
-                      }
+                      // suffixIcon={
+                      //   open ? (
+                      //     <UpOutlined
+                      //       onClick={(e) => {
+                      //         e.stopPropagation();
+                      //         setOpen(false);
+                      //         document.body.style.overscrollBehaviorY = "";
+                      //       }}
+                      //     />
+                      //   ) : (
+                      //     <DownOutlined
+                      //       onClick={(e) => {
+                      //         e.stopPropagation();
+                      //         setOpen(true);
+                      //         document.body.style.overscrollBehaviorY = "none";
+                      //       }}
+                      //     />
+                      //   )
+                      // }
                       showSearch
                       allowClear
                       style={{
@@ -745,21 +745,22 @@ const Home = () => {
                       value={category || null}
                       placeholder="Category"
                       onClick={(e) => {
-                        setOpen(true);
+                        // setOpen(true);
                         document.body.style.overscrollBehaviorY = "none";
                       }}
-                      open={open}
+                      // open={open}
                       onChange={(value) => {
                         setCategory(value);
                         const leaf = isLeafNode(value, options);
                         setSubCategory(leaf);
+                        document.body.style.overscrollBehaviorY = "";
                         // setTimeout(() => {
                         //   setOpen(false);
                         // }, 0);
-                        requestAnimationFrame(() => {
-                          document.body.style.overscrollBehaviorY = "";
-                          setOpen(false);
-                        });
+                        // requestAnimationFrame(() => {
+                        //   document.body.style.overscrollBehaviorY = "";
+                        //   setOpen(false);
+                        // });
                         setApplied(false);
                       }}
                       treeData={options}
