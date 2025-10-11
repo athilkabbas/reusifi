@@ -748,8 +748,17 @@ const Home = () => {
                       onClear={() => {
                         const active = document.activeElement;
                         if (active instanceof HTMLElement) active.blur();
+                        const blockFocus = (ev) => {
+                          ev.stopPropagation();
+                          ev.preventDefault();
+                          document.removeEventListener(
+                            "focusin",
+                            blockFocus,
+                            true
+                          );
+                        };
+                        document.addEventListener("focusin", blockFocus, true);
                         setOpen(false);
-                        setTimeout(() => setOpen(false), 100);
                       }}
                       onClick={(e) => {
                         setOpen(true);
