@@ -22,7 +22,6 @@ import {
   DownOutlined,
   MailOutlined,
   CloseCircleOutlined,
-  CloseCircleFilled,
 } from "@ant-design/icons";
 import { LocateFixed } from "lucide-react";
 import { Input, Space, Empty } from "antd";
@@ -745,21 +744,6 @@ const Home = () => {
                       }}
                       value={category || null}
                       placeholder="Category"
-                      onClear={() => {
-                        const active = document.activeElement;
-                        if (active instanceof HTMLElement) active.blur();
-                        const blockFocus = (ev) => {
-                          ev.stopPropagation();
-                          ev.preventDefault();
-                          document.removeEventListener(
-                            "focusin",
-                            blockFocus,
-                            true
-                          );
-                        };
-                        document.addEventListener("focusin", blockFocus, true);
-                        setOpen(false);
-                      }}
                       onClick={(e) => {
                         setOpen(true);
                         document.body.style.overscrollBehaviorY = "none";
