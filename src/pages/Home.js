@@ -686,7 +686,6 @@ const Home = () => {
                   <Space.Compact size="large">
                     <TreeSelect
                       getPopupContainer={(trigger) => trigger.parentElement}
-                      popupStyle={{ position: "fixed" }}
                       popupRender={(menu) => (
                         <div
                           style={{
