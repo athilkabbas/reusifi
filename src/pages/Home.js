@@ -756,11 +756,10 @@ const Home = () => {
                         // setTimeout(() => {
                         //   setOpen(false);
                         // }, 0);
-                        setTimeout(() => {
-                          requestAnimationFrame(() => {
-                            setOpen(false);
-                          });
-                        }, 100);
+                        requestAnimationFrame(() => {
+                          document.body.style.overscrollBehaviorY = "";
+                          setOpen(false);
+                        });
                         setApplied(false);
                       }}
                       treeData={options}
