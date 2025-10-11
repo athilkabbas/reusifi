@@ -594,8 +594,6 @@ const Home = () => {
     }, 300);
   };
 
-  console.log(applied, "athil");
-
   return (
     <Layout
       style={{
@@ -746,10 +744,10 @@ const Home = () => {
                       }}
                       value={category || null}
                       placeholder="Category"
+                      onClear={() => {
+                        setOpen(false);
+                      }}
                       onClick={(e) => {
-                        const isClearButton =
-                          e.target.closest(".ant-select-clear");
-                        if (isClearButton) return;
                         setOpen(true);
                         document.body.style.overscrollBehaviorY = "none";
                       }}
