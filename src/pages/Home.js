@@ -745,13 +745,12 @@ const Home = () => {
                       value={category || null}
                       placeholder="Category"
                       onClear={(e) => {
-                        requestAnimationFrame(() => {
-                          document.body.style.overscrollBehaviorY = "";
-                          setOpen(false);
-                          if (document.activeElement instanceof HTMLElement) {
-                            document.activeElement.blur();
-                          }
-                        });
+                        setTimeout(() => {
+                          requestAnimationFrame(() => {
+                            document.body.style.overscrollBehaviorY = "";
+                            setOpen(false);
+                          });
+                        }, 300);
                       }}
                       onClick={(e) => {
                         setOpen(true);
