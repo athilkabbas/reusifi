@@ -744,11 +744,6 @@ const Home = () => {
                       }}
                       value={category || null}
                       placeholder="Category"
-                      onClear={() => {
-                        requestAnimationFrame(() => {
-                          setOpen(false);
-                        });
-                      }}
                       onClick={(e) => {
                         setOpen(true);
                         document.body.style.overscrollBehaviorY = "none";
@@ -761,9 +756,11 @@ const Home = () => {
                         // setTimeout(() => {
                         //   setOpen(false);
                         // }, 0);
-                        requestAnimationFrame(() => {
-                          setOpen(false);
-                        });
+                        setTimeout(() => {
+                          requestAnimationFrame(() => {
+                            setOpen(false);
+                          });
+                        }, 100);
                         setApplied(false);
                       }}
                       treeData={options}

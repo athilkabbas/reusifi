@@ -386,14 +386,16 @@ const AddDress = () => {
   const bottomRef = useRef(null);
 
   const scrollToBottom = () => {
-    requestAnimationFrame(() => {
-      if (bottomRef?.current) {
-        bottomRef.current.scrollIntoView({
-          behavior: "smooth",
-          block: "end",
-        });
-      }
-    });
+    setTimeout(() => {
+      requestAnimationFrame(() => {
+        if (bottomRef?.current) {
+          bottomRef.current.scrollIntoView({
+            behavior: "smooth",
+            block: "end",
+          });
+        }
+      });
+    }, 100);
   };
   return (
     <Layout
@@ -663,18 +665,7 @@ const AddDress = () => {
                     onChange={(value) => handleChange(value, "price")}
                     placeholder="Price"
                     onClick={() => {
-                      let prevHeight = window.innerHeight;
-
-                      const handleResize = () => {
-                        const currentHeight = window.innerHeight;
-                        if (currentHeight < prevHeight) {
-                          scrollToBottom();
-                        }
-                        prevHeight = currentHeight;
-                      };
-                      window.addEventListener("resize", handleResize, {
-                        once: true,
-                      });
+                      scrollToBottom();
                     }}
                     value={form.price}
                     maxLength={15}
