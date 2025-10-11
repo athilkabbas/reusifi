@@ -752,7 +752,6 @@ const Home = () => {
                         setCategory(value);
                         const leaf = isLeafNode(value, options);
                         setSubCategory(leaf);
-                        document.body.style.overscrollBehaviorY = "";
                         requestAnimationFrame(() => {
                           document.body.style.overscrollBehaviorY = "";
                           setOpen(false);
@@ -843,9 +842,6 @@ const Home = () => {
                         )
                       }
                       onClick={(e) => {
-                        const isClearButton =
-                          e.target.closest(".ant-select-clear");
-                        if (isClearButton) return;
                         setSopen(true);
                         document.body.style.overscrollBehaviorY = "none";
                       }}
@@ -936,9 +932,17 @@ const Home = () => {
                       allowClear
                     ></Input>
                   </Space.Compact>
-                  <Space.Compact size="large">
+                  <Space.Compact
+                    size="large"
+                    id="parent-container-select-radius"
+                  >
                     <Input value="Radius" style={{ width: "20dvw" }} readOnly />
                     <Select
+                      getPopupContainer={() =>
+                        document.getElementById(
+                          "parent-container-select-radius"
+                        )
+                      }
                       disabled={!currentLocation && !location}
                       popupRender={(menu) => (
                         <div
@@ -946,6 +950,7 @@ const Home = () => {
                             maxHeight: 400,
                             overflow: "auto",
                             overscrollBehavior: "contain",
+                            touchAction: "pan-y",
                           }}
                           onTouchMove={(e) => {
                             if (
@@ -954,15 +959,14 @@ const Home = () => {
                             ) {
                               const popup = e.currentTarget;
                               const scrollTop = popup.scrollTop;
-
-                              try {
-                                document.activeElement.blur({
-                                  preventScroll: true,
-                                });
-                              } catch {
-                                document.activeElement.blur();
-                              }
                               requestAnimationFrame(() => {
+                                try {
+                                  document.activeElement.blur({
+                                    preventScroll: true,
+                                  });
+                                } catch {
+                                  document.activeElement.blur();
+                                }
                                 popup.scrollTop = scrollTop;
                               });
                             }
@@ -978,9 +982,6 @@ const Home = () => {
                       placeholder="Radius"
                       filterOption={false}
                       onClick={(e) => {
-                        const isClearButton =
-                          e.target.closest(".ant-select-clear");
-                        if (isClearButton) return;
                         setRopen(true);
                         document.body.style.overscrollBehaviorY = "none";
                       }}
