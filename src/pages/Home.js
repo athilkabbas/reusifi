@@ -679,9 +679,11 @@ const Home = () => {
                   >
                     Category
                   </Divider>
-                  <Space.Compact size="large">
+                  <Space.Compact size="large" id="parent-container">
                     <TreeSelect
-                      getPopupContainer={(trigger) => trigger.parentElement}
+                      getPopupContainer={() =>
+                        document.getElementById("parent-container")
+                      }
                       popupRender={(menu) => (
                         <div
                           style={{
