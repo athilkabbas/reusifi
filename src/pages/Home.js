@@ -748,11 +748,9 @@ const Home = () => {
                         requestAnimationFrame(() => {
                           document.body.style.overscrollBehaviorY = "";
                           setOpen(false);
-                          const input =
-                            document.querySelector <
-                            HTMLInputElement >
-                            ".ant-select-selector input";
-                          input?.blur();
+                          if (document.activeElement instanceof HTMLElement) {
+                            document.activeElement.blur();
+                          }
                         });
                       }}
                       onClick={(e) => {
