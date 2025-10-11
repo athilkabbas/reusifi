@@ -681,13 +681,14 @@ const Home = () => {
                   </Divider>
                   <Space.Compact size="large">
                     <TreeSelect
+                      getPopupContainer={(trigger) => trigger.parentElement}
                       popupRender={(menu) => (
                         <div
                           style={{
                             maxHeight: 400,
                             overflow: "auto",
                             overscrollBehavior: "contain",
-                            touchAction: "pan-y",
+                            zIndex: 1050,
                           }}
                           onTouchMove={(e) => {
                             if (
@@ -770,13 +771,14 @@ const Home = () => {
                   </Divider>
                   <Space.Compact size="large">
                     <Select
+                      getPopupContainer={(trigger) => trigger.parentElement}
                       popupRender={(menu) => (
                         <div
                           style={{
                             maxHeight: 400,
                             overflow: "auto",
                             overscrollBehavior: "contain",
-                            touchAction: "pan-y",
+                            zIndex: 1050,
                           }}
                           onTouchMove={(e) => {
                             if (
