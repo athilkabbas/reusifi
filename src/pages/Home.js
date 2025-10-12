@@ -945,7 +945,7 @@ const Home = () => {
                         fontSize: "13px",
                         fontWeight: "300",
                         color: "#52c41a",
-                        width: !isMobile ? "20dvw" : "50dvw",
+                        width: !isMobile ? "30dvw" : "60dvw",
                       }}
                       onClick={() => {
                         navigator.permissions
@@ -1453,7 +1453,10 @@ const Home = () => {
                       style={{ display: "flex", justifyContent: "center" }}
                     >
                       <Skeleton.Node
-                        style={{ height: "300px", width: "186px" }}
+                        style={{
+                          height: "300px",
+                          width: "186px",
+                        }}
                         active
                       />
                     </Col>
