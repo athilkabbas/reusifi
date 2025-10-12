@@ -22,6 +22,7 @@ import {
   DownOutlined,
   MailOutlined,
   CloseCircleOutlined,
+  CloseCircleFilled,
 } from "@ant-design/icons";
 import { LocateFixed } from "lucide-react";
 import { Input, Space, Empty } from "antd";
@@ -679,7 +680,11 @@ const Home = () => {
                   >
                     Category
                   </Divider>
-                  <Space.Compact size="large" id="parent-container-treeSelect">
+                  <Space.Compact
+                    size="large"
+                    id="parent-container-treeSelect"
+                    style={{ position: "relative" }}
+                  >
                     <TreeSelect
                       getPopupContainer={() =>
                         document.getElementById("parent-container-treeSelect")
@@ -716,26 +721,29 @@ const Home = () => {
                         </div>
                       )}
                       suffixIcon={
-                        open ? (
-                          <UpOutlined
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setOpen(false);
-                              document.body.style.overscrollBehaviorY = "";
-                            }}
-                          />
-                        ) : (
-                          <DownOutlined
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setOpen(true);
-                              document.body.style.overscrollBehaviorY = "none";
-                            }}
-                          />
-                        )
+                        !category ? (
+                          open ? (
+                            <UpOutlined
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setOpen(false);
+                                document.body.style.overscrollBehaviorY = "";
+                              }}
+                            />
+                          ) : (
+                            <DownOutlined
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setOpen(true);
+                                document.body.style.overscrollBehaviorY =
+                                  "none";
+                              }}
+                            />
+                          )
+                        ) : null
                       }
                       showSearch
-                      allowClear
+                      // allowClear
                       style={{
                         width: !isMobile ? "50dvw" : "calc(100dvw - 50px)",
                         borderRadius: "7px",
@@ -744,15 +752,6 @@ const Home = () => {
                       value={category || null}
                       placeholder="Category"
                       onClick={(e) => {
-                        const clearButton =
-                          e.target.closest(".ant-select-clear");
-                        if (clearButton) {
-                          setCategory("");
-                          setSubCategory("null");
-                          setApplied(false);
-                          e.stopPropagation();
-                          return;
-                        }
                         setOpen(true);
                         document.body.style.overscrollBehaviorY = "none";
                       }}
@@ -769,6 +768,27 @@ const Home = () => {
                       }}
                       treeData={options}
                     />
+                    {category && (
+                      <CloseCircleFilled
+                        onClick={() => {
+                          setCategory("");
+                          setSubCategory("");
+                          setApplied(false);
+                        }}
+                        style={{
+                          position: "absolute",
+                          right: 9,
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          background: "none",
+                          border: "none",
+                          cursor: "pointer",
+                          color: "rgba(0, 0, 0, 0.25)",
+                          zIndex: 10,
+                          scale: "0.9",
+                        }}
+                      ></CloseCircleFilled>
+                    )}
                   </Space.Compact>
                 </Space>
                 <Space size="small" direction="vertical">
