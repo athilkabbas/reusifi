@@ -4,7 +4,7 @@ import { Input } from "antd";
 import { useNavigate } from "react-router-dom";
 import { Cascader } from "antd";
 import { Layout, Modal } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
+import { CloseCircleFilled, UploadOutlined } from "@ant-design/icons";
 import { LocateFixed } from "lucide-react";
 import { Image, Upload, Typography, message } from "antd";
 import { Button, Row } from "antd";
@@ -476,8 +476,9 @@ const AddDress = () => {
                     value={form.description}
                   />
                 </Space.Compact>
-                <Space.Compact size="large">
+                <Space.Compact size="large" style={{ position: "relative" }}>
                   <Cascader
+                    allowClear={false}
                     placement="topLeft"
                     popupRender={(menu) => (
                       <div
@@ -532,26 +533,52 @@ const AddDress = () => {
                     }}
                     open={open}
                     options={options}
+                    value={
+                      form.category
+                        ? form.category + "/" + form.subCategory
+                        : null
+                    }
                     suffixIcon={
-                      open ? (
-                        <UpOutlined
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setOpen(false);
-                            document.body.style.overscrollBehaviorY = "";
-                          }}
-                        />
-                      ) : (
-                        <DownOutlined
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setOpen(true);
-                            document.body.style.overscrollBehaviorY = "none";
-                          }}
-                        />
-                      )
+                      !form.category ? (
+                        open ? (
+                          <UpOutlined
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setOpen(false);
+                              document.body.style.overscrollBehaviorY = "";
+                            }}
+                          />
+                        ) : (
+                          <DownOutlined
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setOpen(true);
+                              document.body.style.overscrollBehaviorY = "none";
+                            }}
+                          />
+                        )
+                      ) : null
                     }
                   ></Cascader>
+                  {form.category && (
+                    <CloseCircleFilled
+                      onClick={() => {
+                        handleChange("", "category");
+                      }}
+                      style={{
+                        position: "absolute",
+                        right: 9,
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                        color: "rgba(0, 0, 0, 0.25)",
+                        zIndex: 10,
+                        scale: "0.9",
+                      }}
+                    ></CloseCircleFilled>
+                  )}
                 </Space.Compact>
                 {/* <Space.Compact size="large">
                   <Cascader

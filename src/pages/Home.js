@@ -743,7 +743,6 @@ const Home = () => {
                         ) : null
                       }
                       showSearch
-                      // allowClear
                       style={{
                         width: !isMobile ? "50dvw" : "calc(100dvw - 50px)",
                         borderRadius: "7px",
@@ -798,7 +797,11 @@ const Home = () => {
                   >
                     Location
                   </Divider>
-                  <Space.Compact size="large" id="parent-container-select">
+                  <Space.Compact
+                    size="large"
+                    id="parent-container-select"
+                    style={{ position: "relative" }}
+                  >
                     <Select
                       getPopupContainer={() =>
                         document.getElementById("parent-container-select")
@@ -839,7 +842,6 @@ const Home = () => {
                         width: !isMobile ? "50dvw" : "calc(100dvw - 50px)",
                       }}
                       showSearch
-                      allowClear
                       value={locationLabel || null}
                       onSearch={(value) => {
                         handleLocation(value);
@@ -875,23 +877,26 @@ const Home = () => {
                         document.body.style.overscrollBehaviorY = "none";
                       }}
                       suffixIcon={
-                        sOpen ? (
-                          <UpOutlined
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSopen(false);
-                              document.body.style.overscrollBehaviorY = "";
-                            }}
-                          />
-                        ) : (
-                          <DownOutlined
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSopen(true);
-                              document.body.style.overscrollBehaviorY = "none";
-                            }}
-                          />
-                        )
+                        !locationLabel ? (
+                          sOpen ? (
+                            <UpOutlined
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setOpen(false);
+                                document.body.style.overscrollBehaviorY = "";
+                              }}
+                            />
+                          ) : (
+                            <DownOutlined
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setOpen(true);
+                                document.body.style.overscrollBehaviorY =
+                                  "none";
+                              }}
+                            />
+                          )
+                        ) : null
                       }
                       open={sOpen}
                       onSelect={(value, options) => {
@@ -908,6 +913,28 @@ const Home = () => {
                         placeId: item.PlaceId,
                       }))}
                     ></Select>
+                    {locationLabel && (
+                      <CloseCircleFilled
+                        onClick={() => {
+                          setLocationLabels([]);
+                          setLocation("");
+                          setLocationLabel("");
+                          setApplied(false);
+                        }}
+                        style={{
+                          position: "absolute",
+                          right: 9,
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          background: "none",
+                          border: "none",
+                          cursor: "pointer",
+                          color: "rgba(0, 0, 0, 0.25)",
+                          zIndex: 10,
+                          scale: "0.9",
+                        }}
+                      ></CloseCircleFilled>
+                    )}
                   </Space.Compact>
                   &nbsp;&nbsp;or
                   <Space.Compact size="large">
