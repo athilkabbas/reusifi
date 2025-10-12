@@ -744,6 +744,15 @@ const Home = () => {
                       value={category || null}
                       placeholder="Category"
                       onClick={(e) => {
+                        const clearButton =
+                          e.target.closest(".ant-select-clear");
+                        if (clearButton) {
+                          setCategory("");
+                          setSubCategory("null");
+                          setApplied(false);
+                          e.stopPropagation();
+                          return;
+                        }
                         setOpen(true);
                         document.body.style.overscrollBehaviorY = "none";
                       }}
