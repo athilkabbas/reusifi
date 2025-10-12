@@ -882,7 +882,7 @@ const Home = () => {
                             <UpOutlined
                               onClick={(e) => {
                                 e.stopPropagation();
-                                setOpen(false);
+                                setSopen(false);
                                 document.body.style.overscrollBehaviorY = "";
                               }}
                             />
@@ -890,7 +890,7 @@ const Home = () => {
                             <DownOutlined
                               onClick={(e) => {
                                 e.stopPropagation();
-                                setOpen(true);
+                                setSopen(true);
                                 document.body.style.overscrollBehaviorY =
                                   "none";
                               }}
