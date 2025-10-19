@@ -410,55 +410,14 @@ const Chat = () => {
   //   }
   // }, []);
 
-  const menuItems = [
+  const subMenuItems = [
     {
       key: "1",
-      label: "Ad details",
+      label: (
+        <span style={{ fontSize: "13px", fontWeight: "300" }}>Ad details</span>
+      ),
     },
   ];
-
-  const menu = (index) => {
-    return (
-      <Menu
-        onClick={(event) => {
-          let userId2;
-          if (conversationId) {
-            let userIds = conversationId.split("#");
-            userIds.splice(1, 1);
-            for (let userId of userIds) {
-              if (user.userId !== userId) {
-                userId2 = userId;
-                break;
-              }
-            }
-          }
-          navigate("/details", {
-            state: {
-              item: {
-                item: {
-                  uuid: productId || recipient["item"]["uuid"],
-                  title: title || recipient["item"]["title"],
-                  email: email || recipient["item"]["email"],
-                },
-              },
-              ad:
-                user.userId === recipient?.["item"]["email"] ||
-                user.userId === email,
-            },
-          });
-        }}
-      >
-        {menuItems.map((item) => (
-          <Menu.Item
-            style={{ color: "#52c41a", fontSize: "13px", fontWeight: "300" }}
-            key={item.key}
-          >
-            {item.label}
-          </Menu.Item>
-        ))}
-      </Menu>
-    );
-  };
 
   useEffect(() => {
     const getChatsAndCount = async () => {
@@ -639,25 +598,32 @@ const Chat = () => {
         >
           <div>{title || recipient["item"]["title"]}</div>
           <Dropdown
-            overlay={menu()}
             trigger={["click"]}
-            placement="bottomRight"
-            style={{ display: "flex" }}
+            menu={{
+              items: subMenuItems,
+              onClick: () => {
+                navigate("/details", {
+                  state: {
+                    item: {
+                      item: {
+                        uuid: productId || recipient["item"]["uuid"],
+                        title: title || recipient["item"]["title"],
+                        email: email || recipient["item"]["email"],
+                      },
+                    },
+                    ad:
+                      user.userId === recipient?.["item"]["email"] ||
+                      user.userId === email,
+                  },
+                });
+              },
+              style: { width: "150px" },
+            }}
           >
-            <a
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-              }}
-              style={{ display: "flex" }}
-            >
+            <a style={{ display: "flex" }} onClick={(e) => e.preventDefault()}>
               <Space>
                 <EllipsisVertical
-                  style={{
-                    color: "#9CA3AF",
-                    scale: "0.9",
-                    display: "flex",
-                  }}
+                  style={{ color: "#9CA3AF", display: "flex" }}
                 />
               </Space>
             </a>
