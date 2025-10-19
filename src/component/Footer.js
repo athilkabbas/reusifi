@@ -7,7 +7,7 @@ const FooterWrapper = ({ children }) => {
       style={{
         position: "fixed",
         bottom: 0,
-        zIndex: 1,
+        zIndex: 2,
         width: "100dvw",
         height: "60px",
         padding: "0px",
