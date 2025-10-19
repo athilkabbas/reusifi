@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
-import { Spin } from "antd";
+import { Dropdown, Menu, Spin } from "antd";
 import { Input } from "antd";
 import { Layout, Modal } from "antd";
 import { Button } from "antd";
@@ -8,19 +8,20 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { Skeleton, Space, Typography } from "antd";
 import { Context } from "../context/provider";
 import { LoadingOutlined } from "@ant-design/icons";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useIsMobile } from "../hooks/windowSize";
 import { callApi } from "../helpers/api";
 import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
+import { EllipsisVertical } from "lucide-react";
 const { TextArea } = Input;
 const { Content } = Layout;
 const Chat = () => {
   const [ichatData, setIChatData] = useState([]);
   const location = useLocation();
   const { recipient } = location.state || "";
-  const { conversationId, productId } = location.state;
+  const { conversationId, productId, title, email } = location.state;
   const [messageValue, setMessageValue] = useState("");
   const [reconnect, setReconnect] = useState(false);
   const [lastEvaluatedKey, setLastEvaluatedKey] = useState(null);
@@ -32,13 +33,15 @@ const Chat = () => {
   const socketRef = useRef(null);
   const reconnectTimeoutRef = useRef(null);
   const { Text } = Typography;
+  const navigate = useNavigate();
   const sendMessage = (
     message,
     recipientUserId,
     senderUserId,
     productId,
     title,
-    image
+    image,
+    email
   ) => {
     try {
       if (socketRef.current) {
@@ -51,6 +54,7 @@ const Chat = () => {
             message: message,
             title: title,
             image: image,
+            email: email,
           })
         );
       }
@@ -392,7 +396,7 @@ const Chat = () => {
       if (err?.status === 401) {
         Modal.error(errorSessionConfig);
       } else {
-        Modal.error({ ...errorConfig, content: err.message + "get chats" });
+        Modal.error(errorConfig);
       }
       return;
     }
@@ -405,6 +409,56 @@ const Chat = () => {
   //     setChatInitialLoad(true);
   //   }
   // }, []);
+
+  const menuItems = [
+    {
+      key: "1",
+      label: "Ad Details",
+    },
+  ];
+
+  const menu = (index) => {
+    return (
+      <Menu
+        onClick={(event) => {
+          let userId2;
+          if (conversationId) {
+            let userIds = conversationId.split("#");
+            userIds.splice(1, 1);
+            for (let userId of userIds) {
+              if (user.userId !== userId) {
+                userId2 = userId;
+                break;
+              }
+            }
+          }
+          navigate("/details", {
+            state: {
+              item: {
+                item: {
+                  uuid: productId || recipient["item"]["uuid"],
+                  title: title || recipient["item"]["title"],
+                  email: email || recipient["item"]["email"],
+                },
+              },
+              ad:
+                user.userId === recipient?.["item"]["email"] ||
+                user.userId === email,
+            },
+          });
+        }}
+      >
+        {menuItems.map((item) => (
+          <Menu.Item
+            style={{ color: "#52c41a", fontSize: "13px", fontWeight: "300" }}
+            key={item.key}
+          >
+            {item.label}
+          </Menu.Item>
+        ))}
+      </Menu>
+    );
+  };
 
   useEffect(() => {
     const getChatsAndCount = async () => {
@@ -432,7 +486,7 @@ const Chat = () => {
         if (err?.status === 401) {
           Modal.error(errorSessionConfig);
         } else {
-          Modal.error({ ...errorConfig, content: err.message + "get count" });
+          Modal.error(errorConfig);
         }
         return;
       }
@@ -470,7 +524,8 @@ const Chat = () => {
           user.userId,
           recipient["item"]["uuid"],
           recipient["item"]["title"],
-          recipient["images"][0]
+          recipient["images"][0],
+          recipient["item"]["email"]
         );
       } else if (conversationId) {
         let userIds = conversationId.split("#");
@@ -564,6 +619,51 @@ const Chat = () => {
           />
         </HeaderWrapper>
       )}
+      <HeaderWrapper
+        style={{
+          display: "flex",
+          alignItems: "center",
+          padding: "0px",
+          height: "50px",
+        }}
+      >
+        <Space
+          style={{
+            display: "flex",
+            background: "white",
+            width: "100dvw",
+            height: "60px",
+            padding: "0px 10px 0px 10px",
+            justifyContent: "space-between",
+          }}
+        >
+          <div>{title || recipient["item"]["title"]}</div>
+          <Dropdown
+            overlay={menu()}
+            trigger={["click"]}
+            placement="bottomRight"
+            style={{ display: "flex" }}
+          >
+            <a
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+              style={{ display: "flex" }}
+            >
+              <Space>
+                <EllipsisVertical
+                  style={{
+                    color: "#9CA3AF",
+                    scale: "0.9",
+                    display: "flex",
+                  }}
+                />
+              </Space>
+            </a>
+          </Dropdown>
+        </Space>
+      </HeaderWrapper>
       <Content>
         <div
           style={{
@@ -571,7 +671,7 @@ const Chat = () => {
             borderRadius: "0px",
             display: "flex",
             flexDirection: "column-reverse",
-            height: "calc(100% - 60px)",
+            height: "calc(100% - 120px)",
             width: "100%",
             position: "fixed",
           }}

@@ -27,6 +27,10 @@ const menuItems = [
     key: "2",
     label: "Delete",
   },
+  {
+    key: "3",
+    label: "Ad Details",
+  },
 ];
 
 const menuItemsBlocked = [
@@ -37,6 +41,10 @@ const menuItemsBlocked = [
   {
     key: "2",
     label: "Delete",
+  },
+  {
+    key: "3",
+    label: "Ad Details",
   },
 ];
 const { Content } = Layout;
@@ -162,6 +170,7 @@ const ChatPage = () => {
           break;
         }
       }
+      console.log(user.userId, userId2, "athil");
       if (clickedItemKey === "1") {
         const result = await callApi(
           `https://api.reusifi.com/prod/blockUserNew?block=${true}&userId1=${encodeURIComponent(
@@ -180,7 +189,7 @@ const ChatPage = () => {
           });
         });
         message.success("User blocked");
-      } else {
+      } else if (clickedItemKey === "2") {
         const result = await callApi(
           `https://api.reusifi.com/prod/deleteChat?deleteChat=${true}&userId1=${encodeURIComponent(
             user.userId
@@ -198,6 +207,19 @@ const ChatPage = () => {
           });
         });
         message.success("Chat deleted");
+      } else if (clickedItemKey === "3") {
+        navigate("/details", {
+          state: {
+            item: {
+              item: {
+                uuid: chatData[index].productId,
+                title: chatData[index].title,
+              },
+            },
+            ad: user.userId === chatData[index].email,
+          },
+        });
+        return;
       }
       const getChatsReadPromise = callApi(
         `https://api.reusifi.com/prod/getChatsRead?userId1=${encodeURIComponent(
@@ -283,7 +305,7 @@ const ChatPage = () => {
           });
         });
         message.success("User unblocked");
-      } else {
+      } else if (clickedItemKey === "2") {
         const result = await callApi(
           `https://api.reusifi.com/prod/deleteChat?deleteChat=${true}&userId1=${encodeURIComponent(
             user.userId
@@ -301,6 +323,8 @@ const ChatPage = () => {
           });
         });
         message.success("Chat deleted");
+      } else if (clickedItemKey === "3") {
+        return;
       }
       setMenuLoading(false);
     } catch (err) {
@@ -576,6 +600,8 @@ const ChatPage = () => {
                                 state: {
                                   conversationId: item.conversationId,
                                   productId: item.productId,
+                                  title: capitalize(item.title),
+                                  email: item.email,
                                 },
                               });
                             }

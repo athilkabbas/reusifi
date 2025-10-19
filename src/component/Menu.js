@@ -92,7 +92,7 @@ const MenuWrapper = ({
     return {
       key: String(index + 1),
       icon:
-        index === 2 ? <Badge dot={unreadChatCount}>{divHtml}</Badge> : divHtml,
+        index === 1 ? <Badge dot={unreadChatCount}>{divHtml}</Badge> : divHtml,
     };
   });
 
