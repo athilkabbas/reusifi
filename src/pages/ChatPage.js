@@ -227,7 +227,9 @@ const ChatPage = () => {
               item: {
                 uuid: chatData[index].productId,
                 title: chatData[index].title,
+                email: chatData[index].email,
               },
+              images: [chatData[index].image],
             },
             ad: user.userId === chatData[index].email,
           },
@@ -582,6 +584,7 @@ const ChatPage = () => {
                                   productId: item.productId,
                                   title: capitalize(item.title),
                                   email: item.email,
+                                  image: item.image,
                                 },
                               });
                             }

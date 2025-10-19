@@ -21,7 +21,7 @@ const Chat = () => {
   const [ichatData, setIChatData] = useState([]);
   const location = useLocation();
   const { recipient } = location.state || "";
-  const { conversationId, productId, title, email } = location.state;
+  const { conversationId, productId, title, email, image } = location.state;
   const [messageValue, setMessageValue] = useState("");
   const [reconnect, setReconnect] = useState(false);
   const [lastEvaluatedKey, setLastEvaluatedKey] = useState(null);
@@ -610,6 +610,7 @@ const Chat = () => {
                         title: title || recipient["item"]["title"],
                         email: email || recipient["item"]["email"],
                       },
+                      images: [image || recipient["images"][0]],
                     },
                     ad:
                       user.userId === recipient?.["item"]["email"] ||

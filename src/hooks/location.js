@@ -46,7 +46,7 @@ const useLocationComponent = () => {
         setError(err.message);
         setLocationAccessLoading(false);
       },
-      { enableHighAccuracy: false }
+      { enableHighAccuracy: false, maximumAge: 3600000, timeout: 5000 }
     );
   }, [triggerLocation, currentLocationLabel, currLocRemoved]);
 };
