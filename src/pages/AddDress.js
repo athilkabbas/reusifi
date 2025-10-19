@@ -400,8 +400,7 @@ const AddDress = () => {
       const currentHeight = window.innerHeight;
       if (
         currentHeight < prevHeight &&
-        (document.activeElement.id === "sellPriceId" ||
-          document.activeElement.id === "sellPincodeId")
+        document.activeElement.id === "sellPriceId"
       ) {
         scrollToBottom();
       }
@@ -609,7 +608,6 @@ const AddDress = () => {
                   }}
                 >
                   <Input
-                    id="sellPincodeId"
                     value={pincode}
                     onChange={handlePincode}
                     placeholder="Pincode"
