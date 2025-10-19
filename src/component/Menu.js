@@ -81,7 +81,6 @@ const MenuWrapper = ({
             fontSize: isMobile ? "10px" : "15px",
             marginTop: isMobile ? "10px" : "5px",
             marginLeft: isMobile ? "0px" : "10px",
-            color: "#389e0d",
           }}
         >
           {IconText[index]}

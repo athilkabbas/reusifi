@@ -18,35 +18,40 @@ import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
 
-const menuItems = [
+const subMenuItemsUnblocked = [
   {
     key: "1",
-    label: "Block",
+    label: <span style={{ fontSize: "13px", fontWeight: "300" }}>Block</span>,
   },
   {
     key: "2",
-    label: "Delete",
+    label: <span style={{ fontSize: "13px", fontWeight: "300" }}>Delete</span>,
   },
   {
     key: "3",
-    label: "Ad Details",
+    label: (
+      <span style={{ fontSize: "13px", fontWeight: "300" }}>Ad details</span>
+    ),
   },
 ];
 
-const menuItemsBlocked = [
+const subMenuItemsBlocked = [
   {
     key: "1",
-    label: "Unblock",
+    label: <span style={{ fontSize: "13px", fontWeight: "300" }}>Unblock</span>,
   },
   {
     key: "2",
-    label: "Delete",
+    label: <span style={{ fontSize: "13px", fontWeight: "300" }}>Delete</span>,
   },
   {
     key: "3",
-    label: "Ad Details",
+    label: (
+      <span style={{ fontSize: "13px", fontWeight: "300" }}>Ad details</span>
+    ),
   },
 ];
+
 const { Content } = Layout;
 const ChatPage = () => {
   const navigate = useNavigate();
@@ -344,24 +349,6 @@ const ChatPage = () => {
       return;
     }
   };
-  const menu = (index) => {
-    return (
-      <Menu
-        onClick={(event) => {
-          handleMenuClick(event, index);
-        }}
-      >
-        {menuItems.map((item) => (
-          <Menu.Item
-            style={{ color: "#52c41a", fontSize: "13px", fontWeight: "300" }}
-            key={item.key}
-          >
-            {item.label}
-          </Menu.Item>
-        ))}
-      </Menu>
-    );
-  };
   const formatTimeStamp = (timestamp) => {
     const date = new Date(timestamp);
 
@@ -402,21 +389,6 @@ const ChatPage = () => {
     return `${day}/${month}/${year} ${timeString}`;
   }
 
-  const menuBlocked = (index) => {
-    return (
-      <Menu
-        onClick={(event) => {
-          handleMenuClickUnblock(event, index);
-        }}
-      >
-        {menuItemsBlocked.map((item) => (
-          <Menu.Item style={{ color: "#52c41a" }} key={item.key}>
-            {item.label}
-          </Menu.Item>
-        ))}
-      </Menu>
-    );
-  };
   const getChats = async () => {
     try {
       const scrollPosition = scrollableDivRef.current.scrollTop;
@@ -630,7 +602,13 @@ const ChatPage = () => {
                               <Col>
                                 {!item.blocked && (
                                   <Dropdown
-                                    overlay={menu(index)}
+                                    menu={{
+                                      items: subMenuItemsUnblocked,
+                                      onClick: (e) => {
+                                        handleMenuClick(e, index);
+                                      },
+                                      style: { width: "150px" },
+                                    }}
                                     trigger={["click"]}
                                     placement="bottomRight"
                                   >
@@ -653,7 +631,13 @@ const ChatPage = () => {
                                 )}
                                 {item.blocked && (
                                   <Dropdown
-                                    overlay={menuBlocked(index)}
+                                    menu={{
+                                      items: subMenuItemsBlocked,
+                                      onClick: (e) => {
+                                        handleMenuClickUnblock(e, index);
+                                      },
+                                      style: { width: "150px" },
+                                    }}
                                     trigger={["click"]}
                                     placement="bottomRight"
                                   >

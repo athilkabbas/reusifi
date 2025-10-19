@@ -413,7 +413,7 @@ const Chat = () => {
   const menuItems = [
     {
       key: "1",
-      label: "Ad Details",
+      label: "Ad details",
     },
   ];
 

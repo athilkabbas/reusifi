@@ -646,7 +646,7 @@ const Home = () => {
             }}
           >
             <Input
-              prefix={<Search style={{ color: "#9CA3AF" }} />}
+              prefix={<Search style={{ color: "#9CA3AF", scale: "0.7" }} />}
               value={search}
               onChange={(event) => {
                 setSearch(event.target.value);
@@ -672,7 +672,11 @@ const Home = () => {
               />
               <Dropdown
                 trigger={["click"]}
-                menu={{ items: subMenuItems, onClick: handleMenuClick }}
+                menu={{
+                  items: subMenuItems,
+                  onClick: handleMenuClick,
+                  style: { width: "150px" },
+                }}
               >
                 <a onClick={(e) => e.preventDefault()}>
                   <Space>
