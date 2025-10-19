@@ -514,7 +514,7 @@ const Favourites = () => {
                 </div>
               ))}
             {(loading || chatLoading || favLoading) && (
-              <Row gutter={[10, 10]}>
+              <Row gutter={[0, 10]}>
                 {Array.from({ length: limit }).map((_, index) => {
                   return (
                     <Col
@@ -522,13 +522,16 @@ const Favourites = () => {
                       xs={12}
                       sm={8}
                       md={6}
-                      lg={5}
+                      lg={4.8}
                       xl={4}
-                      xxl={4}
+                      xxl={3.4}
                       style={{ display: "flex", justifyContent: "center" }}
                     >
                       <Skeleton.Node
-                        style={{ height: "300px", width: "186px" }}
+                        style={{
+                          height: "300px",
+                          width: isMobile ? "calc(186px - 10dvw)" : "186px",
+                        }}
                         active
                       />
                     </Col>

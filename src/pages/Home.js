@@ -1465,7 +1465,7 @@ const Home = () => {
                 </div>
               ))}
             {(loading || chatLoading || favLoading) && (
-              <Row gutter={[10, 10]}>
+              <Row gutter={[0, 10]}>
                 {Array.from({ length: limit }).map((_, index) => {
                   return (
                     <Col
@@ -1481,7 +1481,7 @@ const Home = () => {
                       <Skeleton.Node
                         style={{
                           height: "300px",
-                          width: "186px",
+                          width: isMobile ? "calc(186px - 10dvw)" : "186px",
                         }}
                         active
                       />
