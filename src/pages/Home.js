@@ -160,8 +160,19 @@ const Home = () => {
     }
   }, [currentLocationLabel, locationLabel]);
 
+  const bottomRef = useRef(null);
+
+  const scrollToBottom = () => {
+    requestAnimationFrame(() => {
+      if (bottomRef?.current) {
+        bottomRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
+      }
+    });
+  };
+
   useEffect(() => {
     let prevWidth = window.innerWidth;
+    let prevHeight = window.innerHeight;
     const updateLimit = () => {
       const newLimit = calculateLimit();
       setLimit(newLimit);
@@ -169,6 +180,7 @@ const Home = () => {
     updateLimit(); // on mount
     const handleResize = () => {
       const currentWidth = window.innerWidth;
+      const currentHeight = window.innerHeight;
       if (hasMore && currentWidth > prevWidth) {
         setData([]);
         setCurrentPage(1);
@@ -177,6 +189,14 @@ const Home = () => {
         updateLimit();
       }
       prevWidth = currentWidth;
+      if (
+        currentHeight < prevHeight &&
+        (document.activeElement.id === "homeMinId" ||
+          document.activeElement.id === "homeMaxId")
+      ) {
+        scrollToBottom();
+      }
+      prevHeight = currentHeight;
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -704,14 +724,14 @@ const Home = () => {
                             ) {
                               const popup = e.currentTarget;
                               const scrollTop = popup.scrollTop;
+                              try {
+                                document.activeElement.blur({
+                                  preventScroll: true,
+                                });
+                              } catch {
+                                document.activeElement.blur();
+                              }
                               requestAnimationFrame(() => {
-                                try {
-                                  document.activeElement.blur({
-                                    preventScroll: true,
-                                  });
-                                } catch {
-                                  document.activeElement.blur();
-                                }
                                 popup.scrollTop = scrollTop;
                               });
                             }
@@ -821,15 +841,14 @@ const Home = () => {
                             ) {
                               const popup = e.currentTarget;
                               const scrollTop = popup.scrollTop;
-
+                              try {
+                                document.activeElement.blur({
+                                  preventScroll: true,
+                                });
+                              } catch {
+                                document.activeElement.blur();
+                              }
                               requestAnimationFrame(() => {
-                                try {
-                                  document.activeElement.blur({
-                                    preventScroll: true,
-                                  });
-                                } catch {
-                                  document.activeElement.blur();
-                                }
                                 popup.scrollTop = scrollTop;
                               });
                             }
@@ -1015,14 +1034,14 @@ const Home = () => {
                             ) {
                               const popup = e.currentTarget;
                               const scrollTop = popup.scrollTop;
+                              try {
+                                document.activeElement.blur({
+                                  preventScroll: true,
+                                });
+                              } catch {
+                                document.activeElement.blur();
+                              }
                               requestAnimationFrame(() => {
-                                try {
-                                  document.activeElement.blur({
-                                    preventScroll: true,
-                                  });
-                                } catch {
-                                  document.activeElement.blur();
-                                }
                                 popup.scrollTop = scrollTop;
                               });
                             }
@@ -1121,6 +1140,7 @@ const Home = () => {
                     <Space size="large">
                       <Space.Compact size="large">
                         <Input
+                          id="homeMinId"
                           onChange={(event) => {
                             setPriceFilter("");
                             setMinPrice(event.target.value);
@@ -1133,6 +1153,7 @@ const Home = () => {
                       </Space.Compact>
                       <Space.Compact size="large">
                         <Input
+                          id="homeMaxId"
                           onChange={(event) => {
                             setPriceFilter("");
                             setMaxPrice(event.target.value);
@@ -1228,6 +1249,7 @@ const Home = () => {
                   </Space.Compact>
                 </Space>
               </Space>
+              <div ref={bottomRef}></div>
             </Drawer>
           </Space.Compact>
         </Space>

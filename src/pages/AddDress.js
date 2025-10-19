@@ -387,26 +387,28 @@ const AddDress = () => {
   const bottomRef = useRef(null);
 
   const scrollToBottom = () => {
-    if (Platform.isAndroid) {
-      setTimeout(() => {
-        if (bottomRef?.current) {
-          bottomRef.current.scrollIntoView({
-            behavior: "smooth",
-            block: "end",
-          });
-        }
-      }, 100);
-    } else {
-      requestAnimationFrame(() => {
-        if (bottomRef?.current) {
-          bottomRef.current.scrollIntoView({
-            behavior: "smooth",
-            block: "end",
-          });
-        }
-      });
-    }
+    requestAnimationFrame(() => {
+      if (bottomRef?.current) {
+        bottomRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
+      }
+    });
   };
+
+  useEffect(() => {
+    let prevHeight = window.innerHeight;
+    const handleResize = () => {
+      const currentHeight = window.innerHeight;
+      if (
+        currentHeight < prevHeight &&
+        document.activeElement.id === "sellPriceId"
+      ) {
+        scrollToBottom();
+      }
+      prevHeight = currentHeight;
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
   return (
     <Layout
       style={{
@@ -687,6 +689,7 @@ const AddDress = () => {
                 )}
                 <Space.Compact size="large">
                   <Input
+                    id="sellPriceId"
                     allowClear
                     style={{
                       // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
