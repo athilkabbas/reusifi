@@ -143,7 +143,10 @@ const Chat = () => {
       } else {
         setMoreWidth(false);
       }
-      if (currentHeight < prevHeight) {
+      if (
+        currentHeight < prevHeight &&
+        document.activeElement.id === "chatTextAreaId"
+      ) {
         scrollToBottom();
       }
       prevWidth = currentWidth;
@@ -582,6 +585,7 @@ const Chat = () => {
             }}
           >
             <TextArea
+              id="chatTextAreaId"
               onTouchMove={(e) => {
                 if (
                   (isMobile || window.innerWidth < 1200) &&
