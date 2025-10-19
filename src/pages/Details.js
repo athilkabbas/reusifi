@@ -455,9 +455,11 @@ const Details = () => {
                         size="small"
                         style={{
                           width: isMobile ? "calc(100dvw - 50px)" : "40dvw",
+                          background: "#fff",
+                          borderRadius: "12px",
+                          padding: isMobile ? "12px" : "20px",
                           fontSize: "13px",
-                          fontWeight: "300",
-                          // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+                          fontWeight: 300,
                         }}
                         bordered
                         title=""
@@ -484,10 +486,10 @@ const Details = () => {
                           >
                             <Button
                               style={{
-                                background: "#52c41a",
                                 fontSize: "13px",
                                 fontWeight: "300",
                               }}
+                              danger
                               type="primary"
                             >
                               Delete

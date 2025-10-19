@@ -25,7 +25,11 @@ const subMenuItemsUnblocked = [
   },
   {
     key: "2",
-    label: <span style={{ fontSize: "13px", fontWeight: "300" }}>Delete</span>,
+    label: (
+      <span style={{ fontSize: "13px", fontWeight: "300", color: "#ff4d4f" }}>
+        Delete
+      </span>
+    ),
   },
   {
     key: "3",
@@ -42,7 +46,11 @@ const subMenuItemsBlocked = [
   },
   {
     key: "2",
-    label: <span style={{ fontSize: "13px", fontWeight: "300" }}>Delete</span>,
+    label: (
+      <span style={{ fontSize: "13px", fontWeight: "300", color: "#ff4d4f" }}>
+        Delete
+      </span>
+    ),
   },
   {
     key: "3",
