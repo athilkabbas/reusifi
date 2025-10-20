@@ -159,10 +159,7 @@ const Details = () => {
       }
       isModalVisibleRef.current = true;
       if (err?.status === 401) {
-        Modal.error({
-          ...errorSessionConfig,
-          content: err.message + "details chat",
-        });
+        Modal.error(errorSessionConfig);
       } else {
         Modal.error(errorConfig);
       }
@@ -199,10 +196,7 @@ const Details = () => {
       }
       isModalVisibleRef.current = true;
       if (err?.status === 401) {
-        Modal.error({
-          ...errorSessionConfig,
-          content: err.message + "details",
-        });
+        Modal.error(errorSessionConfig);
       } else {
         Modal.error(errorConfig);
       }

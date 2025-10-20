@@ -235,10 +235,7 @@ const Chat = () => {
               if (err?.status === 401) {
                 Modal.error(errorSessionConfig);
               } else {
-                Modal.error({
-                  ...errorConfig,
-                  content: err.message + "chat read",
-                });
+                Modal.error(errorConfig);
               }
             }
           };

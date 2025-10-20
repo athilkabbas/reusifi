@@ -275,10 +275,7 @@ const ChatPage = () => {
       }
       isModalVisibleRef.current = true;
       if (err?.status === 401) {
-        Modal.error({
-          ...errorSessionConfig,
-          content: err.message + "chat menu",
-        });
+        Modal.error(errorSessionConfig);
       } else {
         Modal.error(errorConfig);
       }
@@ -349,10 +346,7 @@ const ChatPage = () => {
       }
       isModalVisibleRef.current = true;
       if (err?.status === 401) {
-        Modal.error({
-          ...errorSessionConfig,
-          content: err.message + "chat unblock",
-        });
+        Modal.error(errorSessionConfig);
       } else {
         Modal.error(errorConfig);
       }

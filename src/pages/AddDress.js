@@ -246,7 +246,7 @@ const AddDress = () => {
       maxWidthOrHeight: 500,
       useWebWorker: true,
       initialQuality: 0.7,
-      fileType: "image/webp",
+      fileType: "image/jpeg",
     };
 
     const viewingOptions = {
@@ -254,7 +254,7 @@ const AddDress = () => {
       maxWidthOrHeight: 1200,
       useWebWorker: true,
       initialQuality: 0.8,
-      fileType: "image/webp",
+      fileType: "image/jpeg",
     };
 
     try {
@@ -270,7 +270,7 @@ const AddDress = () => {
       const urlRes = await callApi(
         `https://api.reusifi.com/prod/getUrlNew?email=${encodeURIComponent(
           form.email
-        )}&contentType=${encodeURIComponent("image/webp")}&count=${
+        )}&contentType=${encodeURIComponent("image/jpeg")}&count=${
           allCompressed.length
         }`,
         "GET"
@@ -282,7 +282,7 @@ const AddDress = () => {
         allCompressed.map((img, idx) =>
           axios.put(uploadURLs[idx], img, {
             headers: {
-              "Content-Type": "image/webp",
+              "Content-Type": "image/jpeg",
               "Cache-Control": "public, max-age=2592000",
             },
           })
@@ -325,12 +325,16 @@ const AddDress = () => {
       }
       isModalVisibleRef.current = true;
       if (err?.status === 401) {
-        Modal.error({
-          ...errorSessionConfig,
-          content: err.message + "add dress",
-        });
+        Modal.error(errorSessionConfig);
       } else {
-        Modal.error(errorConfig);
+        if (err?.response?.data?.message === "Invalid Image") {
+          Modal.error({
+            ...errorConfig,
+            content: "Invalid image",
+          });
+        } else {
+          Modal.error(errorConfig);
+        }
       }
       return;
     }
