@@ -1,4 +1,4 @@
-export const categories = [
+export const options = [
   {
     value: "electronics",
     label: "Electronics",
