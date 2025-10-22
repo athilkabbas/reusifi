@@ -249,9 +249,14 @@ const Details = () => {
       children: <p>{detailData?.[0]?.["item"]["locationLabel"]}</p>,
     },
     {
-      key: "7",
+      key: "6",
       label: "Price",
       children: <p>{detailData?.[0]?.["item"]["price"]}</p>,
+    },
+    {
+      key: "7",
+      label: "Ad Id",
+      children: <p>{detailData?.[0]?.["item"]["uuid"]}</p>,
     },
   ];
   return (
