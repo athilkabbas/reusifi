@@ -183,7 +183,6 @@ const ChatPage = () => {
           break;
         }
       }
-      console.log(user.userId, userId2, "athil");
       if (clickedItemKey === "1") {
         const result = await callApi(
           `https://api.reusifi.com/prod/blockUserNew?block=${true}&userId1=${encodeURIComponent(
@@ -221,6 +220,7 @@ const ChatPage = () => {
         });
         message.success("Chat deleted");
       } else if (clickedItemKey === "3") {
+        setChatScrollPosition(scrollableDivRef.current.scrollTop);
         navigate("/details", {
           state: {
             item: {
@@ -234,6 +234,7 @@ const ChatPage = () => {
             ad: user.userId === chatData[index].email,
           },
         });
+        setMenuLoading(false);
         return;
       }
       const getChatsReadPromise = callApi(
@@ -336,6 +337,21 @@ const ChatPage = () => {
         });
         message.success("Chat deleted");
       } else if (clickedItemKey === "3") {
+        setChatScrollPosition(scrollableDivRef.current.scrollTop);
+        navigate("/details", {
+          state: {
+            item: {
+              item: {
+                uuid: chatData[index].productId,
+                title: chatData[index].title,
+                email: chatData[index].email,
+              },
+              images: [chatData[index].image],
+            },
+            ad: user.userId === chatData[index].email,
+          },
+        });
+        setMenuLoading(false);
         return;
       }
       setMenuLoading(false);
