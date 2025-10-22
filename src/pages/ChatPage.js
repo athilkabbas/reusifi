@@ -220,7 +220,6 @@ const ChatPage = () => {
         });
         message.success("Chat deleted");
       } else if (clickedItemKey === "3") {
-        setChatScrollPosition(scrollableDivRef.current.scrollTop);
         navigate("/details", {
           state: {
             item: {
@@ -337,7 +336,6 @@ const ChatPage = () => {
         });
         message.success("Chat deleted");
       } else if (clickedItemKey === "3") {
-        setChatScrollPosition(scrollableDivRef.current.scrollTop);
         navigate("/details", {
           state: {
             item: {
