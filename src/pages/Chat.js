@@ -593,7 +593,9 @@ const Chat = () => {
             justifyContent: "space-between",
           }}
         >
-          <div>{title || recipient["item"]["title"]}</div>
+          <div style={{ fontSize: "13px", fontWeight: "300", padding: "15px" }}>
+            {title || recipient["item"]["title"]}
+          </div>
           <Dropdown
             trigger={["click"]}
             menu={{

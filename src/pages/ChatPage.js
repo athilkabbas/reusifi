@@ -532,8 +532,16 @@ const ChatPage = () => {
             overflowY: "scroll",
             overflowX: "hidden",
             scrollbarWidth: "none",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
           }}
         >
+          <span
+            style={{ fontSize: "13px", fontWeight: "300", padding: "15px" }}
+          >
+            The chats will be deleted automatically after 6 months
+          </span>
           <InfiniteScroll
             style={{
               overflowX: "hidden",
