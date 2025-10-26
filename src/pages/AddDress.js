@@ -757,7 +757,7 @@ const AddDress = () => {
                 <Space.Compact size="large">
                   {count < 5 && (
                     <span style={{ fontSize: "13px", fontWeight: "300" }}>
-                      The ad will get deactivated automatically after 30 days
+                      The ad will be deactivated automatically after 30 days
                     </span>
                   )}
                 </Space.Compact>
