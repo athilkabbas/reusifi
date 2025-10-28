@@ -290,7 +290,7 @@ const Ads = () => {
                               });
                             }}
                             cover={
-                              <>
+                              <div style={{ position: "relative" }}>
                                 {!loadedImages[item["item"]["uuid"]] && (
                                   <div
                                     style={{
@@ -331,7 +331,27 @@ const Ads = () => {
                                     handleImageLoad(item["item"]["uuid"])
                                   }
                                 />
-                              </>
+                                {item["item"]["deactivated"] === true && (
+                                  <span
+                                    style={{
+                                      position: "absolute",
+                                      top: 0,
+                                      left: 0,
+                                      width: "100%",
+                                      height: "100%",
+                                      backgroundColor: "rgba(0, 0, 0, 0.5)",
+                                      color: "white",
+                                      fontWeight: "bold",
+                                      fontSize: "20px",
+                                      display: "flex",
+                                      justifyContent: "center",
+                                      alignItems: "center",
+                                    }}
+                                  >
+                                    DEACTIVATED
+                                  </span>
+                                )}
+                              </div>
                             }
                           >
                             <Card.Meta

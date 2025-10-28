@@ -452,6 +452,22 @@ const Details = () => {
                       <Descriptions
                         column={1}
                         size="small"
+                        extra={
+                          detailData[0]["item"]["deactivated"] === true ? (
+                            <Button
+                              style={{
+                                background: "#52c41a",
+                                fontSize: "13px",
+                                fontWeight: "300",
+                              }}
+                              type="primary"
+                            >
+                              Activate
+                            </Button>
+                          ) : (
+                            <></>
+                          )
+                        }
                         style={{
                           width: isMobile ? "calc(100dvw - 50px)" : "40dvw",
                           background: "#fff",
