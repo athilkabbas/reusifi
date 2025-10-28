@@ -96,7 +96,7 @@ const Details = () => {
             setUnreadChatCount(chatResult.data.count);
             setDetailData(result.data);
             setChatProduct(chatProductResult.data);
-            if (result.data.length === 0) {
+            if (result.data.length === 0 || result.data[0]?.item?.deactivated) {
               message.info("Ad no longer available");
               navigate(-1);
             }
