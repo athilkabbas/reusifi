@@ -17,6 +17,7 @@ import { EllipsisVertical } from "lucide-react";
 import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
+import { Segmented } from "antd";
 
 const subMenuItemsUnblocked = [
   {
@@ -542,6 +543,14 @@ const ChatPage = () => {
           >
             The chats will be deleted automatically after 6 months
           </span>
+          <Segmented
+            options={["Selling", "Buying"]}
+            block
+            style={{ width: "90dvw", padding: "15px" }}
+            onChange={(value) => {
+              console.log(value);
+            }}
+          />
           <InfiniteScroll
             style={{
               overflowX: "hidden",
