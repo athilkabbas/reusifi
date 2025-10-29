@@ -25,6 +25,7 @@ const Details = () => {
   const [chatProduct, setChatProduct] = useState(false);
   const [unblockLoading, setUnblockLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [activateLoading, setActivateLoading] = useState(false);
   const navigate = useNavigate();
   const capitalize = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1);
@@ -137,6 +138,52 @@ const Details = () => {
       }
     }
   }, [user, item]);
+
+  const handleActivate = async () => {
+    try {
+      setActivateLoading(true);
+      await callApi(
+        `https://api.reusifi.com/prod/activateAd?uuid=${encodeURIComponent(
+          detailData[0]["item"]["uuid"]
+        )}`,
+        "GET"
+      );
+      setActivateLoading(false);
+      setDetailData((prevValue) => {
+        const newValue = [...prevValue];
+        newValue[0] = {
+          ...newValue[0],
+          item: {
+            ...newValue[0].item,
+            deactivated: false,
+          },
+        };
+        return newValue;
+      });
+      setAdData((prevValue) => {
+        const newValue = [...prevValue];
+        const newAdValue = newValue.map((item) => {
+          if (item.item.uuid === detailData[0]["item"]["uuid"]) {
+            item.item.deactivated = false;
+          }
+          return item;
+        });
+        return newAdValue;
+      });
+    } catch (err) {
+      setActivateLoading(false);
+      if (isModalVisibleRef.current) {
+        return;
+      }
+      isModalVisibleRef.current = true;
+      if (err?.status === 401) {
+        Modal.error(errorSessionConfig);
+      } else {
+        Modal.error(errorConfig);
+      }
+      return;
+    }
+  };
 
   const handleChat = async () => {
     try {
@@ -459,6 +506,7 @@ const Details = () => {
                           ad &&
                           detailData[0]["item"]["deactivated"] === true ? (
                             <Button
+                              onClick={handleActivate}
                               style={{
                                 background: "#52c41a",
                                 fontSize: "13px",
@@ -600,7 +648,7 @@ const Details = () => {
           <MenuWrapper defaultSelectedKeys={["0"]} isMobile={isMobile} />
         </FooterWrapper>
       )}
-      {(unblockLoading || deleteLoading) && (
+      {(unblockLoading || deleteLoading || activateLoading) && (
         <Spin
           fullscreen
           indicator={
