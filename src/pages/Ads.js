@@ -320,6 +320,7 @@ const Ads = () => {
                                   style={{
                                     height: "247px",
                                     objectFit: "contain",
+                                    width: "100%",
                                     display: loadedImages[item["item"]["uuid"]]
                                       ? "block"
                                       : "none",
