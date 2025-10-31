@@ -81,6 +81,28 @@ const ChatPage = () => {
     setChatLastEvaluatedKey,
     setUnreadChatCount,
     user,
+    sellingChatLastEvaluatedKey,
+    setSellingChatLastEvaluatedKey,
+    buyingChatLastEvaluatedKey,
+    setBuyingChatLastEvaluatedKey,
+    sellingChatInitalLoad,
+    setSellingChatInitialLoad,
+    buyingChatInitalLoad,
+    setBuyingChatInitialLoad,
+    sellingChatScrollPosition,
+    setSellingChatScrollPosition,
+    buyingChatScrollPosition,
+    setBuyingChatScrollPosition,
+    sellingChatData,
+    setSellingChatData,
+    buyingChatData,
+    setBuyingChatData,
+    sellingChatHasMore,
+    setSellingChatHasMore,
+    buyingChatHasMore,
+    setBuyingChatHasMore,
+    actionType,
+    setActionType,
   } = useContext(Context);
   const [loadedImages, setLoadedImages] = useState({});
   const handleImageLoad = (uuid) => {
@@ -121,27 +143,50 @@ const ChatPage = () => {
     updateLimit(); // on mount
     const handleResize = () => {
       const currentWidth = window.innerWidth;
-      if (chatHasMore && currentWidth > prevWidth) {
-        setChatData([]);
-        setChatLastEvaluatedKey(null);
-        setChatInitialLoad(true);
-        updateLimit();
+      if (actionType === "Selling") {
+        if (sellingChatHasMore && currentWidth > prevWidth) {
+          setSellingChatData([]);
+          setSellingChatLastEvaluatedKey(null);
+          setSellingChatInitialLoad(true);
+          updateLimit();
+        }
+      } else {
+        if (buyingChatHasMore && currentWidth > prevWidth) {
+          setBuyingChatData([]);
+          setBuyingChatLastEvaluatedKey(null);
+          setBuyingChatInitialLoad(true);
+          updateLimit();
+        }
       }
       prevWidth = currentWidth;
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, [chatHasMore]);
+  }, [sellingChatHasMore, buyingChatHasMore, actionType]);
 
   useEffect(() => {
     if (scrollableDivRef.current && !loading && !chatLoading) {
       requestAnimationFrame(() => {
-        if (scrollableDivRef.current) {
-          scrollableDivRef.current.scrollTo(0, chatScrollPosition);
+        if (actionType === "Selling") {
+          if (scrollableDivRef.current) {
+            scrollableDivRef.current.scrollTo(0, sellingChatScrollPosition);
+          }
+        } else {
+          if (scrollableDivRef.current) {
+            scrollableDivRef.current.scrollTo(0, buyingChatScrollPosition);
+          }
         }
       });
     }
-  }, [chatScrollPosition, loading, chatData, chatLoading]);
+  }, [
+    sellingChatScrollPosition,
+    buyingChatScrollPosition,
+    loading,
+    sellingChatData,
+    buyingChatData,
+    chatLoading,
+    actionType,
+  ]);
 
   const isModalVisibleRef = useRef(false);
   const errorSessionConfig = {
@@ -169,106 +214,225 @@ const ChatPage = () => {
 
   const handleMenuClick = async (e, index) => {
     try {
-      setChatScrollPosition(scrollableDivRef.current.scrollTop);
-      e.domEvent.preventDefault();
-      e.domEvent.stopPropagation();
-      // This will give you the key of the clicked item
-      setMenuLoading(true);
-      const clickedItemKey = e.key;
-      let userIds = chatData[index].conversationId.split("#");
-      userIds.splice(1, 1);
-      let userId2;
-      for (let userId of userIds) {
-        if (user.userId !== userId) {
-          userId2 = userId;
-          break;
+      if (actionType === "Selling") {
+        setSellingChatScrollPosition(scrollableDivRef.current.scrollTop);
+        e.domEvent.preventDefault();
+        e.domEvent.stopPropagation();
+        // This will give you the key of the clicked item
+        setMenuLoading(true);
+        const clickedItemKey = e.key;
+        let userIds = sellingChatData[index].conversationId.split("#");
+        userIds.splice(1, 1);
+        let userId2;
+        for (let userId of userIds) {
+          if (user.userId !== userId) {
+            userId2 = userId;
+            break;
+          }
         }
-      }
-      if (clickedItemKey === "1") {
-        const result = await callApi(
-          `https://api.reusifi.com/prod/blockUserNew?block=${true}&userId1=${encodeURIComponent(
-            user.userId
-          )}&userId2=${encodeURIComponent(
-            userId2
-          )}&productId=${encodeURIComponent(chatData[index].productId)}`,
-          "GET"
-        );
-        setChatData((prevValue) => {
-          return prevValue.map((item) => {
-            if (item.conversationId === chatData[index].conversationId) {
-              return { ...item, blocked: true };
-            }
-            return item;
+        if (clickedItemKey === "1") {
+          const result = await callApi(
+            `https://api.reusifi.com/prod/blockUserNew?block=${true}&userId1=${encodeURIComponent(
+              user.userId
+            )}&userId2=${encodeURIComponent(
+              userId2
+            )}&productId=${encodeURIComponent(
+              sellingChatData[index].productId
+            )}`,
+            "GET"
+          );
+          setSellingChatData((prevValue) => {
+            return prevValue.map((item) => {
+              if (
+                item.conversationId === sellingChatData[index].conversationId
+              ) {
+                return { ...item, blocked: true };
+              }
+              return item;
+            });
           });
-        });
-        message.success("User blocked");
-      } else if (clickedItemKey === "2") {
-        const result = await callApi(
-          `https://api.reusifi.com/prod/deleteChat?deleteChat=${true}&userId1=${encodeURIComponent(
-            user.userId
-          )}&userId2=${encodeURIComponent(
-            userId2
-          )}&productId=${encodeURIComponent(chatData[index].productId)}`,
-          "GET"
-        );
-        setChatData((prevValue) => {
-          return prevValue.map((item) => {
-            if (item.conversationId === chatData[index].conversationId) {
-              return { ...item, deleted: true };
-            }
-            return item;
+          message.success("User blocked");
+        } else if (clickedItemKey === "2") {
+          const result = await callApi(
+            `https://api.reusifi.com/prod/deleteChat?deleteChat=${true}&userId1=${encodeURIComponent(
+              user.userId
+            )}&userId2=${encodeURIComponent(
+              userId2
+            )}&productId=${encodeURIComponent(
+              sellingChatData[index].productId
+            )}`,
+            "GET"
+          );
+          setSellingChatData((prevValue) => {
+            return prevValue.map((item) => {
+              if (
+                item.conversationId === sellingChatData[index].conversationId
+              ) {
+                return { ...item, deleted: true };
+              }
+              return item;
+            });
           });
-        });
-        message.success("Chat deleted");
-      } else if (clickedItemKey === "3") {
-        navigate("/details", {
-          state: {
-            item: {
+          message.success("Chat deleted");
+        } else if (clickedItemKey === "3") {
+          navigate("/details", {
+            state: {
               item: {
-                uuid: chatData[index].productId,
-                title: chatData[index].title,
-                email: chatData[index].email,
+                item: {
+                  uuid: sellingChatData[index].productId,
+                  title: sellingChatData[index].title,
+                  email: sellingChatData[index].email,
+                },
+                images: [sellingChatData[index].image],
               },
-              images: [chatData[index].image],
+              ad: user.userId === sellingChatData[index].email,
             },
-            ad: user.userId === chatData[index].email,
-          },
+          });
+          setMenuLoading(false);
+          return;
+        }
+        const getChatsReadPromise = callApi(
+          `https://api.reusifi.com/prod/getChatsRead?userId1=${encodeURIComponent(
+            user.userId
+          )}&userId2=${encodeURIComponent(userId2)}&productId=${
+            sellingChatData[index].productId
+          }&read=${encodeURIComponent(true)}`,
+          "GET"
+        );
+        const getChatCountPromise = callApi(
+          `https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(
+            user.userId
+          )}&count=${encodeURIComponent(true)}`,
+          "GET"
+        );
+
+        const [chatCount] = await Promise.all([
+          getChatCountPromise,
+          getChatsReadPromise,
+        ]);
+        setUnreadChatCount(chatCount.data.count);
+        setSellingChatData((sellingChatData) => {
+          return sellingChatData.map((item) => {
+            let conversationId = [user.userId, userId2]
+              .sort()
+              .join(`#${sellingChatData[index].productId}#`);
+            if (item.conversationId === conversationId) {
+              return { ...item, read: "true" };
+            }
+            return item;
+          });
         });
         setMenuLoading(false);
-        return;
-      }
-      const getChatsReadPromise = callApi(
-        `https://api.reusifi.com/prod/getChatsRead?userId1=${encodeURIComponent(
-          user.userId
-        )}&userId2=${encodeURIComponent(userId2)}&productId=${
-          chatData[index].productId
-        }&read=${encodeURIComponent(true)}`,
-        "GET"
-      );
-      const getChatCountPromise = callApi(
-        `https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(
-          user.userId
-        )}&count=${encodeURIComponent(true)}`,
-        "GET"
-      );
-
-      const [chatCount] = await Promise.all([
-        getChatCountPromise,
-        getChatsReadPromise,
-      ]);
-      setUnreadChatCount(chatCount.data.count);
-      setChatData((chatData) => {
-        return chatData.map((item) => {
-          let conversationId = [user.userId, userId2]
-            .sort()
-            .join(`#${chatData[index].productId}#`);
-          if (item.conversationId === conversationId) {
-            return { ...item, read: "true" };
+      } else {
+        setBuyingChatScrollPosition(scrollableDivRef.current.scrollTop);
+        e.domEvent.preventDefault();
+        e.domEvent.stopPropagation();
+        // This will give you the key of the clicked item
+        setMenuLoading(true);
+        const clickedItemKey = e.key;
+        let userIds = buyingChatData[index].conversationId.split("#");
+        userIds.splice(1, 1);
+        let userId2;
+        for (let userId of userIds) {
+          if (user.userId !== userId) {
+            userId2 = userId;
+            break;
           }
-          return item;
+        }
+        if (clickedItemKey === "1") {
+          const result = await callApi(
+            `https://api.reusifi.com/prod/blockUserNew?block=${true}&userId1=${encodeURIComponent(
+              user.userId
+            )}&userId2=${encodeURIComponent(
+              userId2
+            )}&productId=${encodeURIComponent(
+              buyingChatData[index].productId
+            )}`,
+            "GET"
+          );
+          setBuyingChatData((prevValue) => {
+            return prevValue.map((item) => {
+              if (
+                item.conversationId === buyingChatData[index].conversationId
+              ) {
+                return { ...item, blocked: true };
+              }
+              return item;
+            });
+          });
+          message.success("User blocked");
+        } else if (clickedItemKey === "2") {
+          const result = await callApi(
+            `https://api.reusifi.com/prod/deleteChat?deleteChat=${true}&userId1=${encodeURIComponent(
+              user.userId
+            )}&userId2=${encodeURIComponent(
+              userId2
+            )}&productId=${encodeURIComponent(
+              buyingChatData[index].productId
+            )}`,
+            "GET"
+          );
+          setBuyingChatData((prevValue) => {
+            return prevValue.map((item) => {
+              if (
+                item.conversationId === buyingChatData[index].conversationId
+              ) {
+                return { ...item, deleted: true };
+              }
+              return item;
+            });
+          });
+          message.success("Chat deleted");
+        } else if (clickedItemKey === "3") {
+          navigate("/details", {
+            state: {
+              item: {
+                item: {
+                  uuid: buyingChatData[index].productId,
+                  title: buyingChatData[index].title,
+                  email: buyingChatData[index].email,
+                },
+                images: [buyingChatData[index].image],
+              },
+              ad: user.userId === buyingChatData[index].email,
+            },
+          });
+          setMenuLoading(false);
+          return;
+        }
+        const getChatsReadPromise = callApi(
+          `https://api.reusifi.com/prod/getChatsRead?userId1=${encodeURIComponent(
+            user.userId
+          )}&userId2=${encodeURIComponent(userId2)}&productId=${
+            buyingChatData[index].productId
+          }&read=${encodeURIComponent(true)}`,
+          "GET"
+        );
+        const getChatCountPromise = callApi(
+          `https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(
+            user.userId
+          )}&count=${encodeURIComponent(true)}`,
+          "GET"
+        );
+
+        const [chatCount] = await Promise.all([
+          getChatCountPromise,
+          getChatsReadPromise,
+        ]);
+        setUnreadChatCount(chatCount.data.count);
+        setBuyingChatData((buyingChatData) => {
+          return buyingChatData.map((item) => {
+            let conversationId = [user.userId, userId2]
+              .sort()
+              .join(`#${buyingChatData[index].productId}#`);
+            if (item.conversationId === conversationId) {
+              return { ...item, read: "true" };
+            }
+            return item;
+          });
         });
-      });
-      setMenuLoading(false);
+        setMenuLoading(false);
+      }
     } catch (err) {
       setMenuLoading(false);
       if (isModalVisibleRef.current) {
@@ -286,74 +450,161 @@ const ChatPage = () => {
 
   const handleMenuClickUnblock = async (e, index) => {
     try {
-      setChatScrollPosition(scrollableDivRef.current.scrollTop);
-      setMenuLoading(true);
-      e.domEvent.preventDefault();
-      e.domEvent.stopPropagation();
-      const clickedItemKey = e.key;
-      let userIds = chatData[index].conversationId.split("#");
-      userIds.splice(1, 1);
-      let userId2;
-      for (let userId of userIds) {
-        if (user.userId !== userId) {
-          userId2 = userId;
-          break;
+      if (actionType === "Selling") {
+        setSellingChatScrollPosition(scrollableDivRef.current.scrollTop);
+        setMenuLoading(true);
+        e.domEvent.preventDefault();
+        e.domEvent.stopPropagation();
+        const clickedItemKey = e.key;
+        let userIds = sellingChatData[index].conversationId.split("#");
+        userIds.splice(1, 1);
+        let userId2;
+        for (let userId of userIds) {
+          if (user.userId !== userId) {
+            userId2 = userId;
+            break;
+          }
         }
-      }
-      if (clickedItemKey === "1") {
-        const result = await callApi(
-          `https://api.reusifi.com/prod/unBlockUser?unBlock=${true}&userId1=${encodeURIComponent(
-            user.userId
-          )}&userId2=${encodeURIComponent(
-            userId2
-          )}&productId=${encodeURIComponent(chatData[index].productId)}`,
-          "GET"
-        );
-        setChatData((prevValue) => {
-          return prevValue.map((item) => {
-            if (item.conversationId === chatData[index].conversationId) {
-              return { ...item, blocked: false };
-            }
-            return item;
+        if (clickedItemKey === "1") {
+          const result = await callApi(
+            `https://api.reusifi.com/prod/unBlockUser?unBlock=${true}&userId1=${encodeURIComponent(
+              user.userId
+            )}&userId2=${encodeURIComponent(
+              userId2
+            )}&productId=${encodeURIComponent(
+              sellingChatData[index].productId
+            )}`,
+            "GET"
+          );
+          setSellingChatData((prevValue) => {
+            return prevValue.map((item) => {
+              if (
+                item.conversationId === sellingChatData[index].conversationId
+              ) {
+                return { ...item, blocked: false };
+              }
+              return item;
+            });
           });
-        });
-        message.success("User unblocked");
-      } else if (clickedItemKey === "2") {
-        const result = await callApi(
-          `https://api.reusifi.com/prod/deleteChat?deleteChat=${true}&userId1=${encodeURIComponent(
-            user.userId
-          )}&userId2=${encodeURIComponent(
-            userId2
-          )}&productId=${encodeURIComponent(chatData[index].productId)}`,
-          "GET"
-        );
-        setChatData((prevValue) => {
-          return prevValue.map((item) => {
-            if (item.conversationId === chatData[index].conversationId) {
-              return { ...item, deleted: true };
-            }
-            return item;
+          message.success("User unblocked");
+        } else if (clickedItemKey === "2") {
+          const result = await callApi(
+            `https://api.reusifi.com/prod/deleteChat?deleteChat=${true}&userId1=${encodeURIComponent(
+              user.userId
+            )}&userId2=${encodeURIComponent(
+              userId2
+            )}&productId=${encodeURIComponent(
+              sellingChatData[index].productId
+            )}`,
+            "GET"
+          );
+          setSellingChatData((prevValue) => {
+            return prevValue.map((item) => {
+              if (
+                item.conversationId === sellingChatData[index].conversationId
+              ) {
+                return { ...item, deleted: true };
+              }
+              return item;
+            });
           });
-        });
-        message.success("Chat deleted");
-      } else if (clickedItemKey === "3") {
-        navigate("/details", {
-          state: {
-            item: {
+          message.success("Chat deleted");
+        } else if (clickedItemKey === "3") {
+          navigate("/details", {
+            state: {
               item: {
-                uuid: chatData[index].productId,
-                title: chatData[index].title,
-                email: chatData[index].email,
+                item: {
+                  uuid: sellingChatData[index].productId,
+                  title: sellingChatData[index].title,
+                  email: sellingChatData[index].email,
+                },
+                images: [sellingChatData[index].image],
               },
-              images: [chatData[index].image],
+              ad: user.userId === sellingChatData[index].email,
             },
-            ad: user.userId === chatData[index].email,
-          },
-        });
+          });
+          setMenuLoading(false);
+          return;
+        }
         setMenuLoading(false);
-        return;
+      } else {
+        setBuyingChatScrollPosition(scrollableDivRef.current.scrollTop);
+        setMenuLoading(true);
+        e.domEvent.preventDefault();
+        e.domEvent.stopPropagation();
+        const clickedItemKey = e.key;
+        let userIds = buyingChatData[index].conversationId.split("#");
+        userIds.splice(1, 1);
+        let userId2;
+        for (let userId of userIds) {
+          if (user.userId !== userId) {
+            userId2 = userId;
+            break;
+          }
+        }
+        if (clickedItemKey === "1") {
+          const result = await callApi(
+            `https://api.reusifi.com/prod/unBlockUser?unBlock=${true}&userId1=${encodeURIComponent(
+              user.userId
+            )}&userId2=${encodeURIComponent(
+              userId2
+            )}&productId=${encodeURIComponent(
+              buyingChatData[index].productId
+            )}`,
+            "GET"
+          );
+          setBuyingChatData((prevValue) => {
+            return prevValue.map((item) => {
+              if (
+                item.conversationId === buyingChatData[index].conversationId
+              ) {
+                return { ...item, blocked: false };
+              }
+              return item;
+            });
+          });
+          message.success("User unblocked");
+        } else if (clickedItemKey === "2") {
+          const result = await callApi(
+            `https://api.reusifi.com/prod/deleteChat?deleteChat=${true}&userId1=${encodeURIComponent(
+              user.userId
+            )}&userId2=${encodeURIComponent(
+              userId2
+            )}&productId=${encodeURIComponent(
+              buyingChatData[index].productId
+            )}`,
+            "GET"
+          );
+          setBuyingChatData((prevValue) => {
+            return prevValue.map((item) => {
+              if (
+                item.conversationId === buyingChatData[index].conversationId
+              ) {
+                return { ...item, deleted: true };
+              }
+              return item;
+            });
+          });
+          message.success("Chat deleted");
+        } else if (clickedItemKey === "3") {
+          navigate("/details", {
+            state: {
+              item: {
+                item: {
+                  uuid: buyingChatData[index].productId,
+                  title: buyingChatData[index].title,
+                  email: buyingChatData[index].email,
+                },
+                images: [buyingChatData[index].image],
+              },
+              ad: user.userId === buyingChatData[index].email,
+            },
+          });
+          setMenuLoading(false);
+          return;
+        }
+        setMenuLoading(false);
       }
-      setMenuLoading(false);
     } catch (err) {
       setMenuLoading(false);
       if (isModalVisibleRef.current) {
@@ -410,27 +661,51 @@ const ChatPage = () => {
 
   const getChats = async () => {
     try {
-      const scrollPosition = scrollableDivRef.current.scrollTop;
-      setLoading(true);
-      const result = await callApi(
-        `https://api.reusifi.com/prod/getChatsNew?userId1=${encodeURIComponent(
-          user.userId
-        )}&lastEvaluatedKey=${encodeURIComponent(
-          chatLastEvaluatedKey
-        )}&limit=${encodeURIComponent(limit)}`,
-        "GET"
-      );
-      setChatData([...chatData, ...result.data.items]);
-      setChatLastEvaluatedKey(result.data.lastEvaluatedKey);
-      // If no more data to load, set hasMore to false
-      setLoading(false);
-      if (!result.data.lastEvaluatedKey) {
-        setChatHasMore(false);
+      if (actionType === "Selling") {
+        const scrollPosition = scrollableDivRef.current.scrollTop;
+        setLoading(true);
+        const result = await callApi(
+          `https://api.reusifi.com/prod/getChatsNew?userId1=${encodeURIComponent(
+            user.userId
+          )}&lastEvaluatedKey=${encodeURIComponent(
+            sellingChatLastEvaluatedKey
+          )}&limit=${encodeURIComponent(limit)}&type=${actionType}`,
+          "GET"
+        );
+        setSellingChatData([...sellingChatData, ...result.data.items]);
+        setSellingChatLastEvaluatedKey(result.data.lastEvaluatedKey);
+        // If no more data to load, set hasMore to false
+        setLoading(false);
+        if (!result.data.lastEvaluatedKey) {
+          setSellingChatHasMore(false);
+        } else {
+          setSellingChatHasMore(true);
+        }
+        setSellingChatScrollPosition(scrollPosition);
+        setSellingChatInitialLoad(false);
       } else {
-        setChatHasMore(true);
+        const scrollPosition = scrollableDivRef.current.scrollTop;
+        setLoading(true);
+        const result = await callApi(
+          `https://api.reusifi.com/prod/getChatsNew?userId1=${encodeURIComponent(
+            user.userId
+          )}&lastEvaluatedKey=${encodeURIComponent(
+            buyingChatLastEvaluatedKey
+          )}&limit=${encodeURIComponent(limit)}&type=${actionType}`,
+          "GET"
+        );
+        setBuyingChatData([...buyingChatData, ...result.data.items]);
+        setBuyingChatLastEvaluatedKey(result.data.lastEvaluatedKey);
+        // If no more data to load, set hasMore to false
+        setLoading(false);
+        if (!result.data.lastEvaluatedKey) {
+          setBuyingChatHasMore(false);
+        } else {
+          setBuyingChatHasMore(true);
+        }
+        setBuyingChatHasMore(scrollPosition);
+        setBuyingChatInitialLoad(false);
       }
-      setChatScrollPosition(scrollPosition);
-      setChatInitialLoad(false);
     } catch (err) {
       setLoading(false);
       // message.error("An Error has occurred")
@@ -448,7 +723,14 @@ const ChatPage = () => {
   };
 
   useEffect(() => {
-    if (user && user.userId && chatInitialLoad && limit) {
+    if (
+      user &&
+      user.userId &&
+      (actionType === "Selling"
+        ? sellingChatInitalLoad
+        : buyingChatInitalLoad) &&
+      limit
+    ) {
       try {
         setChatLoading(true);
         setLoading(true);
@@ -494,7 +776,7 @@ const ChatPage = () => {
         return;
       }
     }
-  }, [user, chatInitialLoad, limit]);
+  }, [user, sellingChatInitalLoad, buyingChatInitalLoad, limit, actionType]);
 
   return (
     <Layout
@@ -514,7 +796,11 @@ const ChatPage = () => {
           }}
         >
           <MenuWrapper
-            setScrollPosition={setChatScrollPosition}
+            setScrollPosition={
+              actionType === "Selling"
+                ? setSellingChatScrollPosition
+                : setBuyingChatScrollPosition
+            }
             scrollableDivRef={scrollableDivRef}
             defaultSelectedKeys={["2"]}
             isMobile={isMobile}
@@ -548,262 +834,286 @@ const ChatPage = () => {
             block
             style={{ width: "90dvw", padding: "15px" }}
             onChange={(value) => {
-              console.log(value);
+              setActionType(value);
             }}
+            value={actionType}
           />
           <InfiniteScroll
             style={{
               overflowX: "hidden",
               background: "#F9FAFB",
             }}
-            dataLength={chatData.length}
+            dataLength={
+              actionType === "Selling"
+                ? sellingChatData.length
+                : buyingChatData.length
+            }
             next={() => {
               getChats();
             }}
-            hasMore={chatHasMore}
+            hasMore={
+              actionType === "Selling" ? sellingChatHasMore : buyingChatHasMore
+            }
             scrollableTarget="scrollableDiv"
           >
-            {!loading && !chatLoading && user && chatData.length > 0 && (
-              <List
-                grid={{
-                  xs: 1,
-                  sm: 1,
-                  md: 1,
-                  lg: 1,
-                  xl: 1,
-                  xxl: 1,
-                  gutter: 10,
-                }}
-                dataSource={chatData}
-                renderItem={(item, index) => {
-                  if (item.deleted) {
-                    return null;
+            {!loading &&
+              !chatLoading &&
+              user &&
+              (actionType === "Selling"
+                ? sellingChatData.length > 0
+                : buyingChatData.length > 0) && (
+                <List
+                  grid={{
+                    xs: 1,
+                    sm: 1,
+                    md: 1,
+                    lg: 1,
+                    xl: 1,
+                    xxl: 1,
+                    gutter: 10,
+                  }}
+                  dataSource={
+                    actionType === "Selling" ? sellingChatData : buyingChatData
                   }
-                  return (
-                    <>
-                      <List.Item
-                        key={item.timestamp}
-                        style={{ display: "flex", justifyContent: "center" }}
-                      >
-                        <Card
-                          style={{
-                            borderRadius: "12px",
-                            // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-                            height: "150px",
-                            width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
-                            backgroundColor:
-                              item.read === "false" ? "#f6ffed" : "#ffffff",
-                          }}
-                          onClick={() => {
-                            if (item.blocked) {
-                              message.info(
-                                "You have blocked this user, unblock to chat"
-                              );
-                            } else {
-                              setChatScrollPosition(
-                                scrollableDivRef.current.scrollTop
-                              );
-                              navigate("/chat", {
-                                state: {
-                                  conversationId: item.conversationId,
-                                  productId: item.productId,
-                                  title: capitalize(item.title),
-                                  email: item.email,
-                                  image: item.image,
-                                },
-                              });
-                            }
-                          }}
-                          key={item.conversationId}
-                          title={
-                            <Row>
-                              <Col
-                                span={22}
-                                style={{
-                                  whiteSpace: "nowrap",
-                                  textOverflow: "ellipsis",
-                                  overflow: "hidden",
-                                  paddingRight: "70px",
-                                }}
-                              >
-                                <span
+                  renderItem={(item, index) => {
+                    if (item.deleted) {
+                      return null;
+                    }
+                    return (
+                      <>
+                        <List.Item
+                          key={item.timestamp}
+                          style={{ display: "flex", justifyContent: "center" }}
+                        >
+                          <Card
+                            style={{
+                              borderRadius: "12px",
+                              // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+                              height: "150px",
+                              width: !isMobile
+                                ? "50dvw"
+                                : "calc(100dvw - 30px)",
+                              backgroundColor:
+                                item.read === "false" ? "#f6ffed" : "#ffffff",
+                            }}
+                            onClick={() => {
+                              if (item.blocked) {
+                                message.info(
+                                  "You have blocked this user, unblock to chat"
+                                );
+                              } else {
+                                if (actionType === "Selling") {
+                                  setSellingChatScrollPosition(
+                                    scrollableDivRef.current.scrollTop
+                                  );
+                                } else {
+                                  setBuyingChatScrollPosition(
+                                    scrollableDivRef.current.scrollTop
+                                  );
+                                }
+                                navigate("/chat", {
+                                  state: {
+                                    conversationId: item.conversationId,
+                                    productId: item.productId,
+                                    title: capitalize(item.title),
+                                    email: item.email,
+                                    image: item.image,
+                                  },
+                                });
+                              }
+                            }}
+                            key={item.conversationId}
+                            title={
+                              <Row>
+                                <Col
+                                  span={22}
                                   style={{
-                                    fontSize: "15px",
-                                    fontWeight: "300",
+                                    whiteSpace: "nowrap",
+                                    textOverflow: "ellipsis",
+                                    overflow: "hidden",
+                                    paddingRight: "70px",
                                   }}
                                 >
-                                  {capitalize(item.title)}
-                                </span>
-                              </Col>
-                              <Col>
-                                {!item.blocked && (
-                                  <Dropdown
-                                    menu={{
-                                      items: subMenuItemsUnblocked,
-                                      onClick: (e) => {
-                                        handleMenuClick(e, index);
-                                      },
-                                      style: { width: "150px" },
-                                    }}
-                                    trigger={["click"]}
-                                    placement="bottomRight"
-                                  >
-                                    <a
-                                      onClick={(e) => {
-                                        e.preventDefault();
-                                        e.stopPropagation();
-                                      }}
-                                    >
-                                      <Space>
-                                        <EllipsisVertical
-                                          style={{
-                                            color: "#9CA3AF",
-                                            scale: "0.9",
-                                          }}
-                                        />
-                                      </Space>
-                                    </a>
-                                  </Dropdown>
-                                )}
-                                {item.blocked && (
-                                  <Dropdown
-                                    menu={{
-                                      items: subMenuItemsBlocked,
-                                      onClick: (e) => {
-                                        handleMenuClickUnblock(e, index);
-                                      },
-                                      style: { width: "150px" },
-                                    }}
-                                    trigger={["click"]}
-                                    placement="bottomRight"
-                                  >
-                                    <a
-                                      onClick={(e) => {
-                                        e.preventDefault();
-                                        e.stopPropagation();
-                                      }}
-                                    >
-                                      <Space>
-                                        <EllipsisVertical
-                                          style={{
-                                            color: "#9CA3AF",
-                                            scale: "0.9",
-                                          }}
-                                        />
-                                      </Space>
-                                    </a>
-                                  </Dropdown>
-                                )}
-                              </Col>
-                            </Row>
-                          }
-                          bordered
-                        >
-                          <div
-                            style={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                            }}
-                          >
-                            <div>
-                              <div
-                                style={{
-                                  whiteSpace: "nowrap",
-                                  textOverflow: "ellipsis",
-                                  overflow: "hidden",
-                                  maxWidth: isMobile ? "50dvw" : "30dvw",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  gap: "6px",
-                                }}
-                              >
-                                {item.read === "false" && (
                                   <span
                                     style={{
-                                      width: 8,
-                                      height: 8,
-                                      borderRadius: "50%",
-                                      backgroundColor: "#ff4d4f",
-                                      display: "inline-block",
-                                      flexShrink: 0,
+                                      fontSize: "15px",
+                                      fontWeight: "300",
                                     }}
-                                  />
-                                )}
-                                <span
-                                  style={{
-                                    fontSize: "13px",
-                                    fontWeight:
-                                      item.read === "false" ? "600" : "300",
-                                  }}
-                                >
-                                  {item.message}
-                                </span>
-                              </div>
-                              <div style={{ fontSize: "10px" }}>
-                                {formatChatTimestamp(item.timestamp)}{" "}
-                              </div>
-                            </div>
+                                  >
+                                    {capitalize(item.title)}
+                                  </span>
+                                </Col>
+                                <Col>
+                                  {!item.blocked && (
+                                    <Dropdown
+                                      menu={{
+                                        items: subMenuItemsUnblocked,
+                                        onClick: (e) => {
+                                          handleMenuClick(e, index);
+                                        },
+                                        style: { width: "150px" },
+                                      }}
+                                      trigger={["click"]}
+                                      placement="bottomRight"
+                                    >
+                                      <a
+                                        onClick={(e) => {
+                                          e.preventDefault();
+                                          e.stopPropagation();
+                                        }}
+                                      >
+                                        <Space>
+                                          <EllipsisVertical
+                                            style={{
+                                              color: "#9CA3AF",
+                                              scale: "0.9",
+                                            }}
+                                          />
+                                        </Space>
+                                      </a>
+                                    </Dropdown>
+                                  )}
+                                  {item.blocked && (
+                                    <Dropdown
+                                      menu={{
+                                        items: subMenuItemsBlocked,
+                                        onClick: (e) => {
+                                          handleMenuClickUnblock(e, index);
+                                        },
+                                        style: { width: "150px" },
+                                      }}
+                                      trigger={["click"]}
+                                      placement="bottomRight"
+                                    >
+                                      <a
+                                        onClick={(e) => {
+                                          e.preventDefault();
+                                          e.stopPropagation();
+                                        }}
+                                      >
+                                        <Space>
+                                          <EllipsisVertical
+                                            style={{
+                                              color: "#9CA3AF",
+                                              scale: "0.9",
+                                            }}
+                                          />
+                                        </Space>
+                                      </a>
+                                    </Dropdown>
+                                  )}
+                                </Col>
+                              </Row>
+                            }
+                            bordered
+                          >
                             <div
-                              onClick={(e) => e.stopPropagation()}
                               style={{
-                                width: "50px",
-                                height: "60px",
                                 display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
+                                justifyContent: "space-between",
                               }}
                             >
-                              {!loadedImages[item.productId] && (
+                              <div>
                                 <div
                                   style={{
-                                    width: "50px",
-                                    height: "60px",
+                                    whiteSpace: "nowrap",
+                                    textOverflow: "ellipsis",
+                                    overflow: "hidden",
+                                    maxWidth: isMobile ? "50dvw" : "30dvw",
                                     display: "flex",
-                                    justifyContent: "center",
                                     alignItems: "center",
-                                    backgroundColor: "#f0f0f0",
+                                    gap: "6px",
                                   }}
                                 >
-                                  <Spin
-                                    indicator={
-                                      <LoadingOutlined
-                                        style={{
-                                          fontSize: 48,
-                                          color: "#52c41a",
-                                        }}
-                                        spin
-                                      />
-                                    }
-                                  />
+                                  {item.read === "false" && (
+                                    <span
+                                      style={{
+                                        width: 8,
+                                        height: 8,
+                                        borderRadius: "50%",
+                                        backgroundColor: "#ff4d4f",
+                                        display: "inline-block",
+                                        flexShrink: 0,
+                                      }}
+                                    />
+                                  )}
+                                  <span
+                                    style={{
+                                      fontSize: "13px",
+                                      fontWeight:
+                                        item.read === "false" ? "600" : "300",
+                                    }}
+                                  >
+                                    {item.message}
+                                  </span>
                                 </div>
-                              )}
-                              <Image
-                                preview={true}
-                                src={item.image}
-                                alt={"No Longer Available"}
+                                <div style={{ fontSize: "10px" }}>
+                                  {formatChatTimestamp(item.timestamp)}{" "}
+                                </div>
+                              </div>
+                              <div
+                                onClick={(e) => e.stopPropagation()}
                                 style={{
-                                  display: loadedImages[item.productId]
-                                    ? "block"
-                                    : "none",
+                                  width: "50px",
                                   height: "60px",
-                                  objectFit: "contain",
-                                  borderRadius: "5px",
+                                  display: "flex",
+                                  justifyContent: "center",
+                                  alignItems: "center",
                                 }}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                }}
-                                onLoad={() => handleImageLoad(item.productId)}
-                                onError={() => handleImageLoad(item.productId)}
-                              />
+                              >
+                                {!loadedImages[item.productId] && (
+                                  <div
+                                    style={{
+                                      width: "50px",
+                                      height: "60px",
+                                      display: "flex",
+                                      justifyContent: "center",
+                                      alignItems: "center",
+                                      backgroundColor: "#f0f0f0",
+                                    }}
+                                  >
+                                    <Spin
+                                      indicator={
+                                        <LoadingOutlined
+                                          style={{
+                                            fontSize: 48,
+                                            color: "#52c41a",
+                                          }}
+                                          spin
+                                        />
+                                      }
+                                    />
+                                  </div>
+                                )}
+                                <Image
+                                  preview={true}
+                                  src={item.image}
+                                  alt={"No Longer Available"}
+                                  style={{
+                                    display: loadedImages[item.productId]
+                                      ? "block"
+                                      : "none",
+                                    height: "60px",
+                                    objectFit: "contain",
+                                    borderRadius: "5px",
+                                  }}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                  }}
+                                  onLoad={() => handleImageLoad(item.productId)}
+                                  onError={() =>
+                                    handleImageLoad(item.productId)
+                                  }
+                                />
+                              </div>
                             </div>
-                          </div>
-                        </Card>
-                      </List.Item>
-                    </>
-                  );
-                }}
-              />
-            )}
+                          </Card>
+                        </List.Item>
+                      </>
+                    );
+                  }}
+                />
+              )}
             {(loading || chatLoading) && (
               <Row gutter={[10, 10]}>
                 {Array.from({ length: limit }).map((_, index) => {
@@ -830,25 +1140,33 @@ const ChatPage = () => {
                 })}
               </Row>
             )}
-            {chatData.length === 0 && !loading && !chatLoading && (
-              <div
-                style={{
-                  height: "50vh",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Empty description="No items found" />
-              </div>
-            )}
+            {(actionType === "Selling"
+              ? sellingChatData.length === 0
+              : buyingChatData.length === 0) &&
+              !loading &&
+              !chatLoading && (
+                <div
+                  style={{
+                    height: "50vh",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Empty description="No items found" />
+                </div>
+              )}
           </InfiniteScroll>
         </div>
       </Content>
       {isMobile && (
         <FooterWrapper>
           <MenuWrapper
-            setScrollPosition={setChatScrollPosition}
+            setScrollPosition={
+              actionType === "Selling"
+                ? setSellingChatScrollPosition
+                : setBuyingChatScrollPosition
+            }
             scrollableDivRef={scrollableDivRef}
             defaultSelectedKeys={["2"]}
             isMobile={isMobile}

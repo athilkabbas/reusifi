@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { LoadingOutlined } from "@ant-design/icons";
 import { Amplify } from "aws-amplify";
 import awsconfig from "./aws-exports";
@@ -14,7 +14,7 @@ import ChatPage from "./pages/ChatPage";
 import Ads from "./pages/Ads";
 import Contact from "./pages/Contact";
 import Favourites from "./pages/Favourite";
-import { Spin } from "antd";
+import { message, Spin } from "antd";
 import { Context } from "./context/provider";
 
 import "./App.css";
@@ -44,8 +44,15 @@ function AppWithSession() {
     setChatLastEvaluatedKey,
     setUser,
     setEmail,
+    setSellingChatData,
+    setSellingChatInitialLoad,
+    setSellingChatLastEvaluatedKey,
+    setBuyingChatData,
+    setBuyingChatInitialLoad,
+    setBuyingChatLastEvaluatedKey,
+    actionType,
   } = useContext(Context);
-
+  const location = useLocation();
   const [socketLoading, setSocketLoading] = useState(false);
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -93,10 +100,19 @@ function AppWithSession() {
               socketRef.current.readyState !== WebSocket.OPEN
             )
               return;
-            setChatData([]);
-            setChatLastEvaluatedKey(null);
-            setChatInitialLoad(true);
-            setUnreadChatCount(1);
+            if (location.pathname !== "/chatPage") {
+              if (actionType === "Selling") {
+                setSellingChatData([]);
+                setSellingChatLastEvaluatedKey(null);
+                setSellingChatInitialLoad(true);
+              } else {
+                setBuyingChatData([]);
+                setBuyingChatLastEvaluatedKey(null);
+                setBuyingChatInitialLoad(true);
+              }
+            } else {
+              message.info("There is a new message");
+            }
           };
 
           socketRef.current.onclose = () => {

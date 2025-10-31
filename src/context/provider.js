@@ -51,9 +51,44 @@ const Provider = ({ children }) => {
   const [subCategory, setSubCategory] = useState(false);
   const [applied, setApplied] = useState(false);
   const [currLocRemoved, setCurrLocRemoved] = useState(false);
+  const [sellingChatLastEvaluatedKey, setSellingChatLastEvaluatedKey] =
+    useState(null);
+  const [buyingChatLastEvaluatedKey, setBuyingChatLastEvaluatedKey] =
+    useState(null);
+  const [sellingChatInitalLoad, setSellingChatInitialLoad] = useState(true);
+  const [buyingChatInitalLoad, setBuyingChatInitialLoad] = useState(true);
+  const [sellingChatScrollPosition, setSellingChatScrollPosition] = useState(0);
+  const [buyingChatScrollPosition, setBuyingChatScrollPosition] = useState(0);
+  const [sellingChatData, setSellingChatData] = useState([]);
+  const [buyingChatData, setBuyingChatData] = useState([]);
+  const [sellingChatHasMore, setSellingChatHasMore] = useState(false);
+  const [buyingChatHasMore, setBuyingChatHasMore] = useState(false);
+  const [actionType, setActionType] = useState("Selling");
   return (
     <Context.Provider
       value={{
+        actionType,
+        setActionType,
+        sellingChatLastEvaluatedKey,
+        setSellingChatLastEvaluatedKey,
+        buyingChatLastEvaluatedKey,
+        setBuyingChatLastEvaluatedKey,
+        sellingChatInitalLoad,
+        setSellingChatInitialLoad,
+        buyingChatInitalLoad,
+        setBuyingChatInitialLoad,
+        sellingChatScrollPosition,
+        setSellingChatScrollPosition,
+        buyingChatScrollPosition,
+        setBuyingChatScrollPosition,
+        sellingChatData,
+        setSellingChatData,
+        buyingChatData,
+        setBuyingChatData,
+        sellingChatHasMore,
+        setSellingChatHasMore,
+        buyingChatHasMore,
+        setBuyingChatHasMore,
         currLocRemoved,
         setCurrLocRemoved,
         applied,

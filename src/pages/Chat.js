@@ -68,6 +68,13 @@ const Chat = () => {
     setChatLastEvaluatedKey,
     setIChatInitialLoad,
     setUnreadChatCount,
+    setSellingChatData,
+    setSellingChatInitialLoad,
+    setSellingChatLastEvaluatedKey,
+    setBuyingChatData,
+    setBuyingChatInitialLoad,
+    setBuyingChatLastEvaluatedKey,
+    actionType,
     user,
   } = useContext(Context);
   const [chatLoading, setChatLoading] = useState(false);
@@ -226,9 +233,15 @@ const Chat = () => {
                 }&read=${encodeURIComponent(true)}`,
                 "GET"
               );
-              setChatData([]);
-              setChatLastEvaluatedKey(null);
-              setChatInitialLoad(true);
+              if (actionType === "Selling") {
+                setSellingChatData([]);
+                setSellingChatLastEvaluatedKey(null);
+                setSellingChatInitialLoad(true);
+              } else {
+                setBuyingChatData([]);
+                setBuyingChatLastEvaluatedKey(null);
+                setBuyingChatInitialLoad(true);
+              }
             } catch (err) {
               if (isModalVisibleRef.current) return;
               isModalVisibleRef.current = true;
@@ -316,17 +329,31 @@ const Chat = () => {
             "GET"
           ),
         ]);
-        setChatData((chatData) => {
-          return chatData.map((item) => {
-            let conversationId = [user.userId, recipient["item"]["email"]]
-              .sort()
-              .join(`#${recipient["item"]["uuid"]}#`);
-            if (item.conversationId === conversationId) {
-              return { ...item, read: "true" };
-            }
-            return item;
+        if (actionType === "Selling") {
+          setSellingChatData((sellingChatData) => {
+            return sellingChatData.map((item) => {
+              let conversationId = [user.userId, recipient["item"]["email"]]
+                .sort()
+                .join(`#${recipient["item"]["uuid"]}#`);
+              if (item.conversationId === conversationId) {
+                return { ...item, read: "true" };
+              }
+              return item;
+            });
           });
-        });
+        } else {
+          setBuyingChatData((buyingChatData) => {
+            return buyingChatData.map((item) => {
+              let conversationId = [user.userId, recipient["item"]["email"]]
+                .sort()
+                .join(`#${recipient["item"]["uuid"]}#`);
+              if (item.conversationId === conversationId) {
+                return { ...item, read: "true" };
+              }
+              return item;
+            });
+          });
+        }
       } else if (conversationId) {
         let userIds = conversationId.split("#");
         userIds.splice(1, 1);
@@ -361,17 +388,31 @@ const Chat = () => {
             "GET"
           ),
         ]);
-        setChatData((chatData) => {
-          return chatData.map((item) => {
-            let conversationId = [user.userId, userId2]
-              .sort()
-              .join(`#${productId}#`);
-            if (item.conversationId === conversationId) {
-              return { ...item, read: "true" };
-            }
-            return item;
+        if (actionType === "Selling") {
+          setSellingChatData((sellingChatData) => {
+            return sellingChatData.map((item) => {
+              let conversationId = [user.userId, userId2]
+                .sort()
+                .join(`#${productId}#`);
+              if (item.conversationId === conversationId) {
+                return { ...item, read: "true" };
+              }
+              return item;
+            });
           });
-        });
+        } else {
+          setBuyingChatData((buyingChatData) => {
+            return buyingChatData.map((item) => {
+              let conversationId = [user.userId, userId2]
+                .sort()
+                .join(`#${productId}#`);
+              if (item.conversationId === conversationId) {
+                return { ...item, read: "true" };
+              }
+              return item;
+            });
+          });
+        }
       }
       setIChatData((prevValue) => [...prevValue, ...result.data.items]);
       setLastEvaluatedKey(result.data.lastEvaluatedKey);
@@ -504,9 +545,15 @@ const Chat = () => {
         },
         ...prevValue,
       ]);
-      setChatData([]);
-      setChatLastEvaluatedKey(null);
-      setChatInitialLoad(true);
+      if (actionType === "Selling") {
+        setSellingChatData([]);
+        setSellingChatLastEvaluatedKey(null);
+        setSellingChatInitialLoad(true);
+      } else {
+        setBuyingChatData([]);
+        setBuyingChatLastEvaluatedKey(null);
+        setBuyingChatInitialLoad(true);
+      }
     }
     setMessageValue("");
   };

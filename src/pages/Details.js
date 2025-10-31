@@ -39,6 +39,14 @@ const Details = () => {
     detailData,
     setDetailData,
     setUnreadChatCount,
+    setSellingChatData,
+    setSellingChatInitialLoad,
+    setSellingChatLastEvaluatedKey,
+    setBuyingChatData,
+    setBuyingChatInitialLoad,
+    setBuyingChatLastEvaluatedKey,
+    actionType,
+    setActionType,
     user,
   } = useContext(Context);
   const isModalVisibleRef = useRef(false);
@@ -196,11 +204,18 @@ const Details = () => {
         )}&productId=${encodeURIComponent(item["item"]["uuid"])}`,
         "GET"
       );
-      setChatData([]);
-      setChatLastEvaluatedKey(null);
-      setChatInitialLoad(true);
+      if (actionType === "Selling") {
+        setSellingChatData([]);
+        setSellingChatLastEvaluatedKey(null);
+        setSellingChatInitialLoad(true);
+      } else {
+        setBuyingChatData([]);
+        setBuyingChatLastEvaluatedKey(null);
+        setBuyingChatInitialLoad(true);
+      }
       setUnblockLoading(false);
       message.success("User unblocked");
+      setActionType("Buying");
       navigate("/chat", { state: { recipient: item } });
     } catch (err) {
       setUnblockLoading(false);
@@ -599,6 +614,7 @@ const Details = () => {
                                 fontWeight: "300",
                               }}
                               onClick={() => {
+                                setActionType("Buying");
                                 navigate("/chat", {
                                   state: { recipient: item },
                                 });
