@@ -438,7 +438,7 @@ const Details = () => {
                                 display: loadedImages[i] ? "block" : "none",
                                 width: "100%",
                                 height: "400px",
-                                objectFit: "contain",
+                                objectFit: "fill",
                               }}
                               onLoad={() => handleLoad(i)}
                               onError={() => handleLoad(i)}
@@ -501,7 +501,7 @@ const Details = () => {
                                   display: loadedImages[i] ? "block" : "none",
                                   width: "100%",
                                   height: "400px",
-                                  objectFit: "contain",
+                                  objectFit: "fill",
                                 }}
                                 onLoad={() => handleLoad(i)}
                                 onError={() => handleLoad(i)}

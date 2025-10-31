@@ -319,7 +319,7 @@ const Ads = () => {
                                   alt={item["item"]["title"]}
                                   style={{
                                     height: "247px",
-                                    objectFit: "contain",
+                                    objectFit: "fill",
                                     width: "100%",
                                     display: loadedImages[item["item"]["uuid"]]
                                       ? "block"

@@ -405,7 +405,7 @@ const Favourites = () => {
                                   alt={item["item"]["title"]}
                                   style={{
                                     height: "247px",
-                                    objectFit: "contain",
+                                    objectFit: "fill",
                                     display: loadedImages[item["item"]["uuid"]]
                                       ? "block"
                                       : "none",
