@@ -28,7 +28,7 @@ import { LocateFixed } from "lucide-react";
 import { Input, Space, Empty } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { List, Skeleton, Radio } from "antd";
-import { Card } from "antd";
+import { Card, Grid } from "antd";
 import { signInWithRedirect, signOut } from "@aws-amplify/auth";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
@@ -42,6 +42,8 @@ const capitalize = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
 const { Content } = Layout;
+
+const { useBreakpoint } = Grid;
 const Home = () => {
   useLocationComponent();
   const [loading, setLoading] = useState(false);
@@ -49,6 +51,7 @@ const Home = () => {
   const scrollableDivRef = useRef(null);
   const [chatLoading, setChatLoading] = useState(false);
   const [favLoading, setFavLoading] = useState(false);
+  const screens = useBreakpoint();
   const {
     data,
     setData,
@@ -1469,7 +1472,8 @@ const Home = () => {
                       <Skeleton.Node
                         style={{
                           height: "300px",
-                          width: isMobile ? "calc(186px - 10dvw)" : "186px",
+                          width: screens.xs ? "43dvw" : "186px",
+                          borderRadius: "6px",
                         }}
                         active
                       />

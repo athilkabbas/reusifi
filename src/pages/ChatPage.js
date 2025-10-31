@@ -1131,7 +1131,8 @@ const ChatPage = () => {
                       <Skeleton.Node
                         style={{
                           height: "150px",
-                          width: !isMobile ? "50dvw" : "calc(100dvw - 10px)",
+                          width: !isMobile ? "50dvw" : "calc(100dvw - 40px)",
+                          borderRadius: "6px",
                         }}
                         active
                       />

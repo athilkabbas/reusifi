@@ -791,7 +791,7 @@ const AddDress = () => {
           )}
           {(loading || chatLoading) && (
             <Row gutter={[30, 30]}>
-              {Array.from({ length: 10 }).map((_, index) => {
+              {Array.from({ length: 9 }).map((_, index) => {
                 return (
                   <Col
                     key={index}
@@ -803,9 +803,10 @@ const AddDress = () => {
                     xxl={24}
                     style={{ display: "flex", justifyContent: "center" }}
                   >
-                    <Skeleton.Input
+                    <Skeleton.Node
                       style={{
                         width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
+                        height: index !== 2 ? "38px" : "214px",
                       }}
                       active
                     />

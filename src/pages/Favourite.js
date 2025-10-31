@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { Layout, Spin, theme, Modal } from "antd";
+import { Layout, Spin, theme, Modal, Grid } from "antd";
 import { HeartOutlined, HeartFilled, LoadingOutlined } from "@ant-design/icons";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { List, Skeleton, Empty, Row, Col } from "antd";
@@ -16,6 +16,7 @@ const capitalize = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
 const { Content } = Layout;
+const { useBreakpoint } = Grid;
 const Favourites = () => {
   const [loading, setLoading] = useState(false);
   const scrollableDivRef = useRef(null);
@@ -23,6 +24,7 @@ const Favourites = () => {
   const [favLoading, setFavLoading] = useState(false);
   const [handleFavLoading, setHandleFavLoading] = useState(false);
   const isMobile = useIsMobile();
+  const screens = useBreakpoint();
   const {
     filterList,
     setFilterList,
@@ -530,7 +532,8 @@ const Favourites = () => {
                       <Skeleton.Node
                         style={{
                           height: "300px",
-                          width: isMobile ? "calc(186px - 10dvw)" : "186px",
+                          width: screens.xs ? "43dvw" : "186px",
+                          borderRadius: "6px",
                         }}
                         active
                       />
