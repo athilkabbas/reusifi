@@ -113,3 +113,15 @@ body {
     font-size: 1rem !important;
   }
 }
+
+@media (max-width: 767px) {
+  .ant-upload-list-item {
+    width: calc(100dvw - 30px);
+  }
+}
+
+@media (min-width: 768px) {
+  .ant-upload-list-item {
+    width: 50dvw;
+  }
+}
