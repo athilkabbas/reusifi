@@ -943,7 +943,7 @@ const ChatPage = () => {
                                     {capitalize(item.title)}
                                   </span>
                                 </Col>
-                                <Col>
+                                <Col span={2}>
                                   {!item.blocked && (
                                     <Dropdown
                                       menu={{
