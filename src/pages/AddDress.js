@@ -781,7 +781,7 @@ const AddDress = () => {
                     }}
                     onClick={handleSubmit}
                     type="primary"
-                    disabled={count >= 5 ? true : false}
+                    disabled={count >= 20 ? true : false}
                   >
                     Submit
                   </Button>

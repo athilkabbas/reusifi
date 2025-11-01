@@ -14,6 +14,7 @@ import { callApi } from "../helpers/api";
 import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
+import AwsMap from "../component/Map";
 const { Content } = Layout;
 const Details = () => {
   const location = useLocation();
@@ -436,7 +437,7 @@ const Details = () => {
                               style={{
                                 borderRadius: "12px",
                                 display: loadedImages[i] ? "block" : "none",
-                                width: "100%",
+                                width: "300px",
                                 height: "400px",
                                 objectFit: "fill",
                               }}
@@ -499,7 +500,7 @@ const Details = () => {
                                 style={{
                                   borderRadius: "12px",
                                   display: loadedImages[i] ? "block" : "none",
-                                  width: "100%",
+                                  width: "300px",
                                   height: "400px",
                                   objectFit: "fill",
                                 }}
@@ -536,7 +537,7 @@ const Details = () => {
                           )
                         }
                         style={{
-                          width: isMobile ? "calc(100dvw - 50px)" : "40dvw",
+                          width: isMobile ? "calc(100dvw - 50px)" : "50dvw",
                           background: "#fff",
                           borderRadius: "12px",
                           padding: isMobile ? "12px" : "20px",
@@ -549,6 +550,15 @@ const Details = () => {
                       />
                     </Space.Compact>
                   )}
+                  {detailData?.[0]["item"]["location"] &&
+                    Object.values(loadedImages).every((item) => item) && (
+                      <AwsMap
+                        center={[
+                          ...detailData[0]["item"]["location"].reverse(),
+                        ]}
+                        zoom={10}
+                      />
+                    )}
                   {Object.values(loadedImages).every((item) => item) && (
                     <>
                       {ad && (
@@ -649,7 +659,7 @@ const Details = () => {
                   <Skeleton.Node
                     style={{
                       height: "400px",
-                      width: isMobile ? "calc(100dvw - 50px)" : "40dvw",
+                      width: isMobile ? "calc(100dvw - 50px)" : "50dvw",
                     }}
                     active
                   />
