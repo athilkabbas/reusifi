@@ -285,44 +285,37 @@ const Details = () => {
     {
       key: "1",
       label: "Title",
-      children: <p>{capitalize(detailData?.[0]?.["item"]["title"] || "")}</p>,
-      labelStyle: { width: "0px" },
+      children: capitalize(detailData?.[0]?.["item"]["title"] || ""),
     },
     {
       key: "2",
       label: "Description",
-      children: (
-        <p>{capitalize(detailData?.[0]?.["item"]["description"] || "")}</p>
-      ),
+      children: capitalize(detailData?.[0]?.["item"]["description"] || ""),
     },
     {
       key: "3",
       label: "Category",
-      children: (
-        <p>{capitalize(detailData?.[0]?.["item"]["category"] || "")}</p>
-      ),
+      children: capitalize(detailData?.[0]?.["item"]["category"] || ""),
     },
     {
       key: "4",
       label: "SubCategory",
-      children: (
-        <p>{capitalize(detailData?.[0]?.["item"]["subCategory"] || "")}</p>
-      ),
+      children: capitalize(detailData?.[0]?.["item"]["subCategory"] || ""),
     },
     {
       key: "5",
       label: "location",
-      children: <p>{detailData?.[0]?.["item"]["locationLabel"]}</p>,
+      children: detailData?.[0]?.["item"]["locationLabel"],
     },
     {
       key: "6",
       label: "Price",
-      children: <p>{detailData?.[0]?.["item"]["price"]}</p>,
+      children: detailData?.[0]?.["item"]["price"],
     },
     {
       key: "7",
       label: "Ad Id",
-      children: <p>{detailData?.[0]?.["item"]["uuid"]}</p>,
+      children: detailData?.[0]?.["item"]["uuid"],
     },
   ];
   return (
@@ -517,7 +510,7 @@ const Details = () => {
                     <Space.Compact size="large">
                       <Descriptions
                         column={1}
-                        size="small"
+                        bordered
                         extra={
                           ad &&
                           detailData[0]["item"]["deactivated"] === true ? (
@@ -538,14 +531,12 @@ const Details = () => {
                         }
                         style={{
                           width: isMobile ? "calc(100dvw - 50px)" : "50dvw",
-                          background: "#fff",
                           borderRadius: "12px",
                           padding: isMobile ? "12px" : "20px",
                           fontSize: "13px",
                           fontWeight: 300,
                         }}
-                        bordered
-                        title=""
+                        title="Ad details"
                         items={descriptionItems}
                       />
                     </Space.Compact>
