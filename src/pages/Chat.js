@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
 import { Dropdown, Menu, Spin } from "antd";
 import { Input } from "antd";
-import { Layout, Modal } from "antd";
+import { Layout, Modal, Image } from "antd";
 import { Button } from "antd";
 import { fetchAuthSession, signInWithRedirect } from "@aws-amplify/auth";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -512,6 +512,10 @@ const Chat = () => {
   const handleChange = (value) => {
     setMessageValue(value);
   };
+  const [loadedImages, setLoadedImages] = useState({});
+  const handleImageLoad = (uuid) => {
+    setLoadedImages((prev) => ({ ...prev, [uuid]: true }));
+  };
   const handleSubmit = () => {
     if (messageValue) {
       if (recipient && recipient["item"]["email"]) {
@@ -597,6 +601,8 @@ const Chat = () => {
 
     return `${day}/${month}/${year} ${timeString}`;
   }
+
+  console.log(image, recipient);
   return (
     <Layout
       style={{
@@ -643,38 +649,102 @@ const Chat = () => {
           <div style={{ fontSize: "13px", fontWeight: "300", padding: "15px" }}>
             {title || recipient["item"]["title"]}
           </div>
-          <Dropdown
-            trigger={["click"]}
-            menu={{
-              items: subMenuItems,
-              onClick: () => {
-                navigate("/details", {
-                  state: {
-                    item: {
+          <div style={{ display: "flex", gap: "15px" }}>
+            <div
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                width: "30px",
+                height: "40px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              {!loadedImages[recipient?.["item"]?.["uuid"] || productId] && (
+                <div
+                  style={{
+                    width: "30px",
+                    height: "40px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    backgroundColor: "#f0f0f0",
+                  }}
+                >
+                  <Spin
+                    indicator={
+                      <LoadingOutlined
+                        style={{
+                          fontSize: 48,
+                          color: "#52c41a",
+                        }}
+                        spin
+                      />
+                    }
+                  />
+                </div>
+              )}
+              <Image
+                preview={true}
+                src={recipient?.["images"]?.[0] || image}
+                alt={"No Longer Available"}
+                style={{
+                  display: loadedImages[
+                    recipient?.["item"]?.["uuid"] || productId
+                  ]
+                    ? "block"
+                    : "none",
+                  height: "40px",
+                  objectFit: "fill",
+                  borderRadius: "5px",
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+                onLoad={() =>
+                  handleImageLoad(recipient?.["item"]?.["uuid"] || productId)
+                }
+                onError={() =>
+                  handleImageLoad(recipient?.["item"]?.["uuid"] || productId)
+                }
+              />
+            </div>
+            <Dropdown
+              trigger={["click"]}
+              menu={{
+                items: subMenuItems,
+                onClick: () => {
+                  navigate("/details", {
+                    state: {
                       item: {
-                        uuid: productId || recipient["item"]["uuid"],
-                        title: title || recipient["item"]["title"],
-                        email: email || recipient["item"]["email"],
+                        item: {
+                          uuid: productId || recipient["item"]["uuid"],
+                          title: title || recipient["item"]["title"],
+                          email: email || recipient["item"]["email"],
+                        },
+                        images: [image || recipient["images"][0]],
                       },
-                      images: [image || recipient["images"][0]],
+                      ad:
+                        user.userId === recipient?.["item"]["email"] ||
+                        user.userId === email,
                     },
-                    ad:
-                      user.userId === recipient?.["item"]["email"] ||
-                      user.userId === email,
-                  },
-                });
-              },
-              style: { width: "150px" },
-            }}
-          >
-            <a style={{ display: "flex" }} onClick={(e) => e.preventDefault()}>
-              <Space>
-                <EllipsisVertical
-                  style={{ color: "#9CA3AF", display: "flex" }}
-                />
-              </Space>
-            </a>
-          </Dropdown>
+                  });
+                },
+                style: { width: "150px" },
+              }}
+            >
+              <a
+                style={{ display: "flex" }}
+                onClick={(e) => e.preventDefault()}
+              >
+                <Space>
+                  <EllipsisVertical
+                    style={{ color: "#9CA3AF", display: "flex" }}
+                  />
+                </Space>
+              </a>
+            </Dropdown>
+          </div>
         </Space>
       </HeaderWrapper>
       <Content>
