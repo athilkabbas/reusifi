@@ -1473,7 +1473,7 @@ const Home = () => {
                         style={{
                           height: "300px",
                           width: screens.xs ? "43dvw" : "186px",
-                          borderRadius: "6px",
+                          borderRadius: "8px",
                         }}
                         active
                       />

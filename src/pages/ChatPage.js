@@ -1132,7 +1132,7 @@ const ChatPage = () => {
                         style={{
                           height: "150px",
                           width: !isMobile ? "50dvw" : "calc(100dvw - 40px)",
-                          borderRadius: "6px",
+                          borderRadius: "8px",
                         }}
                         active
                       />

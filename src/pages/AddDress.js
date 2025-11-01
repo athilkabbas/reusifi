@@ -203,7 +203,7 @@ const AddDress = () => {
   };
 
   useEffect(() => {
-    if (currentLocation) {
+    if (currentLocation && currentLocationLabel) {
       setForm((prevValue) => {
         return {
           ...prevValue,
@@ -212,7 +212,7 @@ const AddDress = () => {
         };
       });
     }
-  }, [currentLocation]);
+  }, [currentLocation, currentLocationLabel]);
 
   useEffect(() => {
     setForm((prevValue) => {
@@ -807,7 +807,8 @@ const AddDress = () => {
                     <Skeleton.Node
                       style={{
                         width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
-                        height: index !== 2 ? "38px" : "214px",
+                        height: index !== 2 ? "40px" : "214px",
+                        borderRadius: "8px",
                       }}
                       active
                     />

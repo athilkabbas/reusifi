@@ -292,7 +292,14 @@ const Ads = () => {
                               });
                             }}
                             cover={
-                              <div style={{ position: "relative" }}>
+                              <div
+                                style={{
+                                  position: "relative",
+                                  borderTopLeftRadius: "8px",
+                                  borderTopRightRadius: "8px",
+                                  overflow: "hidden",
+                                }}
+                              >
                                 {!loadedImages[item["item"]["uuid"]] && (
                                   <div
                                     style={{
@@ -434,7 +441,7 @@ const Ads = () => {
                         style={{
                           height: "300px",
                           width: screens.xs ? "43dvw" : "186px",
-                          borderRadius: "6px",
+                          borderRadius: "8px",
                         }}
                         active
                       />
