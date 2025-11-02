@@ -263,7 +263,17 @@ const Account = () => {
                   </Space.Compact>
                   <Space.Compact size="large">
                     <Button
-                      onClick={() => setEdit((prevValue) => !prevValue)}
+                      onClick={() => {
+                        setEdit((prevValue) => !prevValue);
+                        setForm({
+                          name: "",
+                          description: "",
+                          email: email,
+                          image: "",
+                          showEmail: false,
+                          disableNotification: false,
+                        });
+                      }}
                       style={{
                         background: "#52c41a",
                         fontSize: "13px",
