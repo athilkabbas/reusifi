@@ -60,13 +60,12 @@ const Account = () => {
     name: "",
     description: "",
     email: email,
-    subCategory: "",
     image: "",
   });
 
   const handleChange = (value, type) => {
     setForm((prevValue) => {
-      if (type === "name" || type === "description" || type === "price") {
+      if (type === "name" || type === "description") {
         return { ...prevValue, [type]: value.target.value };
       }
       return { ...prevValue, [type]: value };
