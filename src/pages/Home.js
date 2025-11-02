@@ -23,6 +23,7 @@ import {
   MailOutlined,
   CloseCircleOutlined,
   CloseCircleFilled,
+  UserOutlined,
 } from "@ant-design/icons";
 import { LocateFixed } from "lucide-react";
 import { Input, Space, Empty } from "antd";
@@ -234,8 +235,10 @@ const Home = () => {
 
   const handleMenuClick = ({ key }) => {
     if (key === "1") {
-      navigate("/contact");
+      navigate("/account");
     } else if (key === "2") {
+      navigate("/contact");
+    } else if (key === "3") {
       signOut({ global: true });
     }
   };
@@ -487,6 +490,21 @@ const Home = () => {
     {
       key: "1",
       label: (
+        <span style={{ fontSize: "13px", fontWeight: "300" }}>My Account</span>
+      ),
+      icon: (
+        <UserOutlined
+          style={{
+            color: "#389e0d",
+            fontSize: isMobile ? "10px" : "15px",
+            fontWeight: "300",
+          }}
+        />
+      ),
+    },
+    {
+      key: "2",
+      label: (
         <span style={{ fontSize: "13px", fontWeight: "300" }}>Contact</span>
       ),
       icon: (
@@ -499,7 +517,7 @@ const Home = () => {
       ),
     },
     {
-      key: "2",
+      key: "3",
       label: (
         <span style={{ fontSize: "13px", fontWeight: "300" }}>Sign Out</span>
       ),
@@ -666,7 +684,9 @@ const Home = () => {
                 menu={{
                   items: subMenuItems,
                   onClick: handleMenuClick,
-                  style: { width: "150px" },
+                  style: {
+                    width: "150px",
+                  },
                 }}
               >
                 <a onClick={(e) => e.preventDefault()}>

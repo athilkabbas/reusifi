@@ -20,6 +20,7 @@ import { Context } from "./context/provider";
 import "./App.css";
 import CheckRender from "./helpers/checkRender";
 import ReusifiLanding from "./pages/landingPage";
+import Account from "./pages/Account";
 
 Amplify.configure(awsconfig);
 
@@ -184,6 +185,7 @@ function AppWithSession() {
             <Route path="ads" element={<Ads />} />
             <Route path="contact" element={<Contact />} />
             <Route path="favourite" element={<Favourites />} />
+            <Route path="account" element={<Account />} />
           </Route>
         </Routes>
       )}

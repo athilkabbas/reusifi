@@ -509,7 +509,7 @@ const Details = () => {
                   {Object.values(loadedImages).every((item) => item) && (
                     <Space.Compact size="large">
                       <Descriptions
-                        column={1}
+                        size="small"
                         bordered
                         extra={
                           ad &&
@@ -530,7 +530,6 @@ const Details = () => {
                           )
                         }
                         style={{
-                          width: isMobile ? "calc(100dvw - 50px)" : "50dvw",
                           borderRadius: "12px",
                           padding: isMobile ? "12px" : "20px",
                           fontSize: "13px",
