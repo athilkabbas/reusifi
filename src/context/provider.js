@@ -65,9 +65,12 @@ const Provider = ({ children }) => {
   const [buyingChatHasMore, setBuyingChatHasMore] = useState(false);
   const [actionType, setActionType] = useState("Selling");
   const [mapLoading, setMapLoading] = useState(false);
+  const [accountInitialLoad, setAccountInitialLoad] = useState(true);
   return (
     <Context.Provider
       value={{
+        accountInitialLoad,
+        setAccountInitialLoad,
         mapLoading,
         setMapLoading,
         actionType,

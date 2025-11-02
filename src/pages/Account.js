@@ -49,8 +49,8 @@ const Account = () => {
   const [loading, setLoading] = useState(false);
 
   const {
-    contactInitialLoad,
-    setContactInitialLoad,
+    accountInitialLoad,
+    setAccountInitialLoad,
     setUnreadChatCount,
     user,
     email,
@@ -61,6 +61,8 @@ const Account = () => {
     description: "",
     email: email,
     image: "",
+    showEmail: false,
+    disableNotification: false,
   });
 
   const handleChange = (value, type) => {
@@ -73,17 +75,7 @@ const Account = () => {
   };
 
   const [edit, setEdit] = useState(false);
-  const [checkedShow, setCheckedShow] = useState(false);
-  const [checkedDisable, setCheckedDisable] = useState(true);
 
-  const onChangeDisableSwitch = (checked) => {
-    setCheckedDisable(checked);
-  };
-
-  const onChangeShowSwitch = (checked) => {
-    setCheckedShow(checked);
-  };
-  console.log(email);
   useEffect(() => {
     const getChatCount = async () => {
       try {
@@ -97,7 +89,7 @@ const Account = () => {
         );
         setUnreadChatCount(result.data.count);
         setLoading(false);
-        setContactInitialLoad(false);
+        setAccountInitialLoad(false);
       } catch (err) {
         // message.error("An Error has occurred")
         if (isModalVisibleRef.current) {
@@ -112,10 +104,10 @@ const Account = () => {
         return;
       }
     };
-    if (contactInitialLoad) {
+    if (accountInitialLoad) {
       getChatCount();
     }
-  }, [contactInitialLoad]);
+  }, [accountInitialLoad]);
 
   return (
     <Layout
@@ -186,7 +178,10 @@ const Account = () => {
                 <Button style={{ color: "#000000E0" }} type="link">
                   Show email to users
                 </Button>
-                <Switch checked={checkedShow} onChange={onChangeShowSwitch} />
+                <Switch
+                  checked={form.showEmail}
+                  onChange={(checked) => handleChange(checked, "showEmail")}
+                />
               </Space.Compact>
               <Space.Compact size="large">
                 <Input
@@ -231,8 +226,10 @@ const Account = () => {
                   Disable email notification
                 </Button>
                 <Switch
-                  checked={checkedDisable}
-                  onChange={onChangeDisableSwitch}
+                  checked={form.disableNotification}
+                  onChange={(checked) =>
+                    handleChange(checked, "disableNotification")
+                  }
                 />
               </Space.Compact>
               {!edit && (
