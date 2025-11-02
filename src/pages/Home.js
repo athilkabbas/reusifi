@@ -517,8 +517,8 @@ const Home = () => {
   const navigate = useNavigate();
   const onChangePriceFilter = (event) => {
     setPriceFilter(event.target.value);
-    setMinPrice("");
-    setMaxPrice("");
+    // setMinPrice("");
+    // setMaxPrice("");
     setApplied(false);
   };
   const [open, setOpen] = useState(false);
@@ -688,7 +688,7 @@ const Home = () => {
                 direction="vertical"
                 style={{ display: "flex", alignItems: "center" }}
               >
-                <Space size="small" direction="vertical">
+                <Space size="middle" direction="vertical">
                   <Divider
                     style={{ fontSize: "15px", fontWeight: "300" }}
                     plain
@@ -805,7 +805,7 @@ const Home = () => {
                     )}
                   </Space.Compact>
                 </Space>
-                <Space size="small" direction="vertical">
+                <Space size="middle" direction="vertical">
                   <Divider
                     style={{ fontSize: "15px", fontWeight: "300" }}
                     plain
@@ -1092,7 +1092,7 @@ const Home = () => {
                   </Space.Compact>
                 </Space>
                 <Space
-                  size="small"
+                  size="middle"
                   direction="vertical"
                   style={{ width: !isMobile ? "50dvw" : "calc(100dvw - 50px)" }}
                 >
@@ -1130,14 +1130,14 @@ const Home = () => {
                     </Space.Compact>
                     <CloseCircleOutlined onClick={() => setPriceFilter("")} />
                   </Space>
-                  &nbsp;&nbsp;or
+                  {/* &nbsp;&nbsp;or */}
                   <Space.Compact size="large">
                     <Space size="large">
                       <Space.Compact size="large">
                         <Input
                           id="homeMinId"
                           onChange={(event) => {
-                            setPriceFilter("");
+                            // setPriceFilter("");
                             setMinPrice(event.target.value);
                             setApplied(false);
                           }}
@@ -1150,7 +1150,7 @@ const Home = () => {
                         <Input
                           id="homeMaxId"
                           onChange={(event) => {
-                            setPriceFilter("");
+                            // setPriceFilter("");
                             setMaxPrice(event.target.value);
                             setApplied(false);
                           }}
@@ -1163,7 +1163,7 @@ const Home = () => {
                   </Space.Compact>
                 </Space>
                 <Space
-                  size="middle"
+                  size="large"
                   style={{ display: "flex", justifyContent: "center" }}
                 >
                   <Space.Compact
