@@ -804,14 +804,26 @@ const AddDress = () => {
                     xxl={24}
                     style={{ display: "flex", justifyContent: "center" }}
                   >
-                    <Skeleton.Node
-                      style={{
-                        width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
-                        height: index !== 2 ? "40px" : "214px",
-                        borderRadius: "8px",
-                      }}
-                      active
-                    />
+                    {index !== 8 && (
+                      <Skeleton.Node
+                        style={{
+                          width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
+                          height: index !== 2 ? "40px" : "214px",
+                          borderRadius: "8px",
+                        }}
+                        active
+                      />
+                    )}
+                    {index === 8 && (
+                      <Skeleton.Node
+                        style={{
+                          width: "75px",
+                          height: "40px",
+                          borderRadius: "8px",
+                        }}
+                        active
+                      />
+                    )}
                   </Col>
                 );
               })}

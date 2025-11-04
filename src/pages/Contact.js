@@ -71,10 +71,10 @@ const Contact = () => {
         return;
       }
     };
-    if (contactInitialLoad) {
+    if (contactInitialLoad && user) {
       getChatCount();
     }
-  }, [contactInitialLoad]);
+  }, [contactInitialLoad, user]);
 
   return (
     <Layout

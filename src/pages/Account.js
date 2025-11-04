@@ -8,6 +8,9 @@ import {
   Avatar,
   Button,
   Switch,
+  Spin,
+  Row,
+  Col,
 } from "antd";
 import { signInWithRedirect } from "@aws-amplify/auth";
 import { Context } from "../context/provider";
@@ -16,7 +19,7 @@ import { callApi } from "../helpers/api";
 import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
-import { UserOutlined } from "@ant-design/icons";
+import { UserOutlined, LoadingOutlined } from "@ant-design/icons";
 import { Input } from "antd";
 const { Content } = Layout;
 const { Text } = Typography;
@@ -54,6 +57,8 @@ const Account = () => {
     setUnreadChatCount,
     user,
     email,
+    account,
+    setAccount,
   } = useContext(Context);
 
   const [form, setForm] = useState({
@@ -64,6 +69,8 @@ const Account = () => {
     showEmail: false,
     disableNotification: false,
   });
+
+  const [submitLoading, setSubmitLoading] = useState(false);
 
   const handleChange = (value, type) => {
     setForm((prevValue) => {
@@ -76,18 +83,66 @@ const Account = () => {
 
   const [edit, setEdit] = useState(false);
 
+  const handleSubmit = async () => {
+    try {
+      setSubmitLoading(true);
+      await callApi(
+        "https://api.reusifi.com/prod/addAccount",
+        "POST",
+        false,
+        form
+      );
+      setSubmitLoading(false);
+      setEdit(false);
+    } catch (err) {
+      setSubmitLoading(false);
+      if (isModalVisibleRef.current) {
+        return;
+      }
+      isModalVisibleRef.current = true;
+      if (err?.status === 401) {
+        Modal.error(errorSessionConfig);
+      } else {
+        Modal.error(errorConfig);
+      }
+      return;
+    }
+  };
+
   useEffect(() => {
-    const getChatCount = async () => {
+    setForm({
+      name: account?.name ?? "",
+      description: account?.description ?? "",
+      email: email,
+      image: account?.image ?? "",
+      showEmail: account?.showEmail ?? false,
+      disableNotification: account?.disableNotification ?? false,
+    });
+  }, [account, email]);
+
+  useEffect(() => {
+    const getChatAndAccount = async () => {
       try {
         setLoading(true);
         const currentUser = user;
-        const result = await callApi(
+        const chatCountPromise = callApi(
           `https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(
             currentUser.userId
           )}&count=${encodeURIComponent(true)}`,
           "GET"
         );
-        setUnreadChatCount(result.data.count);
+        const accountPromise = callApi(
+          `https://api.reusifi.com/prod/getAccount?email=${encodeURIComponent(
+            email
+          )}`,
+          "GET"
+        );
+        const [chatCount, account] = await Promise.all([
+          chatCountPromise,
+          accountPromise,
+        ]);
+        setUnreadChatCount(chatCount.data.count);
+        setAccount(account?.data?.items);
         setLoading(false);
         setAccountInitialLoad(false);
       } catch (err) {
@@ -104,10 +159,10 @@ const Account = () => {
         return;
       }
     };
-    if (accountInitialLoad) {
-      getChatCount();
+    if (accountInitialLoad && email && user) {
+      getChatAndAccount();
     }
-  }, [accountInitialLoad]);
+  }, [accountInitialLoad, email, user]);
 
   return (
     <Layout
@@ -179,6 +234,7 @@ const Account = () => {
                   Show email to users
                 </Button>
                 <Switch
+                  disabled={!edit}
                   checked={form.showEmail}
                   onChange={(checked) => handleChange(checked, "showEmail")}
                 />
@@ -226,6 +282,7 @@ const Account = () => {
                   Disable email notification
                 </Button>
                 <Switch
+                  disabled={!edit}
                   checked={form.disableNotification}
                   onChange={(checked) =>
                     handleChange(checked, "disableNotification")
@@ -251,6 +308,9 @@ const Account = () => {
                 <Space>
                   <Space.Compact size="large">
                     <Button
+                      onClick={() => {
+                        handleSubmit();
+                      }}
                       style={{
                         background: "#52c41a",
                         fontSize: "13px",
@@ -266,12 +326,13 @@ const Account = () => {
                       onClick={() => {
                         setEdit((prevValue) => !prevValue);
                         setForm({
-                          name: "",
-                          description: "",
+                          name: account?.name ?? "",
+                          description: account?.description ?? "",
                           email: email,
-                          image: "",
-                          showEmail: false,
-                          disableNotification: false,
+                          image: account?.image ?? "",
+                          showEmail: account?.showEmail ?? "",
+                          disableNotification:
+                            account?.disableNotification ?? "",
                         });
                       }}
                       style={{
@@ -302,12 +363,47 @@ const Account = () => {
             </Space>
           )}
           {loading && (
-            <Skeleton
-              paragraph={{
-                rows: 8,
-              }}
-              active
-            />
+            <Row gutter={[30, 30]}>
+              {Array.from({ length: 8 }).map((_, index) => {
+                return (
+                  <Col
+                    key={index}
+                    xs={24}
+                    sm={24}
+                    md={24}
+                    lg={24}
+                    xl={24}
+                    xxl={24}
+                    style={{ display: "flex", justifyContent: "center" }}
+                  >
+                    {index === 0 && (
+                      <Skeleton.Avatar size={64} active shape={"circle"} />
+                    )}
+                    {index !== 0 && index !== 6 && index !== 7 && (
+                      <Skeleton.Node
+                        style={{
+                          width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
+                          height: index !== 4 ? "40px" : "214px",
+                          borderRadius: "8px",
+                        }}
+                        active
+                      />
+                    )}
+                    {index === 6 && <Skeleton.Button active />}
+                    {index === 7 && (
+                      <Skeleton.Node
+                        active
+                        style={{
+                          width: "125px",
+                          height: "40px",
+                          borderRadius: "8px",
+                        }}
+                      />
+                    )}
+                  </Col>
+                );
+              })}
+            </Row>
           )}
         </div>
       </Content>
@@ -315,6 +411,14 @@ const Account = () => {
         <FooterWrapper>
           <MenuWrapper defaultSelectedKeys={["6-1"]} isMobile={isMobile} />
         </FooterWrapper>
+      )}
+      {submitLoading && (
+        <Spin
+          fullscreen
+          indicator={
+            <LoadingOutlined style={{ fontSize: 48, color: "#52c41a" }} spin />
+          }
+        />
       )}
     </Layout>
   );
