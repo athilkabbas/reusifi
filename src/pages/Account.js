@@ -92,6 +92,7 @@ const Account = () => {
         false,
         form
       );
+      setAccount(form);
       setSubmitLoading(false);
       setEdit(false);
     } catch (err) {

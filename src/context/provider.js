@@ -50,7 +50,7 @@ const Provider = ({ children }) => {
   const [category, setCategory] = useState("");
   const [subCategory, setSubCategory] = useState(false);
   const [applied, setApplied] = useState(false);
-  const [currLocRemoved, setCurrLocRemoved] = useState(false);
+  const [currLocRemoved, setCurrLocRemoved] = useState(true);
   const [sellingChatLastEvaluatedKey, setSellingChatLastEvaluatedKey] =
     useState(null);
   const [buyingChatLastEvaluatedKey, setBuyingChatLastEvaluatedKey] =
