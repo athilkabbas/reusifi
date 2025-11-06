@@ -118,6 +118,9 @@ body {
   .ant-upload-list-item {
     width: calc(100dvw - 30px);
   }
+  .account-upload .ant-upload-list-item {
+    width: 70dvw;
+  }
 }
 
 @media (min-width: 768px) {

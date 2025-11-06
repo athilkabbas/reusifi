@@ -11,6 +11,9 @@ import {
   Spin,
   Row,
   Col,
+  Image,
+  Upload,
+  message,
 } from "antd";
 import { signInWithRedirect } from "@aws-amplify/auth";
 import { Context } from "../context/provider";
@@ -19,7 +22,13 @@ import { callApi } from "../helpers/api";
 import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
-import { UserOutlined, LoadingOutlined } from "@ant-design/icons";
+import imageCompression from "browser-image-compression";
+import axios from "axios";
+import {
+  UserOutlined,
+  LoadingOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
 import { Input } from "antd";
 const { Content } = Layout;
 const { Text } = Typography;
@@ -68,7 +77,10 @@ const Account = () => {
     image: "",
     showEmail: false,
     disableNotification: false,
+    s3Key: "",
   });
+
+  const [images, setImages] = useState([]);
 
   const [submitLoading, setSubmitLoading] = useState(false);
 
@@ -83,18 +95,61 @@ const Account = () => {
 
   const [edit, setEdit] = useState(false);
 
+  console.log(images?.length);
+
   const handleSubmit = async () => {
     try {
+      const viewingOptions = {
+        maxSizeMB: 0.5,
+        maxWidthOrHeight: 1200,
+        useWebWorker: true,
+        initialQuality: 0.8,
+        fileType: "image/jpeg",
+      };
       setSubmitLoading(true);
+      let data = { ...form };
+      console.log(images.length);
+      if (images.length > 0) {
+        const compressedImage = await imageCompression(
+          images[0],
+          viewingOptions
+        );
+
+        const urlRes = await callApi(
+          `https://api.reusifi.com/prod/getUrlNew?email=${encodeURIComponent(
+            user.userId
+          )}&contentType=${encodeURIComponent("image/jpeg")}&count=${1}`,
+          "GET"
+        );
+        const uploadURLs = urlRes.data.uploadURLs;
+        const s3Keys = urlRes.data.s3Keys;
+
+        await axios.put(uploadURLs[0], compressedImage, {
+          headers: {
+            "Content-Type": "image/jpeg",
+            "Cache-Control": "public, max-age=2592000",
+          },
+        });
+        data = {
+          ...data,
+          image: `https://digpfxl7t6jra.cloudfront.net/${s3Keys[0]}`,
+          s3Key: s3Keys[0],
+        };
+      }
+
       await callApi(
         "https://api.reusifi.com/prod/addAccount",
         "POST",
         false,
-        form
+        data
       );
-      setAccount(form);
+      if (data.image === "DELETE_IMAGE") {
+        data = { ...data, image: "" };
+      }
+      setAccount(data);
       setSubmitLoading(false);
       setEdit(false);
+      setFileList([]);
     } catch (err) {
       setSubmitLoading(false);
       if (isModalVisibleRef.current) {
@@ -165,6 +220,50 @@ const Account = () => {
     }
   }, [accountInitialLoad, email, user]);
 
+  const [loadedImages, setLoadedImages] = useState([]);
+
+  const handleImageLoad = (uuid) => {
+    setLoadedImages((prev) => ({ ...prev, [uuid]: true }));
+  };
+
+  const [fileList, setFileList] = useState([]);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState("");
+
+  useEffect(() => {
+    setImages([...fileList.map((item) => item.originFileObj)]);
+  }, [fileList]);
+
+  const getBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+  const handlePreview = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+    setPreviewImage(file.url || file.preview);
+    setPreviewOpen(true);
+  };
+  const handleChangeImage = (file) => {
+    if (file.file.size / 1024 / 1024 > 30) {
+      message.info("Max size 30MB per image");
+      return;
+    }
+    let newFileList = file.fileList.filter(
+      (file) => file.size / 1024 / 1024 <= 30
+    );
+    setFileList(newFileList);
+    // if (file.status === "done" || file.status === undefined) {
+    //   scrollToBottom();
+    // }
+  };
+
+  const [deleteImage, setDeleteImage] = useState(false);
+
   return (
     <Layout
       style={{
@@ -194,6 +293,7 @@ const Account = () => {
             height: "100%",
             overflowX: "hidden",
             padding: "15px 15px 70px 15px",
+            scrollbarWidth: "none",
           }}
         >
           {!loading && (
@@ -206,7 +306,147 @@ const Account = () => {
                 padding: "20px",
               }}
             >
-              <Avatar size={64} icon={<UserOutlined />} />
+              {account?.image && !deleteImage && (
+                <Space.Compact
+                  size="large"
+                  style={{
+                    display: "flex",
+                  }}
+                >
+                  <div
+                    onClick={(e) => e.stopPropagation()}
+                    style={{
+                      height: "150px",
+                      width: "100px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    {!loadedImages[form.email] && (
+                      <div
+                        style={{
+                          height: "150px",
+                          width: "100px",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          backgroundColor: "#f0f0f0",
+                        }}
+                      >
+                        <Spin
+                          indicator={
+                            <LoadingOutlined
+                              style={{
+                                fontSize: 48,
+                                color: "#52c41a",
+                              }}
+                              spin
+                            />
+                          }
+                        />
+                      </div>
+                    )}
+                    <Image
+                      preview={true}
+                      src={form.image}
+                      alt={"No Longer Available"}
+                      style={{
+                        display: loadedImages[form.email] ? "block" : "none",
+                        objectFit: "fill",
+                        borderRadius: "5px",
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                      }}
+                      onLoad={() => handleImageLoad(form.email)}
+                      onError={() => handleImageLoad(form.image)}
+                    />
+                  </div>
+                </Space.Compact>
+              )}
+              {(!account?.image || deleteImage) && (
+                <Avatar size={150} icon={<UserOutlined />} />
+              )}
+              <Space.Compact size="large">
+                <Space size="large" direction="vertical">
+                  <div
+                    className="account-upload"
+                    style={{ display: "flex", alignItems: "center" }}
+                  >
+                    <Upload
+                      accept="image/png,image/jpeg"
+                      listType="picture"
+                      fileList={fileList}
+                      onPreview={handlePreview}
+                      beforeUpload={() => false}
+                      onChange={handleChangeImage}
+                      maxCount={1}
+                      multiple
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        height: "40px",
+                      }}
+                    >
+                      <Button
+                        disabled={!edit}
+                        style={{
+                          color: "black",
+                          fontSize: "13px",
+                          fontWeight: "300",
+                          width: !isMobile ? "50dvw" : "70dvw",
+                        }}
+                        icon={<UploadOutlined />}
+                      >
+                        Upload
+                      </Button>
+                    </Upload>
+                    {account?.image && (
+                      <Button
+                        disabled={deleteImage || !edit}
+                        style={{
+                          fontSize: "13px",
+                          fontWeight: "300",
+                          marginLeft: "5px",
+                          display: "flex",
+                          alignSelf: "flex-start",
+                        }}
+                        type="primary"
+                        danger
+                        onClick={() => {
+                          setForm((prevValue) => {
+                            return {
+                              ...prevValue,
+                              image: "DELETE_IMAGE",
+                              s3Key: "",
+                            };
+                          });
+                          setDeleteImage(true);
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    )}
+                  </div>
+                  {previewImage && (
+                    <Image
+                      wrapperStyle={{
+                        display: "none",
+                      }}
+                      style={{ objectFit: "fill" }}
+                      preview={{
+                        visible: previewOpen,
+                        onVisibleChange: (visible) => setPreviewOpen(visible),
+                        afterOpenChange: (visible) =>
+                          !visible && setPreviewImage(""),
+                      }}
+                      src={previewImage}
+                    />
+                  )}
+                </Space>
+              </Space.Compact>
               <Space.Compact size="large">
                 <Input
                   readOnly
@@ -334,7 +574,9 @@ const Account = () => {
                           showEmail: account?.showEmail ?? "",
                           disableNotification:
                             account?.disableNotification ?? "",
+                          s3Key: account?.s3Key ?? "",
                         });
+                        setDeleteImage(false);
                       }}
                       style={{
                         background: "#52c41a",
@@ -378,7 +620,7 @@ const Account = () => {
                     style={{ display: "flex", justifyContent: "center" }}
                   >
                     {index === 0 && (
-                      <Skeleton.Avatar size={64} active shape={"circle"} />
+                      <Skeleton.Avatar size={150} active shape={"circle"} />
                     )}
                     {index !== 0 && index !== 6 && index !== 7 && (
                       <Skeleton.Node
