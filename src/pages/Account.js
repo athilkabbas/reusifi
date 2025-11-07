@@ -629,6 +629,7 @@ const Account = () => {
                     style={{
                       fontSize: "13px",
                       fontWeight: "300",
+                      marginTop: "70px",
                     }}
                     danger
                     type="primary"
