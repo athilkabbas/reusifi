@@ -33,7 +33,9 @@ const AwsMap = ({ center, zoom }) => {
         });
 
         map.addControl(new maplibregl.NavigationControl(), "top-left");
+        map.scrollZoom.disable();
         map.dragPan.disable();
+        map.touchZoomRotate.enable();
         new maplibregl.Marker({ color: "#ff0000" })
           .setLngLat(center)
           .addTo(map);
