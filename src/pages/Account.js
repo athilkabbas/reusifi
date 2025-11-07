@@ -85,6 +85,7 @@ const Account = () => {
   const [images, setImages] = useState([]);
 
   const [submitLoading, setSubmitLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   const handleChange = (value, type) => {
     setForm((prevValue) => {
@@ -269,14 +270,17 @@ const Account = () => {
 
   const handleDeleteUser = async () => {
     try {
+      setDeleteLoading(true);
       await callApi(
         `https://api.reusifi.com/prod/deleteAccount?username=${encodeURIComponent(
           user.username
         )}&userId=${encodeURIComponent(user.userId)}`,
         "GET"
       );
+      setDeleteLoading(false);
       signOut();
     } catch (err) {
+      setDeleteLoading(false);
       // message.error("An Error has occurred")
       if (isModalVisibleRef.current) {
         return;
@@ -690,7 +694,7 @@ const Account = () => {
           <MenuWrapper defaultSelectedKeys={["6-1"]} isMobile={isMobile} />
         </FooterWrapper>
       )}
-      {submitLoading && (
+      {(submitLoading || deleteLoading) && (
         <Spin
           fullscreen
           indicator={
