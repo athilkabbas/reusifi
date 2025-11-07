@@ -30,16 +30,10 @@ const AwsMap = ({ center, zoom }) => {
           center,
           zoom,
           attributionControl: false,
+          cooperativeGestures: true,
         });
 
         map.addControl(new maplibregl.NavigationControl(), "top-left");
-        map.scrollZoom.disable();
-        map.dragPan.disable();
-        map.dragPan.enable({
-          touch: "twoFingerDrag",
-        });
-        map.touchZoomRotate.enable();
-        map.touchZoomRotate.disableRotation();
         new maplibregl.Marker({ color: "#ff0000" })
           .setLngLat(center)
           .addTo(map);
