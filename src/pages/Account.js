@@ -14,8 +14,9 @@ import {
   Image,
   Upload,
   message,
+  Popconfirm,
 } from "antd";
-import { signInWithRedirect } from "@aws-amplify/auth";
+import { signInWithRedirect, signOut } from "@aws-amplify/auth";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
 import { callApi } from "../helpers/api";
@@ -74,6 +75,7 @@ const Account = () => {
     name: "",
     description: "",
     email: email,
+    userId: user.userId,
     image: "",
     showEmail: false,
     disableNotification: false,
@@ -171,10 +173,11 @@ const Account = () => {
       description: account?.description ?? "",
       email: email,
       image: account?.image ?? "",
+      userId: user.userId,
       showEmail: account?.showEmail ?? false,
       disableNotification: account?.disableNotification ?? false,
     });
-  }, [account, email]);
+  }, [account, email, user]);
 
   useEffect(() => {
     const getChatAndAccount = async () => {
@@ -188,8 +191,8 @@ const Account = () => {
           "GET"
         );
         const accountPromise = callApi(
-          `https://api.reusifi.com/prod/getAccount?email=${encodeURIComponent(
-            email
+          `https://api.reusifi.com/prod/getAccount?userId=${encodeURIComponent(
+            user.userId
           )}`,
           "GET"
         );
@@ -263,6 +266,30 @@ const Account = () => {
   };
 
   const [deleteImage, setDeleteImage] = useState(false);
+
+  const handleDeleteUser = async () => {
+    try {
+      await callApi(
+        `https://api.reusifi.com/prod/deleteAccount?username=${encodeURIComponent(
+          user.username
+        )}&userId=${encodeURIComponent(user.userId)}`,
+        "GET"
+      );
+      signOut();
+    } catch (err) {
+      // message.error("An Error has occurred")
+      if (isModalVisibleRef.current) {
+        return;
+      }
+      isModalVisibleRef.current = true;
+      if (err?.status === 401) {
+        Modal.error(errorSessionConfig);
+      } else {
+        Modal.error(errorConfig);
+      }
+      return;
+    }
+  };
 
   return (
     <Layout
@@ -591,17 +618,24 @@ const Account = () => {
                 </Space>
               )}
               <Space.Compact size="large">
-                <Button
-                  style={{
-                    fontSize: "13px",
-                    fontWeight: "300",
-                    marginTop: "40px",
-                  }}
-                  type="primary"
-                  danger
+                <Popconfirm
+                  title="Do you want to delete the Account?"
+                  onConfirm={handleDeleteUser}
+                  onCancel={() => {}}
+                  okText="Yes"
+                  cancelText="No"
                 >
-                  Delete Account
-                </Button>
+                  <Button
+                    style={{
+                      fontSize: "13px",
+                      fontWeight: "300",
+                    }}
+                    danger
+                    type="primary"
+                  >
+                    Delete Account
+                  </Button>
+                </Popconfirm>
               </Space.Compact>
             </Space>
           )}
