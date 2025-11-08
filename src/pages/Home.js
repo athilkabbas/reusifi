@@ -696,7 +696,7 @@ const Home = () => {
                           if (window.innerHeight >= initialHeight) {
                             setTimeout(() => {
                               popup.style.overflow = "auto";
-                            }, 500);
+                            }, 1000);
                           } else {
                             requestAnimationFrame(waitForKeyboardClose);
                           }
