@@ -169,7 +169,9 @@ const Home = () => {
   const scrollToBottom = () => {
     requestAnimationFrame(() => {
       if (bottomRef?.current) {
-        bottomRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
+        setTimeout(() => {
+          bottomRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
+        }, 100);
       }
     });
   };
