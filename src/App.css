@@ -128,3 +128,14 @@ body {
     width: 50dvw;
   }
 }
+
+.ant-drawer-body {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.ant-drawer-body::-webkit-scrollbar {
+  display: none;
+}

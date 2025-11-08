@@ -701,9 +701,7 @@ const Home = () => {
               closable={{ "aria-label": "Close Button" }}
               onClose={onClose}
               open={drawerOpen}
-              width={"100dvw"}
-              height={"100dvh"}
-              style={{ position: "fixed" }}
+              height={"100%"}
             >
               <Space
                 size="middle"
