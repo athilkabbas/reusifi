@@ -661,7 +661,6 @@ const Home = () => {
               id="parent-container-treeSelect"
               style={{
                 position: "relative",
-                overscrollBehavior: "contain",
               }}
             >
               <TreeSelect
@@ -676,6 +675,10 @@ const Home = () => {
                       overscrollBehavior: "contain",
                       touchAction: "pan-y",
                     }}
+                    onTouchStart={(e) => {
+                      const popup = e.currentTarget;
+                      popup.style.overflow = "hidden";
+                    }}
                     onTouchMove={(e) => {
                       if (
                         (isMobile || window.innerWidth < 1200) &&
@@ -684,7 +687,6 @@ const Home = () => {
                         const popup = e.currentTarget;
                         // const scrollTop = popup.scrollTop;
                         const initialHeight = window.innerHeight;
-                        popup.style.overflow = "hidden";
                         try {
                           document.activeElement.blur({
                             preventScroll: true,
