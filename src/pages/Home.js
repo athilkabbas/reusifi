@@ -174,8 +174,6 @@ const Home = () => {
     });
   };
 
-  const [heightIncrease, setHeightIncrease] = useState(false);
-
   useEffect(() => {
     let prevWidth = window.innerWidth;
     let prevHeight = window.innerHeight;
@@ -201,8 +199,6 @@ const Home = () => {
           document.activeElement.id === "homeMaxId")
       ) {
         scrollToBottom();
-      } else {
-        setHeightIncrease(true);
       }
       prevHeight = currentHeight;
     };
@@ -685,6 +681,7 @@ const Home = () => {
                       ) {
                         const popup = e.currentTarget;
                         const scrollTop = popup.scrollTop;
+                        const initialHeight = window.innerHeight;
                         try {
                           document.activeElement.blur({
                             preventScroll: true,
@@ -693,7 +690,7 @@ const Home = () => {
                           document.activeElement.blur();
                         }
                         const waitForKeyboardClose = () => {
-                          if (heightIncrease) {
+                          if (window.innerHeight >= initialHeight) {
                             popup.scrollTop = scrollTop;
                           } else {
                             requestAnimationFrame(waitForKeyboardClose);
