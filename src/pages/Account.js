@@ -143,12 +143,10 @@ const Account = () => {
         false,
         data
       );
-      if (data.image === "DELETE_IMAGE") {
-        data = { ...data, image: "" };
-      }
       setAccount(data);
       setSubmitLoading(false);
       setEdit(false);
+      setDeleteImage(false);
       setFileList([]);
     } catch (err) {
       setSubmitLoading(false);
@@ -174,6 +172,7 @@ const Account = () => {
       userId: user.userId,
       showEmail: account?.showEmail ?? false,
       disableNotification: account?.disableNotification ?? false,
+      s3Key: account?.s3Key ?? "",
     });
   }, [account, email, user]);
 
@@ -334,68 +333,70 @@ const Account = () => {
                 padding: "20px",
               }}
             >
-              {account?.image && !deleteImage && (
-                <Space.Compact
-                  size="large"
-                  style={{
-                    display: "flex",
-                  }}
-                >
-                  <div
-                    onClick={(e) => e.stopPropagation()}
+              {account?.image &&
+                account?.image !== "DELETE_IMAGE" &&
+                !deleteImage && (
+                  <Space.Compact
+                    size="large"
                     style={{
-                      height: "150px",
-                      width: "100px",
                       display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
                     }}
                   >
-                    {!loadedImages[form.email] && (
-                      <div
-                        style={{
-                          height: "150px",
-                          width: "100px",
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          backgroundColor: "#f0f0f0",
-                        }}
-                      >
-                        <Spin
-                          indicator={
-                            <LoadingOutlined
-                              style={{
-                                fontSize: 48,
-                                color: "#52c41a",
-                              }}
-                              spin
-                            />
-                          }
-                        />
-                      </div>
-                    )}
-                    <Image
-                      preview={true}
-                      src={form.image}
-                      alt={"No Longer Available"}
+                    <div
+                      onClick={(e) => e.stopPropagation()}
                       style={{
-                        display: loadedImages[form.email] ? "block" : "none",
-                        objectFit: "fill",
-                        borderRadius: "5px",
+                        height: "150px",
+                        width: "100px",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
                       }}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                      }}
-                      onLoad={() => handleImageLoad(form.email)}
-                      onError={() => handleImageLoad(form.email)}
-                    />
-                  </div>
-                </Space.Compact>
-              )}
-              {(!account?.image || deleteImage) && (
-                <Avatar size={150} icon={<UserOutlined />} />
-              )}
+                    >
+                      {!loadedImages[form.email] && (
+                        <div
+                          style={{
+                            height: "150px",
+                            width: "100px",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            backgroundColor: "#f0f0f0",
+                          }}
+                        >
+                          <Spin
+                            indicator={
+                              <LoadingOutlined
+                                style={{
+                                  fontSize: 48,
+                                  color: "#52c41a",
+                                }}
+                                spin
+                              />
+                            }
+                          />
+                        </div>
+                      )}
+                      <Image
+                        preview={true}
+                        src={form.image}
+                        alt={"No Longer Available"}
+                        style={{
+                          display: loadedImages[form.email] ? "block" : "none",
+                          objectFit: "fill",
+                          borderRadius: "5px",
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
+                        onLoad={() => handleImageLoad(form.email)}
+                        onError={() => handleImageLoad(form.email)}
+                      />
+                    </div>
+                  </Space.Compact>
+                )}
+              {(!account?.image ||
+                account?.image === "DELETE_IMAGE" ||
+                deleteImage) && <Avatar size={150} icon={<UserOutlined />} />}
               <Space.Compact size="large">
                 <Space size="large" direction="vertical">
                   <div
@@ -431,7 +432,7 @@ const Account = () => {
                         Upload
                       </Button>
                     </Upload>
-                    {account?.image && (
+                    {account?.image && account?.image !== "DELETE_IMAGE" && (
                       <Button
                         disabled={deleteImage || !edit}
                         style={{
@@ -603,6 +604,7 @@ const Account = () => {
                           disableNotification:
                             account?.disableNotification ?? "",
                           s3Key: account?.s3Key ?? "",
+                          userId: user.userId,
                         });
                         setDeleteImage(false);
                       }}
