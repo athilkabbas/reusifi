@@ -550,7 +550,7 @@ const Home = () => {
     setOpen(false);
     setSopen(false);
     setRopen(false);
-    // document.body.style.overscrollBehaviorY = "";
+    document.body.style.overscrollBehaviorY = "";
     setDrawerOpen(false);
   };
   const locationTimer = useRef(null);
@@ -702,6 +702,7 @@ const Home = () => {
               onClose={onClose}
               open={drawerOpen}
               width={"100dvw"}
+              height={"100dvh"}
             >
               <Space
                 size="middle"
@@ -737,19 +738,18 @@ const Home = () => {
                               (isMobile || window.innerWidth < 1200) &&
                               document.activeElement instanceof HTMLElement
                             ) {
-                              e.stopPropagation();
-                              // const popup = e.currentTarget;
-                              // const scrollTop = popup.scrollTop;
-                              // try {
-                              //   document.activeElement.blur({
-                              //     preventScroll: true,
-                              //   });
-                              // } catch {
-                              //   document.activeElement.blur();
-                              // }
-                              // requestAnimationFrame(() => {
-                              //   popup.scrollTop = scrollTop;
-                              // });
+                              const popup = e.currentTarget;
+                              const scrollTop = popup.scrollTop;
+                              try {
+                                document.activeElement.blur({
+                                  preventScroll: true,
+                                });
+                              } catch {
+                                document.activeElement.blur();
+                              }
+                              requestAnimationFrame(() => {
+                                popup.scrollTop = scrollTop;
+                              });
                             }
                           }}
                         >
@@ -788,7 +788,7 @@ const Home = () => {
                       placeholder="Category"
                       onClick={(e) => {
                         setOpen(true);
-                        // document.body.style.overscrollBehaviorY = "none";
+                        document.body.style.overscrollBehaviorY = "none";
                       }}
                       open={open}
                       onChange={(value) => {
@@ -796,7 +796,7 @@ const Home = () => {
                         const leaf = isLeafNode(value, options);
                         setSubCategory(leaf);
                         requestAnimationFrame(() => {
-                          // document.body.style.overscrollBehaviorY = "";
+                          document.body.style.overscrollBehaviorY = "";
                           setOpen(false);
                         });
                         setApplied(false);
