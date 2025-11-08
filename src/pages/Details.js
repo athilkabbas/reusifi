@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { Skeleton, Spin, Descriptions, Col } from "antd";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { Layout, message, Modal, Popconfirm } from "antd";
 import { Image, Space } from "antd";
@@ -15,6 +15,7 @@ import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
 import AwsMap from "../component/Map";
+import CopyButton from "../component/CopyButton";
 const { Content } = Layout;
 const Details = () => {
   const location = useLocation();
@@ -318,23 +319,28 @@ const Details = () => {
     {
       key: "7",
       label: "Ad Id",
-      children: detailData?.[0]?.["item"]["uuid"],
+      children: (
+        <>
+          {detailData?.[0]?.["item"]["uuid"]}
+          &nbsp;
+          <CopyButton text={detailData?.[0]?.["item"]["uuid"]}></CopyButton>
+        </>
+      ),
     },
     {
-      key: "7",
+      key: "8",
       label: "User details",
       children: (
-        <Button
-          onClick={() =>
-            navigate("/userDetails", {
-              state: { userId: detailData?.[0]?.["item"]["email"] },
-            })
-          }
-          style={{ whiteSpace: "normal" }}
-          type="link"
-        >
-          {detailData?.[0]?.["item"]["email"]}
-        </Button>
+        <>
+          <Link
+            to="/userDetails"
+            state={{ userId: detailData?.[0]?.item?.email }}
+          >
+            {detailData?.[0]?.["item"]["email"]}
+          </Link>
+          &nbsp;
+          <CopyButton text={detailData?.[0]?.["item"]["email"]}></CopyButton>
+        </>
       ),
     },
   ];
