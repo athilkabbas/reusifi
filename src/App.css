@@ -134,7 +134,7 @@ body {
   overflow-x: hidden;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  overscroll-behavior-y: contain;
+  overscroll-behavior: contain;
 }
 
 .ant-drawer-body::-webkit-scrollbar {
