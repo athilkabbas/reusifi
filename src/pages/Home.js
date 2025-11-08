@@ -622,7 +622,6 @@ const Home = () => {
 
   return (
     <Layout
-      id="parent-container-drawer"
       style={{
         height: "100dvh",
         overflow: "hidden",
@@ -640,12 +639,12 @@ const Home = () => {
         </HeaderWrapper>
       )}
       <Drawer
+        id="parent-container-drawer"
         title="Filters"
         closable={{ "aria-label": "Close Button" }}
         onClose={onClose}
         open={drawerOpen}
         width={isMobile ? "100%" : "60dvw"}
-        getContainer={() => document.getElementById("parent-container-drawer")}
       >
         <Space
           size="middle"
@@ -659,11 +658,13 @@ const Home = () => {
             <Space.Compact
               size="large"
               id="parent-container-treeSelect"
-              style={{ position: "relative" }}
+              style={{
+                position: "relative",
+              }}
             >
               <TreeSelect
                 getPopupContainer={() =>
-                  document.getElementById("parent-container-treeSelect")
+                  document.getElementById("parent-container-drawer")
                 }
                 popupRender={(menu) => (
                   <div
@@ -711,7 +712,7 @@ const Home = () => {
                         onClick={(e) => {
                           e.stopPropagation();
                           setOpen(true);
-                          // document.body.style.overscrollBehaviorY = "none";
+                          document.body.style.overscrollBehaviorY = "none";
                         }}
                       />
                     )
@@ -727,7 +728,7 @@ const Home = () => {
                 placeholder="Category"
                 onClick={(e) => {
                   setOpen(true);
-                  // document.body.style.overscrollBehaviorY = "none";
+                  document.body.style.overscrollBehaviorY = "none";
                 }}
                 open={open}
                 onChange={(value) => {
