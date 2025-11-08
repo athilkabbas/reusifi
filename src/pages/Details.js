@@ -19,15 +19,18 @@ const { Content } = Layout;
 const Details = () => {
   const location = useLocation();
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const { item, ad } = location.state || "";
+  if (!item && !ad) {
+    navigate("/");
+  }
   const [chatLoading, setChatLoading] = useState(false);
   const [chatProductLoading, setChatProductLoading] = useState(false);
   const [chatProduct, setChatProduct] = useState(false);
   const [unblockLoading, setUnblockLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [activateLoading, setActivateLoading] = useState(false);
-  const navigate = useNavigate();
   const capitalize = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1);
   };
@@ -316,6 +319,23 @@ const Details = () => {
       key: "7",
       label: "Ad Id",
       children: detailData?.[0]?.["item"]["uuid"],
+    },
+    {
+      key: "7",
+      label: "User details",
+      children: (
+        <Button
+          onClick={() =>
+            navigate("/userDetails", {
+              state: { userId: detailData?.[0]?.["item"]["email"] },
+            })
+          }
+          style={{ whiteSpace: "normal" }}
+          type="link"
+        >
+          {detailData?.[0]?.["item"]["email"]}
+        </Button>
+      ),
     },
   ];
   return (

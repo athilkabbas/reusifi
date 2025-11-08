@@ -20,8 +20,20 @@ const { Content } = Layout;
 const Chat = () => {
   const [ichatData, setIChatData] = useState([]);
   const location = useLocation();
+  const navigate = useNavigate();
   const { recipient } = location.state || "";
-  const { conversationId, productId, title, email, image } = location.state;
+  const { conversationId, productId, title, email, image } =
+    location.state || "";
+  if (
+    !recipient &&
+    !conversationId &&
+    !productId &&
+    !title &&
+    !email &&
+    !image
+  ) {
+    navigate("/");
+  }
   const [messageValue, setMessageValue] = useState("");
   const [reconnect, setReconnect] = useState(false);
   const [lastEvaluatedKey, setLastEvaluatedKey] = useState(null);
@@ -33,7 +45,6 @@ const Chat = () => {
   const socketRef = useRef(null);
   const reconnectTimeoutRef = useRef(null);
   const { Text } = Typography;
-  const navigate = useNavigate();
   const sendMessage = (
     message,
     recipientUserId,
@@ -304,7 +315,7 @@ const Chat = () => {
       setLoading(true);
       let result;
       let readRes;
-      if (recipient && recipient["item"]["email"]) {
+      if (recipient && recipient?.["item"]?.["email"]) {
         [result, readRes] = await Promise.all([
           callApi(
             `https://api.reusifi.com/prod/getChatsConversation?userId1=${encodeURIComponent(
@@ -493,7 +504,7 @@ const Chat = () => {
       user.userId &&
       limit &&
       moreWidth &&
-      ((recipient && recipient["item"]["email"]) ||
+      ((recipient && recipient?.["item"]?.["email"]) ||
         (conversationId && productId))
     ) {
       getChatsAndCount();
@@ -518,7 +529,7 @@ const Chat = () => {
   };
   const handleSubmit = () => {
     if (messageValue) {
-      if (recipient && recipient["item"]["email"]) {
+      if (recipient && recipient?.["item"]?.["email"]) {
         sendMessage(
           messageValue,
           recipient["item"]["email"],
@@ -602,7 +613,6 @@ const Chat = () => {
     return `${day}/${month}/${year} ${timeString}`;
   }
 
-  console.log(image, recipient);
   return (
     <Layout
       style={{
@@ -647,7 +657,7 @@ const Chat = () => {
           }}
         >
           <div style={{ fontSize: "13px", fontWeight: "300", padding: "15px" }}>
-            {title || recipient["item"]["title"]}
+            {title || recipient?.["item"]?.["title"]}
           </div>
           <div style={{ display: "flex", gap: "15px" }}>
             <div
@@ -718,14 +728,14 @@ const Chat = () => {
                     state: {
                       item: {
                         item: {
-                          uuid: productId || recipient["item"]["uuid"],
-                          title: title || recipient["item"]["title"],
-                          email: email || recipient["item"]["email"],
+                          uuid: productId || recipient?.["item"]?.["uuid"],
+                          title: title || recipient?.["item"]?.["title"],
+                          email: email || recipient?.["item"]?.["email"],
                         },
-                        images: [image || recipient["images"][0]],
+                        images: [image || recipient?.["images"]?.[0]],
                       },
                       ad:
-                        user.userId === recipient?.["item"]["email"] ||
+                        user.userId === recipient?.["item"]?.["email"] ||
                         user.userId === email,
                     },
                   });

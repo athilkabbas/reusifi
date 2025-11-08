@@ -98,8 +98,6 @@ const Account = () => {
 
   const [edit, setEdit] = useState(false);
 
-  console.log(images?.length);
-
   const handleSubmit = async () => {
     try {
       const viewingOptions = {
@@ -111,7 +109,6 @@ const Account = () => {
       };
       setSubmitLoading(true);
       let data = { ...form };
-      console.log(images.length);
       if (images.length > 0) {
         const compressedImage = await imageCompression(
           images[0],
@@ -391,7 +388,7 @@ const Account = () => {
                         e.stopPropagation();
                       }}
                       onLoad={() => handleImageLoad(form.email)}
-                      onError={() => handleImageLoad(form.image)}
+                      onError={() => handleImageLoad(form.email)}
                     />
                   </div>
                 </Space.Compact>
