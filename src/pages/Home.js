@@ -674,25 +674,25 @@ const Home = () => {
                       overscrollBehavior: "contain",
                       touchAction: "pan-y",
                     }}
-                    // onTouchMove={(e) => {
-                    //   if (
-                    //     (isMobile || window.innerWidth < 1200) &&
-                    //     document.activeElement instanceof HTMLElement
-                    //   ) {
-                    //     const popup = e.currentTarget;
-                    //     const scrollTop = popup.scrollTop;
-                    //     try {
-                    //       document.activeElement.blur({
-                    //         preventScroll: true,
-                    //       });
-                    //     } catch {
-                    //       document.activeElement.blur();
-                    //     }
-                    //     requestAnimationFrame(() => {
-                    //       popup.scrollTop = scrollTop;
-                    //     });
-                    //   }
-                    // }}
+                    onTouchMove={(e) => {
+                      if (
+                        (isMobile || window.innerWidth < 1200) &&
+                        document.activeElement instanceof HTMLElement
+                      ) {
+                        const popup = e.currentTarget;
+                        const scrollTop = popup.scrollTop;
+                        try {
+                          document.activeElement.blur({
+                            preventScroll: true,
+                          });
+                        } catch {
+                          document.activeElement.blur();
+                        }
+                        requestAnimationFrame(() => {
+                          popup.scrollTop = scrollTop;
+                        });
+                      }
+                    }}
                   >
                     {menu}
                   </div>
