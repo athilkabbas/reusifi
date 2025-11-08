@@ -682,6 +682,7 @@ const Home = () => {
                         const popup = e.currentTarget;
                         // const scrollTop = popup.scrollTop;
                         const initialHeight = window.innerHeight;
+                        popup.style.overflow = "hidden";
                         try {
                           document.activeElement.blur({
                             preventScroll: true,
@@ -691,7 +692,9 @@ const Home = () => {
                         }
                         const waitForKeyboardClose = () => {
                           if (window.innerHeight >= initialHeight) {
-                            popup.scrollTo({ top: 0, behavior: "smooth" });
+                            setTimeout(() => {
+                              popup.style.overflow = "auto";
+                            }, 100);
                           } else {
                             requestAnimationFrame(waitForKeyboardClose);
                           }
