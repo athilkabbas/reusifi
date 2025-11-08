@@ -643,8 +643,8 @@ const Home = () => {
         closable={{ "aria-label": "Close Button" }}
         onClose={onClose}
         open={drawerOpen}
-        height={"100dvh"}
-        width={"100dvw"}
+        height={"100%"}
+        width={"100%"}
       >
         <Space
           size="middle"
