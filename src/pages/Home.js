@@ -746,9 +746,12 @@ const Home = () => {
                               } catch {
                                 document.activeElement.blur();
                               }
-                              requestAnimationFrame(() => {
+                              // requestAnimationFrame(() => {
+                              //   popup.scrollTop = scrollTop;
+                              // });
+                              setTimeout(() => {
                                 popup.scrollTop = scrollTop;
-                              });
+                              }, 300);
                             }
                           }}
                         >
