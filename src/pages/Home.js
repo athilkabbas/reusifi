@@ -174,6 +174,8 @@ const Home = () => {
     });
   };
 
+  const [height, setHeight] = useState(window.innerHeight);
+
   useEffect(() => {
     let prevWidth = window.innerWidth;
     let prevHeight = window.innerHeight;
@@ -688,9 +690,14 @@ const Home = () => {
                         } catch {
                           document.activeElement.blur();
                         }
-                        requestAnimationFrame(() => {
-                          popup.scrollTop = scrollTop;
-                        });
+                        const waitForKeyboardClose = () => {
+                          if (window.innerHeight >= height) {
+                            popup.scrollTop = scrollTop;
+                          } else {
+                            requestAnimationFrame(waitForKeyboardClose);
+                          }
+                        };
+                        requestAnimationFrame(waitForKeyboardClose);
                       }
                     }}
                   >
