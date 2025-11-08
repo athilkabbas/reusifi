@@ -680,7 +680,7 @@ const Home = () => {
                         document.activeElement instanceof HTMLElement
                       ) {
                         const popup = e.currentTarget;
-                        const scrollTop = popup.scrollTop;
+                        // const scrollTop = popup.scrollTop;
                         const initialHeight = window.innerHeight;
                         try {
                           document.activeElement.blur({
@@ -691,7 +691,7 @@ const Home = () => {
                         }
                         const waitForKeyboardClose = () => {
                           if (window.innerHeight >= initialHeight) {
-                            popup.scrollTop = scrollTop;
+                            popup.scrollTo({ top: 0, behavior: "smooth" });
                           } else {
                             requestAnimationFrame(waitForKeyboardClose);
                           }
