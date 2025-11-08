@@ -622,6 +622,7 @@ const Home = () => {
 
   return (
     <Layout
+      id="parent-container-drawer"
       style={{
         height: "100dvh",
         overflow: "hidden",
@@ -643,8 +644,8 @@ const Home = () => {
         closable={{ "aria-label": "Close Button" }}
         onClose={onClose}
         open={drawerOpen}
-        height={"100%"}
-        width={"100%"}
+        width={isMobile ? "100%" : "60dvw"}
+        getContainer={() => document.getElementById("parent-container-drawer")}
       >
         <Space
           size="middle"
