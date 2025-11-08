@@ -639,7 +639,6 @@ const Home = () => {
         </HeaderWrapper>
       )}
       <Drawer
-        id="parent-container-drawer"
         title="Filters"
         closable={{ "aria-label": "Close Button" }}
         onClose={onClose}
@@ -660,11 +659,12 @@ const Home = () => {
               id="parent-container-treeSelect"
               style={{
                 position: "relative",
+                overscrollBehavior: "contain",
               }}
             >
               <TreeSelect
                 getPopupContainer={() =>
-                  document.getElementById("parent-container-drawer")
+                  document.getElementById("parent-container-treeSelect")
                 }
                 popupRender={(menu) => (
                   <div
@@ -674,25 +674,25 @@ const Home = () => {
                       overscrollBehavior: "contain",
                       touchAction: "pan-y",
                     }}
-                    onTouchMove={(e) => {
-                      if (
-                        (isMobile || window.innerWidth < 1200) &&
-                        document.activeElement instanceof HTMLElement
-                      ) {
-                        const popup = e.currentTarget;
-                        const scrollTop = popup.scrollTop;
-                        try {
-                          document.activeElement.blur({
-                            preventScroll: true,
-                          });
-                        } catch {
-                          document.activeElement.blur();
-                        }
-                        requestAnimationFrame(() => {
-                          popup.scrollTop = scrollTop;
-                        });
-                      }
-                    }}
+                    // onTouchMove={(e) => {
+                    //   if (
+                    //     (isMobile || window.innerWidth < 1200) &&
+                    //     document.activeElement instanceof HTMLElement
+                    //   ) {
+                    //     const popup = e.currentTarget;
+                    //     const scrollTop = popup.scrollTop;
+                    //     try {
+                    //       document.activeElement.blur({
+                    //         preventScroll: true,
+                    //       });
+                    //     } catch {
+                    //       document.activeElement.blur();
+                    //     }
+                    //     requestAnimationFrame(() => {
+                    //       popup.scrollTop = scrollTop;
+                    //     });
+                    //   }
+                    // }}
                   >
                     {menu}
                   </div>
@@ -712,7 +712,7 @@ const Home = () => {
                         onClick={(e) => {
                           e.stopPropagation();
                           setOpen(true);
-                          document.body.style.overscrollBehaviorY = "none";
+                          // document.body.style.overscrollBehaviorY = "none";
                         }}
                       />
                     )
@@ -728,7 +728,7 @@ const Home = () => {
                 placeholder="Category"
                 onClick={(e) => {
                   setOpen(true);
-                  document.body.style.overscrollBehaviorY = "none";
+                  // document.body.style.overscrollBehaviorY = "none";
                 }}
                 open={open}
                 onChange={(value) => {
