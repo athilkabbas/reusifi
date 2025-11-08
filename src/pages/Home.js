@@ -550,7 +550,7 @@ const Home = () => {
     setOpen(false);
     setSopen(false);
     setRopen(false);
-    document.body.style.overscrollBehaviorY = "";
+    // document.body.style.overscrollBehaviorY = "";
     setDrawerOpen(false);
   };
   const locationTimer = useRef(null);
@@ -746,12 +746,9 @@ const Home = () => {
                               } catch {
                                 document.activeElement.blur();
                               }
-                              // requestAnimationFrame(() => {
-                              //   popup.scrollTop = scrollTop;
-                              // });
-                              setTimeout(() => {
+                              requestAnimationFrame(() => {
                                 popup.scrollTop = scrollTop;
-                              }, 300);
+                              });
                             }
                           }}
                         >
@@ -790,7 +787,7 @@ const Home = () => {
                       placeholder="Category"
                       onClick={(e) => {
                         setOpen(true);
-                        document.body.style.overscrollBehaviorY = "none";
+                        // document.body.style.overscrollBehaviorY = "none";
                       }}
                       open={open}
                       onChange={(value) => {
@@ -798,7 +795,7 @@ const Home = () => {
                         const leaf = isLeafNode(value, options);
                         setSubCategory(leaf);
                         requestAnimationFrame(() => {
-                          document.body.style.overscrollBehaviorY = "";
+                          // document.body.style.overscrollBehaviorY = "";
                           setOpen(false);
                         });
                         setApplied(false);
