@@ -703,6 +703,7 @@ const Home = () => {
               open={drawerOpen}
               width={"100dvw"}
               height={"100dvh"}
+              style={{ position: "fixed" }}
             >
               <Space
                 size="middle"
