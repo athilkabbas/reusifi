@@ -256,7 +256,7 @@ const UserDetails = () => {
           )}
           {loading && (
             <Row gutter={[30, 30]}>
-              {Array.from({ length: 8 }).map((_, index) => {
+              {Array.from({ length: 4 }).map((_, index) => {
                 return (
                   <Col
                     key={index}
@@ -271,25 +271,14 @@ const UserDetails = () => {
                     {index === 0 && (
                       <Skeleton.Avatar size={150} active shape={"circle"} />
                     )}
-                    {index !== 0 && index !== 6 && index !== 7 && (
+                    {index !== 0 && (
                       <Skeleton.Node
                         style={{
                           width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
-                          height: index !== 4 ? "40px" : "214px",
+                          height: index !== 3 ? "40px" : "214px",
                           borderRadius: "8px",
                         }}
                         active
-                      />
-                    )}
-                    {index === 6 && <Skeleton.Button active />}
-                    {index === 7 && (
-                      <Skeleton.Node
-                        active
-                        style={{
-                          width: "125px",
-                          height: "40px",
-                          borderRadius: "8px",
-                        }}
                       />
                     )}
                   </Col>
