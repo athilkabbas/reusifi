@@ -390,6 +390,19 @@ const AddDress = () => {
   const submitRef = useRef(null);
   const bottomRef = useRef(null);
 
+  const bottomRefPrice = useRef(null);
+
+  const scrollToBottomPrice = () => {
+    requestAnimationFrame(() => {
+      if (bottomRefPrice?.current) {
+        bottomRefPrice.current?.scrollIntoView({
+          behavior: "auto",
+          block: "end",
+        });
+      }
+    });
+  };
+
   const scrollToBottom = () => {
     requestAnimationFrame(() => {
       if (bottomRef?.current) {
@@ -407,6 +420,12 @@ const AddDress = () => {
         document.activeElement.id === "sellPriceId"
       ) {
         scrollToBottom();
+      } else if (
+        currentHeight < prevHeight &&
+        (document.activeElement.id === "cascaderId" ||
+          document.activeElement.id === "pincodeId")
+      ) {
+        scrollToBottomPrice();
       }
       prevHeight = currentHeight;
     };
@@ -484,8 +503,8 @@ const AddDress = () => {
                 </Space.Compact>
                 <Space.Compact size="large" style={{ position: "relative" }}>
                   <Cascader
+                    id={"cascaderId"}
                     allowClear={false}
-                    placement="topLeft"
                     popupRender={(menu) => (
                       <div
                         style={{
@@ -627,6 +646,7 @@ const AddDress = () => {
                   }}
                 >
                   <Input
+                    id={"pincodeId"}
                     value={pincode}
                     onChange={handlePincode}
                     placeholder="Pincode"
@@ -721,6 +741,7 @@ const AddDress = () => {
                     maxLength={15}
                   />
                 </Space.Compact>
+                <div ref={bottomRefPrice}></div>
                 <Space.Compact size="large">
                   <Space size="large" direction="vertical">
                     <Upload
