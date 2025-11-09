@@ -353,7 +353,7 @@ const Favourites = () => {
                     lg: 5,
                     xl: 6,
                     xxl: 7,
-                    gutter: 5,
+                    gutter: 10,
                   }}
                   dataSource={favData}
                   renderItem={(item) => {
@@ -369,6 +369,9 @@ const Favourites = () => {
                               width: "186px",
                               display: "flex",
                               flexDirection: "column",
+                              background: "transparent",
+                              border: "none",
+                              boxShadow: "none",
                             }}
                             styles={{
                               body: {
@@ -376,6 +379,7 @@ const Favourites = () => {
                                 display: "flex",
                                 flexDirection: "column",
                                 flex: 1,
+                                background: "transparent",
                               },
                             }}
                             onClick={() => {
