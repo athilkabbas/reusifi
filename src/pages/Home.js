@@ -689,8 +689,8 @@ const Home = () => {
                         const prevScrollTop = popup.scrollTop;
                         const initialHeight = window.innerHeight;
 
-                        popup.style.overflow = "auto";
-                        popup.style.touchAction = "pan-y";
+                        popup.style.overflow = "hidden";
+                        popup.style.touchAction = "none";
 
                         try {
                           document.activeElement.blur({ preventScroll: true });
