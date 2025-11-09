@@ -91,7 +91,20 @@ const MenuWrapper = ({
     return {
       key: String(index + 1),
       icon:
-        index === 1 ? <Badge dot={unreadChatCount}>{divHtml}</Badge> : divHtml,
+        index === 1 ? (
+          <Badge
+            dot={unreadChatCount}
+            style={{
+              width: isMobile ? 8 : 8,
+              height: isMobile ? 8 : 8,
+            }}
+            offset={[0, isMobile ? 10 : 15]}
+          >
+            {divHtml}
+          </Badge>
+        ) : (
+          divHtml
+        ),
     };
   });
 
