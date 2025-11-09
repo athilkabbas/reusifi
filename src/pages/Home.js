@@ -673,11 +673,11 @@ const Home = () => {
                       maxHeight: 400,
                       overflow: "auto",
                       overscrollBehavior: "contain",
-                      touchAction: "pan-y",
                     }}
                     onTouchStart={(e) => {
                       const popup = e.currentTarget;
                       popup.style.overflow = "hidden";
+                      popup.style.touchAction = "none";
                     }}
                     onTouchMove={(e) => {
                       if (
@@ -698,7 +698,8 @@ const Home = () => {
                           if (window.innerHeight >= initialHeight) {
                             setTimeout(() => {
                               popup.style.overflow = "auto";
-                              popup.scrollTo({ top: 0, behavior: "smooth" });
+                              popup.style.touchAction = "pan-y";
+                              popup.scrollTop = 0;
                             }, 1000);
                           } else {
                             requestAnimationFrame(waitForKeyboardClose);
