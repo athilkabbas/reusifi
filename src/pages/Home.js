@@ -171,7 +171,7 @@ const Home = () => {
       if (bottomRef?.current) {
         setTimeout(() => {
           bottomRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
-        }, 100);
+        }, 1000);
       }
     });
   };
