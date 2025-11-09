@@ -166,6 +166,19 @@ const Home = () => {
 
   const bottomRef = useRef(null);
 
+  const bottomRefPrice = useRef(null);
+
+  const scrollToBottomPrice = () => {
+    requestAnimationFrame(() => {
+      if (bottomRefPrice?.current) {
+        bottomRefPrice.current?.scrollIntoView({
+          behavior: "auto",
+          block: "end",
+        });
+      }
+    });
+  };
+
   const scrollToBottom = () => {
     requestAnimationFrame(() => {
       if (bottomRef?.current) {
@@ -199,6 +212,11 @@ const Home = () => {
           document.activeElement.id === "homeMaxId")
       ) {
         scrollToBottom();
+      } else if (
+        currentHeight < prevHeight &&
+        document.activeElement.id === "locationId"
+      ) {
+        scrollToBottomPrice();
       }
       prevHeight = currentHeight;
     };
@@ -794,6 +812,7 @@ const Home = () => {
               style={{ position: "relative" }}
             >
               <Select
+                id={"locationId"}
                 getPopupContainer={() =>
                   document.getElementById("parent-container-select")
                 }
@@ -1130,6 +1149,7 @@ const Home = () => {
               </Space.Compact>
               <CloseCircleOutlined onClick={() => setPriceFilter("")} />
             </Space>
+            <div ref={bottomRefPrice}></div>
             {/* &nbsp;&nbsp;or */}
             <Space.Compact size="large">
               <Space size="large">
