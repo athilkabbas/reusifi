@@ -1543,7 +1543,7 @@ const Home = () => {
                       <Skeleton.Node
                         style={{
                           height: "300px",
-                          width: screens.xs ? "43dvw" : "186px",
+                          width: screens.xs ? "45dvw" : "186px",
                           borderRadius: "8px",
                         }}
                         active

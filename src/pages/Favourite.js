@@ -353,7 +353,7 @@ const Favourites = () => {
                     lg: 5,
                     xl: 6,
                     xxl: 7,
-                    gutter: 10,
+                    gutter: 2,
                   }}
                   dataSource={favData}
                   renderItem={(item) => {
@@ -364,8 +364,20 @@ const Favourites = () => {
                           style={{ display: "flex", justifyContent: "center" }}
                         >
                           <Card
-                            style={{ height: "325px", width: "186px" }}
-                            styles={{ body: { adding: "10px 10px 10px 10px" } }}
+                            style={{
+                              height: "335px",
+                              width: "186px",
+                              display: "flex",
+                              flexDirection: "column",
+                            }}
+                            styles={{
+                              body: {
+                                padding: "5px 5px 5px 5px",
+                                display: "flex",
+                                flexDirection: "column",
+                                flex: 1,
+                              },
+                            }}
                             onClick={() => {
                               setFavScrollPosition(
                                 scrollableDivRef.current.scrollTop
@@ -422,81 +434,78 @@ const Favourites = () => {
                               </>
                             }
                           >
-                            <Card.Meta
-                              description={
-                                <div
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                justifyContent: "space-evenly",
+                                flexGrow: 1,
+                              }}
+                            >
+                              <div>
+                                <span
                                   style={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    gap: "5px",
+                                    fontSize: "13px",
+                                    color: "#111827",
+                                    display: "-webkit-box",
+                                    WebkitLineClamp: 1,
+                                    WebkitBoxOrient: "vertical",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    fontWeight: "300",
                                   }}
                                 >
-                                  <div>
-                                    <span
-                                      style={{
-                                        fontSize: "13px",
-                                        color: "#111827",
-                                        display: "-webkit-box",
-                                        WebkitLineClamp: 1,
-                                        WebkitBoxOrient: "vertical",
-                                        overflow: "hidden",
-                                        textOverflow: "ellipsis",
-                                        fontWeight: "300",
-                                      }}
-                                    >
-                                      {capitalize(item["item"]["title"])}
-                                    </span>
-                                  </div>
-                                  <div
-                                    style={{
-                                      display: "flex",
-                                      justifyContent: "space-between",
-                                    }}
-                                  >
-                                    <span
-                                      style={{
-                                        fontSize: "15px",
-                                        color: "#237804",
-                                        whiteSpace: "nowrap",
-                                        textOverflow: "ellipsis",
-                                        overflow: "hidden",
-                                      }}
-                                    >
-                                      ₹{item["item"]["price"]}
-                                    </span>
-                                    <div
-                                      onClick={(event) => {
-                                        handleFav(
-                                          item["item"]["uuid"],
-                                          !filterList.includes(
-                                            item["item"]["uuid"]
-                                          ),
-                                          event
-                                        );
-                                        event.preventDefault();
-                                        event.stopPropagation();
-                                      }}
-                                      style={{
-                                        display: "flex",
-                                        padding: "3px",
-                                        scale: "1.2",
-                                      }}
-                                    >
-                                      {filterList.includes(
+                                  {capitalize(item["item"]["title"])}
+                                </span>
+                              </div>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "space-between",
+                                }}
+                              >
+                                <span
+                                  style={{
+                                    fontSize: "15px",
+                                    color: "#237804",
+                                    whiteSpace: "nowrap",
+                                    textOverflow: "ellipsis",
+                                    overflow: "hidden",
+                                  }}
+                                >
+                                  ₹{item["item"]["price"]}
+                                </span>
+                                <div
+                                  onClick={(event) => {
+                                    handleFav(
+                                      item["item"]["uuid"],
+                                      !filterList.includes(
                                         item["item"]["uuid"]
-                                      ) && (
-                                        <HeartFilled
-                                          style={{ color: "#52c41a" }}
-                                        ></HeartFilled>
-                                      )}
-                                      {!filterList.includes(
-                                        item["item"]["uuid"]
-                                      ) && <HeartOutlined></HeartOutlined>}
-                                    </div>
-                                  </div>
+                                      ),
+                                      event
+                                    );
+                                    event.preventDefault();
+                                    event.stopPropagation();
+                                  }}
+                                  style={{
+                                    display: "flex",
+                                    padding: "3px",
+                                    scale: "1.2",
+                                  }}
+                                >
+                                  {filterList.includes(
+                                    item["item"]["uuid"]
+                                  ) && (
+                                    <HeartFilled
+                                      style={{ color: "#52c41a" }}
+                                    ></HeartFilled>
+                                  )}
+                                  {!filterList.includes(
+                                    item["item"]["uuid"]
+                                  ) && <HeartOutlined></HeartOutlined>}
                                 </div>
-                              }
-                            />
+                              </div>
+                            </div>
                           </Card>
                         </List.Item>
                       </>
@@ -532,7 +541,7 @@ const Favourites = () => {
                       <Skeleton.Node
                         style={{
                           height: "300px",
-                          width: screens.xs ? "43dvw" : "186px",
+                          width: screens.xs ? "45dvw" : "186px",
                           borderRadius: "8px",
                         }}
                         active
