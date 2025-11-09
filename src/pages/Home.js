@@ -1346,7 +1346,7 @@ const Home = () => {
                     lg: 5,
                     xl: 6,
                     xxl: 7,
-                    gutter: 2,
+                    gutter: 5,
                   }}
                   dataSource={data}
                   renderItem={(item) => {
@@ -1358,7 +1358,7 @@ const Home = () => {
                         >
                           <Card
                             style={{
-                              height: "335px",
+                              height: "286px",
                               width: "186px",
                               display: "flex",
                               flexDirection: "column",
@@ -1389,7 +1389,7 @@ const Home = () => {
                                     style={{
                                       display: "flex",
                                       justifyContent: "center",
-                                      height: "250px",
+                                      height: "200px",
                                       alignItems: "center",
                                       backgroundColor: "#f0f0f0",
                                     }}
@@ -1411,7 +1411,7 @@ const Home = () => {
                                   src={item["images"][0]}
                                   alt={item["item"]["title"]}
                                   style={{
-                                    height: "247px",
+                                    height: "200px",
                                     objectFit: "fill",
                                     display: loadedImages[item["item"]["uuid"]]
                                       ? "block"
@@ -1542,8 +1542,8 @@ const Home = () => {
                     >
                       <Skeleton.Node
                         style={{
-                          height: "300px",
-                          width: screens.xs ? "45dvw" : "186px",
+                          height: "286px",
+                          width: screens.xs ? "44dvw" : "186px",
                           borderRadius: "8px",
                         }}
                         active
