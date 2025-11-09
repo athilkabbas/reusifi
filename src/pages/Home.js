@@ -700,7 +700,7 @@ const Home = () => {
 
                         const waitForKeyboardClose = () => {
                           if (
-                            Math.abs(window.innerHeight - initialHeight) < 10
+                            Math.abs(window.innerHeight - initialHeight) < 2
                           ) {
                             popup.style.overflow = "auto";
                             popup.style.touchAction = "pan-y";
