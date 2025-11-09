@@ -787,6 +787,7 @@ const Chat = () => {
                   document.activeElement instanceof HTMLElement
                 ) {
                   const popup = e.currentTarget;
+                  const initialHeight = window.innerHeight;
                   const scrollTop = popup.scrollTop;
 
                   try {
@@ -796,9 +797,16 @@ const Chat = () => {
                   } catch {
                     document.activeElement.blur();
                   }
-                  requestAnimationFrame(() => {
-                    popup.scrollTop = scrollTop;
-                  });
+                  const waitForKeyboardClose = () => {
+                    if (window.innerHeight >= initialHeight) {
+                      setTimeout(() => {
+                        popup.scrollTop = scrollTop;
+                      }, 1000);
+                    } else {
+                      requestAnimationFrame(waitForKeyboardClose);
+                    }
+                  };
+                  requestAnimationFrame(waitForKeyboardClose);
                 }
               }}
               autoSize={{ minRows: 1, maxRows: 5 }}
