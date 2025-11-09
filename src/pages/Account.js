@@ -60,6 +60,7 @@ const Account = () => {
     },
   };
   const [loading, setLoading] = useState(false);
+  const bottomRef = useRef(null);
 
   const {
     accountInitialLoad,
@@ -162,6 +163,32 @@ const Account = () => {
       return;
     }
   };
+  const scrollToBottom = () => {
+    requestAnimationFrame(() => {
+      if (bottomRef?.current) {
+        setTimeout(() => {
+          bottomRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
+        }, 1000);
+      }
+    });
+  };
+
+  useEffect(() => {
+    let prevHeight = window.innerHeight;
+    const handleResize = () => {
+      const currentHeight = window.innerHeight;
+      if (
+        currentHeight < prevHeight &&
+        (document.activeElement.id === "homeMinId" ||
+          document.activeElement.id === "homeMaxId")
+      ) {
+        scrollToBottom();
+      }
+      prevHeight = currentHeight;
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     setForm({
@@ -539,6 +566,8 @@ const Account = () => {
                   value={form.description}
                 />
               </Space.Compact>
+              <br />
+              <div ref={bottomRef}></div>
               <Space.Compact
                 size="large"
                 style={{
