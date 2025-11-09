@@ -620,6 +620,17 @@ const Home = () => {
     }, 300);
   };
 
+  useEffect(() => {
+    if (open) {
+      console.log("athil");
+      const popup = document.getElementById("popupId");
+      if (popup) {
+        popup.style.overflow = "hidden";
+        popup.style.touchAction = "none";
+      }
+    }
+  }, [open]);
+
   return (
     <Layout
       style={{
@@ -667,6 +678,7 @@ const Home = () => {
                 }
                 popupRender={(menu) => (
                   <div
+                    id="popupId"
                     style={{
                       maxHeight: 400,
                       overflow: "hidden",
