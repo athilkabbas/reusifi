@@ -243,6 +243,8 @@ const Home = () => {
     }
   };
 
+  const windowHeight = window.innerHeight;
+
   const handleFav = async (selectedItem, favourite) => {
     try {
       setScrollPosition(scrollableDivRef.current.scrollTop);
@@ -687,7 +689,6 @@ const Home = () => {
 
                         const popup = e.currentTarget;
                         const prevScrollTop = popup.scrollTop;
-                        const initialHeight = window.innerHeight;
 
                         popup.style.overflow = "hidden";
                         popup.style.touchAction = "none";
@@ -699,9 +700,7 @@ const Home = () => {
                         }
 
                         const waitForKeyboardClose = () => {
-                          if (
-                            Math.abs(window.innerHeight - initialHeight) < 2
-                          ) {
+                          if (Math.abs(window.innerHeight - windowHeight) < 2) {
                             popup.style.overflow = "auto";
                             popup.style.touchAction = "pan-y";
                             popup.scrollTop = prevScrollTop;
