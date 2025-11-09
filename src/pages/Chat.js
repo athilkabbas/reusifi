@@ -801,7 +801,7 @@ const Chat = () => {
                     if (window.innerHeight >= initialHeight) {
                       setTimeout(() => {
                         popup.scrollTop = scrollTop;
-                      }, 1000);
+                      }, 50);
                     } else {
                       requestAnimationFrame(waitForKeyboardClose);
                     }

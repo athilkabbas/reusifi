@@ -179,8 +179,7 @@ const Account = () => {
       const currentHeight = window.innerHeight;
       if (
         currentHeight < prevHeight &&
-        (document.activeElement.id === "homeMinId" ||
-          document.activeElement.id === "homeMaxId")
+        document.activeElement.id === "accountDescId"
       ) {
         scrollToBottom();
       }
@@ -562,6 +561,7 @@ const Account = () => {
                   onChange={(value) => handleChange(value, "description")}
                   autoSize={{ minRows: 8, maxRows: 8 }}
                   placeholder="Description"
+                  id={"accountDescId"}
                   maxLength={300}
                   value={form.description}
                 />
