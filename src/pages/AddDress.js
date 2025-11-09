@@ -505,6 +505,7 @@ const AddDress = () => {
                             document.activeElement instanceof HTMLElement
                           ) {
                             const popup = e.currentTarget;
+                            const scrollTop = popup.scrollTop;
                             popup.style.overflow = "hidden";
                             popup.style.touchAction = "none";
                             const initialHeight = window.innerHeight;
@@ -519,7 +520,7 @@ const AddDress = () => {
                               if (window.innerHeight >= initialHeight) {
                                 popup.style.overflow = "auto";
                                 popup.style.touchAction = "pan-y";
-                                popup.scrollTop = 0;
+                                popup.scrollTop = scrollTop;
                               } else {
                                 requestAnimationFrame(waitForKeyboardClose);
                               }
