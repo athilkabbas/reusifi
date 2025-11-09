@@ -683,23 +683,28 @@ const Home = () => {
                         (isMobile || window.innerWidth < 1200) &&
                         document.activeElement instanceof HTMLElement
                       ) {
+                        e.preventDefault();
+
                         const popup = e.currentTarget;
-                        const scrollTop = popup.scrollTop;
+                        const prevScrollTop = popup.scrollTop;
+                        const initialHeight = window.innerHeight;
+
                         popup.style.overflow = "hidden";
                         popup.style.touchAction = "none";
-                        const initialHeight = window.innerHeight;
+
                         try {
-                          document.activeElement.blur({
-                            preventScroll: true,
-                          });
+                          document.activeElement.blur({ preventScroll: true });
                         } catch {
                           document.activeElement.blur();
                         }
+
                         const waitForKeyboardClose = () => {
-                          if (window.innerHeight >= initialHeight) {
+                          if (
+                            Math.abs(window.innerHeight - initialHeight) < 10
+                          ) {
                             popup.style.overflow = "auto";
                             popup.style.touchAction = "pan-y";
-                            popup.scrollTop = scrollTop;
+                            popup.scrollTop = prevScrollTop;
                           } else {
                             requestAnimationFrame(waitForKeyboardClose);
                           }
