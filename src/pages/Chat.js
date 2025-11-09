@@ -140,7 +140,7 @@ const Chat = () => {
       if (bottomRef?.current) {
         setTimeout(() => {
           bottomRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
-        }, 1000);
+        }, 50);
       }
     });
   };

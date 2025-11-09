@@ -168,7 +168,7 @@ const Account = () => {
       if (bottomRef?.current) {
         setTimeout(() => {
           bottomRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
-        }, 1000);
+        }, 50);
       }
     });
   };
@@ -566,7 +566,6 @@ const Account = () => {
                   value={form.description}
                 />
               </Space.Compact>
-              <br />
               <div ref={bottomRef}></div>
               <Space.Compact
                 size="large"

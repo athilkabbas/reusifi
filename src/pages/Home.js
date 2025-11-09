@@ -171,7 +171,7 @@ const Home = () => {
       if (bottomRef?.current) {
         setTimeout(() => {
           bottomRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
-        }, 1000);
+        }, 50);
       }
     });
   };
@@ -1163,6 +1163,7 @@ const Home = () => {
               </Space>
             </Space.Compact>
           </Space>
+          <br />
           <Space
             size="large"
             style={{ display: "flex", justifyContent: "center" }}
@@ -1245,8 +1246,6 @@ const Home = () => {
             </Space.Compact>
           </Space>
         </Space>
-        <br />
-        <br />
         <br />
         <div ref={bottomRef}></div>
       </Drawer>
