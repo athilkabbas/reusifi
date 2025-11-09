@@ -1346,7 +1346,7 @@ const Home = () => {
                     lg: 5,
                     xl: 6,
                     xxl: 7,
-                    gutter: 10,
+                    gutter: 2,
                   }}
                   dataSource={data}
                   renderItem={(item) => {
@@ -1357,8 +1357,11 @@ const Home = () => {
                           style={{ display: "flex", justifyContent: "center" }}
                         >
                           <Card
-                            style={{ height: "325px", width: "186px" }}
-                            bodyStyle={{ padding: "10px 10px 10px 10px" }}
+                            style={{
+                              height: "325px",
+                              width: "186px",
+                            }}
+                            styles={{ body: { padding: "5px 5px 5px 5px" } }}
                             onClick={() => {
                               setScrollPosition(
                                 scrollableDivRef.current.scrollTop
@@ -1421,7 +1424,8 @@ const Home = () => {
                                   style={{
                                     display: "flex",
                                     flexDirection: "column",
-                                    gap: "5px",
+                                    justifyContent: "space-between",
+                                    height: "70px",
                                   }}
                                 >
                                   <div>
@@ -1431,10 +1435,11 @@ const Home = () => {
                                         fontWeight: "300",
                                         color: "#111827",
                                         display: "-webkit-box",
-                                        WebkitLineClamp: 1,
+                                        WebkitLineClamp: 2,
                                         WebkitBoxOrient: "vertical",
                                         overflow: "hidden",
                                         textOverflow: "ellipsis",
+                                        wordBreak: "break-all",
                                       }}
                                     >
                                       {capitalize(item["item"]["title"])}

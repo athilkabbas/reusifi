@@ -365,7 +365,7 @@ const Favourites = () => {
                         >
                           <Card
                             style={{ height: "325px", width: "186px" }}
-                            bodyStyle={{ padding: "10px 10px 10px 10px" }}
+                            styles={{ body: { adding: "10px 10px 10px 10px" } }}
                             onClick={() => {
                               setFavScrollPosition(
                                 scrollableDivRef.current.scrollTop

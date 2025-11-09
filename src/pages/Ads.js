@@ -282,7 +282,7 @@ const Ads = () => {
                         >
                           <Card
                             style={{ height: "325px", width: "186px" }}
-                            bodyStyle={{ padding: "10px 10px 10px 10px" }}
+                            styles={{ body: { padding: "5px 5px 5px 5px" } }}
                             onClick={() => {
                               setAdScrollPosition(
                                 scrollableDivRef.current.scrollTop

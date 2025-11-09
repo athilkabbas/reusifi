@@ -343,7 +343,7 @@ const ReusifiLanding = () => {
               <Card
                 hoverable
                 style={{ textAlign: "center", height: "100%" }}
-                bodyStyle={{ padding: "32px 24px" }}
+                styles={{ body: { padding: "32px 24px" } }}
               >
                 <div
                   style={{
@@ -371,7 +371,7 @@ const ReusifiLanding = () => {
               <Card
                 hoverable
                 style={{ textAlign: "center", height: "100%" }}
-                bodyStyle={{ padding: "32px 24px" }}
+                styles={{ body: { padding: "32px 24px" } }}
               >
                 <div
                   style={{
@@ -401,7 +401,7 @@ const ReusifiLanding = () => {
               <Card
                 hoverable
                 style={{ textAlign: "center", height: "100%" }}
-                bodyStyle={{ padding: "32px 24px" }}
+                styles={{ body: { padding: "32px 24px" } }}
               >
                 <div
                   style={{
