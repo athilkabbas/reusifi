@@ -407,6 +407,8 @@ const Account = () => {
                         alt={"No Longer Available"}
                         style={{
                           display: loadedImages[form.email] ? "block" : "none",
+                          height: "150px",
+                          width: "100px",
                           objectFit: "fill",
                           borderRadius: "5px",
                         }}
