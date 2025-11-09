@@ -138,9 +138,7 @@ const Chat = () => {
   const scrollToBottom = () => {
     requestAnimationFrame(() => {
       if (bottomRef?.current) {
-        setTimeout(() => {
-          bottomRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
-        }, 50);
+        bottomRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
       }
     });
   };
@@ -799,9 +797,7 @@ const Chat = () => {
                   }
                   const waitForKeyboardClose = () => {
                     if (window.innerHeight >= initialHeight) {
-                      setTimeout(() => {
-                        popup.scrollTop = scrollTop;
-                      }, 50);
+                      popup.scrollTop = scrollTop;
                     } else {
                       requestAnimationFrame(waitForKeyboardClose);
                     }

@@ -166,9 +166,7 @@ const Account = () => {
   const scrollToBottom = () => {
     requestAnimationFrame(() => {
       if (bottomRef?.current) {
-        setTimeout(() => {
-          bottomRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
-        }, 50);
+        bottomRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
       }
     });
   };

@@ -393,9 +393,7 @@ const AddDress = () => {
   const scrollToBottom = () => {
     requestAnimationFrame(() => {
       if (bottomRef?.current) {
-        setTimeout(() => {
-          bottomRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
-        }, 50);
+        bottomRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
       }
     });
   };
@@ -519,11 +517,9 @@ const AddDress = () => {
                             }
                             const waitForKeyboardClose = () => {
                               if (window.innerHeight >= initialHeight) {
-                                setTimeout(() => {
-                                  popup.style.overflow = "auto";
-                                  popup.style.touchAction = "pan-y";
-                                  popup.scrollTop = 0;
-                                }, 1000);
+                                popup.style.overflow = "auto";
+                                popup.style.touchAction = "pan-y";
+                                popup.scrollTop = 0;
                               } else {
                                 requestAnimationFrame(waitForKeyboardClose);
                               }
