@@ -490,8 +490,14 @@ const AddDress = () => {
                       <div
                         style={{
                           maxHeight: 400,
-                          overflow: "auto",
+                          overflow: "hidden",
                           overscrollBehavior: "contain",
+                          touchAction: "none",
+                        }}
+                        onTouchStart={(e) => {
+                          const popup = e.currentTarget;
+                          popup.style.overflow = "hidden";
+                          popup.style.touchAction = "none";
                         }}
                         onTouchMove={(e) => {
                           if (
@@ -499,8 +505,9 @@ const AddDress = () => {
                             document.activeElement instanceof HTMLElement
                           ) {
                             const popup = e.currentTarget;
-                            const scrollTop = popup.scrollTop;
-
+                            popup.style.overflow = "hidden";
+                            popup.style.touchAction = "none";
+                            const initialHeight = window.innerHeight;
                             try {
                               document.activeElement.blur({
                                 preventScroll: true,
@@ -508,9 +515,18 @@ const AddDress = () => {
                             } catch {
                               document.activeElement.blur();
                             }
-                            requestAnimationFrame(() => {
-                              popup.scrollTop = scrollTop;
-                            });
+                            const waitForKeyboardClose = () => {
+                              if (window.innerHeight >= initialHeight) {
+                                setTimeout(() => {
+                                  popup.style.overflow = "auto";
+                                  popup.style.touchAction = "pan-y";
+                                  popup.scrollTop = 0;
+                                }, 1000);
+                              } else {
+                                requestAnimationFrame(waitForKeyboardClose);
+                              }
+                            };
+                            requestAnimationFrame(waitForKeyboardClose);
                           }
                         }}
                       >
