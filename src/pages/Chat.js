@@ -785,9 +785,8 @@ const Chat = () => {
                   document.activeElement instanceof HTMLElement
                 ) {
                   const popup = e.currentTarget;
-                  popup.style.overflow = "hidden";
-                  popup.style.touchAction = "none";
-                  const initialHeight = window.innerHeight;
+                  const scrollTop = popup.scrollTop;
+
                   try {
                     document.activeElement.blur({
                       preventScroll: true,
@@ -795,18 +794,9 @@ const Chat = () => {
                   } catch {
                     document.activeElement.blur();
                   }
-                  const waitForKeyboardClose = () => {
-                    if (window.innerHeight >= initialHeight) {
-                      setTimeout(() => {
-                        popup.style.overflow = "auto";
-                        popup.style.touchAction = "pan-y";
-                        popup.scrollTop = 0;
-                      }, 1000);
-                    } else {
-                      requestAnimationFrame(waitForKeyboardClose);
-                    }
-                  };
-                  requestAnimationFrame(waitForKeyboardClose);
+                  requestAnimationFrame(() => {
+                    popup.scrollTop = scrollTop;
+                  });
                 }
               }}
               autoSize={{ minRows: 1, maxRows: 5 }}
