@@ -622,7 +622,6 @@ const Home = () => {
 
   useEffect(() => {
     if (open) {
-      console.log("athil");
       const popup = document.getElementById("popupId");
       if (popup) {
         popup.style.overflow = "hidden";
