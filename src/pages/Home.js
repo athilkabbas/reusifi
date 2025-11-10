@@ -711,6 +711,9 @@ const Home = () => {
                       maxHeight: 400,
                       overflow: "auto",
                     }}
+                    onTouchMove={(e) => {
+                      setOpen(true);
+                    }}
                     // onTouchMove={(e) => {
                     //   if (
                     //     (isMobile || window.innerWidth < 1200) &&
