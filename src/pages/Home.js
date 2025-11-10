@@ -708,7 +708,7 @@ const Home = () => {
                 popupRender={(menu) => (
                   <div
                     style={{
-                      maxHeight: 300,
+                      maxHeight: 400,
                       overflow: "auto",
                     }}
                     // onTouchMove={(e) => {
@@ -816,7 +816,7 @@ const Home = () => {
                 popupRender={(menu) => (
                   <div
                     style={{
-                      maxHeight: 300,
+                      maxHeight: 400,
                       overflow: "autp",
                     }}
                     // onTouchMove={(e) => {
@@ -998,7 +998,7 @@ const Home = () => {
                 popupRender={(menu) => (
                   <div
                     style={{
-                      maxHeight: 300,
+                      maxHeight: 400,
                       overflow: "auto",
                     }}
                     // onTouchMove={(e) => {
@@ -1080,7 +1080,6 @@ const Home = () => {
             >
               Price
             </Divider>
-            <div ref={bottomRefPrice}></div>
             <Space size="small" style={{ width: "100%" }}>
               <Space.Compact size="large">
                 <Radio.Group
@@ -1144,6 +1143,7 @@ const Home = () => {
               </Space>
             </Space.Compact>
           </Space>
+          <div ref={bottomRefPrice}></div>
           <br />
           <Space
             size="large"

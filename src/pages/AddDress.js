@@ -853,8 +853,8 @@ const AddDress = () => {
                     Submit
                   </Button>
                 </Space.Compact>
-                <div ref={bottomRef}></div>
               </Space>
+              <div ref={bottomRef}></div>
             </>
           )}
           {(loading || chatLoading) && (
