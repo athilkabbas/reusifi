@@ -639,26 +639,26 @@ const Home = () => {
     }, 300);
   };
 
-  useEffect(() => {
-    const drawerBody = document.querySelector(".ant-drawer-body");
-    if (drawerBody) {
-      if (open || sOpen || rOpen) {
-        requestAnimationFrame(() => {
-          drawerBody.style.overflow = "hidden";
-          drawerBody.style.touchAction = "none";
-        });
-      } else {
-        drawerBody.style.overflow = "auto";
-        drawerBody.style.touchAction = "auto";
-      }
-    }
-    return () => {
-      if (drawerBody) {
-        drawerBody.style.overflow = "auto";
-        drawerBody.style.touchAction = "auto";
-      }
-    };
-  }, [open, sOpen, rOpen]);
+  // useEffect(() => {
+  //   const drawerBody = document.querySelector(".ant-drawer-body");
+  //   if (drawerBody) {
+  //     if (open || sOpen || rOpen) {
+  //       requestAnimationFrame(() => {
+  //         drawerBody.style.overflow = "hidden";
+  //         drawerBody.style.touchAction = "none";
+  //       });
+  //     } else {
+  //       drawerBody.style.overflow = "auto";
+  //       drawerBody.style.touchAction = "auto";
+  //     }
+  //   }
+  //   return () => {
+  //     if (drawerBody) {
+  //       drawerBody.style.overflow = "auto";
+  //       drawerBody.style.touchAction = "auto";
+  //     }
+  //   };
+  // }, [open, sOpen, rOpen]);
 
   return (
     <Layout
@@ -711,25 +711,7 @@ const Home = () => {
                       maxHeight: 400,
                       overflow: "auto",
                     }}
-                    // onTouchMove={(e) => {
-                    //   if (
-                    //     (isMobile || window.innerWidth < 1200) &&
-                    //     document.activeElement instanceof HTMLElement
-                    //   ) {
-                    //     const popup = e.currentTarget;
-                    //     const prevScrollTop = popup.scrollTop;
-
-                    //     try {
-                    //       document.activeElement.blur({ preventScroll: true });
-                    //     } catch {
-                    //       document.activeElement.blur();
-                    //     }
-
-                    //     requestAnimationFrame(() => {
-                    //       popup.scrollTop = prevScrollTop;
-                    //     });
-                    //   }
-                    // }}
+                    onTouchMove={(e) => e.stopPropagation()}
                   >
                     {menu}
                   </div>
