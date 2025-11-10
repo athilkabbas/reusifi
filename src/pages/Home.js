@@ -718,7 +718,7 @@ const Home = () => {
                         }
 
                         const waitForKeyboardClose = () => {
-                          if (Math.abs(window.innerHeight - windowHeight) < 2) {
+                          if (window.innerHeight - windowHeight === 0) {
                             popup.style.overflow = "auto";
                             popup.style.touchAction = "pan-y";
                             popup.scrollTop = prevScrollTop;
@@ -748,7 +748,7 @@ const Home = () => {
                         onClick={(e) => {
                           e.stopPropagation();
                           setOpen(true);
-                          document.body.style.overscrollBehaviorY = "none";
+                          document.body.style.overscrollBehaviorY = "hidden";
                         }}
                       />
                     )
@@ -764,7 +764,7 @@ const Home = () => {
                 placeholder="Category"
                 onClick={(e) => {
                   setOpen(true);
-                  document.body.style.overscrollBehaviorY = "none";
+                  document.body.style.overscrollBehaviorY = "hidden";
                 }}
                 open={open}
                 onChange={(value) => {
@@ -898,7 +898,8 @@ const Home = () => {
                 }
                 onClick={(e) => {
                   setSopen(true);
-                  document.body.style.overscrollBehaviorY = "none";
+                  document.body.style.overscrollBehaviorY = "hidden";
+                  scrollToBottomPrice();
                 }}
                 suffixIcon={
                   !locationLabel ? (
@@ -915,7 +916,7 @@ const Home = () => {
                         onClick={(e) => {
                           e.stopPropagation();
                           setSopen(true);
-                          document.body.style.overscrollBehaviorY = "none";
+                          document.body.style.overscrollBehaviorY = "hidden";
                         }}
                       />
                     )
@@ -1072,7 +1073,7 @@ const Home = () => {
                 filterOption={false}
                 onClick={(e) => {
                   setRopen(true);
-                  document.body.style.overscrollBehaviorY = "none";
+                  document.body.style.overscrollBehaviorY = "hidden";
                 }}
                 suffixIcon={
                   rOpen ? (
@@ -1088,7 +1089,7 @@ const Home = () => {
                       onClick={(e) => {
                         e.stopPropagation();
                         setRopen(true);
-                        document.body.style.overscrollBehaviorY = "none";
+                        document.body.style.overscrollBehaviorY = "hidden";
                       }}
                     />
                   )
@@ -1124,6 +1125,7 @@ const Home = () => {
             >
               Price
             </Divider>
+            <div ref={bottomRefPrice}></div>
             <Space size="small" style={{ width: "100%" }}>
               <Space.Compact size="large">
                 <Radio.Group
@@ -1149,7 +1151,6 @@ const Home = () => {
               </Space.Compact>
               <CloseCircleOutlined onClick={() => setPriceFilter("")} />
             </Space>
-            <div ref={bottomRefPrice}></div>
             {/* &nbsp;&nbsp;or */}
             <Space.Compact size="large">
               <Space size="large">
@@ -1164,6 +1165,9 @@ const Home = () => {
                     value={minPrice || null}
                     placeholder="min"
                     style={{ width: "150px" }}
+                    onClick={() => {
+                      scrollToBottom();
+                    }}
                   ></Input>
                 </Space.Compact>
                 <Space.Compact size="large">
@@ -1177,6 +1181,9 @@ const Home = () => {
                     value={maxPrice || null}
                     placeholder="max"
                     style={{ width: "150px" }}
+                    onClick={() => {
+                      scrollToBottom();
+                    }}
                   ></Input>
                 </Space.Compact>
               </Space>

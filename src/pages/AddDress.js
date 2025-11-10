@@ -389,8 +389,20 @@ const AddDress = () => {
   const [open, setOpen] = useState(false);
   const submitRef = useRef(null);
   const bottomRef = useRef(null);
+  const bottomRefPincode = useRef(null);
 
   const bottomRefPrice = useRef(null);
+
+  const scrollToBottomPincode = () => {
+    requestAnimationFrame(() => {
+      if (bottomRefPincode?.current) {
+        bottomRefPincode.current?.scrollIntoView({
+          behavior: "auto",
+          block: "end",
+        });
+      }
+    });
+  };
 
   const scrollToBottomPrice = () => {
     requestAnimationFrame(() => {
@@ -426,6 +438,11 @@ const AddDress = () => {
           document.activeElement.id === "pincodeId")
       ) {
         scrollToBottomPrice();
+      } else if (
+        currentHeight < prevHeight &&
+        document.activeElement.id === "descId"
+      ) {
+        scrollToBottomPincode();
       }
       prevHeight = currentHeight;
     };
@@ -489,6 +506,7 @@ const AddDress = () => {
                 </Space.Compact>
                 <Space.Compact size="large">
                   <TextArea
+                    id={"descId"}
                     allowClear
                     style={{
                       // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
@@ -499,6 +517,9 @@ const AddDress = () => {
                     placeholder="Description"
                     maxLength={300}
                     value={form.description}
+                    onClick={() => {
+                      scrollToBottomPincode();
+                    }}
                   />
                 </Space.Compact>
                 <Space.Compact size="large" style={{ position: "relative" }}>
@@ -569,7 +590,8 @@ const AddDress = () => {
                         e.target.closest(".ant-select-clear");
                       if (isClearButton) return;
                       setOpen(true);
-                      document.body.style.overscrollBehaviorY = "none";
+                      document.body.style.overscrollBehaviorY = "hidden";
+                      scrollToBottomPrice();
                     }}
                     open={open}
                     options={options}
@@ -593,7 +615,8 @@ const AddDress = () => {
                             onClick={(e) => {
                               e.stopPropagation();
                               setOpen(true);
-                              document.body.style.overscrollBehaviorY = "none";
+                              document.body.style.overscrollBehaviorY =
+                                "hidden";
                             }}
                           />
                         )
@@ -651,6 +674,9 @@ const AddDress = () => {
                     onChange={handlePincode}
                     placeholder="Pincode"
                     allowClear
+                    onClick={() => {
+                      scrollToBottomPrice();
+                    }}
                   ></Input>
                   <Button
                     loading={postCodeLoading}
@@ -666,6 +692,7 @@ const AddDress = () => {
                     Check Pincode
                   </Button>
                 </Space.Compact>
+                <dv ref={bottomRefPincode}></dv>
                 &nbsp;&nbsp;or
                 <Space.Compact size="large">
                   <Button
@@ -739,6 +766,9 @@ const AddDress = () => {
                     placeholder="Price"
                     value={form.price}
                     maxLength={15}
+                    onClick={() => {
+                      scrollToBottom();
+                    }}
                   />
                 </Space.Compact>
                 <div ref={bottomRefPrice}></div>
