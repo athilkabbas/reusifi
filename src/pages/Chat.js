@@ -811,9 +811,6 @@ const Chat = () => {
                 scrollToBottom();
                 setOpen(true);
               }}
-              onTouchMove={() => {
-                setOpen(true);
-              }}
               autoSize={{ minRows: 1, maxRows: 5 }}
               onChange={(event) => handleChange(event.target.value)}
               placeholder="Enter message"

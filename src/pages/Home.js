@@ -712,27 +712,24 @@ const Home = () => {
                       overflow: "auto",
                     }}
                     onTouchMove={(e) => {
-                      setOpen(true);
+                      if (
+                        (isMobile || window.innerWidth < 1200) &&
+                        document.activeElement instanceof HTMLElement
+                      ) {
+                        const popup = e.currentTarget;
+                        const prevScrollTop = popup.scrollTop;
+
+                        try {
+                          document.activeElement.blur({ preventScroll: true });
+                        } catch {
+                          document.activeElement.blur();
+                        }
+
+                        requestAnimationFrame(() => {
+                          popup.scrollTop = prevScrollTop;
+                        });
+                      }
                     }}
-                    // onTouchMove={(e) => {
-                    //   if (
-                    //     (isMobile || window.innerWidth < 1200) &&
-                    //     document.activeElement instanceof HTMLElement
-                    //   ) {
-                    //     const popup = e.currentTarget;
-                    //     const prevScrollTop = popup.scrollTop;
-
-                    //     try {
-                    //       document.activeElement.blur({ preventScroll: true });
-                    //     } catch {
-                    //       document.activeElement.blur();
-                    //     }
-
-                    //     requestAnimationFrame(() => {
-                    //       popup.scrollTop = prevScrollTop;
-                    //     });
-                    //   }
-                    // }}
                   >
                     {menu}
                   </div>
@@ -823,42 +820,24 @@ const Home = () => {
                       overflow: "autp",
                     }}
                     onTouchMove={(e) => {
-                      setSopen(true);
+                      if (
+                        (isMobile || window.innerWidth < 1200) &&
+                        document.activeElement instanceof HTMLElement
+                      ) {
+                        const popup = e.currentTarget;
+                        const prevScrollTop = popup.scrollTop;
+
+                        try {
+                          document.activeElement.blur({ preventScroll: true });
+                        } catch {
+                          document.activeElement.blur();
+                        }
+
+                        requestAnimationFrame(() => {
+                          popup.scrollTop = prevScrollTop;
+                        });
+                      }
                     }}
-                    // onTouchStart={(e) => {
-                    //   const popup = e.currentTarget;
-                    //   popup.style.overflow = "hidden";
-                    //   popup.style.touchAction = "none";
-                    // }}
-                    // onTouchMove={(e) => {
-                    //   if (
-                    //     (isMobile || window.innerWidth < 1200) &&
-                    //     document.activeElement instanceof HTMLElement
-                    //   ) {
-                    //     const popup = e.currentTarget;
-                    //     const scrollTop = popup.scrollTop;
-                    //     popup.style.overflow = "hidden";
-                    //     popup.style.touchAction = "none";
-                    //     const initialHeight = window.innerHeight;
-                    //     try {
-                    //       document.activeElement.blur({
-                    //         preventScroll: true,
-                    //       });
-                    //     } catch {
-                    //       document.activeElement.blur();
-                    //     }
-                    //     const waitForKeyboardClose = () => {
-                    //       if (window.innerHeight >= initialHeight) {
-                    //         popup.style.overflow = "auto";
-                    //         popup.style.touchAction = "pan-y";
-                    //         popup.scrollTop = scrollTop;
-                    //       } else {
-                    //         requestAnimationFrame(waitForKeyboardClose);
-                    //       }
-                    //     };
-                    //     requestAnimationFrame(waitForKeyboardClose);
-                    //   }
-                    // }}
                   >
                     {menu}
                   </div>
@@ -1023,42 +1002,24 @@ const Home = () => {
                       overflow: "auto",
                     }}
                     onTouchMove={(e) => {
-                      setRopen(true);
+                      if (
+                        (isMobile || window.innerWidth < 1200) &&
+                        document.activeElement instanceof HTMLElement
+                      ) {
+                        const popup = e.currentTarget;
+                        const prevScrollTop = popup.scrollTop;
+
+                        try {
+                          document.activeElement.blur({ preventScroll: true });
+                        } catch {
+                          document.activeElement.blur();
+                        }
+
+                        requestAnimationFrame(() => {
+                          popup.scrollTop = prevScrollTop;
+                        });
+                      }
                     }}
-                    // onTouchStart={(e) => {
-                    //   const popup = e.currentTarget;
-                    //   popup.style.overflow = "hidden";
-                    //   popup.style.touchAction = "none";
-                    // }}
-                    // onTouchMove={(e) => {
-                    //   if (
-                    //     (isMobile || window.innerWidth < 1200) &&
-                    //     document.activeElement instanceof HTMLElement
-                    //   ) {
-                    //     const popup = e.currentTarget;
-                    //     const scrollTop = popup.scrollTop;
-                    //     popup.style.overflow = "hidden";
-                    //     popup.style.touchAction = "none";
-                    //     const initialHeight = window.innerHeight;
-                    //     try {
-                    //       document.activeElement.blur({
-                    //         preventScroll: true,
-                    //       });
-                    //     } catch {
-                    //       document.activeElement.blur();
-                    //     }
-                    //     const waitForKeyboardClose = () => {
-                    //       if (window.innerHeight >= initialHeight) {
-                    //         popup.style.overflow = "auto";
-                    //         popup.style.touchAction = "pan-y";
-                    //         popup.scrollTop = scrollTop;
-                    //       } else {
-                    //         requestAnimationFrame(waitForKeyboardClose);
-                    //       }
-                    //     };
-                    //     requestAnimationFrame(waitForKeyboardClose);
-                    //   }
-                    // }}
                   >
                     {menu}
                   </div>
