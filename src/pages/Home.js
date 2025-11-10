@@ -639,6 +639,22 @@ const Home = () => {
     }, 300);
   };
 
+  useEffect(() => {
+    const drawerBody = document.querySelector(".ant-drawer-body");
+    if (drawerBody) {
+      if (open || sOpen || rOpen) {
+        requestAnimationFrame(() => {
+          drawerBody.style.overflow = "hidden";
+        });
+      } else {
+        drawerBody.style.overflow = "auto";
+      }
+    }
+    return () => {
+      if (drawerBody) drawerBody.style.overflow = "auto";
+    };
+  }, [open, sOpen, rOpen]);
+
   return (
     <Layout
       style={{
@@ -688,27 +704,17 @@ const Home = () => {
                   <div
                     style={{
                       maxHeight: 400,
-                      overflow: "hidden",
+                      overflow: "auto",
                       overscrollBehavior: "contain",
-                      touchAction: "none",
-                    }}
-                    onTouchStart={(e) => {
-                      const popup = e.currentTarget;
-                      popup.style.overflow = "hidden";
-                      popup.style.touchAction = "none";
+                      touchAction: "pan-y",
                     }}
                     onTouchMove={(e) => {
                       if (
                         (isMobile || window.innerWidth < 1200) &&
                         document.activeElement instanceof HTMLElement
                       ) {
-                        e.preventDefault();
-
                         const popup = e.currentTarget;
                         const prevScrollTop = popup.scrollTop;
-
-                        popup.style.overflow = "hidden";
-                        popup.style.touchAction = "none";
 
                         try {
                           document.activeElement.blur({ preventScroll: true });
@@ -716,16 +722,9 @@ const Home = () => {
                           document.activeElement.blur();
                         }
 
-                        const waitForKeyboardClose = () => {
-                          if (window.innerHeight - windowHeight === 0) {
-                            popup.style.overflow = "auto";
-                            popup.style.touchAction = "pan-y";
-                            popup.scrollTop = prevScrollTop;
-                          } else {
-                            requestAnimationFrame(waitForKeyboardClose);
-                          }
-                        };
-                        requestAnimationFrame(waitForKeyboardClose);
+                        requestAnimationFrame(() => {
+                          popup.scrollTop = prevScrollTop;
+                        });
                       }
                     }}
                   >
