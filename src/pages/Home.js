@@ -645,13 +645,18 @@ const Home = () => {
       if (open || sOpen || rOpen) {
         requestAnimationFrame(() => {
           drawerBody.style.overflow = "hidden";
+          drawerBody.style.touchAction = "none";
         });
       } else {
         drawerBody.style.overflow = "auto";
+        drawerBody.style.touchAction = "auto";
       }
     }
     return () => {
-      if (drawerBody) drawerBody.style.overflow = "auto";
+      if (drawerBody) {
+        drawerBody.style.overflow = "auto";
+        drawerBody.style.touchAction = "auto";
+      }
     };
   }, [open, sOpen, rOpen]);
 
@@ -705,8 +710,6 @@ const Home = () => {
                     style={{
                       maxHeight: 400,
                       overflow: "auto",
-                      overscrollBehavior: "contain",
-                      touchAction: "pan-y",
                     }}
                     onTouchMove={(e) => {
                       if (

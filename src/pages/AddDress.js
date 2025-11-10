@@ -449,6 +449,28 @@ const AddDress = () => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  useEffect(() => {
+    const drawerBody = document.querySelector("#addProductContainer");
+    if (drawerBody) {
+      if (open) {
+        requestAnimationFrame(() => {
+          drawerBody.style.overflow = "hidden";
+          drawerBody.style.touchAction = "none";
+        });
+      } else {
+        drawerBody.style.overflow = "auto";
+        drawerBody.style.touchAction = "auto";
+      }
+    }
+    return () => {
+      if (drawerBody) {
+        drawerBody.style.overflow = "auto";
+        drawerBody.style.touchAction = "auto";
+      }
+    };
+  }, [open]);
+
   return (
     <Layout
       style={{
@@ -471,6 +493,7 @@ const AddDress = () => {
       )}
       <Content>
         <div
+          id={"addProductContainer"}
           style={{
             background: "#F9FAFB",
             borderRadius: "0px",
