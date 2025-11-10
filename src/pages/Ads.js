@@ -394,11 +394,12 @@ const Ads = () => {
                                     fontSize: "13px",
                                     color: "#111827",
                                     display: "-webkit-box",
-                                    WebkitLineClamp: 1,
+                                    WebkitLineClamp: 2,
                                     WebkitBoxOrient: "vertical",
                                     overflow: "hidden",
                                     textOverflow: "ellipsis",
                                     fontWeight: "300",
+                                    wordBreak: "break-all",
                                   }}
                                 >
                                   {capitalize(item["item"]["title"])}
