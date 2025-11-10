@@ -6,7 +6,7 @@ const HeaderWrapper = ({ children }) => {
       style={{
         padding: "0px",
         height: "60px",
-        zIndex: 2,
+        zIndex: 1000,
         width: "100dvw",
       }}
     >
