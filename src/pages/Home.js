@@ -711,25 +711,25 @@ const Home = () => {
                       maxHeight: 400,
                       overflow: "auto",
                     }}
-                    onTouchMove={(e) => {
-                      if (
-                        (isMobile || window.innerWidth < 1200) &&
-                        document.activeElement instanceof HTMLElement
-                      ) {
-                        const popup = e.currentTarget;
-                        const prevScrollTop = popup.scrollTop;
+                    // onTouchMove={(e) => {
+                    //   if (
+                    //     (isMobile || window.innerWidth < 1200) &&
+                    //     document.activeElement instanceof HTMLElement
+                    //   ) {
+                    //     const popup = e.currentTarget;
+                    //     const prevScrollTop = popup.scrollTop;
 
-                        try {
-                          document.activeElement.blur({ preventScroll: true });
-                        } catch {
-                          document.activeElement.blur();
-                        }
+                    //     try {
+                    //       document.activeElement.blur({ preventScroll: true });
+                    //     } catch {
+                    //       document.activeElement.blur();
+                    //     }
 
-                        requestAnimationFrame(() => {
-                          popup.scrollTop = prevScrollTop;
-                        });
-                      }
-                    }}
+                    //     requestAnimationFrame(() => {
+                    //       popup.scrollTop = prevScrollTop;
+                    //     });
+                    //   }
+                    // }}
                   >
                     {menu}
                   </div>
