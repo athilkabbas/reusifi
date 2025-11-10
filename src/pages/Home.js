@@ -570,7 +570,6 @@ const Home = () => {
     setOpen(false);
     setSopen(false);
     setRopen(false);
-    document.body.style.overscrollBehaviorY = "";
     setDrawerOpen(false);
   };
   const locationTimer = useRef(null);
@@ -740,7 +739,6 @@ const Home = () => {
                         onClick={(e) => {
                           e.stopPropagation();
                           setOpen(false);
-                          document.body.style.overscrollBehaviorY = "";
                         }}
                       />
                     ) : (
@@ -748,7 +746,6 @@ const Home = () => {
                         onClick={(e) => {
                           e.stopPropagation();
                           setOpen(true);
-                          document.body.style.overscrollBehaviorY = "hidden";
                         }}
                       />
                     )
@@ -764,7 +761,6 @@ const Home = () => {
                 placeholder="Category"
                 onClick={(e) => {
                   setOpen(true);
-                  document.body.style.overscrollBehaviorY = "hidden";
                 }}
                 open={open}
                 onChange={(value) => {
@@ -772,7 +768,6 @@ const Home = () => {
                   const leaf = isLeafNode(value, options);
                   setSubCategory(leaf);
                   requestAnimationFrame(() => {
-                    document.body.style.overscrollBehaviorY = "";
                     setOpen(false);
                   });
                   setApplied(false);
@@ -898,7 +893,6 @@ const Home = () => {
                 }
                 onClick={(e) => {
                   setSopen(true);
-                  document.body.style.overscrollBehaviorY = "hidden";
                   scrollToBottomPrice();
                 }}
                 suffixIcon={
@@ -908,7 +902,6 @@ const Home = () => {
                         onClick={(e) => {
                           e.stopPropagation();
                           setSopen(false);
-                          document.body.style.overscrollBehaviorY = "";
                         }}
                       />
                     ) : (
@@ -916,7 +909,6 @@ const Home = () => {
                         onClick={(e) => {
                           e.stopPropagation();
                           setSopen(true);
-                          document.body.style.overscrollBehaviorY = "hidden";
                         }}
                       />
                     )
@@ -926,7 +918,6 @@ const Home = () => {
                 onSelect={(value, options) => {
                   handleLocationSelect(value, options);
                   requestAnimationFrame(() => {
-                    document.body.style.overscrollBehaviorY = "";
                     setSopen(false);
                   });
                 }}
@@ -1073,7 +1064,6 @@ const Home = () => {
                 filterOption={false}
                 onClick={(e) => {
                   setRopen(true);
-                  document.body.style.overscrollBehaviorY = "hidden";
                 }}
                 suffixIcon={
                   rOpen ? (
@@ -1081,7 +1071,6 @@ const Home = () => {
                       onClick={(e) => {
                         e.stopPropagation();
                         setRopen(false);
-                        document.body.style.overscrollBehaviorY = "";
                       }}
                     />
                   ) : (
@@ -1089,7 +1078,6 @@ const Home = () => {
                       onClick={(e) => {
                         e.stopPropagation();
                         setRopen(true);
-                        document.body.style.overscrollBehaviorY = "hidden";
                       }}
                     />
                   )
@@ -1099,7 +1087,6 @@ const Home = () => {
                   setRadiusValue(value);
                   setApplied(false);
                   requestAnimationFrame(() => {
-                    document.body.style.overscrollBehaviorY = "";
                     setRopen(false);
                   });
                 }}

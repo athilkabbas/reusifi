@@ -590,7 +590,6 @@ const AddDress = () => {
                         e.target.closest(".ant-select-clear");
                       if (isClearButton) return;
                       setOpen(true);
-                      document.body.style.overscrollBehaviorY = "hidden";
                       scrollToBottomPrice();
                     }}
                     open={open}
@@ -607,7 +606,6 @@ const AddDress = () => {
                             onClick={(e) => {
                               e.stopPropagation();
                               setOpen(false);
-                              document.body.style.overscrollBehaviorY = "";
                             }}
                           />
                         ) : (
@@ -615,8 +613,6 @@ const AddDress = () => {
                             onClick={(e) => {
                               e.stopPropagation();
                               setOpen(true);
-                              document.body.style.overscrollBehaviorY =
-                                "hidden";
                             }}
                           />
                         )
