@@ -613,6 +613,33 @@ const Chat = () => {
     return `${day}/${month}/${year} ${timeString}`;
   }
 
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const contentBody = document.querySelector("#chatContainer");
+    if (contentBody) {
+      if (open) {
+        requestAnimationFrame(() => {
+          contentBody.style.overflow = "hidden";
+          contentBody.style.touchAction = "none";
+        });
+      } else {
+        requestAnimationFrame(() => {
+          contentBody.style.overflow = "auto";
+          contentBody.style.touchAction = "auto";
+        });
+      }
+    }
+    return () => {
+      if (contentBody) {
+        requestAnimationFrame(() => {
+          contentBody.style.overflow = "auto";
+          contentBody.style.touchAction = "auto";
+        });
+      }
+    };
+  }, [open]);
+
   return (
     <Layout
       style={{
@@ -759,6 +786,7 @@ const Chat = () => {
       </HeaderWrapper>
       <Content>
         <div
+          id={"chatContainer"}
           style={{
             background: "#F9FAFB",
             borderRadius: "0px",
@@ -779,31 +807,9 @@ const Chat = () => {
           >
             <TextArea
               id="chatTextAreaId"
-              onTouchMove={(e) => {
-                if (
-                  (isMobile || window.innerWidth < 1200) &&
-                  document.activeElement instanceof HTMLElement
-                ) {
-                  const popup = e.currentTarget;
-                  const initialHeight = window.innerHeight;
-                  const scrollTop = popup.scrollTop;
-
-                  try {
-                    document.activeElement.blur({
-                      preventScroll: true,
-                    });
-                  } catch {
-                    document.activeElement.blur();
-                  }
-                  const waitForKeyboardClose = () => {
-                    if (window.innerHeight >= initialHeight) {
-                      popup.scrollTop = scrollTop;
-                    } else {
-                      requestAnimationFrame(waitForKeyboardClose);
-                    }
-                  };
-                  requestAnimationFrame(waitForKeyboardClose);
-                }
+              onClick={() => {
+                scrollToBottom();
+                setOpen(true);
               }}
               autoSize={{ minRows: 1, maxRows: 5 }}
               onChange={(event) => handleChange(event.target.value)}

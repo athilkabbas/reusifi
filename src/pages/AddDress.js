@@ -451,22 +451,22 @@ const AddDress = () => {
   }, []);
 
   useEffect(() => {
-    const drawerBody = document.querySelector("#addProductContainer");
-    if (drawerBody) {
+    const contentBody = document.querySelector("#addProductContainer");
+    if (contentBody) {
       if (open) {
         requestAnimationFrame(() => {
-          drawerBody.style.overflow = "hidden";
-          drawerBody.style.touchAction = "none";
+          contentBody.style.overflow = "hidden";
+          contentBody.style.touchAction = "none";
         });
       } else {
-        drawerBody.style.overflow = "auto";
-        drawerBody.style.touchAction = "auto";
+        contentBody.style.overflow = "auto";
+        contentBody.style.touchAction = "auto";
       }
     }
     return () => {
-      if (drawerBody) {
-        drawerBody.style.overflow = "auto";
-        drawerBody.style.touchAction = "auto";
+      if (contentBody) {
+        contentBody.style.overflow = "auto";
+        contentBody.style.touchAction = "auto";
       }
     };
   }, [open]);
@@ -553,44 +553,42 @@ const AddDress = () => {
                       <div
                         style={{
                           maxHeight: 400,
-                          overflow: "hidden",
-                          overscrollBehavior: "contain",
-                          touchAction: "none",
+                          overflow: "auto",
                         }}
-                        onTouchStart={(e) => {
-                          const popup = e.currentTarget;
-                          popup.style.overflow = "hidden";
-                          popup.style.touchAction = "none";
-                        }}
-                        onTouchMove={(e) => {
-                          if (
-                            (isMobile || window.innerWidth < 1200) &&
-                            document.activeElement instanceof HTMLElement
-                          ) {
-                            const popup = e.currentTarget;
-                            const scrollTop = popup.scrollTop;
-                            popup.style.overflow = "hidden";
-                            popup.style.touchAction = "none";
-                            const initialHeight = window.innerHeight;
-                            try {
-                              document.activeElement.blur({
-                                preventScroll: true,
-                              });
-                            } catch {
-                              document.activeElement.blur();
-                            }
-                            const waitForKeyboardClose = () => {
-                              if (window.innerHeight >= initialHeight) {
-                                popup.style.overflow = "auto";
-                                popup.style.touchAction = "pan-y";
-                                popup.scrollTop = scrollTop;
-                              } else {
-                                requestAnimationFrame(waitForKeyboardClose);
-                              }
-                            };
-                            requestAnimationFrame(waitForKeyboardClose);
-                          }
-                        }}
+                        // onTouchStart={(e) => {
+                        //   const popup = e.currentTarget;
+                        //   popup.style.overflow = "hidden";
+                        //   popup.style.touchAction = "none";
+                        // }}
+                        // onTouchMove={(e) => {
+                        //   if (
+                        //     (isMobile || window.innerWidth < 1200) &&
+                        //     document.activeElement instanceof HTMLElement
+                        //   ) {
+                        //     const popup = e.currentTarget;
+                        //     const scrollTop = popup.scrollTop;
+                        //     popup.style.overflow = "hidden";
+                        //     popup.style.touchAction = "none";
+                        //     const initialHeight = window.innerHeight;
+                        //     try {
+                        //       document.activeElement.blur({
+                        //         preventScroll: true,
+                        //       });
+                        //     } catch {
+                        //       document.activeElement.blur();
+                        //     }
+                        //     const waitForKeyboardClose = () => {
+                        //       if (window.innerHeight >= initialHeight) {
+                        //         popup.style.overflow = "auto";
+                        //         popup.style.touchAction = "pan-y";
+                        //         popup.scrollTop = scrollTop;
+                        //       } else {
+                        //         requestAnimationFrame(waitForKeyboardClose);
+                        //       }
+                        //     };
+                        //     requestAnimationFrame(waitForKeyboardClose);
+                        //   }
+                        // }}
                       >
                         {menu}
                       </div>
