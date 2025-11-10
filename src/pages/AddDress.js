@@ -555,6 +555,9 @@ const AddDress = () => {
                           maxHeight: 400,
                           overflow: "auto",
                         }}
+                        onTouchMove={(e) => {
+                          setOpen(true);
+                        }}
                         // onTouchStart={(e) => {
                         //   const popup = e.currentTarget;
                         //   popup.style.overflow = "hidden";

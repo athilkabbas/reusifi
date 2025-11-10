@@ -822,6 +822,9 @@ const Home = () => {
                       maxHeight: 400,
                       overflow: "autp",
                     }}
+                    onTouchMove={(e) => {
+                      setSopen(true);
+                    }}
                     // onTouchStart={(e) => {
                     //   const popup = e.currentTarget;
                     //   popup.style.overflow = "hidden";
@@ -1018,6 +1021,9 @@ const Home = () => {
                     style={{
                       maxHeight: 400,
                       overflow: "auto",
+                    }}
+                    onTouchMove={(e) => {
+                      setRopen(true);
                     }}
                     // onTouchStart={(e) => {
                     //   const popup = e.currentTarget;
