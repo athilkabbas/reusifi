@@ -705,7 +705,7 @@ const Home = () => {
                 // getPopupContainer={() =>
                 //   document.getElementById("parent-container-treeSelect")
                 // }
-                getPopupContainer={(trigger) => trigger.parentNode}
+                // getPopupContainer={(trigger) => trigger.parentNode}
                 popupRender={(menu) => (
                   <div
                     style={{
@@ -811,7 +811,7 @@ const Home = () => {
             >
               <Select
                 id={"locationId"}
-                getPopupContainer={(trigger) => trigger.parentNode}
+                // getPopupContainer={(trigger) => trigger.parentNode}
                 // getPopupContainer={() =>
                 //   document.getElementById("parent-container-select")
                 // }
