@@ -570,8 +570,8 @@ const Details = () => {
                     Object.values(loadedImages).every((item) => item) && (
                       <AwsMap
                         center={[
-                          ...detailData[0]["item"]["location"].reverse(),
-                        ]}
+                          ...detailData[0]["item"]["location"],
+                        ].reverse()}
                         zoom={10}
                       />
                     )}
