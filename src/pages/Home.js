@@ -702,9 +702,10 @@ const Home = () => {
               }}
             >
               <TreeSelect
-                getPopupContainer={() =>
-                  document.getElementById("parent-container-treeSelect")
-                }
+                // getPopupContainer={() =>
+                //   document.getElementById("parent-container-treeSelect")
+                // }
+                getPopupContainer={(trigger) => trigger.parentNode}
                 popupRender={(menu) => (
                   <div
                     style={{
@@ -810,14 +811,15 @@ const Home = () => {
             >
               <Select
                 id={"locationId"}
-                getPopupContainer={() =>
-                  document.getElementById("parent-container-select")
-                }
+                getPopupContainer={(trigger) => trigger.parentNode}
+                // getPopupContainer={() =>
+                //   document.getElementById("parent-container-select")
+                // }
                 popupRender={(menu) => (
                   <div
                     style={{
                       maxHeight: 400,
-                      overflow: "autp",
+                      overflow: "auto",
                     }}
                     // onTouchMove={(e) => {
                     //   if (
