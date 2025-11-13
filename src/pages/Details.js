@@ -582,7 +582,7 @@ const Details = () => {
                           size="large"
                           style={{
                             display: "flex",
-                            marginTop: "30px",
+                            marginTop: "70px",
                           }}
                         >
                           <Popconfirm
@@ -654,26 +654,28 @@ const Details = () => {
                       )}
                     </>
                   )}
-                  <Space.Compact>
-                    <Button
-                      onClick={() => {
-                        navigate("/report", {
-                          state: {
-                            productId: detailData?.[0]?.["item"]["uuid"],
-                          },
-                        });
-                      }}
-                      style={{
-                        fontSize: "13px",
-                        fontWeight: "300",
-                        marginTop: "50px",
-                      }}
-                      danger
-                      type="primary"
-                    >
-                      Report
-                    </Button>
-                  </Space.Compact>
+                  {!ad && (
+                    <Space.Compact>
+                      <Button
+                        onClick={() => {
+                          navigate("/report", {
+                            state: {
+                              productId: detailData?.[0]?.["item"]["uuid"],
+                            },
+                          });
+                        }}
+                        style={{
+                          fontSize: "13px",
+                          fontWeight: "300",
+                          marginTop: "50px",
+                        }}
+                        danger
+                        type="primary"
+                      >
+                        Report
+                      </Button>
+                    </Space.Compact>
+                  )}
                 </Space>
               </>
             )}
