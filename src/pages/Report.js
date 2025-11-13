@@ -205,6 +205,13 @@ const ReportAd = () => {
                 />
               </Space.Compact>
               <Space.Compact size="large">
+                {report?.message && (
+                  <span style={{ fontSize: "13px", fontWeight: "300" }}>
+                    You have already reported this ad
+                  </span>
+                )}
+              </Space.Compact>
+              <Space.Compact size="large">
                 <Button
                   onClick={() => {
                     handleSubmit();
