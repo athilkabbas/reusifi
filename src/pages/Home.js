@@ -1042,7 +1042,7 @@ const Home = () => {
               </Space>
             </Space.Compact>
           </Space>
-          <div ref={bottomRefPrice}></div>
+          <div ref={bottomRefPrice} style={{ padding: "5px" }}></div>
           <br />
           <Space
             size="large"
@@ -1127,7 +1127,7 @@ const Home = () => {
           </Space>
         </Space>
         <br />
-        <div ref={bottomRef}></div>
+        <div ref={bottomRef} style={{ padding: "5px" }}></div>
       </Drawer>
       <Space
         size="large"

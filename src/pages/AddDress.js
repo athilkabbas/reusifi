@@ -666,7 +666,7 @@ const AddDress = () => {
                     Check Pincode
                   </Button>
                 </Space.Compact>
-                <dv ref={bottomRefPincode} style={{ padding: "20px" }}></dv>
+                <dv ref={bottomRefPincode} style={{ padding: "5px" }}></dv>
                 &nbsp;&nbsp;or
                 <Space.Compact size="large">
                   <Button
@@ -745,7 +745,7 @@ const AddDress = () => {
                     }}
                   />
                 </Space.Compact>
-                <div ref={bottomRefPrice} style={{ padding: "20px" }}></div>
+                <div ref={bottomRefPrice} style={{ padding: "5px" }}></div>
                 <Space.Compact size="large">
                   <Space size="large" direction="vertical">
                     <Upload
@@ -824,7 +824,7 @@ const AddDress = () => {
                   </Button>
                 </Space.Compact>
               </Space>
-              <div ref={bottomRef} style={{ padding: "20px" }}></div>
+              <div ref={bottomRef} style={{ padding: "5px" }}></div>
             </>
           )}
           {(loading || chatLoading) && (

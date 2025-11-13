@@ -165,11 +165,11 @@ const Account = () => {
     }
   };
   const scrollToBottom = () => {
-    requestAnimationFrame(() => {
-      if (bottomRef?.current) {
-        bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-      }
-    });
+    // requestAnimationFrame(() => {
+    //   if (bottomRef?.current) {
+    //     bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+    //   }
+    // });
   };
 
   useEffect(() => {
@@ -656,7 +656,7 @@ const Account = () => {
                   </Space.Compact>
                 </Space>
               )}
-              <div ref={bottomRef} style={{ padding: "20px" }}></div>
+              <div ref={bottomRef} style={{ padding: "5px" }}></div>
               <Space.Compact size="large">
                 <Popconfirm
                   title="Do you want to delete the Account?"
