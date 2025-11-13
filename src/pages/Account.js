@@ -656,7 +656,7 @@ const Account = () => {
                   </Space.Compact>
                 </Space>
               )}
-              <div ref={bottomRef} style={{ padding: "30px" }}></div>
+              <div ref={bottomRef} style={{ padding: "20px" }}></div>
               <Space.Compact size="large">
                 <Popconfirm
                   title="Do you want to delete the Account?"
