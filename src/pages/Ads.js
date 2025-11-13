@@ -282,7 +282,7 @@ const Ads = () => {
                         >
                           <Card
                             style={{
-                              height: "286px",
+                              height: "306px",
                               width: "186px",
                               display: "flex",
                               flexDirection: "column",
@@ -319,7 +319,7 @@ const Ads = () => {
                                 {!loadedImages[item["item"]["uuid"]] && (
                                   <div
                                     style={{
-                                      height: "200px",
+                                      height: "220px",
                                       display: "flex",
                                       justifyContent: "center",
                                       alignItems: "center",
@@ -343,7 +343,7 @@ const Ads = () => {
                                   src={item["images"][0]}
                                   alt={item["item"]["title"]}
                                   style={{
-                                    height: "200px",
+                                    height: "220px",
                                     objectFit: "fill",
                                     width: "100%",
                                     display: loadedImages[item["item"]["uuid"]]

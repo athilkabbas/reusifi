@@ -22,6 +22,8 @@ import CheckRender from "./helpers/checkRender";
 import ReusifiLanding from "./pages/landingPage";
 import Account from "./pages/Account";
 import UserDetails from "./pages/UserDetails";
+import ReportAd from "./pages/Report";
+import Queries from "./pages/Queries";
 
 Amplify.configure(awsconfig);
 
@@ -171,9 +173,11 @@ function AppWithSession() {
             <Route path="userDetails" element={<UserDetails />} />
             <Route path="chatPage" element={<ChatPage />} />
             <Route path="ads" element={<Ads />} />
-            <Route path="contact" element={<Contact />} />
+            {/* <Route path="contact" element={<Contact />} /> */}
             <Route path="favourite" element={<Favourites />} />
             <Route path="account" element={<Account />} />
+            <Route path="report" element={<ReportAd />} />
+            <Route path="query" element={<Queries />} />
           </Route>
         </Routes>
       )}

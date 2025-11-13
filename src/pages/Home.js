@@ -255,7 +255,7 @@ const Home = () => {
     if (key === "1") {
       navigate("/account");
     } else if (key === "2") {
-      navigate("/contact");
+      navigate("/query");
     } else if (key === "3") {
       signOut({ global: true });
     }
@@ -1238,7 +1238,7 @@ const Home = () => {
                         >
                           <Card
                             style={{
-                              height: "286px",
+                              height: "306px",
                               width: "186px",
                               display: "flex",
                               flexDirection: "column",
@@ -1273,7 +1273,7 @@ const Home = () => {
                                     style={{
                                       display: "flex",
                                       justifyContent: "center",
-                                      height: "200px",
+                                      height: "220px",
                                       alignItems: "center",
                                       backgroundColor: "#f0f0f0",
                                     }}
@@ -1295,7 +1295,7 @@ const Home = () => {
                                   src={item["images"][0]}
                                   alt={item["item"]["title"]}
                                   style={{
-                                    height: "200px",
+                                    height: "220px",
                                     objectFit: "fill",
                                     display: loadedImages[item["item"]["uuid"]]
                                       ? "block"

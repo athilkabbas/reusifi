@@ -654,6 +654,26 @@ const Details = () => {
                       )}
                     </>
                   )}
+                  <Space.Compact>
+                    <Button
+                      onClick={() => {
+                        navigate("/report", {
+                          state: {
+                            productId: detailData?.[0]?.["item"]["uuid"],
+                          },
+                        });
+                      }}
+                      style={{
+                        fontSize: "13px",
+                        fontWeight: "300",
+                        marginTop: "50px",
+                      }}
+                      danger
+                      type="primary"
+                    >
+                      Report
+                    </Button>
+                  </Space.Compact>
                 </Space>
               </>
             )}
