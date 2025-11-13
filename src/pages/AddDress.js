@@ -397,7 +397,7 @@ const AddDress = () => {
     requestAnimationFrame(() => {
       if (bottomRefPincode?.current) {
         bottomRefPincode.current?.scrollIntoView({
-          behavior: "auto",
+          behavior: "smooth",
           block: "end",
         });
       }
@@ -408,7 +408,7 @@ const AddDress = () => {
     requestAnimationFrame(() => {
       if (bottomRefPrice?.current) {
         bottomRefPrice.current?.scrollIntoView({
-          behavior: "auto",
+          behavior: "smooth",
           block: "end",
         });
       }
@@ -418,7 +418,7 @@ const AddDress = () => {
   const scrollToBottom = () => {
     requestAnimationFrame(() => {
       if (bottomRef?.current) {
-        bottomRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
+        bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
       }
     });
   };

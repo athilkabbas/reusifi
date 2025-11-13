@@ -172,7 +172,7 @@ const Home = () => {
     requestAnimationFrame(() => {
       if (bottomRefPrice?.current) {
         bottomRefPrice.current?.scrollIntoView({
-          behavior: "auto",
+          behavior: "smooth",
           block: "end",
         });
       }
@@ -182,7 +182,7 @@ const Home = () => {
   const scrollToBottom = () => {
     requestAnimationFrame(() => {
       if (bottomRef?.current) {
-        bottomRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
+        bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
       }
     });
   };
