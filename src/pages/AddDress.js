@@ -653,6 +653,7 @@ const AddDress = () => {
                     }}
                   ></Input>
                   <Button
+                    ref={bottomRefPincode}
                     loading={postCodeLoading}
                     disabled={!pincode}
                     type="primary"
@@ -666,7 +667,7 @@ const AddDress = () => {
                     Check Pincode
                   </Button>
                 </Space.Compact>
-                <dv ref={bottomRefPincode} style={{ padding: "5px" }}></dv>
+                {/* <dv ref={bottomRefPincode} style={{ padding: "5px" }}></dv> */}
                 &nbsp;&nbsp;or
                 <Space.Compact size="large">
                   <Button
