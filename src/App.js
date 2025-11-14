@@ -114,6 +114,7 @@ function AppWithSession() {
                 setBuyingChatLastEvaluatedKey(null);
                 setBuyingChatInitialLoad(true);
               }
+              setUnreadChatCount(1);
             } else {
               message.info("There is a new message");
             }
