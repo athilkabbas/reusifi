@@ -163,7 +163,7 @@ function AppWithSession() {
   }
   return (
     <>
-      {!checkSession && checked && isSignedIn && (
+      {checked && isSignedIn && (
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
@@ -181,7 +181,7 @@ function AppWithSession() {
           </Route>
         </Routes>
       )}
-      {(checkSession || !checked || !isSignedIn) && (
+      {(!checked || !isSignedIn) && (
         <Spin
           fullscreen
           indicator={
