@@ -64,6 +64,8 @@ const AddDress = () => {
     location: "",
     locationLabel: "",
   });
+
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const isMobile = useIsMobile();
   const isModalVisibleRef = useRef(false);
   const errorSessionConfig = {
@@ -203,15 +205,13 @@ const AddDress = () => {
   };
 
   useEffect(() => {
-    if (currentLocation && currentLocationLabel) {
-      setForm((prevValue) => {
-        return {
-          ...prevValue,
-          location: currentLocation,
-          locationLabel: currentLocationLabel,
-        };
-      });
-    }
+    setForm((prevValue) => {
+      return {
+        ...prevValue,
+        location: currentLocation,
+        locationLabel: currentLocationLabel,
+      };
+    });
   }, [currentLocation, currentLocationLabel]);
 
   useEffect(() => {
@@ -235,6 +235,7 @@ const AddDress = () => {
     };
 
     if (!isValid()) {
+      setIsSubmitted(true);
       message.info("All fields are mandatory");
       return;
     }
@@ -384,10 +385,11 @@ const AddDress = () => {
     setPincode(value);
     if (!value) {
       setAddress("");
+      handleChange("", "location");
+      handleChange("", "locationLabel");
     }
   };
   const [open, setOpen] = useState(false);
-  const submitRef = useRef(null);
   const bottomRef = useRef(null);
   const bottomRefPincode = useRef(null);
 
@@ -515,6 +517,10 @@ const AddDress = () => {
               >
                 <Space.Compact size="large">
                   <Input
+                    className={
+                      isSubmitted ? (form.title ? "" : "my-red-border") : ""
+                    }
+                    status="error"
                     allowClear
                     style={{
                       // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
@@ -529,6 +535,13 @@ const AddDress = () => {
                 </Space.Compact>
                 <Space.Compact size="large">
                   <TextArea
+                    className={
+                      isSubmitted
+                        ? form.description
+                          ? ""
+                          : "my-red-border"
+                        : ""
+                    }
                     id={"descId"}
                     allowClear
                     style={{
@@ -547,13 +560,19 @@ const AddDress = () => {
                 </Space.Compact>
                 <Space.Compact size="large" style={{ position: "relative" }}>
                   <Cascader
+                    className={
+                      isSubmitted
+                        ? form.category
+                          ? "my-custom-cascader"
+                          : "my-red-border my-custom-cascader"
+                        : "my-custom-cascader"
+                    }
                     id={"cascaderId"}
                     popupMenuColumnStyle={{ width: "calc(50dvw - 25px)" }}
                     allowClear={false}
                     style={{
                       // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                       width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
-                      borderRadius: "9px",
                     }}
                     showSearch={{ filter }}
                     placeholder={"Category"}
@@ -643,11 +662,18 @@ const AddDress = () => {
                   }}
                 >
                   <Input
+                    className={
+                      isSubmitted
+                        ? address || currentLocationLabel
+                          ? ""
+                          : "my-red-border"
+                        : ""
+                    }
                     id={"pincodeId"}
                     value={pincode}
                     onChange={handlePincode}
                     placeholder="Pincode"
-                    allowClear
+                    // allowClear
                     onClick={() => {
                       scrollToBottomPrice();
                     }}
@@ -673,6 +699,13 @@ const AddDress = () => {
                 &nbsp;&nbsp;or
                 <Space.Compact size="large">
                   <Button
+                    className={
+                      isSubmitted
+                        ? address || currentLocationLabel
+                          ? ""
+                          : "my-red-border"
+                        : ""
+                    }
                     disabled={currentLocationLabel}
                     loading={locationAccessLoading}
                     style={{
@@ -720,18 +753,21 @@ const AddDress = () => {
                 {pincode && address && (
                   <Space.Compact size="large">
                     <Input
+                      onChange={handlePincode}
                       allowClear
                       style={{
                         width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
                       }}
                       value={address}
                       placeholder="Address"
-                      readOnly
                     />
                   </Space.Compact>
                 )}
                 <Space.Compact size="large">
                   <Input
+                    className={
+                      isSubmitted ? (form.price ? "" : "my-red-border") : ""
+                    }
                     id="sellPriceId"
                     allowClear
                     style={{
@@ -765,6 +801,13 @@ const AddDress = () => {
                       multiple
                     >
                       <Button
+                        className={
+                          isSubmitted
+                            ? form.images.length > 0
+                              ? ""
+                              : "my-red-border"
+                            : ""
+                        }
                         style={{
                           color: "black",
                           fontSize: "13px",

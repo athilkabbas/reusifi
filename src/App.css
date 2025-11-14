@@ -139,3 +139,15 @@ body {
 .ant-drawer-body::-webkit-scrollbar {
   display: none;
 }
+
+.my-red-border {
+  border-color: #ff4d4f !important;
+}
+
+.my-red-border .ant-select-selector {
+  border-color: #ff4d4f !important;
+}
+
+.my-custom-cascader .ant-select-selector {
+  border-radius: 9px !important;
+}
