@@ -81,7 +81,7 @@ const Queries = () => {
       );
       setMessage("");
       setSubmitLoading(false);
-      messageAnt.info("Query successfully submitted");
+      messageAnt.success("Query successfully submitted");
     } catch (err) {
       setSubmitLoading(false);
       if (isModalVisibleRef.current) {

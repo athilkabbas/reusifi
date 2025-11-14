@@ -145,7 +145,7 @@ const Account = () => {
         data
       );
       setAccount(data);
-      message.info("Account successfully updated");
+      message.success("Account successfully updated");
       setSubmitLoading(false);
       setEdit(false);
       setDeleteImage(false);

@@ -86,7 +86,7 @@ const ReportAd = () => {
       );
       setReport(submitData);
       setSubmitLoading(false);
-      messageAnt.info("Ad reported");
+      messageAnt.success("Ad reported");
     } catch (err) {
       setSubmitLoading(false);
       if (isModalVisibleRef.current) {
