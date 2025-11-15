@@ -105,19 +105,16 @@ function AppWithSession() {
             )
               return;
             if (location.pathname !== "/chatPage") {
-              if (actionType === "Selling") {
-                setSellingChatData([]);
-                setSellingChatLastEvaluatedKey(null);
-                setSellingChatInitialLoad(true);
-              } else {
-                setBuyingChatData([]);
-                setBuyingChatLastEvaluatedKey(null);
-                setBuyingChatInitialLoad(true);
-              }
-              setUnreadChatCount(1);
+              setSellingChatData([]);
+              setSellingChatLastEvaluatedKey(null);
+              setSellingChatInitialLoad(true);
+              setBuyingChatData([]);
+              setBuyingChatLastEvaluatedKey(null);
+              setBuyingChatInitialLoad(true);
             } else {
               message.info("There is a new message");
             }
+            setUnreadChatCount(1);
           };
 
           socketRef.current.onclose = () => {
@@ -158,7 +155,7 @@ function AppWithSession() {
         }
       }
     };
-  }, []);
+  }, [location]);
   if (checked && !isSignedIn) {
     return <ReusifiLanding />;
   }
