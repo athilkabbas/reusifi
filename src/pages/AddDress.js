@@ -813,6 +813,10 @@ const AddDress = () => {
                     }}
                   />
                 </Space.Compact>
+                <div
+                  ref={bottomRefPrice}
+                  style={{ display: "block", height: 0 }}
+                ></div>
                 <Space.Compact size="large">
                   <Space size="large" direction="vertical">
                     <Upload
@@ -861,10 +865,6 @@ const AddDress = () => {
                     )}
                   </Space>
                 </Space.Compact>
-                <div
-                  ref={bottomRefPrice}
-                  style={{ display: "block", height: 0 }}
-                ></div>
                 {/* <Space.Compact size="large">
                   <span style={{ fontSize: "13px", fontWeight: "300" }}>
                     Max 6 images
@@ -900,16 +900,14 @@ const AddDress = () => {
                     Submit
                   </Button>
                 </Space.Compact>
+                <br />
+                <br />
+                <br />
+                <div
+                  ref={bottomRef}
+                  style={{ display: "block", height: 0 }}
+                ></div>
               </Space>
-              <br />
-              <br />
-              <br />
-              <br />
-              <br />
-              <div
-                ref={bottomRef}
-                style={{ display: "block", height: 0 }}
-              ></div>
             </>
           )}
           {(loading || chatLoading) && (
