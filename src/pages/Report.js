@@ -142,10 +142,10 @@ const ReportAd = () => {
         return;
       }
     };
-    if (user && productId) {
+    if (productId) {
       getChatAndReport();
     }
-  }, [user, productId]);
+  }, [productId]);
 
   return (
     <Layout

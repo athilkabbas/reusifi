@@ -99,10 +99,10 @@ const UserDetails = () => {
         return;
       }
     };
-    if (userId && user) {
+    if (userId) {
       getChatAndAccount();
     }
-  }, [userId, user]);
+  }, [userId]);
 
   const [loadedImages, setLoadedImages] = useState([]);
 

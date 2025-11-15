@@ -500,8 +500,6 @@ const Chat = () => {
       }
     };
     if (
-      user &&
-      user.userId &&
       limit &&
       moreWidth &&
       ((recipient && recipient?.["item"]?.["email"]) ||
@@ -509,7 +507,7 @@ const Chat = () => {
     ) {
       getChatsAndCount();
     }
-  }, [user, limit, conversationId, recipient, productId, moreWidth]);
+  }, [limit, conversationId, recipient, productId, moreWidth]);
 
   useEffect(() => {
     if (scrollableDivRef.current && !loading && !chatLoading)

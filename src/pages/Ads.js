@@ -160,7 +160,7 @@ const Ads = () => {
   };
 
   useEffect(() => {
-    if (user && adInitialLoad && limit) {
+    if (adInitialLoad && limit) {
       try {
         setChatLoading(true);
         setLoading(true);
@@ -206,7 +206,7 @@ const Ads = () => {
         return;
       }
     }
-  }, [user, adInitialLoad, limit]);
+  }, [adInitialLoad, limit]);
 
   const navigate = useNavigate();
   return (

@@ -724,8 +724,6 @@ const ChatPage = () => {
 
   useEffect(() => {
     if (
-      user &&
-      user.userId &&
       (actionType === "Selling"
         ? sellingChatInitalLoad
         : buyingChatInitalLoad) &&
@@ -776,7 +774,7 @@ const ChatPage = () => {
         return;
       }
     }
-  }, [user, sellingChatInitalLoad, buyingChatInitalLoad, limit, actionType]);
+  }, [sellingChatInitalLoad, buyingChatInitalLoad, limit, actionType]);
 
   return (
     <Layout

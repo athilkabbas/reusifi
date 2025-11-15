@@ -81,7 +81,7 @@ const Details = () => {
   const { Text } = Typography;
 
   useEffect(() => {
-    if (user && item) {
+    if (item) {
       try {
         setChatLoading(true);
         setLoading(true);
@@ -150,7 +150,7 @@ const Details = () => {
         return;
       }
     }
-  }, [user, item]);
+  }, [item]);
 
   const handleActivate = async () => {
     try {

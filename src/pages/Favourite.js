@@ -235,7 +235,7 @@ const Favourites = () => {
   };
 
   useEffect(() => {
-    if (user && favInitialLoad && limit) {
+    if (favInitialLoad && limit) {
       try {
         setChatLoading(true);
         setFavLoading(true);
@@ -285,7 +285,7 @@ const Favourites = () => {
         return;
       }
     }
-  }, [user, favInitialLoad, limit]);
+  }, [favInitialLoad, limit]);
 
   const navigate = useNavigate();
   const {

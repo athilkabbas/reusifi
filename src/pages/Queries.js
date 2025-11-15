@@ -125,10 +125,8 @@ const Queries = () => {
         return;
       }
     };
-    if (user) {
-      getChat();
-    }
-  }, [user]);
+    getChat();
+  }, []);
 
   return (
     <Layout

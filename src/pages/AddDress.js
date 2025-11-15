@@ -102,7 +102,7 @@ const AddDress = () => {
   };
 
   useEffect(() => {
-    if (user && addProductInitialLoad) {
+    if (addProductInitialLoad) {
       try {
         setChatLoading(true);
         setLoading(true);
@@ -154,7 +154,7 @@ const AddDress = () => {
         return;
       }
     }
-  }, [user, addProductInitialLoad]);
+  }, [addProductInitialLoad]);
   const handleChange = (value, type) => {
     if (
       type === "price" &&

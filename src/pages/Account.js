@@ -200,7 +200,7 @@ const Account = () => {
       disableNotification: account?.disableNotification ?? false,
       s3Key: account?.s3Key ?? "",
     });
-  }, [account, email, user]);
+  }, [account]);
 
   useEffect(() => {
     const getChatAndAccount = async () => {
@@ -241,10 +241,10 @@ const Account = () => {
         return;
       }
     };
-    if (accountInitialLoad && email && user) {
+    if (accountInitialLoad) {
       getChatAndAccount();
     }
-  }, [accountInitialLoad, email, user]);
+  }, [accountInitialLoad]);
 
   const [loadedImages, setLoadedImages] = useState([]);
 

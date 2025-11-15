@@ -441,7 +441,6 @@ const Home = () => {
 
   useEffect(() => {
     if (
-      user &&
       initialLoad &&
       limit &&
       !search.trim() &&
@@ -498,7 +497,6 @@ const Home = () => {
       }
     }
   }, [
-    user,
     initialLoad,
     limit,
     search,
