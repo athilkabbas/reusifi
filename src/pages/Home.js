@@ -1299,7 +1299,7 @@ const Home = () => {
                                   alt={item["item"]["title"]}
                                   style={{
                                     height: "220px",
-                                    objectFit: "fill",
+                                    objectFit: "contain",
                                     display: loadedImages[item["item"]["uuid"]]
                                       ? "block"
                                       : "none",

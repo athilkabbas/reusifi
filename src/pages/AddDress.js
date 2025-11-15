@@ -190,7 +190,14 @@ const AddDress = () => {
     setPreviewImage(file.url || file.preview);
     setPreviewOpen(true);
   };
-  const handleChangeImage = (file) => {
+  const handleChangeImage = async (file) => {
+    if (file.file.status !== "removed") {
+      const value = await getActualMimeType(file.file);
+      if (!value) {
+        message.info("Invalid image format");
+        return;
+      }
+    }
     if (file.file.size / 1024 / 1024 > 30) {
       message.info("Max size 30MB per image");
       return;
@@ -222,6 +229,28 @@ const AddDress = () => {
       };
     });
   }, [fileList]);
+
+  const getActualMimeType = async (file) => {
+    const buffer = await file.arrayBuffer();
+    const bytes = new Uint8Array(buffer).subarray(0, 4);
+
+    // JPEG magic bytes: FF D8 FF
+    if (bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) {
+      return true;
+    }
+
+    // PNG magic bytes: 89 50 4E 47
+    if (
+      bytes[0] === 0x89 &&
+      bytes[1] === 0x50 &&
+      bytes[2] === 0x4e &&
+      bytes[3] === 0x47
+    ) {
+      return true;
+    }
+
+    return false;
+  };
 
   const handleSubmit = async () => {
     const isValid = () => {
@@ -824,7 +853,7 @@ const AddDress = () => {
                         wrapperStyle={{
                           display: "none",
                         }}
-                        style={{ objectFit: "fill" }}
+                        style={{ objectFit: "contain" }}
                         preview={{
                           visible: previewOpen,
                           onVisibleChange: (visible) => setPreviewOpen(visible),

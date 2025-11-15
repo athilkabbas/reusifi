@@ -199,7 +199,7 @@ const UserDetails = () => {
                       alt={"No Longer Available"}
                       style={{
                         display: loadedImages[userId] ? "block" : "none",
-                        objectFit: "fill",
+                        objectFit: "contain",
                         borderRadius: "5px",
                       }}
                       onClick={(e) => {
