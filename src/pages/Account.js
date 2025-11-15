@@ -79,7 +79,7 @@ const Account = () => {
     userId: user.userId,
     image: "",
     showEmail: false,
-    disableNotification: false,
+    enableNotification: false,
     s3Key: "",
   });
 
@@ -197,7 +197,7 @@ const Account = () => {
       image: account?.image ?? "",
       userId: user.userId,
       showEmail: account?.showEmail ?? false,
-      disableNotification: account?.disableNotification ?? false,
+      enableNotification: account?.enableNotification ?? false,
       s3Key: account?.s3Key ?? "",
     });
   }, [account, email, user]);
@@ -585,13 +585,13 @@ const Account = () => {
                 }}
               >
                 <Button style={{ color: "#000000E0" }} type="link">
-                  Disable email notification
+                  Enable email notification
                 </Button>
                 <Switch
                   disabled={!edit}
-                  checked={form.disableNotification}
+                  checked={form.enableNotification}
                   onChange={(checked) =>
-                    handleChange(checked, "disableNotification")
+                    handleChange(checked, "enableNotification")
                   }
                 />
               </Space.Compact>
@@ -637,8 +637,7 @@ const Account = () => {
                           email: email,
                           image: account?.image ?? "",
                           showEmail: account?.showEmail ?? "",
-                          disableNotification:
-                            account?.disableNotification ?? "",
+                          enableNotification: account?.enableNotification ?? "",
                           s3Key: account?.s3Key ?? "",
                           userId: user.userId,
                         });
