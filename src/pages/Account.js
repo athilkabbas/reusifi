@@ -165,11 +165,11 @@ const Account = () => {
     }
   };
   const scrollToBottom = () => {
-    // requestAnimationFrame(() => {
-    //   if (bottomRef?.current) {
-    //     bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-    //   }
-    // });
+    requestAnimationFrame(() => {
+      if (bottomRef?.current) {
+        bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+      }
+    });
   };
 
   useEffect(() => {
@@ -656,6 +656,8 @@ const Account = () => {
                   </Space.Compact>
                 </Space>
               )}
+              <br />
+              <br />
               <div
                 ref={bottomRef}
                 style={{ display: "block", height: 0 }}

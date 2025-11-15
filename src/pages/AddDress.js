@@ -721,11 +721,11 @@ const AddDress = () => {
                     Check Pincode
                   </Button>
                 </Space.Compact>
-                <dv
+                &nbsp;&nbsp;or
+                <div
                   ref={bottomRefPincode}
                   style={{ display: "block", height: 0 }}
-                ></dv>
-                &nbsp;&nbsp;or
+                ></div>
                 <Space.Compact size="large">
                   <Button
                     className={
@@ -813,10 +813,6 @@ const AddDress = () => {
                     }}
                   />
                 </Space.Compact>
-                <div
-                  ref={bottomRefPrice}
-                  style={{ display: "block", height: 0 }}
-                ></div>
                 <Space.Compact size="large">
                   <Space size="large" direction="vertical">
                     <Upload
@@ -865,6 +861,10 @@ const AddDress = () => {
                     )}
                   </Space>
                 </Space.Compact>
+                <div
+                  ref={bottomRefPrice}
+                  style={{ display: "block", height: 0 }}
+                ></div>
                 {/* <Space.Compact size="large">
                   <span style={{ fontSize: "13px", fontWeight: "300" }}>
                     Max 6 images
@@ -901,6 +901,11 @@ const AddDress = () => {
                   </Button>
                 </Space.Compact>
               </Space>
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
               <div
                 ref={bottomRef}
                 style={{ display: "block", height: 0 }}
