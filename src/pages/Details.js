@@ -41,8 +41,6 @@ const Details = () => {
     setChatLastEvaluatedKey,
     setAdData,
     setCount,
-    detailData,
-    setDetailData,
     setUnreadChatCount,
     setSellingChatData,
     setSellingChatInitialLoad,
@@ -54,6 +52,8 @@ const Details = () => {
     setActionType,
     user,
   } = useContext(Context);
+
+  const [detailData, setDetailData] = useState([]);
   const isModalVisibleRef = useRef(false);
   const errorSessionConfig = {
     title: "Session has expired.",

@@ -38,7 +38,6 @@ const Provider = ({ children }) => {
   const [detailInitialLoad, setDetailInitialLoad] = useState(true);
   const [contactInitialLoad, setContactInitialLoad] = useState(true);
   const [iChatInitialLoad, setIChatInitialLoad] = useState(true);
-  const [detailData, setDetailData] = useState([]);
   const [unreadChatCount, setUnreadChatCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [user, setUser] = useState(null);
@@ -130,8 +129,6 @@ const Provider = ({ children }) => {
         setCount,
         unreadChatCount,
         setUnreadChatCount,
-        detailData,
-        setDetailData,
         contactInitialLoad,
         setContactInitialLoad,
         iChatInitialLoad,
