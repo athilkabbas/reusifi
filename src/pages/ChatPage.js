@@ -1005,7 +1005,6 @@ const ChatPage = () => {
                                 </Col>
                               </Row>
                             }
-                            bordered
                           >
                             <div
                               style={{
