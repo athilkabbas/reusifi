@@ -50,20 +50,13 @@ const AddDress = () => {
     setCurrentLocationLabel,
     setCurrentLocation,
     setCurrLocRemoved,
+    form,
+    setForm,
+    fileList,
+    setFileList,
   } = useContext(Context);
 
   useLocationComponent();
-  const [form, setForm] = useState({
-    title: "",
-    description: "",
-    category: "",
-    subCategory: "",
-    email: user.userId,
-    images: [],
-    price: null,
-    location: "",
-    locationLabel: "",
-  });
 
   const [isSubmitted, setIsSubmitted] = useState(false);
   const isMobile = useIsMobile();
@@ -179,7 +172,6 @@ const AddDress = () => {
   const navigate = useNavigate();
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
-  const [fileList, setFileList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [chatLoading, setChatLoading] = useState(false);
@@ -210,6 +202,12 @@ const AddDress = () => {
       scrollToBottom();
     }
   };
+
+  useEffect(() => {
+    setForm((prevValue) => {
+      return { ...prevValue, email: user.userId };
+    });
+  }, []);
 
   useEffect(() => {
     setForm((prevValue) => {
@@ -252,23 +250,17 @@ const AddDress = () => {
     return false;
   };
 
-  const handleSubmit = async () => {
-    const isValid = () => {
-      if (!form.images || form.images.length === 0) return false;
-      for (let key in form) {
-        if (key !== "images" && (form[key] === "" || form[key] === null)) {
-          return false;
-        }
+  const isValid = () => {
+    if (!form.images || form.images.length === 0) return false;
+    for (let key in form) {
+      if (key !== "images" && (form[key] === "" || form[key] === null)) {
+        return false;
       }
-      return true;
-    };
-
-    if (!isValid()) {
-      setIsSubmitted(true);
-      message.info("All fields are mandatory");
-      return;
     }
+    return true;
+  };
 
+  const handleSubmit = async () => {
     setSubmitLoading(true);
 
     const thumbnailOptions = {
@@ -299,7 +291,7 @@ const AddDress = () => {
       const allCompressed = [...compressedThumbnails, ...compressedViewings];
       const urlRes = await callApi(
         `https://api.reusifi.com/prod/getUrlNew?email=${encodeURIComponent(
-          form.email
+          user.userId
         )}&contentType=${encodeURIComponent("image/jpeg")}&count=${
           allCompressed.length
         }`,
@@ -326,7 +318,7 @@ const AddDress = () => {
       const data = {
         title: form.title.trim().toLowerCase(),
         description: form.description.trim().toLowerCase(),
-        email: form.email.toLowerCase(),
+        email: user.userId.toLowerCase(),
         location: form.location.split(",").map(parseFloat),
         locationLabel: form.locationLabel,
         price: parseFloat(form.price).toFixed(2),
@@ -346,7 +338,14 @@ const AddDress = () => {
       setAdLastEvaluatedKey(null);
       setAdInitialLoad(true);
       setSubmitLoading(false);
-      message.success("Ad submitted");
+      setForm({});
+      setFileList([]);
+      setCurrLocRemoved(true);
+      setCurrentLocationLabel("");
+      setCurrentLocation("");
+      message.success(
+        "Your ad is now live on Reusifi. It may take up to 5 minutes to appear."
+      );
       navigate("/ads");
     } catch (err) {
       setSubmitLoading(false);
@@ -871,14 +870,9 @@ const AddDress = () => {
                   </span>
                 </Space.Compact> */}
                 <Space.Compact size="large">
-                  {count < 5 && (
-                    <span style={{ fontSize: "13px", fontWeight: "300" }}>
-                      The ad will be deactivated automatically after 30 days
-                    </span>
-                  )}
-                </Space.Compact>
-                <Space.Compact size="large">
-                  {count >= 5 && <Text>Max 5 ads</Text>}
+                  <span style={{ fontSize: "13px", fontWeight: "300" }}>
+                    The ad will be deactivated automatically after 30 days
+                  </span>
                 </Space.Compact>
                 <Space.Compact
                   size="large"
@@ -893,9 +887,19 @@ const AddDress = () => {
                       fontSize: "13px",
                       fontWeight: "300",
                     }}
-                    onClick={handleSubmit}
+                    onClick={() => {
+                      if (!isValid()) {
+                        setIsSubmitted(true);
+                        message.info("All fields are mandatory");
+                        return;
+                      }
+                      if (count < 5) {
+                        handleSubmit();
+                      } else {
+                        navigate("/checkout");
+                      }
+                    }}
                     type="primary"
-                    disabled={count >= 5 ? true : false}
                   >
                     Submit
                   </Button>

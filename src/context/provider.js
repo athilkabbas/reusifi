@@ -68,9 +68,25 @@ const Provider = ({ children }) => {
   const [queryInitialLoad, setQueryInitialLoad] = useState(true);
   const [reportInitialLoad, setReportInitialLoad] = useState(true);
   const [account, setAccount] = useState({});
+  const [fileList, setFileList] = useState([]);
+  const [form, setForm] = useState({
+    title: "",
+    description: "",
+    category: "",
+    subCategory: "",
+    email: "",
+    images: [],
+    price: null,
+    location: "",
+    locationLabel: "",
+  });
   return (
     <Context.Provider
       value={{
+        fileList,
+        setFileList,
+        form,
+        setForm,
         account,
         setAccount,
         queryInitialLoad,

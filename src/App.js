@@ -24,6 +24,8 @@ import Account from "./pages/Account";
 import UserDetails from "./pages/UserDetails";
 import ReportAd from "./pages/Report";
 import Queries from "./pages/Queries";
+import CheckoutForm from "./pages/checkoutForm";
+import Return from "./pages/Return";
 
 Amplify.configure(awsconfig);
 
@@ -176,6 +178,8 @@ function AppWithSession() {
             <Route path="account" element={<Account />} />
             <Route path="report" element={<ReportAd />} />
             <Route path="query" element={<Queries />} />
+            <Route path="/checkout" element={<CheckoutForm />} />
+            <Route path="/return" element={<Return />} />
           </Route>
         </Routes>
       )}
