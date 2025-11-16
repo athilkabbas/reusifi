@@ -595,6 +595,7 @@ const Account = () => {
                   }
                 />
               </Space.Compact>
+              <br />
               {!edit && (
                 <Space.Compact size="large">
                   <Button

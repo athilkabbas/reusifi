@@ -901,8 +901,6 @@ const AddDress = () => {
                   </Button>
                 </Space.Compact>
                 <br />
-                <br />
-                <br />
                 <div
                   ref={bottomRef}
                   style={{ display: "block", height: 0 }}
