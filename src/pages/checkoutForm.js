@@ -11,7 +11,7 @@ const TEST_STRIPE_KEY =
 const LIVE_STRIPE_KEY =
   "pk_live_51SU7iXCGYi9Bz1k4QVlwGOyXrUM0QteOBjk8zYTpVEh94BIo1XGcriyAL3BCdHLmbdkP2ytZ3eGee5tHx6GWMTqj003WtmPVbH";
 
-const stripePromise = loadStripe(LIVE_STRIPE_KEY);
+const stripePromise = loadStripe(TEST_STRIPE_KEY);
 
 const CheckoutForm = () => {
   const fetchClientSecret = useCallback(async () => {
