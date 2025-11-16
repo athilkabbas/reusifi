@@ -56,7 +56,8 @@ const Queries = () => {
 
   const [message, setMessage] = useState("");
 
-  const { setUnreadChatCount, user } = useContext(Context);
+  const { setUnreadChatCount, user, queryInitialLoad, setQueryInitialLoad } =
+    useContext(Context);
 
   const [query, setQuery] = useState({
     userId: user.userId,
@@ -111,6 +112,7 @@ const Queries = () => {
         const [chatCount] = await Promise.all([chatCountPromise]);
         setUnreadChatCount(chatCount.data.count);
         setLoading(false);
+        setQueryInitialLoad(false);
       } catch (err) {
         // message.error("An Error has occurred")
         if (isModalVisibleRef.current) {
@@ -125,7 +127,9 @@ const Queries = () => {
         return;
       }
     };
-    getChat();
+    if (queryInitialLoad) {
+      getChat();
+    }
   }, []);
 
   return (

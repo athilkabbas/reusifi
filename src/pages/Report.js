@@ -60,7 +60,8 @@ const ReportAd = () => {
 
   const [message, setMessage] = useState("");
 
-  const { setUnreadChatCount, user } = useContext(Context);
+  const { setUnreadChatCount, user, reportInitialLoad, setReportInitialLoad } =
+    useContext(Context);
 
   const [report, setReport] = useState({
     productId,
@@ -127,6 +128,7 @@ const ReportAd = () => {
           return { ...prevValue, message: report?.data?.items?.message };
         });
         setUnreadChatCount(chatCount.data.count);
+        setReportInitialLoad(false);
         setLoading(false);
       } catch (err) {
         // message.error("An Error has occurred")
@@ -142,7 +144,7 @@ const ReportAd = () => {
         return;
       }
     };
-    if (productId) {
+    if (productId && reportInitialLoad) {
       getChatAndReport();
     }
   }, [productId]);

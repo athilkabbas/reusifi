@@ -65,12 +65,18 @@ const Provider = ({ children }) => {
   const [actionType, setActionType] = useState("Selling");
   const [mapLoading, setMapLoading] = useState(false);
   const [accountInitialLoad, setAccountInitialLoad] = useState(true);
+  const [queryInitialLoad, setQueryInitialLoad] = useState(true);
+  const [reportInitialLoad, setReportInitialLoad] = useState(true);
   const [account, setAccount] = useState({});
   return (
     <Context.Provider
       value={{
         account,
         setAccount,
+        queryInitialLoad,
+        reportInitialLoad,
+        setQueryInitialLoad,
+        setReportInitialLoad,
         accountInitialLoad,
         setAccountInitialLoad,
         mapLoading,
