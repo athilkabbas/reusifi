@@ -1091,7 +1091,7 @@ const ChatPage = () => {
                                       ? "block"
                                       : "none",
                                     height: "60px",
-                                    objectFit: "contain",
+                                    objectFit: "cover",
                                     borderRadius: "5px",
                                   }}
                                   onClick={(e) => {

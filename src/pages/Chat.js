@@ -730,7 +730,7 @@ const Chat = () => {
                     ? "block"
                     : "none",
                   height: "40px",
-                  objectFit: "contain",
+                  objectFit: "cover",
                   borderRadius: "5px",
                 }}
                 onClick={(e) => {

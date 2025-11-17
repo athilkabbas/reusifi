@@ -410,7 +410,7 @@ const Account = () => {
                           display: loadedImages[form.email] ? "block" : "none",
                           height: "150px",
                           width: "100px",
-                          objectFit: "contain",
+                          objectFit: "cover",
                           borderRadius: "5px",
                         }}
                         onClick={(e) => {
@@ -492,7 +492,7 @@ const Account = () => {
                       wrapperStyle={{
                         display: "none",
                       }}
-                      style={{ objectFit: "contain" }}
+                      style={{ objectFit: "cover" }}
                       preview={{
                         visible: previewOpen,
                         onVisibleChange: (visible) => setPreviewOpen(visible),

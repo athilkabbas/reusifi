@@ -852,7 +852,7 @@ const AddDress = () => {
                         wrapperStyle={{
                           display: "none",
                         }}
-                        style={{ objectFit: "contain" }}
+                        style={{ objectFit: "cover" }}
                         preview={{
                           visible: previewOpen,
                           onVisibleChange: (visible) => setPreviewOpen(visible),
