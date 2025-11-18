@@ -85,14 +85,9 @@ const Provider = ({ children }) => {
 
   useEffect(() => {
     const loadForm = async () => {
-      const reusifiForm = sessionStorage.getItem("reusifiForm");
-      if (reusifiForm) {
-        const storedForm = JSON.parse(sessionStorage.getItem("reusifiForm"));
-        if (storedForm && Object.keys(storedForm).length > 0) {
-          const images = await load();
-          setForm({ ...storedForm, images });
-        }
-      }
+      const storedForm = JSON.parse(sessionStorage.getItem("reusifiForm"));
+      const images = await load();
+      setForm({ ...storedForm, images });
     };
     loadForm();
   }, []);
@@ -100,15 +95,8 @@ const Provider = ({ children }) => {
   useEffect(() => {
     const saveForm = async () => {
       const { images, ...formWithoutImages } = form;
-      if (Object.values(formWithoutImages).length > 0) {
-        sessionStorage.setItem(
-          "reusifiForm",
-          JSON.stringify(formWithoutImages)
-        );
-        if (images && images.length > 0) {
-          await save(images);
-        }
-      }
+      sessionStorage.setItem("reusifiForm", JSON.stringify(formWithoutImages));
+      await save(images);
     };
     saveForm();
   }, [form]);
