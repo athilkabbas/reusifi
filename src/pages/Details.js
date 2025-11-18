@@ -16,6 +16,7 @@ import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
 import AwsMap from "../component/Map";
 import CopyButton from "../component/CopyButton";
+import { useClearForm } from "../hooks/clearForm";
 const { Content } = Layout;
 const Details = () => {
   const location = useLocation();
@@ -54,6 +55,7 @@ const Details = () => {
   } = useContext(Context);
 
   const [detailData, setDetailData] = useState([]);
+  const { clearForm } = useClearForm();
   const isModalVisibleRef = useRef(false);
   const errorSessionConfig = {
     title: "Session has expired.",
@@ -61,8 +63,9 @@ const Details = () => {
     closable: false,
     maskClosable: false,
     okText: "Login",
-    onOk: () => {
+    onOk: async () => {
       isModalVisibleRef.current = false;
+      await clearForm();
       signInWithRedirect();
     },
   };

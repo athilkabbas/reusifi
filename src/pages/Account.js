@@ -24,6 +24,7 @@ import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
 import imageCompression from "browser-image-compression";
+import { useClearForm } from "../hooks/clearForm";
 import axios from "axios";
 import {
   UserOutlined,
@@ -36,6 +37,7 @@ const { Text } = Typography;
 const { TextArea } = Input;
 const Account = () => {
   const isMobile = useIsMobile();
+  const { clearForm } = useClearForm();
   const isModalVisibleRef = useRef(false);
   const errorSessionConfig = {
     title: "Session has expired.",
@@ -43,8 +45,9 @@ const Account = () => {
     closable: false,
     maskClosable: false,
     okText: "Login",
-    onOk: () => {
+    onOk: async () => {
       isModalVisibleRef.current = false;
+      await clearForm();
       signInWithRedirect();
     },
   };

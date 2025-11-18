@@ -1,14 +1,17 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { Navigate } from "react-router-dom";
 import { callApi } from "../helpers/api";
-import { Button, Result, message, Modal } from "antd";
+import { Button, Result, message, Modal, Spin } from "antd";
 import { useNavigate } from "react-router-dom";
 import imageCompression from "browser-image-compression";
 import { Context } from "../context/provider";
 import { signInWithRedirect } from "@aws-amplify/auth";
 import axios from "axios";
+import { useClearForm } from "../hooks/clearForm";
+import { LoadingOutlined } from "@ant-design/icons";
 
 const Return = () => {
+  const { clearForm } = useClearForm();
   const [status, setStatus] = useState(null);
   const [customerEmail, setCustomerEmail] = useState("");
   const navigate = useNavigate();
@@ -22,8 +25,21 @@ const Return = () => {
     closable: false,
     maskClosable: false,
     okText: "Login",
-    onOk: () => {
+    onOk: async () => {
       isModalVisibleRef.current = false;
+      await clearForm();
+      signInWithRedirect();
+    },
+  };
+  const errorSessionConfigRefundFailure = {
+    title: "Session has expired.",
+    content: "Please raise a query",
+    closable: false,
+    maskClosable: false,
+    okText: "Login",
+    onOk: async () => {
+      isModalVisibleRef.current = false;
+      await clearForm();
       signInWithRedirect();
     },
   };
@@ -97,10 +113,12 @@ const Return = () => {
     try {
       // Compress thumbnails and viewings in parallel
       const compressedThumbnails = [
-        await imageCompression(form.images[0], thumbnailOptions),
+        await imageCompression(form.images[0].originFileObj, thumbnailOptions),
       ];
       const compressedViewings = await Promise.all(
-        form.images.map((image) => imageCompression(image, viewingOptions))
+        form.images.map((image) =>
+          imageCompression(image.originFileObj, viewingOptions)
+        )
       );
 
       const allCompressed = [...compressedThumbnails, ...compressedViewings];
@@ -141,6 +159,7 @@ const Return = () => {
         subCategory: form.subCategory.toLowerCase(),
         thumbnailS3Keys,
         viewingS3Keys,
+        sessionId,
       };
       await callApi(
         "https://api.reusifi.com/prod/addProduct",
@@ -152,17 +171,17 @@ const Return = () => {
       setAdData([]);
       setAdLastEvaluatedKey(null);
       setAdInitialLoad(true);
-      setSubmitLoading(false);
-      setForm({});
       setFileList([]);
       setCurrLocRemoved(true);
       setCurrentLocationLabel("");
       setCurrentLocation("");
       setSubmit(true);
-      message.success(
-        "Your ad is now live on Reusifi. It may take up to 5 minutes to appear."
-      );
-      navigate("/ads");
+      await clearForm();
+      setSubmitLoading(false);
+      // message.success(
+      //   "Your ad is now live on Reusifi. It may take up to 5 minutes to appear."
+      // );
+      // navigate("/ads");
     } catch (err) {
       setSubmitLoading(false);
       try {
@@ -184,7 +203,7 @@ const Return = () => {
         }
         isModalVisibleRef.current = true;
         if (err?.status === 401) {
-          Modal.error(errorSessionConfig);
+          Modal.error(errorSessionConfigRefundFailure);
         } else {
           Modal.error(errorConfigRefundFailure);
         }
@@ -221,6 +240,11 @@ const Return = () => {
         subTitle="Your ad is now live on Reusifi. It may take up to 5 minutes to appear."
         extra={[
           <Button
+            style={{
+              background: "#52c41a",
+              fontSize: "13px",
+              fontWeight: "300",
+            }}
             onClick={() => {
               navigate("/");
             }}
@@ -233,8 +257,14 @@ const Return = () => {
       />
     );
   }
-
-  return null;
+  return (
+    <Spin
+      fullscreen
+      indicator={
+        <LoadingOutlined style={{ fontSize: 48, color: "#52c41a" }} spin />
+      }
+    />
+  );
 };
 
 export default Return;

@@ -12,6 +12,7 @@ import { callApi } from "../helpers/api";
 import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
+import { useClearForm } from "../hooks/clearForm";
 const capitalize = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
@@ -43,14 +44,16 @@ const Favourites = () => {
   } = useContext(Context);
 
   const isModalVisibleRef = useRef(false);
+  const { clearForm } = useClearForm();
   const errorSessionConfig = {
     title: "Session has expired.",
     content: "Please login again.",
     closable: false,
     maskClosable: false,
     okText: "Login",
-    onOk: () => {
+    onOk: async () => {
       isModalVisibleRef.current = false;
+      await clearForm();
       signInWithRedirect();
     },
   };

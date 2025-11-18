@@ -39,6 +39,7 @@ import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
 import useLocationComponent from "../hooks/location";
+import { useClearForm } from "../hooks/clearForm";
 const capitalize = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
@@ -47,6 +48,7 @@ const { Content } = Layout;
 const { useBreakpoint } = Grid;
 const Home = () => {
   useLocationComponent();
+  const { clearForm } = useClearForm();
   const [loading, setLoading] = useState(false);
   const timer = useRef(null);
   const scrollableDivRef = useRef(null);
@@ -95,6 +97,7 @@ const Home = () => {
     applied,
     currLocRemoved,
     setCurrLocRemoved,
+    setForm,
   } = useContext(Context);
   const [handleFavLoading, setHandleFavLoading] = useState(false);
 
@@ -125,8 +128,9 @@ const Home = () => {
     closable: false,
     maskClosable: false,
     okText: "Login",
-    onOk: () => {
+    onOk: async () => {
       isModalVisibleRef.current = false;
+      await clearForm();
       signInWithRedirect();
     },
   };
@@ -251,12 +255,13 @@ const Home = () => {
     data,
   ]);
 
-  const handleMenuClick = ({ key }) => {
+  const handleMenuClick = async ({ key }) => {
     if (key === "1") {
       navigate("/account");
     } else if (key === "2") {
       navigate("/query");
     } else if (key === "3") {
+      await clearForm();
       signOut({ global: true });
     }
   };

@@ -12,12 +12,14 @@ import { callApi } from "../helpers/api";
 import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
+import { useClearForm } from "../hooks/clearForm";
 const capitalize = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
 const { Content } = Layout;
 const { useBreakpoint } = Grid;
 const Ads = () => {
+  const { clearForm } = useClearForm();
   const [loading, setLoading] = useState(false);
   const scrollableDivRef = useRef(null);
   const [chatLoading, setChatLoading] = useState(false);
@@ -42,8 +44,9 @@ const Ads = () => {
     closable: false,
     maskClosable: false,
     okText: "Login",
-    onOk: () => {
+    onOk: async () => {
       isModalVisibleRef.current = false;
+      await clearForm();
       signInWithRedirect();
     },
   };

@@ -20,6 +20,7 @@ import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
 import { useLocation, useNavigate } from "react-router-dom";
 import { UserOutlined, LoadingOutlined } from "@ant-design/icons";
+import { useClearForm } from "../hooks/clearForm";
 import { Input } from "antd";
 const { Content } = Layout;
 const { Text } = Typography;
@@ -34,14 +35,16 @@ const ReportAd = () => {
   }
   const isModalVisibleRef = useRef(false);
   const [submitLoading, setSubmitLoading] = useState(false);
+  const { clearForm } = useClearForm();
   const errorSessionConfig = {
     title: "Session has expired.",
     content: "Please login again.",
     closable: false,
     maskClosable: false,
     okText: "Login",
-    onOk: () => {
+    onOk: async () => {
       isModalVisibleRef.current = false;
+      await clearForm();
       signInWithRedirect();
     },
   };

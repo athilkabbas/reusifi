@@ -7,10 +7,12 @@ import { callApi } from "../helpers/api";
 import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
+import { useClearForm } from "../hooks/clearForm";
 const { Content } = Layout;
 const { Text } = Typography;
 const Contact = () => {
   const isMobile = useIsMobile();
+  const { clearForm } = useClearForm();
   const isModalVisibleRef = useRef(false);
   const errorSessionConfig = {
     title: "Session has expired.",
@@ -18,8 +20,9 @@ const Contact = () => {
     closable: false,
     maskClosable: false,
     okText: "Login",
-    onOk: () => {
+    onOk: async () => {
       isModalVisibleRef.current = false;
+      await clearForm();
       signInWithRedirect();
     },
   };

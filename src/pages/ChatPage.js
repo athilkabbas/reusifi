@@ -18,6 +18,7 @@ import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
 import { Segmented } from "antd";
+import { useClearForm } from "../hooks/clearForm";
 
 const subMenuItemsUnblocked = [
   {
@@ -105,6 +106,7 @@ const ChatPage = () => {
     setActionType,
   } = useContext(Context);
   const [loadedImages, setLoadedImages] = useState({});
+  const { clearForm } = useClearForm();
   const handleImageLoad = (uuid) => {
     setLoadedImages((prev) => ({ ...prev, [uuid]: true }));
   };
@@ -195,8 +197,9 @@ const ChatPage = () => {
     closable: false,
     maskClosable: false,
     okText: "Login",
-    onOk: () => {
+    onOk: async () => {
       isModalVisibleRef.current = false;
+      await clearForm();
       signInWithRedirect();
     },
   };

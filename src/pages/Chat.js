@@ -14,10 +14,12 @@ import { callApi } from "../helpers/api";
 import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
+import { useClearForm } from "../hooks/clearForm";
 import { EllipsisVertical } from "lucide-react";
 const { TextArea } = Input;
 const { Content } = Layout;
 const Chat = () => {
+  const { clearForm } = useClearForm();
   const [ichatData, setIChatData] = useState([]);
   const location = useLocation();
   const navigate = useNavigate();
@@ -99,8 +101,9 @@ const Chat = () => {
     closable: false,
     maskClosable: false,
     okText: "Login",
-    onOk: () => {
+    onOk: async () => {
       isModalVisibleRef.current = false;
+      await clearForm();
       signInWithRedirect();
     },
   };

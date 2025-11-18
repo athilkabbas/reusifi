@@ -20,6 +20,7 @@ import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
 import { options } from "../helpers/categories";
 import useLocationComponent from "../hooks/location";
+import { useClearForm } from "../hooks/clearForm";
 import { Platform } from "../helpers/config";
 const { Text } = Typography;
 const { TextArea } = Input;
@@ -52,14 +53,13 @@ const AddDress = () => {
     setCurrLocRemoved,
     form,
     setForm,
-    fileList,
-    setFileList,
   } = useContext(Context);
 
   useLocationComponent();
 
   const [isSubmitted, setIsSubmitted] = useState(false);
   const isMobile = useIsMobile();
+  const { clearForm } = useClearForm();
   const isModalVisibleRef = useRef(false);
   const errorSessionConfig = {
     title: "Session has expired.",
@@ -67,8 +67,9 @@ const AddDress = () => {
     closable: false,
     maskClosable: false,
     okText: "Login",
-    onOk: () => {
+    onOk: async () => {
       isModalVisibleRef.current = false;
+      await clearForm();
       signInWithRedirect();
     },
   };
@@ -182,11 +183,17 @@ const AddDress = () => {
     setPreviewImage(file.url || file.preview);
     setPreviewOpen(true);
   };
+
   const handleChangeImage = async (file) => {
     if (file.file.status !== "removed") {
       const value = await getActualMimeType(file.file);
       if (!value) {
         message.info("Invalid image format");
+        setForm((prev) => ({
+          ...prev,
+          images: prev.images.filter((img) => img.uid !== file.file.uid),
+        }));
+
         return;
       }
     }
@@ -194,10 +201,22 @@ const AddDress = () => {
       message.info("Max size 30MB per image");
       return;
     }
-    let newFileList = file.fileList.filter(
-      (file) => file.size / 1024 / 1024 <= 30
-    );
-    setFileList(newFileList);
+    setForm((prev) => {
+      // Keep only images that are still in fileList
+      const updatedImages = prev.images.filter((img) =>
+        file.fileList.some((f) => f.uid === img.uid)
+      );
+
+      // Merge new images that are not already in state
+      const newImages = file.fileList.filter(
+        (f) => !prev.images.some((img) => img.uid === f.uid)
+      );
+
+      return {
+        ...prev,
+        images: [...updatedImages, ...newImages],
+      };
+    });
     if (file.status === "done" || file.status === undefined) {
       scrollToBottom();
     }
@@ -210,23 +229,16 @@ const AddDress = () => {
   }, []);
 
   useEffect(() => {
-    setForm((prevValue) => {
-      return {
-        ...prevValue,
-        location: currentLocation,
-        locationLabel: currentLocationLabel,
-      };
-    });
+    if (currentLocation && currentLocationLabel) {
+      setForm((prevValue) => {
+        return {
+          ...prevValue,
+          location: currentLocation,
+          locationLabel: currentLocationLabel,
+        };
+      });
+    }
   }, [currentLocation, currentLocationLabel]);
-
-  useEffect(() => {
-    setForm((prevValue) => {
-      return {
-        ...prevValue,
-        images: fileList.map((item) => item.originFileObj),
-      };
-    });
-  }, [fileList]);
 
   const getActualMimeType = async (file) => {
     const buffer = await file.arrayBuffer();
@@ -282,10 +294,12 @@ const AddDress = () => {
     try {
       // Compress thumbnails and viewings in parallel
       const compressedThumbnails = [
-        await imageCompression(form.images[0], thumbnailOptions),
+        await imageCompression(form.images[0].originFileObj, thumbnailOptions),
       ];
       const compressedViewings = await Promise.all(
-        form.images.map((image) => imageCompression(image, viewingOptions))
+        form.images.map((image) =>
+          imageCompression(image.originFileObj, viewingOptions)
+        )
       );
 
       const allCompressed = [...compressedThumbnails, ...compressedViewings];
@@ -338,11 +352,10 @@ const AddDress = () => {
       setAdLastEvaluatedKey(null);
       setAdInitialLoad(true);
       setSubmitLoading(false);
-      setForm({});
-      setFileList([]);
       setCurrLocRemoved(true);
       setCurrentLocationLabel("");
       setCurrentLocation("");
+      await clearForm();
       message.success(
         "Your ad is now live on Reusifi. It may take up to 5 minutes to appear."
       );
@@ -760,7 +773,31 @@ const AddDress = () => {
                     Use your current location
                   </Button>
                 </Space.Compact>
-                {currentLocationLabel && !address && (
+                {form.locationLabel && (
+                  <Space.Compact size="large">
+                    <Input
+                      onChange={(e) => {
+                        setForm((prevValue) => {
+                          return {
+                            ...prevValue,
+                            location: "",
+                            locationLabel: "",
+                          };
+                        });
+                        setCurrentLocationLabel("");
+                        setCurrentLocation("");
+                        setCurrLocRemoved(true);
+                        handlePincode(e);
+                      }}
+                      allowClear
+                      style={{
+                        width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
+                      }}
+                      value={form.locationLabel}
+                    />
+                  </Space.Compact>
+                )}
+                {/* {currentLocationLabel && !address && (
                   <Space.Compact size="large">
                     <Input
                       onChange={(e) => {
@@ -790,7 +827,7 @@ const AddDress = () => {
                       placeholder="Address"
                     />
                   </Space.Compact>
-                )}
+                )} */}
                 <Space.Compact size="large">
                   <Input
                     className={
@@ -821,7 +858,7 @@ const AddDress = () => {
                     <Upload
                       accept="image/png,image/jpeg"
                       listType="picture"
-                      fileList={fileList}
+                      fileList={form.images}
                       onPreview={handlePreview}
                       beforeUpload={() => false}
                       onChange={handleChangeImage}

@@ -1,8 +1,10 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
+import { useIndexedDBImages } from "../hooks/indexedDB";
 
 export const Context = createContext();
 
 const Provider = ({ children }) => {
+  const { save, load } = useIndexedDBImages();
   const [currentLocation, setCurrentLocation] = useState("");
   const [currentLocationLabel, setCurrentLocationLabel] = useState("");
   const [triggerLocation, setTriggerLocation] = useState(false);
@@ -80,6 +82,37 @@ const Provider = ({ children }) => {
     location: "",
     locationLabel: "",
   });
+
+  useEffect(() => {
+    const loadForm = async () => {
+      const reusifiForm = sessionStorage.getItem("reusifiForm");
+      if (reusifiForm) {
+        const storedForm = JSON.parse(sessionStorage.getItem("reusifiForm"));
+        if (storedForm && Object.keys(storedForm).length > 0) {
+          const images = await load();
+          setForm({ ...storedForm, images });
+        }
+      }
+    };
+    loadForm();
+  }, []);
+
+  useEffect(() => {
+    const saveForm = async () => {
+      const { images, ...formWithoutImages } = form;
+      if (Object.values(formWithoutImages).length > 0) {
+        sessionStorage.setItem(
+          "reusifiForm",
+          JSON.stringify(formWithoutImages)
+        );
+        if (images && images.length > 0) {
+          await save(images);
+        }
+      }
+    };
+    saveForm();
+  }, [form]);
+
   return (
     <Context.Provider
       value={{
