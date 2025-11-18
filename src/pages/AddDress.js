@@ -184,42 +184,22 @@ const AddDress = () => {
     setPreviewOpen(true);
   };
 
-  const handleChangeImage = async (file) => {
-    if (file.file.status !== "removed") {
-      const value = await getActualMimeType(file.file);
-      if (!value) {
-        message.info("Invalid image format");
-        setForm((prev) => ({
-          ...prev,
-          images: prev.images.filter((img) => img.uid !== file.file.uid),
-        }));
-
-        return;
-      }
-    }
-    if (file.file.size / 1024 / 1024 > 30) {
+  const handleBeforeUpload = async (file) => {
+    const value = await getActualMimeType(file);
+    if (!value) {
+      message.info("Invalid image format");
+      return Upload.LIST_IGNORE;
+    } else if (file.size / 1024 / 1024 > 30) {
       message.info("Max size 30MB per image");
-      return;
+      return Upload.LIST_IGNORE;
     }
-    setForm((prev) => {
-      // Keep only images that are still in fileList
-      const updatedImages = prev.images.filter((img) =>
-        file.fileList.some((f) => f.uid === img.uid)
-      );
+    return false;
+  };
 
-      // Merge new images that are not already in state
-      const newImages = file.fileList.filter(
-        (f) => !prev.images.some((img) => img.uid === f.uid)
-      );
-
-      return {
-        ...prev,
-        images: [...updatedImages, ...newImages],
-      };
+  const handleChangeImage = async ({ fileList }) => {
+    setForm((prevValue) => {
+      return { ...prevValue, images: [...fileList] };
     });
-    if (file.status === "done" || file.status === undefined) {
-      scrollToBottom();
-    }
   };
 
   useEffect(() => {
@@ -860,7 +840,7 @@ const AddDress = () => {
                       listType="picture"
                       fileList={form.images}
                       onPreview={handlePreview}
-                      beforeUpload={() => false}
+                      beforeUpload={handleBeforeUpload}
                       onChange={handleChangeImage}
                       maxCount={6}
                       multiple
