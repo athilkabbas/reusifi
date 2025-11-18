@@ -18,6 +18,7 @@ export const useClearForm = () => {
       price: null,
       location: "",
       locationLabel: "",
+      keywords: [],
     });
     sessionStorage.removeItem("reusifiForm");
     await clear();

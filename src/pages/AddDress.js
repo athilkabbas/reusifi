@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { Col, Skeleton, Space, Spin } from "antd";
+import { Col, Skeleton, Space, Spin, TreeSelect } from "antd";
 import { Input } from "antd";
 import { useNavigate } from "react-router-dom";
 import { Cascader } from "antd";
@@ -18,7 +18,7 @@ import { callApi } from "../helpers/api";
 import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
-import { options } from "../helpers/categories";
+import { leafOptions, options } from "../helpers/categories";
 import useLocationComponent from "../hooks/location";
 import { useClearForm } from "../hooks/clearForm";
 import { Platform } from "../helpers/config";
@@ -159,12 +159,6 @@ const AddDress = () => {
     setForm((prevValue) => {
       if (type === "title" || type === "description" || type === "price") {
         return { ...prevValue, [type]: value.target.value };
-      } else if (type === "category") {
-        return {
-          ...prevValue,
-          category: value?.[0] || "",
-          subCategory: value?.[1] || "",
-        };
       }
       return { ...prevValue, [type]: value };
     });
@@ -206,7 +200,7 @@ const AddDress = () => {
     setForm((prevValue) => {
       return { ...prevValue, email: user.userId };
     });
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     if (currentLocation && currentLocationLabel) {
@@ -304,7 +298,6 @@ const AddDress = () => {
           })
         )
       );
-
       const thumbnailS3Keys = [s3Keys[0]];
       const viewingS3Keys = s3Keys.slice(1);
 
@@ -473,26 +466,22 @@ const AddDress = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  useEffect(() => {
-    const contentBody = document.querySelector("#addProductContainer");
-    if (contentBody) {
-      if (open) {
-        requestAnimationFrame(() => {
-          contentBody.style.overflow = "hidden";
-          contentBody.style.touchAction = "none";
-        });
-      } else {
-        contentBody.style.overflow = "auto";
-        contentBody.style.touchAction = "auto";
+  const findRootOfLeaf = (value, nodes) => {
+    for (const node of nodes) {
+      if (node.children) {
+        // Check if leaf exists in children
+        const found = node.children.find((child) => child.value === value);
+        if (found) {
+          return node.value; // return root value
+        } else {
+          // recursively check deeper levels
+          const deeper = findRootOfLeaf(value, node.children);
+          if (deeper) return deeper;
+        }
       }
     }
-    return () => {
-      if (contentBody) {
-        contentBody.style.overflow = "auto";
-        contentBody.style.touchAction = "auto";
-      }
-    };
-  }, [open]);
+    return null;
+  };
 
   return (
     <Layout
@@ -579,7 +568,45 @@ const AddDress = () => {
                     }}
                   />
                 </Space.Compact>
-                <Space.Compact size="large" style={{ position: "relative" }}>
+                <Space.Compact
+                  id={"tree-select-container-id"}
+                  size="large"
+                  style={{
+                    position: "relative",
+                  }}
+                >
+                  <TreeSelect
+                    getPopupContainer={() =>
+                      document.getElementById("tree-select-container-id")
+                    }
+                    className={
+                      isSubmitted
+                        ? form.subCategory
+                          ? "my-custom-cascader"
+                          : "my-red-border my-custom-cascader"
+                        : "my-custom-cascader"
+                    }
+                    style={{
+                      width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
+                    }}
+                    value={form.subCategory || null}
+                    placeholder="Category"
+                    onChange={(value, node) => {
+                      const root = findRootOfLeaf(value, options);
+                      handleChange(root, "category");
+                      handleChange(value, "subCategory");
+                    }}
+                    onSelect={(val, node) => {
+                      handleChange(node.keywords, "keywords");
+                    }}
+                    treeData={leafOptions}
+                    onClick={() => {
+                      scrollToBottomPrice();
+                    }}
+                    allowClear
+                  />
+                </Space.Compact>
+                {/* <Space.Compact size="large" style={{ position: "relative" }}>
                   <Cascader
                     className={
                       isSubmitted
@@ -595,46 +622,21 @@ const AddDress = () => {
                       // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                       width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
                     }}
-                    showSearch={{ filter }}
                     placeholder={"Category"}
                     onChange={(value) => {
                       handleChange(value, "category");
-                      requestAnimationFrame(() => {
-                        setOpen(false);
-                      });
                     }}
                     onClick={(e) => {
                       const isClearButton =
                         e.target.closest(".ant-select-clear");
                       if (isClearButton) return;
-                      setOpen(true);
                       scrollToBottomPrice();
                     }}
-                    open={open}
                     options={options}
                     value={
                       form.category
                         ? form.category + "/" + form.subCategory
                         : null
-                    }
-                    suffixIcon={
-                      !form.category ? (
-                        open ? (
-                          <UpOutlined
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setOpen(false);
-                            }}
-                          />
-                        ) : (
-                          <DownOutlined
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setOpen(true);
-                            }}
-                          />
-                        )
-                      ) : null
                     }
                   ></Cascader>
                   {form.category && (
@@ -656,24 +658,6 @@ const AddDress = () => {
                       }}
                     ></CloseCircleFilled>
                   )}
-                </Space.Compact>
-                {/* <Space.Compact size="large">
-                  <Cascader
-                    style={{
-                      // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-                      width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
-                      borderRadius: "9px",
-                    }}
-                    showSearch={{ filter }}
-                    onSearch={(value) => {
-                      handleChange(value, "location");
-                    }}
-                    placeholder={"Location"}
-                    onChange={(value) => {
-                      handleChange(value, "location");
-                    }}
-                    options={locationsCascader}
-                  ></Cascader>
                 </Space.Compact> */}
                 <Space.Compact
                   size="large"

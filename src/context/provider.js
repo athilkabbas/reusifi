@@ -76,6 +76,7 @@ const Provider = ({ children }) => {
     description: "",
     category: "",
     subCategory: "",
+    keywords: [],
     email: "",
     images: [],
     price: null,
@@ -85,7 +86,10 @@ const Provider = ({ children }) => {
 
   useEffect(() => {
     const loadForm = async () => {
-      const storedForm = JSON.parse(sessionStorage.getItem("reusifiForm"));
+      let storedForm = JSON.parse(sessionStorage.getItem("reusifiForm"));
+      if (!storedForm) {
+        storedForm = { ...form };
+      }
       const images = await load();
       setForm({ ...storedForm, images });
     };

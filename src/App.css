@@ -151,3 +151,11 @@ body {
 .my-custom-cascader .ant-select-selector {
   border-radius: 9px !important;
 }
+
+.my-custom-tree-select .ant-select-selector {
+  border-radius: 9px !important;
+}
+
+.my-custom-select .ant-select-selector {
+  border-radius: 9px !important;
+}

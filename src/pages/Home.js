@@ -642,26 +642,26 @@ const Home = () => {
     }, 300);
   };
 
-  useEffect(() => {
-    const drawerBody = document.querySelector(".ant-drawer-body");
-    if (drawerBody) {
-      if (open || sOpen || rOpen) {
-        requestAnimationFrame(() => {
-          drawerBody.style.overflow = "hidden";
-          drawerBody.style.touchAction = "none";
-        });
-      } else {
-        drawerBody.style.overflow = "auto";
-        drawerBody.style.touchAction = "auto";
-      }
-    }
-    return () => {
-      if (drawerBody) {
-        drawerBody.style.overflow = "auto";
-        drawerBody.style.touchAction = "auto";
-      }
-    };
-  }, [open, sOpen, rOpen]);
+  // useEffect(() => {
+  //   const drawerBody = document.querySelector(".ant-drawer-body");
+  //   if (drawerBody) {
+  //     if (open || sOpen || rOpen) {
+  //       requestAnimationFrame(() => {
+  //         drawerBody.style.overflow = "hidden";
+  //         drawerBody.style.touchAction = "none";
+  //       });
+  //     } else {
+  //       drawerBody.style.overflow = "auto";
+  //       drawerBody.style.touchAction = "auto";
+  //     }
+  //   }
+  //   return () => {
+  //     if (drawerBody) {
+  //       drawerBody.style.overflow = "auto";
+  //       drawerBody.style.touchAction = "auto";
+  //     }
+  //   };
+  // }, [open, sOpen, rOpen]);
 
   return (
     <Layout
@@ -698,55 +698,32 @@ const Home = () => {
               Category
             </Divider>
             <Space.Compact
+              id={"tree-select-container-id"}
               size="large"
               style={{
                 position: "relative",
               }}
             >
               <TreeSelect
-                suffixIcon={
-                  !category ? (
-                    open ? (
-                      <UpOutlined
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setOpen(false);
-                        }}
-                      />
-                    ) : (
-                      <DownOutlined
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setOpen(true);
-                        }}
-                      />
-                    )
-                  ) : null
+                getPopupContainer={() =>
+                  document.getElementById("tree-select-container-id")
                 }
-                showSearch
+                className={"my-custom-tree-select"}
                 style={{
                   width: !isMobile ? "50dvw" : "calc(100dvw - 50px)",
-                  borderRadius: "7px",
-                  height: "fit-content",
                 }}
                 value={category || null}
                 placeholder="Category"
-                onClick={(e) => {
-                  setOpen(true);
-                }}
-                open={open}
                 onChange={(value) => {
                   setCategory(value);
                   const leaf = isLeafNode(value, options);
                   setSubCategory(leaf);
-                  requestAnimationFrame(() => {
-                    setOpen(false);
-                  });
                   setApplied(false);
                 }}
                 treeData={options}
+                allowClear
               />
-              {category && (
+              {/* {category && (
                 <CloseCircleFilled
                   onClick={() => {
                     setCategory("");
@@ -766,15 +743,23 @@ const Home = () => {
                     scale: "0.9",
                   }}
                 ></CloseCircleFilled>
-              )}
+              )} */}
             </Space.Compact>
           </Space>
           <Space size="middle" direction="vertical">
             <Divider style={{ fontSize: "15px", fontWeight: "300" }} plain>
               Location
             </Divider>
-            <Space.Compact size="large" style={{ position: "relative" }}>
+            <Space.Compact
+              id={"select-container-id"}
+              size="large"
+              style={{ position: "relative" }}
+            >
               <Select
+                getPopupContainer={() =>
+                  document.getElementById("select-container-id")
+                }
+                className={"my-custom-select"}
                 id={"locationId"}
                 style={{
                   width: !isMobile ? "50dvw" : "calc(100dvw - 50px)",
@@ -811,34 +796,10 @@ const Home = () => {
                   )
                 }
                 onClick={(e) => {
-                  setSopen(true);
                   scrollToBottomPrice();
                 }}
-                suffixIcon={
-                  !locationLabel ? (
-                    sOpen ? (
-                      <UpOutlined
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSopen(false);
-                        }}
-                      />
-                    ) : (
-                      <DownOutlined
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSopen(true);
-                        }}
-                      />
-                    )
-                  ) : null
-                }
-                open={sOpen}
                 onSelect={(value, options) => {
                   handleLocationSelect(value, options);
-                  requestAnimationFrame(() => {
-                    setSopen(false);
-                  });
                 }}
                 options={(locationLabels || []).map((item) => ({
                   value: item.Address.Label,
@@ -922,49 +883,31 @@ const Home = () => {
                 allowClear
               ></Input>
             </Space.Compact>
-            <Space.Compact size="large">
+            <Space.Compact size="large" id={"radius-select-container-id"}>
               <Input value="Radius" style={{ width: "20dvw" }} readOnly />
               <Select
+                getPopupContainer={() =>
+                  document.getElementById("radius-select-container-id")
+                }
                 disabled={!currentLocation && !location}
                 style={{
-                  width: !isMobile ? "10dvw" : "30dvw",
+                  width: !isMobile ? "20dvw" : "45dvw",
                 }}
                 value={radiusValue}
                 placeholder="Radius"
                 filterOption={false}
-                onClick={(e) => {
-                  setRopen(true);
-                }}
-                suffixIcon={
-                  rOpen ? (
-                    <UpOutlined
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setRopen(false);
-                      }}
-                    />
-                  ) : (
-                    <DownOutlined
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setRopen(true);
-                      }}
-                    />
-                  )
-                }
-                open={rOpen}
                 onSelect={(value, options) => {
                   setRadiusValue(value);
                   setApplied(false);
-                  requestAnimationFrame(() => {
-                    setRopen(false);
-                  });
                 }}
                 options={(radius || []).map((item, index) => ({
                   value: item.value,
                   label: item.label,
                   key: index,
                 }))}
+                onClick={() => {
+                  scrollToBottom();
+                }}
               ></Select>
             </Space.Compact>
           </Space>
