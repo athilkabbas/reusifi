@@ -178,7 +178,15 @@ const AddDress = () => {
     setPreviewOpen(true);
   };
 
+  const prevFilesRef = useRef([]);
+
+  const [isRemoved, setIsRemoved] = useState(false);
+
   const handleBeforeUpload = async (file) => {
+    if (form.keywords.length === 0) {
+      message.info("Please select Category");
+      return Upload.LIST_IGNORE;
+    }
     const value = await getActualMimeType(file);
     if (!value) {
       message.info("Invalid image format");
@@ -190,10 +198,44 @@ const AddDress = () => {
     return false;
   };
 
+  const timer = useRef(null);
+
+  useEffect(() => {
+    if (form.images.length > 0 && !isRemoved) {
+      if (timer.current) {
+        clearTimeout(timer.current);
+      }
+      timer.current = setTimeout(async () => {
+        try {
+          setSubmitLoading(true);
+          const { viewingS3Keys } = await uploadImages();
+          let files = form.images.map((file, index) => {
+            return { ...file, s3Key: viewingS3Keys[index] };
+          });
+          await callApi(
+            "https://api.reusifi.com/prod/verifyImage",
+            "POST",
+            false,
+            {
+              files,
+              keywords: form.keywords,
+            }
+          );
+          setSubmitLoading(false);
+        } catch (err) {
+          setSubmitLoading(false);
+          console.log(err);
+        }
+      }, 500);
+    }
+  }, [form.images, isRemoved]);
+
   const handleChangeImage = async ({ fileList }) => {
     setForm((prevValue) => {
       return { ...prevValue, images: [...fileList] };
     });
+    setIsRemoved(prevFilesRef.current.length > fileList.length);
+    prevFilesRef.current = [...fileList];
   };
 
   useEffect(() => {
@@ -246,9 +288,7 @@ const AddDress = () => {
     return true;
   };
 
-  const handleSubmit = async () => {
-    setSubmitLoading(true);
-
+  const uploadImages = async () => {
     const thumbnailOptions = {
       maxSizeMB: 0.15,
       maxWidthOrHeight: 500,
@@ -265,42 +305,50 @@ const AddDress = () => {
       fileType: "image/jpeg",
     };
 
+    const compressedThumbnails = [
+      await imageCompression(form.images[0].originFileObj, thumbnailOptions),
+    ];
+    const compressedViewings = await Promise.all(
+      form.images.map((image) =>
+        imageCompression(image.originFileObj, viewingOptions)
+      )
+    );
+
+    const allCompressed = [...compressedThumbnails, ...compressedViewings];
+    const urlRes = await callApi(
+      `https://api.reusifi.com/prod/getUrlNew?email=${encodeURIComponent(
+        user.userId
+      )}&contentType=${encodeURIComponent("image/jpeg")}&count=${
+        allCompressed.length
+      }`,
+      "GET"
+    );
+    const uploadURLs = urlRes.data.uploadURLs;
+    const s3Keys = urlRes.data.s3Keys;
+
+    await Promise.all(
+      allCompressed.map((img, idx) =>
+        axios.put(uploadURLs[idx], img, {
+          headers: {
+            "Content-Type": "image/jpeg",
+            "Cache-Control": "public, max-age=2592000",
+          },
+        })
+      )
+    );
+    const thumbnailS3Keys = [s3Keys[0]];
+    const viewingS3Keys = s3Keys.slice(1);
+    return {
+      thumbnailS3Keys,
+      viewingS3Keys,
+    };
+  };
+
+  const handleSubmit = async () => {
+    setSubmitLoading(true);
+
     try {
-      // Compress thumbnails and viewings in parallel
-      const compressedThumbnails = [
-        await imageCompression(form.images[0].originFileObj, thumbnailOptions),
-      ];
-      const compressedViewings = await Promise.all(
-        form.images.map((image) =>
-          imageCompression(image.originFileObj, viewingOptions)
-        )
-      );
-
-      const allCompressed = [...compressedThumbnails, ...compressedViewings];
-      const urlRes = await callApi(
-        `https://api.reusifi.com/prod/getUrlNew?email=${encodeURIComponent(
-          user.userId
-        )}&contentType=${encodeURIComponent("image/jpeg")}&count=${
-          allCompressed.length
-        }`,
-        "GET"
-      );
-      const uploadURLs = urlRes.data.uploadURLs;
-      const s3Keys = urlRes.data.s3Keys;
-
-      await Promise.all(
-        allCompressed.map((img, idx) =>
-          axios.put(uploadURLs[idx], img, {
-            headers: {
-              "Content-Type": "image/jpeg",
-              "Cache-Control": "public, max-age=2592000",
-            },
-          })
-        )
-      );
-      const thumbnailS3Keys = [s3Keys[0]];
-      const viewingS3Keys = s3Keys.slice(1);
-
+      const { thumbnailS3Keys, viewingS3Keys } = await uploadImages();
       // Prepare form data with separate keys for thumbnails and viewings
       const data = {
         title: form.title.trim().toLowerCase(),
