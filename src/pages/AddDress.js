@@ -589,6 +589,11 @@ const AddDress = () => {
                     style={{
                       width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
                     }}
+                    styles={{
+                      popup: {
+                        root: { maxHeight: "400px", overflow: "auto" },
+                      },
+                    }}
                     value={form.subCategory || null}
                     placeholder="Category"
                     onChange={(value, node) => {

@@ -705,6 +705,11 @@ const Home = () => {
               }}
             >
               <TreeSelect
+                styles={{
+                  popup: {
+                    root: { maxHeight: "400px", overflow: "auto" },
+                  },
+                }}
                 getPopupContainer={() =>
                   document.getElementById("tree-select-container-id")
                 }
@@ -756,6 +761,11 @@ const Home = () => {
               style={{ position: "relative" }}
             >
               <Select
+                styles={{
+                  popup: {
+                    root: { maxHeight: "400px", overflow: "auto" },
+                  },
+                }}
                 getPopupContainer={() =>
                   document.getElementById("select-container-id")
                 }
@@ -886,6 +896,11 @@ const Home = () => {
             <Space.Compact size="large" id={"radius-select-container-id"}>
               <Input value="Radius" style={{ width: "20dvw" }} readOnly />
               <Select
+                styles={{
+                  popup: {
+                    root: { maxHeight: "400px", overflow: "auto" },
+                  },
+                }}
                 getPopupContainer={() =>
                   document.getElementById("radius-select-container-id")
                 }
