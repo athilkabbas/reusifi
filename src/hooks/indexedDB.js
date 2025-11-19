@@ -15,12 +15,12 @@ const getBase64 = (file) =>
 
 function openDB() {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open("imageDB", 1);
+    const request = indexedDB.open("imageDBReusifi", 1);
 
     request.onupgradeneeded = () => {
       const db = request.result;
-      if (!db.objectStoreNames.contains("images")) {
-        db.createObjectStore("images", { keyPath: "id" });
+      if (!db.objectStoreNames.contains("imagesReusifi")) {
+        db.createObjectStore("imagesReusifi", { keyPath: "id" });
       }
     };
 
@@ -32,13 +32,13 @@ function openDB() {
 export function useIndexedDBImages() {
   const save = useCallback(async (imageArray) => {
     const db = await openDB();
-    const tx = db.transaction("images", "readwrite");
-    const store = tx.objectStore("images");
+    const tx = db.transaction("imagesReusifi", "readwrite");
+    const store = tx.objectStore("imagesReusifi");
 
     // Save only the File/Blob itself
     const filesToSave = imageArray.map((f) => f.originFileObj || f);
 
-    store.put({ id: "imageList", files: filesToSave });
+    store.put({ id: "imageListReusifi", files: filesToSave });
 
     return new Promise((resolve) => {
       tx.oncomplete = resolve;
@@ -47,11 +47,11 @@ export function useIndexedDBImages() {
 
   const load = useCallback(async () => {
     const db = await openDB();
-    const tx = db.transaction("images", "readonly");
-    const store = tx.objectStore("images");
+    const tx = db.transaction("imagesReusifi", "readonly");
+    const store = tx.objectStore("imagesReusifi");
 
     return new Promise((resolve) => {
-      const req = store.get("imageList");
+      const req = store.get("imageListReusifi");
       req.onsuccess = async () => {
         const files = req.result?.files || [];
 
@@ -74,9 +74,9 @@ export function useIndexedDBImages() {
 
   const clear = useCallback(async () => {
     const db = await openDB();
-    const tx = db.transaction("images", "readwrite");
-    const store = tx.objectStore("images");
-    store.delete("imageList");
+    const tx = db.transaction("imagesReusifi", "readwrite");
+    const store = tx.objectStore("imagesReusifi");
+    store.delete("imageListReusifi");
 
     return new Promise((resolve) => {
       tx.oncomplete = resolve;
