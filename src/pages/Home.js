@@ -720,6 +720,11 @@ const Home = () => {
                 value={category || null}
                 placeholder="Category"
                 onChange={(value) => {
+                  if (!value) {
+                    setCategory("");
+                    setSubCategory("");
+                    return;
+                  }
                   setCategory(value);
                   const leaf = isLeafNode(value, options);
                   setSubCategory(leaf);
@@ -761,6 +766,7 @@ const Home = () => {
               style={{ position: "relative" }}
             >
               <Select
+                allowClear
                 styles={{
                   popup: {
                     root: { maxHeight: "400px", overflow: "auto" },
@@ -775,9 +781,12 @@ const Home = () => {
                   width: !isMobile ? "50dvw" : "calc(100dvw - 50px)",
                 }}
                 showSearch
-                value={locationLabel || null}
+                searchValue={locationLabel || null}
                 onSearch={(value) => {
-                  handleLocation(value);
+                  if (value.length <= 100) {
+                    handleLocation(value);
+                    setLocationLabel(value);
+                  }
                 }}
                 onChange={(value) => {
                   if (!value) {
@@ -970,9 +979,15 @@ const Home = () => {
               <Space size="large">
                 <Space.Compact size="large">
                   <Input
+                    allowClear
                     id="homeMinId"
                     onChange={(event) => {
                       // setPriceFilter("");
+                      if (
+                        !/^(|0|[1-9]\d*)(\.\d{0,2})?$/.test(event.target.value)
+                      ) {
+                        return;
+                      }
                       setMinPrice(event.target.value);
                       setApplied(false);
                     }}
@@ -982,13 +997,20 @@ const Home = () => {
                     onClick={() => {
                       scrollToBottom();
                     }}
+                    maxLength={15}
                   ></Input>
                 </Space.Compact>
                 <Space.Compact size="large">
                   <Input
+                    allowClear
                     id="homeMaxId"
                     onChange={(event) => {
                       // setPriceFilter("");
+                      if (
+                        !/^(|0|[1-9]\d*)(\.\d{0,2})?$/.test(event.target.value)
+                      ) {
+                        return;
+                      }
                       setMaxPrice(event.target.value);
                       setApplied(false);
                     }}
@@ -998,6 +1020,7 @@ const Home = () => {
                     onClick={() => {
                       scrollToBottom();
                     }}
+                    maxLength={15}
                   ></Input>
                 </Space.Compact>
               </Space>
@@ -1128,6 +1151,7 @@ const Home = () => {
                 // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                 borderRadius: "7px",
               }}
+              maxLength={300}
             />
           </Space.Compact>
           <Space.Compact>

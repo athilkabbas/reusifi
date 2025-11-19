@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { Col, Skeleton, Space, Spin, TreeSelect } from "antd";
-import { Input } from "antd";
+import { Input, notification } from "antd";
 import { useNavigate } from "react-router-dom";
 import { Cascader } from "antd";
 import { Layout, Modal } from "antd";
@@ -54,6 +54,8 @@ const AddDress = () => {
     form,
     setForm,
   } = useContext(Context);
+
+  const [api, contextHolder] = notification.useNotification();
 
   useLocationComponent();
 
@@ -200,17 +202,29 @@ const AddDress = () => {
 
   const timer = useRef(null);
 
-  useEffect(() => {
-    if (form.images.length > 0 && !isRemoved) {
+  const openNotificationWithIcon = (type, message) => {
+    api[type]({
+      message: "Invald Image",
+      description: `${message}`,
+      duration: 0,
+    });
+  };
+
+  const handleChangeImage = async ({ fileList }) => {
+    setForm((prevValue) => {
+      return { ...prevValue, images: [...fileList] };
+    });
+    if (fileList.length > 0 && fileList.length > prevFilesRef.current.length) {
       if (timer.current) {
         clearTimeout(timer.current);
       }
       timer.current = setTimeout(async () => {
         try {
           setSubmitLoading(true);
-          const { viewingS3Keys } = await uploadImages();
-          let files = form.images.map((file, index) => {
-            return { ...file, s3Key: viewingS3Keys[index] };
+          const { viewingS3Keys } = await uploadImages(fileList);
+          let files = fileList.map((file, index) => {
+            const { preview, originFileObj, ...fileRest } = file;
+            return { ...fileRest, s3Key: viewingS3Keys[index] };
           });
           await callApi(
             "https://api.reusifi.com/prod/verifyImage",
@@ -223,18 +237,27 @@ const AddDress = () => {
           );
           setSubmitLoading(false);
         } catch (err) {
+          if (err && err.status === 400) {
+            openNotificationWithIcon("error", err.response.data.message);
+            setForm((prevValue) => {
+              return {
+                ...prevValue,
+                images: [
+                  ...prevValue.images.filter(
+                    (image) =>
+                      !err.response.data.invalidUids.includes(image.uid)
+                  ),
+                ],
+              };
+            });
+            prevFilesRef.current = prevFilesRef.current.filter(
+              (file) => !err.response.data.invalidUids.includes(file.uid)
+            );
+          }
           setSubmitLoading(false);
-          console.log(err);
         }
       }, 500);
     }
-  }, [form.images, isRemoved]);
-
-  const handleChangeImage = async ({ fileList }) => {
-    setForm((prevValue) => {
-      return { ...prevValue, images: [...fileList] };
-    });
-    setIsRemoved(prevFilesRef.current.length > fileList.length);
     prevFilesRef.current = [...fileList];
   };
 
@@ -288,7 +311,7 @@ const AddDress = () => {
     return true;
   };
 
-  const uploadImages = async () => {
+  const uploadImages = async (fileList) => {
     const thumbnailOptions = {
       maxSizeMB: 0.15,
       maxWidthOrHeight: 500,
@@ -306,10 +329,10 @@ const AddDress = () => {
     };
 
     const compressedThumbnails = [
-      await imageCompression(form.images[0].originFileObj, thumbnailOptions),
+      await imageCompression(fileList[0].originFileObj, thumbnailOptions),
     ];
     const compressedViewings = await Promise.all(
-      form.images.map((image) =>
+      fileList.map((image) =>
         imageCompression(image.originFileObj, viewingOptions)
       )
     );
@@ -348,7 +371,9 @@ const AddDress = () => {
     setSubmitLoading(true);
 
     try {
-      const { thumbnailS3Keys, viewingS3Keys } = await uploadImages();
+      const { thumbnailS3Keys, viewingS3Keys } = await uploadImages(
+        form.images
+      );
       // Prepare form data with separate keys for thumbnails and viewings
       const data = {
         title: form.title.trim().toLowerCase(),
@@ -552,6 +577,7 @@ const AddDress = () => {
         </HeaderWrapper>
       )}
       <Content>
+        {contextHolder}
         <div
           id={"addProductContainer"}
           style={{
@@ -651,6 +677,9 @@ const AddDress = () => {
                     }}
                     onSelect={(val, node) => {
                       handleChange(node.keywords, "keywords");
+                    }}
+                    onClear={() => {
+                      handleChange([], "keywords");
                     }}
                     treeData={leafOptions}
                     onClick={() => {
