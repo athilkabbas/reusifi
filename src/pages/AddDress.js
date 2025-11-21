@@ -203,7 +203,7 @@ const AddDress = () => {
 
   const openNotificationWithIcon = (type, message) => {
     api[type]({
-      message: "Invald Image",
+      message: "Invalid Image",
       description: `${message}`,
       duration: 0,
     });
@@ -410,14 +410,7 @@ const AddDress = () => {
       if (err?.status === 401) {
         Modal.error(errorSessionConfig);
       } else {
-        if (err?.response?.data?.message === "Invalid Image") {
-          Modal.error({
-            ...errorConfig,
-            content: "Invalid image",
-          });
-        } else {
-          Modal.error(errorConfig);
-        }
+        Modal.error(errorConfig);
       }
       return;
     }

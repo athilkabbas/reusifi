@@ -71,6 +71,7 @@ const Provider = ({ children }) => {
   const [reportInitialLoad, setReportInitialLoad] = useState(true);
   const [account, setAccount] = useState({});
   const [fileList, setFileList] = useState([]);
+  const [deletedDB, setDeletedDB] = useState(false);
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -84,6 +85,37 @@ const Provider = ({ children }) => {
     locationLabel: "",
   });
 
+  const SESSION_KEY = "sessionActiveReusifi";
+
+  useEffect(() => {
+    if (sessionStorage.getItem(SESSION_KEY)) {
+      setDeletedDB(true);
+      return;
+    }
+
+    sessionStorage.setItem(SESSION_KEY, "1");
+
+    const deleteDB = async () => {
+      try {
+        if (indexedDB.databases) {
+          const dbs = await indexedDB.databases();
+          for (const db of dbs) {
+            if (db.name === "imageDBReusifi") {
+              indexedDB.deleteDatabase("imageDBReusifi");
+              setDeletedDB(true);
+            }
+          }
+        } else {
+          indexedDB.deleteDatabase("imageDBReusifi");
+          setDeletedDB(true);
+        }
+      } catch (err) {
+        console.error("IndexedDB cleanup failed:", err);
+      }
+    };
+    deleteDB();
+  }, []);
+
   useEffect(() => {
     const loadForm = async () => {
       let storedForm = JSON.parse(sessionStorage.getItem("reusifiForm"));
@@ -93,8 +125,10 @@ const Provider = ({ children }) => {
       const images = await load();
       setForm({ ...storedForm, images });
     };
-    loadForm();
-  }, []);
+    if (deletedDB) {
+      loadForm();
+    }
+  }, [deletedDB]);
 
   useEffect(() => {
     const saveForm = async () => {
@@ -102,8 +136,10 @@ const Provider = ({ children }) => {
       sessionStorage.setItem("reusifiForm", JSON.stringify(formWithoutImages));
       await save(images);
     };
-    saveForm();
-  }, [form]);
+    if (deletedDB) {
+      saveForm();
+    }
+  }, [form, deletedDB]);
 
   return (
     <Context.Provider
