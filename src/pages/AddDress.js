@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { Col, Skeleton, Space, Spin, TreeSelect } from "antd";
+import { Col, Popover, Skeleton, Space, Spin, TreeSelect } from "antd";
 import { Input, notification } from "antd";
 import { useNavigate } from "react-router-dom";
 import { Layout, Modal } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
+import { InfoCircleOutlined, UploadOutlined } from "@ant-design/icons";
 import { LocateFixed } from "lucide-react";
 import { Image, Upload, message } from "antd";
 import { Button, Row } from "antd";
@@ -544,6 +544,12 @@ const AddDress = () => {
     return null;
   };
 
+  const [popOpen, setPopOpen] = useState(false);
+
+  const handleOpenChange = (newOpen) => {
+    setPopOpen(newOpen);
+  };
+
   return (
     <Layout
       style={{
@@ -606,29 +612,52 @@ const AddDress = () => {
                   />
                 </Space.Compact>
                 <Space.Compact size="large">
-                  <TextArea
-                    className={
-                      isSubmitted
-                        ? form.description
-                          ? ""
-                          : "my-red-border"
-                        : ""
-                    }
-                    id={"descId"}
-                    allowClear
-                    style={{
-                      // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-                      width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
-                    }}
-                    onChange={(value) => handleChange(value, "description")}
-                    autoSize={{ minRows: 8, maxRows: 8 }}
-                    placeholder="Description"
-                    maxLength={300}
-                    value={form.description}
-                    onClick={() => {
-                      scrollToBottomPincode();
-                    }}
-                  />
+                  <div style={{ position: "relative" }}>
+                    <TextArea
+                      className={
+                        isSubmitted
+                          ? form.description
+                            ? ""
+                            : "my-red-border"
+                          : ""
+                      }
+                      id={"descId"}
+                      allowClear
+                      style={{
+                        // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+                        width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
+                      }}
+                      onChange={(value) => handleChange(value, "description")}
+                      autoSize={{ minRows: 8, maxRows: 8 }}
+                      placeholder="Description"
+                      maxLength={300}
+                      value={form.description}
+                      onClick={() => {
+                        scrollToBottomPincode();
+                      }}
+                    />
+                    <Popover
+                      content={
+                        "Please provide all the details about your item (e.g., for a phone: color, memory, condition) to help buyers make informed decisions."
+                      }
+                      title=""
+                      trigger="click"
+                      open={popOpen}
+                      placement="topLeft"
+                      styles={{ root: { width: "250px" } }}
+                      onOpenChange={handleOpenChange}
+                    >
+                      <InfoCircleOutlined
+                        style={{
+                          position: "absolute",
+                          right: "10px",
+                          bottom: "10px",
+                          zIndex: 10,
+                          color: "#52c41a",
+                        }}
+                      />
+                    </Popover>
+                  </div>
                 </Space.Compact>
                 <Space.Compact
                   id={"tree-select-container-id"}

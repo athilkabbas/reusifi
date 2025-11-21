@@ -12,6 +12,7 @@ import {
   Row,
   Col,
   Select,
+  Popover,
 } from "antd";
 import { EllipsisVertical, Settings2, Search } from "lucide-react";
 import {
@@ -22,6 +23,7 @@ import {
   CloseCircleOutlined,
   CloseCircleFilled,
   UserOutlined,
+  InfoCircleOutlined,
 } from "@ant-design/icons";
 import { LocateFixed } from "lucide-react";
 import { Input, Space, Empty } from "antd";
@@ -1142,6 +1144,20 @@ const Home = () => {
                 setInitialLoad(true);
                 setLoadedImages({});
               }}
+              suffix={
+                <Popover
+                  placement="bottomRight"
+                  styles={{ root: { width: "250px" } }}
+                  content={
+                    "Please provide as many details as possible in your search (e.g., for a phone: brand, color, memory, condition) to help you find the most relevant items."
+                  }
+                  trigger="click"
+                >
+                  <InfoCircleOutlined
+                    style={{ cursor: "pointer", color: "#52c41a" }}
+                  />
+                </Popover>
+              }
               placeholder="Search"
               style={{
                 width: "calc(100dvw - 100px)",
