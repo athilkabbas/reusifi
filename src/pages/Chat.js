@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
-import { Dropdown, Menu, Spin } from "antd";
+import { Dropdown, Spin } from "antd";
 import { Input } from "antd";
 import { Layout, Modal, Image } from "antd";
 import { Button } from "antd";
@@ -76,9 +76,6 @@ const Chat = () => {
     }
   };
   const {
-    setChatInitialLoad,
-    setChatData,
-    setChatLastEvaluatedKey,
     setIChatInitialLoad,
     setUnreadChatCount,
     setSellingChatData,

@@ -3,7 +3,6 @@ import {
   Layout,
   Space,
   Skeleton,
-  Typography,
   Modal,
   Avatar,
   Spin,
@@ -23,7 +22,6 @@ import { UserOutlined, LoadingOutlined } from "@ant-design/icons";
 import { useClearForm } from "../hooks/clearForm";
 import { Input } from "antd";
 const { Content } = Layout;
-const { Text } = Typography;
 const { TextArea } = Input;
 const UserDetails = () => {
   const isMobile = useIsMobile();

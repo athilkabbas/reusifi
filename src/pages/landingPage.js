@@ -7,17 +7,9 @@ import {
   Button,
   Typography,
   Card,
-  Input,
   Space,
-  Rate,
-  Image,
   Tag,
-  Divider,
-  Statistic,
-  Form,
-  Drawer,
   Grid,
-  Menu,
 } from "antd";
 import {
   DollarSign,

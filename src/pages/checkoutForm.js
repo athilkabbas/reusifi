@@ -5,7 +5,6 @@ import {
   EmbeddedCheckout,
 } from "@stripe/react-stripe-js";
 import { callApi } from "../helpers/api";
-import { useIsMobile } from "../hooks/windowSize";
 
 const TEST_STRIPE_KEY =
   "pk_test_51SU7igCRFnrudVzCXa7taHa6By0kzfuOwNFIVDLxJoo6qpn5YfAPRCVivrVQa7WqXYCirQdfygBVihqpfDs3IcmC00d5srxpgo";

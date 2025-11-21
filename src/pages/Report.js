@@ -19,11 +19,10 @@ import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
 import { useLocation, useNavigate } from "react-router-dom";
-import { UserOutlined, LoadingOutlined } from "@ant-design/icons";
+import { LoadingOutlined } from "@ant-design/icons";
 import { useClearForm } from "../hooks/clearForm";
 import { Input } from "antd";
 const { Content } = Layout;
-const { Text } = Typography;
 const { TextArea } = Input;
 const ReportAd = () => {
   const isMobile = useIsMobile();

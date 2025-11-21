@@ -18,8 +18,6 @@ import {
   LogoutOutlined,
   HeartFilled,
   LoadingOutlined,
-  UpOutlined,
-  DownOutlined,
   MailOutlined,
   CloseCircleOutlined,
   CloseCircleFilled,

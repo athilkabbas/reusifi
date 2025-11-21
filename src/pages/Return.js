@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { Navigate } from "react-router-dom";
 import { callApi } from "../helpers/api";
-import { Button, Result, message, Modal, Spin } from "antd";
+import { Button, Result, Modal, Spin } from "antd";
 import { useNavigate } from "react-router-dom";
 import imageCompression from "browser-image-compression";
 import { Context } from "../context/provider";

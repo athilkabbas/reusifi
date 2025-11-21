@@ -2,16 +2,15 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { Col, Skeleton, Space, Spin, TreeSelect } from "antd";
 import { Input, notification } from "antd";
 import { useNavigate } from "react-router-dom";
-import { Cascader } from "antd";
 import { Layout, Modal } from "antd";
-import { CloseCircleFilled, UploadOutlined } from "@ant-design/icons";
+import { UploadOutlined } from "@ant-design/icons";
 import { LocateFixed } from "lucide-react";
-import { Image, Upload, Typography, message } from "antd";
+import { Image, Upload, message } from "antd";
 import { Button, Row } from "antd";
 import axios from "axios";
 import { signInWithRedirect } from "@aws-amplify/auth";
 import imageCompression from "browser-image-compression";
-import { LoadingOutlined, UpOutlined, DownOutlined } from "@ant-design/icons";
+import { LoadingOutlined } from "@ant-design/icons";
 import { Context } from "../context/provider";
 import { useIsMobile } from "../hooks/windowSize";
 import { callApi } from "../helpers/api";
@@ -21,8 +20,6 @@ import HeaderWrapper from "../component/Header";
 import { leafOptions, options } from "../helpers/categories";
 import useLocationComponent from "../hooks/location";
 import { useClearForm } from "../hooks/clearForm";
-import { Platform } from "../helpers/config";
-const { Text } = Typography;
 const { TextArea } = Input;
 const { Content } = Layout;
 const getBase64 = (file) =>
@@ -182,7 +179,9 @@ const AddDress = () => {
 
   const prevFilesRef = useRef([]);
 
-  const [isRemoved, setIsRemoved] = useState(false);
+  useEffect(() => {
+    prevFilesRef.current = [...form.images];
+  }, [form.images]);
 
   const handleBeforeUpload = async (file) => {
     if (form.keywords.length === 0) {
@@ -250,15 +249,11 @@ const AddDress = () => {
                 ],
               };
             });
-            prevFilesRef.current = prevFilesRef.current.filter(
-              (file) => !err.response.data.invalidUids.includes(file.uid)
-            );
           }
           setSubmitLoading(false);
         }
       }, 500);
     }
-    prevFilesRef.current = [...fileList];
   };
 
   useEffect(() => {

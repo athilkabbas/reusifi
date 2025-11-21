@@ -18,17 +18,13 @@ import { callApi } from "../helpers/api";
 import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
-import { useLocation, useNavigate } from "react-router-dom";
-import { UserOutlined, LoadingOutlined } from "@ant-design/icons";
+import { LoadingOutlined } from "@ant-design/icons";
 import { useClearForm } from "../hooks/clearForm";
 import { Input } from "antd";
 const { Content } = Layout;
-const { Text } = Typography;
 const { TextArea } = Input;
 const Queries = () => {
   const isMobile = useIsMobile();
-  const location = useLocation();
-  const navigate = useNavigate();
   const isModalVisibleRef = useRef(false);
   const [submitLoading, setSubmitLoading] = useState(false);
   const { clearForm } = useClearForm();

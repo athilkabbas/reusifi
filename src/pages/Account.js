@@ -3,7 +3,6 @@ import {
   Layout,
   Space,
   Skeleton,
-  Typography,
   Modal,
   Avatar,
   Button,
@@ -33,7 +32,6 @@ import {
 } from "@ant-design/icons";
 import { Input } from "antd";
 const { Content } = Layout;
-const { Text } = Typography;
 const { TextArea } = Input;
 const Account = () => {
   const isMobile = useIsMobile();

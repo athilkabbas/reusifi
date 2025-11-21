@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
 import { Col, message, Row, Spin } from "antd";
 import { useNavigate } from "react-router-dom";
-import { Layout, Menu, Modal } from "antd";
+import { Layout, Modal } from "antd";
 import { Image } from "antd";
 import { signInWithRedirect } from "@aws-amplify/auth";
 import { List } from "antd";
