@@ -98,10 +98,15 @@ const Account = () => {
     });
   };
 
-  const [edit, setEdit] = useState(false);
-
   const handleSubmit = async () => {
     try {
+      if (
+        images.length === 0 &&
+        Object.keys(account).every((key) => account[key] === form[key])
+      ) {
+        message.info("No changes found");
+        return;
+      }
       const viewingOptions = {
         maxSizeMB: 0.5,
         maxWidthOrHeight: 1200,
@@ -148,7 +153,6 @@ const Account = () => {
       setAccount(data);
       message.success("Account successfully updated");
       setSubmitLoading(false);
-      setEdit(false);
       setDeleteImage(false);
       setFileList([]);
     } catch (err) {
@@ -449,7 +453,6 @@ const Account = () => {
                       }}
                     >
                       <Button
-                        disabled={!edit}
                         style={{
                           color: "black",
                           fontSize: "13px",
@@ -463,7 +466,6 @@ const Account = () => {
                     </Upload>
                     {account?.image && account?.image !== "DELETE_IMAGE" && (
                       <Button
-                        disabled={deleteImage || !edit}
                         style={{
                           fontSize: "13px",
                           fontWeight: "300",
@@ -533,14 +535,12 @@ const Account = () => {
                   Show email to users
                 </Button>
                 <Switch
-                  disabled={!edit}
                   checked={form.showEmail}
                   onChange={(checked) => handleChange(checked, "showEmail")}
                 />
               </Space.Compact>
               <Space.Compact size="large">
                 <Input
-                  readOnly={!edit}
                   allowClear
                   style={{
                     // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
@@ -559,7 +559,6 @@ const Account = () => {
               </Space.Compact>
               <Space.Compact size="large">
                 <TextArea
-                  readOnly={!edit}
                   allowClear
                   style={{
                     // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
@@ -589,7 +588,6 @@ const Account = () => {
                   Disable email notification
                 </Button>
                 <Switch
-                  disabled={!edit}
                   checked={form.disableNotification}
                   onChange={(checked) =>
                     handleChange(checked, "disableNotification")
@@ -597,10 +595,12 @@ const Account = () => {
                 />
               </Space.Compact>
               <br />
-              {!edit && (
+              <Space>
                 <Space.Compact size="large">
                   <Button
-                    onClick={() => setEdit((prevValue) => !prevValue)}
+                    onClick={() => {
+                      handleSubmit();
+                    }}
                     style={{
                       background: "#52c41a",
                       fontSize: "13px",
@@ -608,56 +608,36 @@ const Account = () => {
                     }}
                     type="primary"
                   >
-                    Edit
+                    Submit
                   </Button>
                 </Space.Compact>
-              )}
-              {edit && (
-                <Space>
-                  <Space.Compact size="large">
-                    <Button
-                      onClick={() => {
-                        handleSubmit();
-                      }}
-                      style={{
-                        background: "#52c41a",
-                        fontSize: "13px",
-                        fontWeight: "300",
-                      }}
-                      type="primary"
-                    >
-                      Submit
-                    </Button>
-                  </Space.Compact>
-                  <Space.Compact size="large">
-                    <Button
-                      onClick={() => {
-                        setEdit((prevValue) => !prevValue);
-                        setForm({
-                          name: account?.name ?? "",
-                          description: account?.description ?? "",
-                          email: email,
-                          image: account?.image ?? "",
-                          showEmail: account?.showEmail ?? "",
-                          disableNotification:
-                            account?.disableNotification ?? "",
-                          s3Key: account?.s3Key ?? "",
-                          userId: user.userId,
-                        });
-                        setDeleteImage(false);
-                      }}
-                      style={{
-                        background: "#52c41a",
-                        fontSize: "13px",
-                        fontWeight: "300",
-                      }}
-                      type="primary"
-                    >
-                      Cancel
-                    </Button>
-                  </Space.Compact>
-                </Space>
-              )}
+                <Space.Compact size="large">
+                  <Button
+                    onClick={() => {
+                      setForm({
+                        name: account?.name ?? "",
+                        description: account?.description ?? "",
+                        email: email,
+                        image: account?.image ?? "",
+                        showEmail: account?.showEmail ?? "",
+                        disableNotification: account?.disableNotification ?? "",
+                        s3Key: account?.s3Key ?? "",
+                        userId: user.userId,
+                      });
+                      setDeleteImage(false);
+                    }}
+                    style={{
+                      background: "#52c41a",
+                      fontSize: "13px",
+                      fontWeight: "300",
+                    }}
+                    type="primary"
+                  >
+                    Cancel
+                  </Button>
+                </Space.Compact>
+              </Space>
+
               <br />
               <br />
               <div
