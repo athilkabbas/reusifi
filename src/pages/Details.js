@@ -541,19 +541,41 @@ const Details = () => {
                         size="small"
                         bordered
                         extra={
-                          ad &&
-                          detailData[0]["item"]["deactivated"] === true ? (
-                            <Button
-                              onClick={handleActivate}
-                              style={{
-                                background: "#52c41a",
-                                fontSize: "13px",
-                                fontWeight: "300",
-                              }}
-                              type="primary"
-                            >
-                              Activate
-                            </Button>
+                          ad ? (
+                            detailData[0]["item"]["deactivated"] === true ? (
+                              <Button
+                                onClick={handleActivate}
+                                style={{
+                                  background: "#52c41a",
+                                  fontSize: "13px",
+                                  fontWeight: "300",
+                                }}
+                                type="primary"
+                              >
+                                Activate
+                              </Button>
+                            ) : (
+                              <>
+                                {" "}
+                                <Button
+                                  onClick={() => {
+                                    navigate("/boost", {
+                                      state: {
+                                        uuid: detailData?.[0]?.["item"]["uuid"],
+                                      },
+                                    });
+                                  }}
+                                  style={{
+                                    background: "#52c41a",
+                                    fontSize: "13px",
+                                    fontWeight: "300",
+                                  }}
+                                  type="primary"
+                                >
+                                  Boost
+                                </Button>
+                              </>
+                            )
                           ) : (
                             <></>
                           )

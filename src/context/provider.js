@@ -68,6 +68,7 @@ const Provider = ({ children }) => {
   const [mapLoading, setMapLoading] = useState(false);
   const [accountInitialLoad, setAccountInitialLoad] = useState(true);
   const [queryInitialLoad, setQueryInitialLoad] = useState(true);
+  const [boostInitialLoad, setBoostInitialLoad] = useState(true);
   const [reportInitialLoad, setReportInitialLoad] = useState(true);
   const [account, setAccount] = useState({});
   const [fileList, setFileList] = useState([]);
@@ -83,6 +84,10 @@ const Provider = ({ children }) => {
     price: null,
     location: "",
     locationLabel: "",
+  });
+
+  const [boostForm, setBoostForm] = useState({
+    uuid: "",
   });
 
   const SESSION_KEY = "sessionActiveReusifi";
@@ -117,6 +122,24 @@ const Provider = ({ children }) => {
   }, []);
 
   useEffect(() => {
+    const loadBoostForm = async () => {
+      let storedForm = JSON.parse(sessionStorage.getItem("reusifiBoostForm"));
+      if (!storedForm) {
+        storedForm = { ...boostForm };
+      }
+      setBoostForm({ ...storedForm });
+    };
+    loadBoostForm();
+  }, []);
+
+  useEffect(() => {
+    const saveBoostForm = async () => {
+      sessionStorage.setItem("reusifiBoostForm", JSON.stringify(boostForm));
+    };
+    saveBoostForm();
+  }, [boostForm]);
+
+  useEffect(() => {
     const loadForm = async () => {
       let storedForm = JSON.parse(sessionStorage.getItem("reusifiForm"));
       if (!storedForm) {
@@ -144,12 +167,16 @@ const Provider = ({ children }) => {
   return (
     <Context.Provider
       value={{
+        boostForm,
+        setBoostForm,
         fileList,
         setFileList,
         form,
         setForm,
         account,
         setAccount,
+        boostInitialLoad,
+        setBoostInitialLoad,
         queryInitialLoad,
         reportInitialLoad,
         setQueryInitialLoad,

@@ -56,6 +56,19 @@ const Return = () => {
     },
   };
 
+  const errorConfigBoost = {
+    title: "An error has occurred.",
+    content:
+      "Your payment has been refunded because the ad boost didn’t go through. Please try again.",
+    closable: false,
+    maskClosable: false,
+    okText: "OK",
+    onOk: () => {
+      isModalVisibleRef.current = false;
+      navigate("/ads");
+    },
+  };
+
   const errorConfigRefundFailure = {
     title: "An error has occurred.",
     content: "Please raise a query",
@@ -78,18 +91,64 @@ const Return = () => {
     setCurrentLocation,
     setCurrLocRemoved,
     form,
-    setForm,
+    boostForm,
     setFileList,
   } = useContext(Context);
 
   const [submit, setSubmit] = useState(false);
   const [sessionId, setSessionId] = useState("");
 
+  const [adType, setAdType] = useState("");
+
   useEffect(() => {
-    if (status === "complete") {
+    if (status === "complete" && adType === "POSTAD") {
       handleSubmit();
+    } else if (
+      (status === "complete" && adType === "BOOSTAD3") ||
+      adType === "BOOSTAD7"
+    ) {
+      handleBoost(adType);
     }
   }, [status]);
+
+  const handleBoost = async (adType) => {
+    try {
+      setSubmitLoading(true);
+      await callApi("https://api.reusifi.com/prod/boostAd", "POST", false, {
+        adType,
+        boostForm,
+      });
+      setSubmit(true);
+      setSubmitLoading(false);
+    } catch (err) {
+      setSubmitLoading(false);
+      try {
+        await callApi("https://api.reusifi.com/prod/refund", "POST", false, {
+          session_id: sessionId,
+        });
+        if (isModalVisibleRef.current) {
+          return;
+        }
+        isModalVisibleRef.current = true;
+        if (err?.status === 401) {
+          Modal.error(errorSessionConfig);
+        } else {
+          Modal.error(errorConfigBoost);
+        }
+      } catch (err) {
+        if (isModalVisibleRef.current) {
+          return;
+        }
+        isModalVisibleRef.current = true;
+        if (err?.status === 401) {
+          Modal.error(errorSessionConfigRefundFailure);
+        } else {
+          Modal.error(errorConfigRefundFailure);
+        }
+      }
+      return;
+    }
+  };
 
   const handleSubmit = async () => {
     setSubmitLoading(true);
@@ -217,11 +276,13 @@ const Return = () => {
       const queryString = window.location.search;
       const urlParams = new URLSearchParams(queryString);
       const sessionId = urlParams.get("session_id");
+      const adType = urlParams.get("adType");
       const result = await callApi(
         `https://api.reusifi.com/prod/checkoutSessionStatus?session_id=${sessionId}`,
         "GET"
       );
       setSessionId(sessionId);
+      setAdType(adType);
       setStatus(result.data.status);
       setCustomerEmail(result.data.customer_email);
     };
@@ -232,12 +293,62 @@ const Return = () => {
     return <Navigate to="/checkout" />;
   }
 
-  if (status === "complete" && submit) {
+  if (status === "complete" && submit && adType === "POSTAD") {
     return (
       <Result
         status="success"
         title="Successfully posted an Ad"
         subTitle="Your ad is now live on Reusifi. It may take up to 5 minutes to appear."
+        extra={[
+          <Button
+            style={{
+              background: "#52c41a",
+              fontSize: "13px",
+              fontWeight: "300",
+            }}
+            onClick={() => {
+              navigate("/");
+            }}
+            type="primary"
+            key="console"
+          >
+            Go Home
+          </Button>,
+        ]}
+      />
+    );
+  }
+  if (status === "complete" && submit && adType === "BOOSTAD3") {
+    return (
+      <Result
+        status="success"
+        title="Successfully boosted Ad"
+        subTitle="Your ad has been successfully boosted for 3 days. It may take up to 5 minutes to appear."
+        extra={[
+          <Button
+            style={{
+              background: "#52c41a",
+              fontSize: "13px",
+              fontWeight: "300",
+            }}
+            onClick={() => {
+              navigate("/");
+            }}
+            type="primary"
+            key="console"
+          >
+            Go Home
+          </Button>,
+        ]}
+      />
+    );
+  }
+  if (status === "complete" && submit && adType === "BOOSTAD7") {
+    return (
+      <Result
+        status="success"
+        title="Successfully boosted Ad"
+        subTitle="Your ad has been successfully boosted for 7 days. It may take up to 5 minutes to appear."
         extra={[
           <Button
             style={{

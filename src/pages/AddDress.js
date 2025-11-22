@@ -996,7 +996,7 @@ const AddDress = () => {
                       if (count < 5) {
                         handleSubmit();
                       } else {
-                        navigate("/checkout");
+                        navigate("/checkout", { state: { adType: "POSTAD" } });
                       }
                     }}
                     type="primary"
