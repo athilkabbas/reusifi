@@ -23,6 +23,7 @@ import {
   Users,
 } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const { Header, Content, Footer } = Layout;
 const { Title, Paragraph, Text } = Typography;
@@ -30,6 +31,8 @@ const { Meta } = Card;
 const { useBreakpoint } = Grid;
 
 const ReusifiLanding = () => {
+  const navigate = useNavigate();
+
   const [mobileMenuVisible, setMobileMenuVisible] = useState(false);
   const screens = useBreakpoint();
 
@@ -86,7 +89,11 @@ const ReusifiLanding = () => {
                     {/* <Button type="default">Sign In</Button> */}
                     <Button
                       onClick={() => {
-                        signInWithRedirect();
+                        try {
+                          signInWithRedirect();
+                        } catch (err) {
+                          navigate("/");
+                        }
                       }}
                       type="primary"
                       style={{ backgroundColor: "#52c41a" }}
@@ -102,7 +109,11 @@ const ReusifiLanding = () => {
               <Space>
                 <Button
                   onClick={() => {
-                    signInWithRedirect();
+                    try {
+                      signInWithRedirect();
+                    } catch (err) {
+                      navigate("/");
+                    }
                   }}
                   type="primary"
                   size="small"
@@ -187,7 +198,11 @@ const ReusifiLanding = () => {
                   >
                     <Button
                       onClick={() => {
-                        signInWithRedirect();
+                        try {
+                          signInWithRedirect();
+                        } catch (err) {
+                          navigate("/");
+                        }
                       }}
                       type="primary"
                       size="large"
@@ -737,7 +752,11 @@ const ReusifiLanding = () => {
               >
                 <Button
                   onClick={() => {
-                    signInWithRedirect();
+                    try {
+                      signInWithRedirect();
+                    } catch (err) {
+                      navigate("/");
+                    }
                   }}
                   size="large"
                   style={{

@@ -262,7 +262,7 @@ const Home = () => {
       navigate("/query");
     } else if (key === "3") {
       await clearForm();
-      signOut({ global: true });
+      signOut();
     }
   };
 
