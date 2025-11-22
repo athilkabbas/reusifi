@@ -346,6 +346,20 @@ const Details = () => {
         </>
       ),
     },
+    {
+      key: "9",
+      label: "Posted on",
+      children: new Date(
+        detailData?.[0]?.["item"]["createdAtOrig"]
+      ).toLocaleString("en-GB"),
+    },
+    {
+      key: "10",
+      label: "Expires on",
+      children: new Date(
+        detailData?.[0]?.["item"]["expiresAt"] * 1000
+      ).toLocaleString("en-GB"),
+    },
   ];
   return (
     <Layout

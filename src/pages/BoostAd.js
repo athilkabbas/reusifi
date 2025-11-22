@@ -138,7 +138,7 @@ const BoostAd = () => {
           {!loading && (
             <Space
               size="middle"
-              direction={isMobile ? "vertical" : "horizontal"}
+              direction="vertical"
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -147,44 +147,67 @@ const BoostAd = () => {
                 height: "100%",
               }}
             >
-              <Space.Compact size="large">
-                <Card title="3-Day Ad Boost" bordered style={{ width: 300 }}>
-                  <p>Increase your ad’s visibility for 3 days for £1.</p>
-                  <Button
-                    onClick={() => {
-                      setBoostForm((prevValue) => {
-                        return { ...prevValue, uuid };
-                      });
-                      navigate("/checkout", {
-                        state: { adType: "BOOSTAD3" },
-                      });
-                    }}
-                    style={{ backgroundColor: "#52c41a" }}
-                    type="primary"
-                  >
-                    Select
-                  </Button>
-                </Card>
-              </Space.Compact>
-              <Space.Compact size="large">
-                <Card title="7-Day Ad Boost" bordered style={{ width: 300 }}>
-                  <p>Increase your ad’s visibility for 7 days for £2.</p>
-                  <Button
-                    onClick={() => {
-                      setBoostForm((prevValue) => {
-                        return { ...prevValue, uuid };
-                      });
-                      navigate("/checkout", {
-                        state: { adType: "BOOSTAD7" },
-                      });
-                    }}
-                    style={{ backgroundColor: "#52c41a" }}
-                    type="primary"
-                  >
-                    Select
-                  </Button>
-                </Card>
-              </Space.Compact>
+              <Space size="large">
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  Please check your ad’s expiry before applying a boost.
+                </div>
+              </Space>
+              <Space
+                size="middle"
+                direction={isMobile ? "vertical" : "horizontal"}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  padding: "20px",
+                  justifyContent: "center",
+                  height: "100%",
+                }}
+              >
+                <Space.Compact size="large">
+                  <Card title="3-Day Ad Boost" bordered style={{ width: 300 }}>
+                    <p>Increase your ad’s visibility for 3 days for £1.</p>
+                    <Button
+                      onClick={() => {
+                        setBoostForm((prevValue) => {
+                          return { ...prevValue, uuid };
+                        });
+                        navigate("/checkout", {
+                          state: { adType: "BOOSTAD3" },
+                        });
+                      }}
+                      style={{ backgroundColor: "#52c41a" }}
+                      type="primary"
+                    >
+                      Select
+                    </Button>
+                  </Card>
+                </Space.Compact>
+                <Space.Compact size="large">
+                  <Card title="7-Day Ad Boost" bordered style={{ width: 300 }}>
+                    <p>Increase your ad’s visibility for 7 days for £2.</p>
+                    <Button
+                      onClick={() => {
+                        setBoostForm((prevValue) => {
+                          return { ...prevValue, uuid };
+                        });
+                        navigate("/checkout", {
+                          state: { adType: "BOOSTAD7" },
+                        });
+                      }}
+                      style={{ backgroundColor: "#52c41a" }}
+                      type="primary"
+                    >
+                      Select
+                    </Button>
+                  </Card>
+                </Space.Compact>
+              </Space>
             </Space>
           )}
           {loading && (
