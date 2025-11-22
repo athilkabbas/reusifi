@@ -14,6 +14,7 @@ import {
   Upload,
   message,
   Popconfirm,
+  notification,
 } from "antd";
 import { signInWithRedirect, signOut } from "@aws-amplify/auth";
 import { Context } from "../context/provider";
@@ -84,10 +85,42 @@ const Account = () => {
     s3Key: "",
   });
 
-  const [images, setImages] = useState([]);
-
   const [submitLoading, setSubmitLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [api, contextHolder] = notification.useNotification();
+
+  const uploadImages = async (fileList) => {
+    const viewingOptions = {
+      maxSizeMB: 0.5,
+      maxWidthOrHeight: 1200,
+      useWebWorker: true,
+      initialQuality: 0.8,
+      fileType: "image/jpeg",
+    };
+
+    const compressedImage = await imageCompression(
+      fileList[0].originFileObj,
+      viewingOptions
+    );
+
+    const urlRes = await callApi(
+      `https://api.reusifi.com/prod/getUrlNew?email=${encodeURIComponent(
+        user.userId
+      )}&contentType=${encodeURIComponent("image/jpeg")}&count=${1}`,
+      "GET"
+    );
+    const uploadURLs = urlRes.data.uploadURLs;
+    const s3Keys = urlRes.data.s3Keys;
+
+    await axios.put(uploadURLs[0], compressedImage, {
+      headers: {
+        "Content-Type": "image/jpeg",
+        "Cache-Control": "public, max-age=2592000",
+      },
+    });
+
+    return s3Keys;
+  };
 
   const handleChange = (value, type) => {
     setForm((prevValue) => {
@@ -101,42 +134,17 @@ const Account = () => {
   const handleSubmit = async () => {
     try {
       if (
-        images.length === 0 &&
+        fileList.length === 0 &&
         Object.keys(account).every((key) => account[key] === form[key])
       ) {
         message.info("No changes found");
         return;
       }
-      const viewingOptions = {
-        maxSizeMB: 0.5,
-        maxWidthOrHeight: 1200,
-        useWebWorker: true,
-        initialQuality: 0.8,
-        fileType: "image/jpeg",
-      };
+
       setSubmitLoading(true);
       let data = { ...form };
-      if (images.length > 0) {
-        const compressedImage = await imageCompression(
-          images[0],
-          viewingOptions
-        );
-
-        const urlRes = await callApi(
-          `https://api.reusifi.com/prod/getUrlNew?email=${encodeURIComponent(
-            user.userId
-          )}&contentType=${encodeURIComponent("image/jpeg")}&count=${1}`,
-          "GET"
-        );
-        const uploadURLs = urlRes.data.uploadURLs;
-        const s3Keys = urlRes.data.s3Keys;
-
-        await axios.put(uploadURLs[0], compressedImage, {
-          headers: {
-            "Content-Type": "image/jpeg",
-            "Cache-Control": "public, max-age=2592000",
-          },
-        });
+      if (fileList.length > 0) {
+        const s3Keys = await uploadImages(fileList);
         data = {
           ...data,
           image: `https://digpfxl7t6jra.cloudfront.net/${s3Keys[0]}`,
@@ -261,10 +269,6 @@ const Account = () => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
 
-  useEffect(() => {
-    setImages([...fileList.map((item) => item.originFileObj)]);
-  }, [fileList]);
-
   const getBase64 = (file) =>
     new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -279,18 +283,94 @@ const Account = () => {
     setPreviewImage(file.url || file.preview);
     setPreviewOpen(true);
   };
-  const handleChangeImage = (file) => {
-    if (file.file.size / 1024 / 1024 > 30) {
-      message.info("Max size 30MB per image");
-      return;
+
+  const prevFilesRef = useRef([]);
+
+  const timer = useRef(null);
+
+  const openNotificationWithIcon = (type, message) => {
+    api[type]({
+      message: "Invalid Image",
+      description: `${message}`,
+      duration: 0,
+    });
+  };
+
+  const getActualMimeType = async (file) => {
+    const buffer = await file.arrayBuffer();
+    const bytes = new Uint8Array(buffer).subarray(0, 4);
+
+    // JPEG magic bytes: FF D8 FF
+    if (bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) {
+      return true;
     }
-    let newFileList = file.fileList.filter(
-      (file) => file.size / 1024 / 1024 <= 30
-    );
-    setFileList(newFileList);
-    // if (file.status === "done" || file.status === undefined) {
-    //   scrollToBottom();
-    // }
+
+    // PNG magic bytes: 89 50 4E 47
+    if (
+      bytes[0] === 0x89 &&
+      bytes[1] === 0x50 &&
+      bytes[2] === 0x4e &&
+      bytes[3] === 0x47
+    ) {
+      return true;
+    }
+
+    return false;
+  };
+
+  useEffect(() => {
+    prevFilesRef.current = [...fileList];
+  }, [fileList]);
+
+  const handleBeforeUpload = async (file) => {
+    const value = await getActualMimeType(file);
+    if (!value) {
+      message.info("Invalid image format");
+      return Upload.LIST_IGNORE;
+    } else if (file.size / 1024 / 1024 > 30) {
+      message.info("Max size 30MB per image");
+      return Upload.LIST_IGNORE;
+    }
+    return false;
+  };
+
+  const handleChangeImage = async ({ fileList }) => {
+    setFileList(fileList);
+    if (fileList.length > 0 && fileList.length >= prevFilesRef.current.length) {
+      if (timer.current) {
+        clearTimeout(timer.current);
+      }
+      timer.current = setTimeout(async () => {
+        try {
+          setSubmitLoading(true);
+          const s3Keys = await uploadImages(fileList);
+          let files = fileList.map((file, index) => {
+            const { preview, originFileObj, ...fileRest } = file;
+            return { ...fileRest, s3Key: s3Keys[index] };
+          });
+          await callApi(
+            "https://api.reusifi.com/prod/verifyImage",
+            "POST",
+            false,
+            {
+              files,
+              keywords: [],
+            }
+          );
+          setSubmitLoading(false);
+        } catch (err) {
+          if (err && err.status === 400) {
+            openNotificationWithIcon("error", err.response.data.message);
+            setFileList((prevValue) => {
+              return prevValue.filter(
+                (image) => !err.response.data.invalidUids.includes(image.uid)
+              );
+            });
+          }
+          setSubmitLoading(false);
+        }
+      }, 500);
+    }
   };
 
   const [deleteImage, setDeleteImage] = useState(false);
@@ -441,7 +521,7 @@ const Account = () => {
                       listType="picture"
                       fileList={fileList}
                       onPreview={handlePreview}
-                      beforeUpload={() => false}
+                      beforeUpload={handleBeforeUpload}
                       onChange={handleChangeImage}
                       maxCount={1}
                       multiple
@@ -614,6 +694,15 @@ const Account = () => {
                 <Space.Compact size="large">
                   <Button
                     onClick={() => {
+                      if (
+                        fileList.length === 0 &&
+                        Object.keys(account).every(
+                          (key) => account[key] === form[key]
+                        )
+                      ) {
+                        message.info("No changes found");
+                        return;
+                      }
                       setForm({
                         name: account?.name ?? "",
                         description: account?.description ?? "",
@@ -624,6 +713,7 @@ const Account = () => {
                         s3Key: account?.s3Key ?? "",
                         userId: user.userId,
                       });
+                      setFileList([]);
                       setDeleteImage(false);
                     }}
                     style={{
