@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { Col, Popover, Skeleton, Space, Spin, TreeSelect } from "antd";
+import { Col, Popover, Select, Skeleton, Space, Spin, TreeSelect } from "antd";
 import { Input, notification } from "antd";
 import { useNavigate } from "react-router-dom";
 import { Layout, Modal } from "antd";
@@ -17,7 +17,7 @@ import { callApi } from "../helpers/api";
 import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
-import { leafOptions, options } from "../helpers/categories";
+import { options } from "../helpers/categories";
 import useLocationComponent from "../hooks/location";
 import { useIndexedDBImages } from "../hooks/indexedDB";
 const { TextArea } = Input;
@@ -55,6 +55,22 @@ const AddDress = () => {
   const [api, contextHolder] = notification.useNotification();
 
   useLocationComponent();
+
+  const [subCategoryOptions, setSubCategoryOptions] = useState([]);
+
+  useEffect(() => {
+    if (form.category) {
+      for (let option of options) {
+        if (option.value === form.category) {
+          setSubCategoryOptions(option.children);
+          break;
+        }
+      }
+    } else {
+      setSubCategoryOptions([]);
+      handleChange("", "subCategory");
+    }
+  }, [form.category]);
 
   const [isSubmitted, setIsSubmitted] = useState(false);
   const isMobile = useIsMobile();
@@ -185,7 +201,7 @@ const AddDress = () => {
 
   const handleBeforeUpload = async (file) => {
     if (form.keywords.length === 0) {
-      message.info("Please select Category");
+      message.info("Please select Subcategory");
       return Upload.LIST_IGNORE;
     }
     const value = await getActualMimeType(file);
@@ -666,98 +682,106 @@ const AddDress = () => {
                     position: "relative",
                   }}
                 >
-                  <TreeSelect
-                    getPopupContainer={() =>
-                      document.getElementById("tree-select-container-id")
-                    }
-                    className={
-                      isSubmitted
-                        ? form.subCategory
-                          ? "my-custom-cascader"
-                          : "my-red-border my-custom-cascader"
-                        : "my-custom-cascader"
-                    }
+                  <Space
+                    size="large"
+                    direction="vertical"
                     style={{
-                      width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
+                      display: "flex",
+                      alignItems: "center",
                     }}
-                    styles={{
-                      popup: {
-                        root: { maxHeight: "400px", overflow: "auto" },
-                      },
-                    }}
-                    value={form.subCategory || null}
-                    placeholder="Category"
-                    onChange={(value, node) => {
-                      const root = findRootOfLeaf(value, options);
-                      handleChange(root, "category");
-                      handleChange(value, "subCategory");
-                    }}
-                    onSelect={(val, node) => {
-                      handleChange(node.keywords, "keywords");
-                    }}
-                    onClear={() => {
-                      handleChange([], "keywords");
-                    }}
-                    treeData={leafOptions}
-                    onClick={() => {
-                      scrollToBottomPrice();
-                    }}
-                    allowClear
-                  />
-                </Space.Compact>
-                {/* <Space.Compact size="large" style={{ position: "relative" }}>
-                  <Cascader
-                    className={
-                      isSubmitted
-                        ? form.category
-                          ? "my-custom-cascader"
-                          : "my-red-border my-custom-cascader"
-                        : "my-custom-cascader"
-                    }
-                    id={"cascaderId"}
-                    popupMenuColumnStyle={{ width: "calc(50dvw - 25px)" }}
-                    allowClear={false}
-                    style={{
-                      // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-                      width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
-                    }}
-                    placeholder={"Category"}
-                    onChange={(value) => {
-                      handleChange(value, "category");
-                    }}
-                    onClick={(e) => {
-                      const isClearButton =
-                        e.target.closest(".ant-select-clear");
-                      if (isClearButton) return;
-                      scrollToBottomPrice();
-                    }}
-                    options={options}
-                    value={
-                      form.category
-                        ? form.category + "/" + form.subCategory
-                        : null
-                    }
-                  ></Cascader>
-                  {form.category && (
-                    <CloseCircleFilled
-                      onClick={() => {
-                        handleChange("", "category");
-                      }}
+                  >
+                    <Space.Compact
+                      id={"add-product-category-c"}
+                      size="large"
                       style={{
-                        position: "absolute",
-                        right: 9,
-                        top: "50%",
-                        transform: "translateY(-50%)",
-                        background: "none",
-                        border: "none",
-                        cursor: "pointer",
-                        color: "rgba(0, 0, 0, 0.25)",
-                        zIndex: 10,
-                        scale: "0.9",
+                        position: "relative",
                       }}
-                    ></CloseCircleFilled>
-                  )}
-                </Space.Compact> */}
+                    >
+                      <Select
+                        className={
+                          isSubmitted
+                            ? form.category
+                              ? "my-custom-select"
+                              : "my-custom-select my-red-border"
+                            : "my-custom-select"
+                        }
+                        allowClear
+                        styles={{
+                          popup: {
+                            root: { maxHeight: "400px", overflow: "auto" },
+                          },
+                        }}
+                        getPopupContainer={() =>
+                          document.getElementById("add-product-category-c")
+                        }
+                        id={"addProductCId"}
+                        style={{
+                          width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
+                        }}
+                        value={form.category || undefined}
+                        onChange={(value) => {
+                          if (!value) {
+                            handleChange("", "category");
+                          } else {
+                            handleChange(value, "category");
+                          }
+                        }}
+                        placeholder="Category"
+                        filterOption={false}
+                        onClick={(e) => {
+                          scrollToBottomPrice();
+                        }}
+                        options={options}
+                      ></Select>
+                    </Space.Compact>
+                    <Space.Compact
+                      id={"add-product-subcategory-c"}
+                      size="large"
+                      style={{
+                        position: "relative",
+                      }}
+                    >
+                      <Select
+                        className={
+                          isSubmitted
+                            ? form.subCategory
+                              ? "my-custom-select"
+                              : "my-custom-select my-red-border"
+                            : "my-custom-select"
+                        }
+                        allowClear
+                        styles={{
+                          popup: {
+                            root: { maxHeight: "400px", overflow: "auto" },
+                          },
+                        }}
+                        value={form.subCategory || undefined}
+                        getPopupContainer={() =>
+                          document.getElementById("add-product-subcategory-c")
+                        }
+                        id={"addProductSCId"}
+                        style={{
+                          width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
+                        }}
+                        onChange={(value, option) => {
+                          if (!value) {
+                            handleChange("", "subCategory");
+                            handleChange([], "keywords");
+                          } else {
+                            handleChange(value, "subCategory");
+                            handleChange(option.keywords, "keywords");
+                          }
+                        }}
+                        placeholder="Subcategory"
+                        filterOption={false}
+                        onClick={(e) => {
+                          scrollToBottomPrice();
+                        }}
+                        options={subCategoryOptions}
+                      ></Select>
+                    </Space.Compact>
+                  </Space>
+                </Space.Compact>
                 <Space.Compact
                   size="large"
                   style={{
@@ -860,37 +884,6 @@ const AddDress = () => {
                     />
                   </Space.Compact>
                 )}
-                {/* {currentLocationLabel && !address && (
-                  <Space.Compact size="large">
-                    <Input
-                      onChange={(e) => {
-                        if (!e.target.value) {
-                          setCurrentLocationLabel("");
-                          setCurrentLocation("");
-                          setCurrLocRemoved(true);
-                        }
-                      }}
-                      allowClear
-                      style={{
-                        width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
-                      }}
-                      value={currentLocationLabel}
-                    />
-                  </Space.Compact>
-                )}
-                {pincode && address && (
-                  <Space.Compact size="large">
-                    <Input
-                      onChange={handlePincode}
-                      allowClear
-                      style={{
-                        width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
-                      }}
-                      value={address}
-                      placeholder="Address"
-                    />
-                  </Space.Compact>
-                )} */}
                 <Space.Compact size="large">
                   <Input
                     className={

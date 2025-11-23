@@ -21,7 +21,6 @@ import {
   LoadingOutlined,
   MailOutlined,
   CloseCircleOutlined,
-  CloseCircleFilled,
   UserOutlined,
   InfoCircleOutlined,
 } from "@ant-design/icons";
@@ -102,6 +101,22 @@ const Home = () => {
 
   const isMobile = useIsMobile();
   const [loadedImages, setLoadedImages] = useState({});
+
+  const [subCategoryOptions, setSubCategoryOptions] = useState([]);
+
+  useEffect(() => {
+    if (category) {
+      for (let option of options) {
+        if (option.value === category) {
+          setSubCategoryOptions(option.children);
+          break;
+        }
+      }
+    } else {
+      setSubCategoryOptions([]);
+      setSubCategory("");
+    }
+  }, [category]);
 
   const calculateLimit = () => {
     const viewportHeight = window.innerHeight;
@@ -365,9 +380,9 @@ const Home = () => {
           )}&sortByPrice=${encodeURIComponent(
             priceFilter
           )}&category=${encodeURIComponent(
-            !subCategory ? category : ""
+            category
           )}&subCategory=${encodeURIComponent(
-            subCategory ? category : ""
+            subCategory
           )}&radius=${encodeURIComponent(radiusValue)}`,
           "GET"
         );
@@ -589,7 +604,6 @@ const Home = () => {
       setCurrentLocation("");
       setCurrentLocationLabel("");
       setCurrLocRemoved(true);
-      setApplied(false);
     } catch (err) {
       // message.info("Pincode not found");
     }
@@ -676,62 +690,82 @@ const Home = () => {
               Category
             </Divider>
             <Space.Compact
-              id={"tree-select-container-id"}
+              id={"home-category-c"}
               size="large"
               style={{
                 position: "relative",
               }}
             >
-              <TreeSelect
+              <Select
+                allowClear
                 styles={{
                   popup: {
                     root: { maxHeight: "400px", overflow: "auto" },
                   },
                 }}
                 getPopupContainer={() =>
-                  document.getElementById("tree-select-container-id")
+                  document.getElementById("home-category-c")
                 }
-                className={"my-custom-tree-select"}
+                className={"my-custom-select"}
+                id={"homeCId"}
                 style={{
                   width: !isMobile ? "50dvw" : "calc(100dvw - 50px)",
                 }}
-                value={category || null}
-                placeholder="Category"
+                value={category || undefined}
                 onChange={(value) => {
                   if (!value) {
                     setCategory("");
-                    setSubCategory("");
-                    return;
+                  } else {
+                    setCategory(value);
                   }
-                  setCategory(value);
-                  const leaf = isLeafNode(value, options);
-                  setSubCategory(leaf);
                   setApplied(false);
                 }}
-                treeData={options}
+                placeholder="Category"
+                filterOption={false}
+                onClick={(e) => {
+                  scrollToBottomPrice();
+                }}
+                options={options}
+              ></Select>
+            </Space.Compact>
+            <Space.Compact
+              id={"home-subcategory-c"}
+              size="large"
+              style={{
+                position: "relative",
+              }}
+            >
+              <Select
                 allowClear
-              />
-              {/* {category && (
-                <CloseCircleFilled
-                  onClick={() => {
-                    setCategory("");
+                styles={{
+                  popup: {
+                    root: { maxHeight: "400px", overflow: "auto" },
+                  },
+                }}
+                value={subCategory || undefined}
+                getPopupContainer={() =>
+                  document.getElementById("home-subcategory-c")
+                }
+                className={"my-custom-select"}
+                id={"homeSCId"}
+                style={{
+                  width: !isMobile ? "50dvw" : "calc(100dvw - 50px)",
+                }}
+                onChange={(value) => {
+                  if (!value) {
                     setSubCategory("");
-                    setApplied(false);
-                  }}
-                  style={{
-                    position: "absolute",
-                    right: 9,
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    color: "rgba(0, 0, 0, 0.25)",
-                    zIndex: 10,
-                    scale: "0.9",
-                  }}
-                ></CloseCircleFilled>
-              )} */}
+                  } else {
+                    setSubCategory(value);
+                  }
+                  setApplied(false);
+                }}
+                placeholder="Subcategory"
+                filterOption={false}
+                onClick={(e) => {
+                  scrollToBottomPrice();
+                }}
+                options={subCategoryOptions}
+              ></Select>
             </Space.Compact>
           </Space>
           <Space size="middle" direction="vertical">
@@ -772,6 +806,7 @@ const Home = () => {
                     setLocation("");
                   }
                   setLocationLabel(value);
+                  setApplied(false);
                 }}
                 placeholder="Location"
                 filterOption={false}
@@ -805,28 +840,6 @@ const Home = () => {
                   placeId: item.PlaceId,
                 }))}
               ></Select>
-              {locationLabel && (
-                <CloseCircleFilled
-                  onClick={() => {
-                    setLocationLabels([]);
-                    setLocation("");
-                    setLocationLabel("");
-                    setApplied(false);
-                  }}
-                  style={{
-                    position: "absolute",
-                    right: 9,
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    color: "rgba(0, 0, 0, 0.25)",
-                    zIndex: 10,
-                    scale: "0.9",
-                  }}
-                ></CloseCircleFilled>
-              )}
             </Space.Compact>
             &nbsp;&nbsp;or
             <Space.Compact size="large">
@@ -950,7 +963,12 @@ const Home = () => {
                   </Radio.Button>
                 </Radio.Group>
               </Space.Compact>
-              <CloseCircleOutlined onClick={() => setPriceFilter("")} />
+              <CloseCircleOutlined
+                onClick={() => {
+                  setApplied(false);
+                  setPriceFilter("");
+                }}
+              />
             </Space>
             {/* &nbsp;&nbsp;or */}
             <Space.Compact size="large">
