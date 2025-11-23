@@ -104,8 +104,8 @@ const Return = () => {
     if (status === "complete" && adType === "POSTAD") {
       handleSubmit();
     } else if (
-      (status === "complete" && adType === "BOOSTAD3") ||
-      adType === "BOOSTAD7"
+      status === "complete" &&
+      (adType === "BOOSTAD3" || adType === "BOOSTAD7")
     ) {
       handleBoost(adType);
     }
