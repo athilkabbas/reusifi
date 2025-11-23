@@ -19,7 +19,7 @@ import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
 import { leafOptions, options } from "../helpers/categories";
 import useLocationComponent from "../hooks/location";
-import { useClearForm } from "../hooks/clearForm";
+import { useIndexedDBImages } from "../hooks/indexedDB";
 const { TextArea } = Input;
 const { Content } = Layout;
 const getBase64 = (file) =>
@@ -58,7 +58,7 @@ const AddDress = () => {
 
   const [isSubmitted, setIsSubmitted] = useState(false);
   const isMobile = useIsMobile();
-  const { clearForm } = useClearForm();
+  const { deleteDB } = useIndexedDBImages();
   const isModalVisibleRef = useRef(false);
   const errorSessionConfig = {
     title: "Session has expired.",
@@ -68,7 +68,7 @@ const AddDress = () => {
     okText: "Login",
     onOk: async () => {
       isModalVisibleRef.current = false;
-      await clearForm();
+      await deleteDB();
       signInWithRedirect();
     },
   };
@@ -396,7 +396,7 @@ const AddDress = () => {
       setCurrLocRemoved(true);
       setCurrentLocationLabel("");
       setCurrentLocation("");
-      await clearForm();
+      await deleteDB();
       message.success(
         "Your ad is now live on Reusifi. It may take up to 5 minutes to appear."
       );

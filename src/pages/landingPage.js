@@ -88,7 +88,7 @@ const ReusifiLanding = () => {
                   <Space>
                     {/* <Button type="default">Sign In</Button> */}
                     <Button
-                      onClick={() => {
+                      onClick={async () => {
                         try {
                           signInWithRedirect();
                         } catch (err) {
@@ -108,7 +108,7 @@ const ReusifiLanding = () => {
             <Col>
               <Space>
                 <Button
-                  onClick={() => {
+                  onClick={async () => {
                     try {
                       signInWithRedirect();
                     } catch (err) {
@@ -197,7 +197,7 @@ const ReusifiLanding = () => {
                     style={{ width: screens.sm ? "auto" : "100%" }}
                   >
                     <Button
-                      onClick={() => {
+                      onClick={async () => {
                         try {
                           signInWithRedirect();
                         } catch (err) {
@@ -751,7 +751,7 @@ const ReusifiLanding = () => {
                 style={{ width: screens.sm ? "auto" : "100%" }}
               >
                 <Button
-                  onClick={() => {
+                  onClick={async () => {
                     try {
                       signInWithRedirect();
                     } catch (err) {

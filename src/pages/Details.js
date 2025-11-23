@@ -16,7 +16,7 @@ import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
 import AwsMap from "../component/Map";
 import CopyButton from "../component/CopyButton";
-import { useClearForm } from "../hooks/clearForm";
+import { useIndexedDBImages } from "../hooks/indexedDB";
 const { Content } = Layout;
 const Details = () => {
   const location = useLocation();
@@ -27,6 +27,7 @@ const Details = () => {
   if (!item && !ad) {
     navigate("/");
   }
+  const { deleteDB } = useIndexedDBImages();
   const [chatLoading, setChatLoading] = useState(false);
   const [chatProductLoading, setChatProductLoading] = useState(false);
   const [chatProduct, setChatProduct] = useState(false);
@@ -37,9 +38,6 @@ const Details = () => {
     return str.charAt(0).toUpperCase() + str.slice(1);
   };
   const {
-    setChatData,
-    setChatInitialLoad,
-    setChatLastEvaluatedKey,
     setAdData,
     setCount,
     setUnreadChatCount,
@@ -55,7 +53,6 @@ const Details = () => {
   } = useContext(Context);
 
   const [detailData, setDetailData] = useState([]);
-  const { clearForm } = useClearForm();
   const isModalVisibleRef = useRef(false);
   const errorSessionConfig = {
     title: "Session has expired.",
@@ -65,7 +62,7 @@ const Details = () => {
     okText: "Login",
     onOk: async () => {
       isModalVisibleRef.current = false;
-      await clearForm();
+      await deleteDB();
       signInWithRedirect();
     },
   };

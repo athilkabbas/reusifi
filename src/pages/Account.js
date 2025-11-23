@@ -24,7 +24,7 @@ import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
 import imageCompression from "browser-image-compression";
-import { useClearForm } from "../hooks/clearForm";
+import { useIndexedDBImages } from "../hooks/indexedDB";
 import axios from "axios";
 import {
   UserOutlined,
@@ -36,7 +36,7 @@ const { Content } = Layout;
 const { TextArea } = Input;
 const Account = () => {
   const isMobile = useIsMobile();
-  const { clearForm } = useClearForm();
+  const { deleteDB } = useIndexedDBImages();
   const isModalVisibleRef = useRef(false);
   const errorSessionConfig = {
     title: "Session has expired.",
@@ -46,7 +46,7 @@ const Account = () => {
     okText: "Login",
     onOk: async () => {
       isModalVisibleRef.current = false;
-      await clearForm();
+      await deleteDB();
       signInWithRedirect();
     },
   };
@@ -385,6 +385,7 @@ const Account = () => {
         "GET"
       );
       setDeleteLoading(false);
+      await deleteDB();
       signOut();
     } catch (err) {
       setDeleteLoading(false);

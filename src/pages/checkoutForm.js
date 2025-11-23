@@ -12,8 +12,6 @@ const TEST_STRIPE_KEY =
 const LIVE_STRIPE_KEY =
   "pk_live_51SU7iXCGYi9Bz1k4QVlwGOyXrUM0QteOBjk8zYTpVEh94BIo1XGcriyAL3BCdHLmbdkP2ytZ3eGee5tHx6GWMTqj003WtmPVbH";
 
-const stripePromise = loadStripe(TEST_STRIPE_KEY);
-
 const CheckoutForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -36,6 +34,15 @@ const CheckoutForm = () => {
   }, []);
 
   const options = { fetchClientSecret };
+
+  let stripePromise;
+  if (window.location.origin === "https://localhost:3000") {
+    stripePromise = loadStripe(TEST_STRIPE_KEY);
+    console.log("athile");
+  } else {
+    console.log("aaa");
+    stripePromise = loadStripe(LIVE_STRIPE_KEY);
+  }
 
   return (
     <div id="checkout">

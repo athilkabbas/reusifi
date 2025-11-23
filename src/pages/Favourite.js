@@ -12,7 +12,7 @@ import { callApi } from "../helpers/api";
 import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
-import { useClearForm } from "../hooks/clearForm";
+import { useIndexedDBImages } from "../hooks/indexedDB";
 const capitalize = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
@@ -20,6 +20,7 @@ const { Content } = Layout;
 const { useBreakpoint } = Grid;
 const Favourites = () => {
   const [loading, setLoading] = useState(false);
+  const { deleteDB } = useIndexedDBImages();
   const scrollableDivRef = useRef(null);
   const [chatLoading, setChatLoading] = useState(false);
   const [favLoading, setFavLoading] = useState(false);
@@ -44,7 +45,6 @@ const Favourites = () => {
   } = useContext(Context);
 
   const isModalVisibleRef = useRef(false);
-  const { clearForm } = useClearForm();
   const errorSessionConfig = {
     title: "Session has expired.",
     content: "Please login again.",
@@ -53,7 +53,7 @@ const Favourites = () => {
     okText: "Login",
     onOk: async () => {
       isModalVisibleRef.current = false;
-      await clearForm();
+      await deleteDB();
       signInWithRedirect();
     },
   };

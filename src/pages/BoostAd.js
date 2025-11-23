@@ -3,13 +3,11 @@ import {
   Layout,
   Space,
   Skeleton,
-  Typography,
   Modal,
   Row,
   Col,
   Button,
   Spin,
-  message as messageAnt,
   Card,
 } from "antd";
 import { signInWithRedirect } from "@aws-amplify/auth";
@@ -20,12 +18,11 @@ import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
 import { LoadingOutlined } from "@ant-design/icons";
-import { useClearForm } from "../hooks/clearForm";
-import { Input } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useIndexedDBImages } from "../hooks/indexedDB";
 const { Content } = Layout;
-const { TextArea } = Input;
 const BoostAd = () => {
+  const { deleteDB } = useIndexedDBImages();
   const isMobile = useIsMobile();
   const isModalVisibleRef = useRef(false);
   const navigate = useNavigate();
@@ -35,7 +32,6 @@ const BoostAd = () => {
     navigate("/");
   }
   const [submitLoading, setSubmitLoading] = useState(false);
-  const { clearForm } = useClearForm();
   const errorSessionConfig = {
     title: "Session has expired.",
     content: "Please login again.",
@@ -44,7 +40,7 @@ const BoostAd = () => {
     okText: "Login",
     onOk: async () => {
       isModalVisibleRef.current = false;
-      await clearForm();
+      await deleteDB();
       signInWithRedirect();
     },
   };

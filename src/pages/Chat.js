@@ -14,15 +14,15 @@ import { callApi } from "../helpers/api";
 import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
-import { useClearForm } from "../hooks/clearForm";
 import { EllipsisVertical } from "lucide-react";
+import { useIndexedDBImages } from "../hooks/indexedDB";
 const { TextArea } = Input;
 const { Content } = Layout;
 const Chat = () => {
-  const { clearForm } = useClearForm();
   const [ichatData, setIChatData] = useState([]);
   const location = useLocation();
   const navigate = useNavigate();
+  const { deleteDB } = useIndexedDBImages();
   const { recipient } = location.state || "";
   const { conversationId, productId, title, email, image } =
     location.state || "";
@@ -100,7 +100,7 @@ const Chat = () => {
     okText: "Login",
     onOk: async () => {
       isModalVisibleRef.current = false;
-      await clearForm();
+      await deleteDB();
       signInWithRedirect();
     },
   };

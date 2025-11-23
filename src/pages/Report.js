@@ -3,7 +3,6 @@ import {
   Layout,
   Space,
   Skeleton,
-  Typography,
   Modal,
   Row,
   Col,
@@ -20,21 +19,21 @@ import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
 import { useLocation, useNavigate } from "react-router-dom";
 import { LoadingOutlined } from "@ant-design/icons";
-import { useClearForm } from "../hooks/clearForm";
 import { Input } from "antd";
+import { useIndexedDBImages } from "../hooks/indexedDB";
 const { Content } = Layout;
 const { TextArea } = Input;
 const ReportAd = () => {
   const isMobile = useIsMobile();
   const location = useLocation();
   const navigate = useNavigate();
+  const { deleteDB } = useIndexedDBImages();
   const { productId } = location.state || "";
   if (!productId) {
     navigate("/");
   }
   const isModalVisibleRef = useRef(false);
   const [submitLoading, setSubmitLoading] = useState(false);
-  const { clearForm } = useClearForm();
   const errorSessionConfig = {
     title: "Session has expired.",
     content: "Please login again.",
@@ -43,7 +42,7 @@ const ReportAd = () => {
     okText: "Login",
     onOk: async () => {
       isModalVisibleRef.current = false;
-      await clearForm();
+      await deleteDB();
       signInWithRedirect();
     },
   };

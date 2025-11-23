@@ -4,7 +4,7 @@ import { useIndexedDBImages } from "../hooks/indexedDB";
 export const Context = createContext();
 
 const Provider = ({ children }) => {
-  const { save, load } = useIndexedDBImages();
+  const { saveImage, loadImage, saveForm, loadForm } = useIndexedDBImages();
   const [currentLocation, setCurrentLocation] = useState("");
   const [currentLocationLabel, setCurrentLocationLabel] = useState("");
   const [triggerLocation, setTriggerLocation] = useState(false);
@@ -69,10 +69,7 @@ const Provider = ({ children }) => {
   const [accountInitialLoad, setAccountInitialLoad] = useState(true);
   const [queryInitialLoad, setQueryInitialLoad] = useState(true);
   const [boostInitialLoad, setBoostInitialLoad] = useState(true);
-  const [reportInitialLoad, setReportInitialLoad] = useState(true);
   const [account, setAccount] = useState({});
-  const [fileList, setFileList] = useState([]);
-  const [deletedDB, setDeletedDB] = useState(false);
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -90,87 +87,44 @@ const Provider = ({ children }) => {
     uuid: "",
   });
 
-  const SESSION_KEY = "sessionActiveReusifi";
-
   useEffect(() => {
-    if (sessionStorage.getItem(SESSION_KEY)) {
-      setDeletedDB(true);
-      return;
-    }
-
-    sessionStorage.setItem(SESSION_KEY, "1");
-
-    const deleteDB = async () => {
-      try {
-        if (indexedDB.databases) {
-          const dbs = await indexedDB.databases();
-          for (const db of dbs) {
-            if (db.name === "imageDBReusifi") {
-              indexedDB.deleteDatabase("imageDBReusifi");
-              setDeletedDB(true);
-            }
-          }
-        } else {
-          indexedDB.deleteDatabase("imageDBReusifi");
-          setDeletedDB(true);
-        }
-      } catch (err) {
-        console.error("IndexedDB cleanup failed:", err);
-      }
+    const loadFormIndexedDB = async () => {
+      const storedForm = await loadForm("reusifiForm");
+      const images = await loadImage("imageReusifiForm");
+      setForm({ ...form, ...storedForm, images });
     };
-    deleteDB();
+    loadFormIndexedDB();
   }, []);
 
   useEffect(() => {
     const loadBoostForm = async () => {
-      let storedForm = JSON.parse(sessionStorage.getItem("reusifiBoostForm"));
-      if (!storedForm) {
-        storedForm = { ...boostForm };
-      }
-      setBoostForm({ ...storedForm });
+      const storedBoostForm = await loadForm("reusifiBoostForm");
+      setBoostForm({ ...boostForm, ...storedBoostForm });
     };
     loadBoostForm();
   }, []);
 
   useEffect(() => {
+    const saveFormIndexedDB = async () => {
+      const { images, ...formWithoutImages } = form;
+      await saveForm(formWithoutImages, "reusifiForm");
+      await saveImage(images, "imageReusifiForm");
+    };
+    saveFormIndexedDB();
+  }, [form]);
+
+  useEffect(() => {
     const saveBoostForm = async () => {
-      sessionStorage.setItem("reusifiBoostForm", JSON.stringify(boostForm));
+      await saveForm(boostForm, "reusifiBoostForm");
     };
     saveBoostForm();
   }, [boostForm]);
-
-  useEffect(() => {
-    const loadForm = async () => {
-      let storedForm = JSON.parse(sessionStorage.getItem("reusifiForm"));
-      if (!storedForm) {
-        storedForm = { ...form };
-      }
-      const images = await load();
-      setForm({ ...storedForm, images });
-    };
-    if (deletedDB) {
-      loadForm();
-    }
-  }, [deletedDB]);
-
-  useEffect(() => {
-    const saveForm = async () => {
-      const { images, ...formWithoutImages } = form;
-      sessionStorage.setItem("reusifiForm", JSON.stringify(formWithoutImages));
-      await save(images);
-    };
-    if (deletedDB) {
-      saveForm();
-    }
-  }, [form, deletedDB]);
 
   return (
     <Context.Provider
       value={{
         boostForm,
         setBoostForm,
-        fileList,
-        setFileList,
         form,
         setForm,
         account,

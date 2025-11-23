@@ -7,11 +7,11 @@ import imageCompression from "browser-image-compression";
 import { Context } from "../context/provider";
 import { signInWithRedirect } from "@aws-amplify/auth";
 import axios from "axios";
-import { useClearForm } from "../hooks/clearForm";
 import { LoadingOutlined } from "@ant-design/icons";
+import { useIndexedDBImages } from "../hooks/indexedDB";
 
 const Return = () => {
-  const { clearForm } = useClearForm();
+  const { deleteDB } = useIndexedDBImages();
   const [status, setStatus] = useState(null);
   const [customerEmail, setCustomerEmail] = useState("");
   const navigate = useNavigate();
@@ -27,7 +27,7 @@ const Return = () => {
     okText: "Login",
     onOk: async () => {
       isModalVisibleRef.current = false;
-      await clearForm();
+      await deleteDB();
       signInWithRedirect();
     },
   };
@@ -39,7 +39,7 @@ const Return = () => {
     okText: "Login",
     onOk: async () => {
       isModalVisibleRef.current = false;
-      await clearForm();
+      await deleteDB();
       signInWithRedirect();
     },
   };
@@ -92,7 +92,6 @@ const Return = () => {
     setCurrLocRemoved,
     form,
     boostForm,
-    setFileList,
   } = useContext(Context);
 
   const [submit, setSubmit] = useState(false);
@@ -118,6 +117,12 @@ const Return = () => {
         adType,
         boostForm,
       });
+      setAdData([]);
+      setAdLastEvaluatedKey(null);
+      setAdInitialLoad(true);
+      setCurrLocRemoved(true);
+      setCurrentLocationLabel("");
+      setCurrentLocation("");
       setSubmit(true);
       setSubmitLoading(false);
     } catch (err) {
@@ -230,17 +235,12 @@ const Return = () => {
       setAdData([]);
       setAdLastEvaluatedKey(null);
       setAdInitialLoad(true);
-      setFileList([]);
       setCurrLocRemoved(true);
       setCurrentLocationLabel("");
       setCurrentLocation("");
       setSubmit(true);
-      await clearForm();
+      await deleteDB();
       setSubmitLoading(false);
-      // message.success(
-      //   "Your ad is now live on Reusifi. It may take up to 5 minutes to appear."
-      // );
-      // navigate("/ads");
     } catch (err) {
       setSubmitLoading(false);
       try {
@@ -307,12 +307,12 @@ const Return = () => {
               fontWeight: "300",
             }}
             onClick={() => {
-              navigate("/");
+              navigate("/ads");
             }}
             type="primary"
             key="console"
           >
-            Go Home
+            Go to My Ads
           </Button>,
         ]}
       />
@@ -332,12 +332,12 @@ const Return = () => {
               fontWeight: "300",
             }}
             onClick={() => {
-              navigate("/");
+              navigate("/ads");
             }}
             type="primary"
             key="console"
           >
-            Go Home
+            Go to My Ads
           </Button>,
         ]}
       />
@@ -357,12 +357,12 @@ const Return = () => {
               fontWeight: "300",
             }}
             onClick={() => {
-              navigate("/");
+              navigate("/ads");
             }}
             type="primary"
             key="console"
           >
-            Go Home
+            Go to My Ads
           </Button>,
         ]}
       />

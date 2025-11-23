@@ -3,7 +3,6 @@ import {
   Layout,
   Space,
   Skeleton,
-  Typography,
   Modal,
   Row,
   Col,
@@ -19,15 +18,15 @@ import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
 import { LoadingOutlined } from "@ant-design/icons";
-import { useClearForm } from "../hooks/clearForm";
 import { Input } from "antd";
+import { useIndexedDBImages } from "../hooks/indexedDB";
 const { Content } = Layout;
 const { TextArea } = Input;
 const Queries = () => {
   const isMobile = useIsMobile();
+  const { deleteDB } = useIndexedDBImages();
   const isModalVisibleRef = useRef(false);
   const [submitLoading, setSubmitLoading] = useState(false);
-  const { clearForm } = useClearForm();
   const errorSessionConfig = {
     title: "Session has expired.",
     content: "Please login again.",
@@ -36,7 +35,7 @@ const Queries = () => {
     okText: "Login",
     onOk: async () => {
       isModalVisibleRef.current = false;
-      await clearForm();
+      await deleteDB();
       signInWithRedirect();
     },
   };

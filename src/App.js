@@ -12,13 +12,10 @@ import Details from "./pages/Details";
 import Chat from "./pages/Chat";
 import ChatPage from "./pages/ChatPage";
 import Ads from "./pages/Ads";
-import Contact from "./pages/Contact";
 import Favourites from "./pages/Favourite";
 import { message, Spin } from "antd";
 import { Context } from "./context/provider";
-
 import "./App.css";
-import CheckRender from "./helpers/checkRender";
 import ReusifiLanding from "./pages/landingPage";
 import Account from "./pages/Account";
 import UserDetails from "./pages/UserDetails";
@@ -46,9 +43,6 @@ function AppWithSession() {
   const reconnectTimeoutRef = useRef(null);
   const {
     setUnreadChatCount,
-    setChatInitialLoad,
-    setChatData,
-    setChatLastEvaluatedKey,
     setUser,
     setEmail,
     setSellingChatData,
@@ -57,7 +51,6 @@ function AppWithSession() {
     setBuyingChatData,
     setBuyingChatInitialLoad,
     setBuyingChatLastEvaluatedKey,
-    actionType,
   } = useContext(Context);
   const location = useLocation();
   const [socketLoading, setSocketLoading] = useState(false);
@@ -174,7 +167,6 @@ function AppWithSession() {
             <Route path="userDetails" element={<UserDetails />} />
             <Route path="chatPage" element={<ChatPage />} />
             <Route path="ads" element={<Ads />} />
-            {/* <Route path="contact" element={<Contact />} /> */}
             <Route path="favourite" element={<Favourites />} />
             <Route path="account" element={<Account />} />
             <Route path="report" element={<ReportAd />} />

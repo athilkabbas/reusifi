@@ -18,7 +18,7 @@ import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
 import { Segmented } from "antd";
-import { useClearForm } from "../hooks/clearForm";
+import { useIndexedDBImages } from "../hooks/indexedDB";
 
 const subMenuItemsUnblocked = [
   {
@@ -70,16 +70,6 @@ const ChatPage = () => {
   const scrollableDivRef = useRef(null);
   const [chatLoading, setChatLoading] = useState(false);
   const {
-    chatScrollPosition,
-    setChatScrollPosition,
-    chatInitialLoad,
-    setChatInitialLoad,
-    chatData,
-    setChatData,
-    setChatHasMore,
-    chatHasMore,
-    chatLastEvaluatedKey,
-    setChatLastEvaluatedKey,
     setUnreadChatCount,
     user,
     sellingChatLastEvaluatedKey,
@@ -106,13 +96,13 @@ const ChatPage = () => {
     setActionType,
   } = useContext(Context);
   const [loadedImages, setLoadedImages] = useState({});
-  const { clearForm } = useClearForm();
   const handleImageLoad = (uuid) => {
     setLoadedImages((prev) => ({ ...prev, [uuid]: true }));
   };
   const capitalize = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1);
   };
+  const { deleteDB } = useIndexedDBImages();
 
   const isMobile = useIsMobile();
 
@@ -199,7 +189,7 @@ const ChatPage = () => {
     okText: "Login",
     onOk: async () => {
       isModalVisibleRef.current = false;
-      await clearForm();
+      await deleteDB();
       signInWithRedirect();
     },
   };

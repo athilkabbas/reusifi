@@ -19,20 +19,20 @@ import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
 import { useLocation, useNavigate } from "react-router-dom";
 import { UserOutlined, LoadingOutlined } from "@ant-design/icons";
-import { useClearForm } from "../hooks/clearForm";
 import { Input } from "antd";
+import { useIndexedDBImages } from "../hooks/indexedDB";
 const { Content } = Layout;
 const { TextArea } = Input;
 const UserDetails = () => {
   const isMobile = useIsMobile();
   const location = useLocation();
   const navigate = useNavigate();
+  const { deleteDB } = useIndexedDBImages();
   const { userId } = location.state || "";
   if (!userId) {
     navigate("/");
   }
   const isModalVisibleRef = useRef(false);
-  const { clearForm } = useClearForm();
   const errorSessionConfig = {
     title: "Session has expired.",
     content: "Please login again.",
@@ -41,7 +41,7 @@ const UserDetails = () => {
     okText: "Login",
     onOk: async () => {
       isModalVisibleRef.current = false;
-      await clearForm();
+      await deleteDB();
       signInWithRedirect();
     },
   };

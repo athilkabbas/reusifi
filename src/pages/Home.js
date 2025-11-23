@@ -39,7 +39,7 @@ import MenuWrapper from "../component/Menu";
 import FooterWrapper from "../component/Footer";
 import HeaderWrapper from "../component/Header";
 import useLocationComponent from "../hooks/location";
-import { useClearForm } from "../hooks/clearForm";
+import { useIndexedDBImages } from "../hooks/indexedDB";
 const capitalize = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
@@ -48,7 +48,7 @@ const { Content } = Layout;
 const { useBreakpoint } = Grid;
 const Home = () => {
   useLocationComponent();
-  const { clearForm } = useClearForm();
+  const { deleteDB } = useIndexedDBImages();
   const [loading, setLoading] = useState(false);
   const timer = useRef(null);
   const scrollableDivRef = useRef(null);
@@ -97,7 +97,6 @@ const Home = () => {
     applied,
     currLocRemoved,
     setCurrLocRemoved,
-    setForm,
   } = useContext(Context);
   const [handleFavLoading, setHandleFavLoading] = useState(false);
 
@@ -130,7 +129,7 @@ const Home = () => {
     okText: "Login",
     onOk: async () => {
       isModalVisibleRef.current = false;
-      await clearForm();
+      await deleteDB();
       signInWithRedirect();
     },
   };
@@ -261,7 +260,7 @@ const Home = () => {
     } else if (key === "2") {
       navigate("/query");
     } else if (key === "3") {
-      await clearForm();
+      await deleteDB();
       signOut();
     }
   };
@@ -641,27 +640,6 @@ const Home = () => {
       }
     }, 300);
   };
-
-  // useEffect(() => {
-  //   const drawerBody = document.querySelector(".ant-drawer-body");
-  //   if (drawerBody) {
-  //     if (open || sOpen || rOpen) {
-  //       requestAnimationFrame(() => {
-  //         drawerBody.style.overflow = "hidden";
-  //         drawerBody.style.touchAction = "none";
-  //       });
-  //     } else {
-  //       drawerBody.style.overflow = "auto";
-  //       drawerBody.style.touchAction = "auto";
-  //     }
-  //   }
-  //   return () => {
-  //     if (drawerBody) {
-  //       drawerBody.style.overflow = "auto";
-  //       drawerBody.style.touchAction = "auto";
-  //     }
-  //   };
-  // }, [open, sOpen, rOpen]);
 
   return (
     <Layout
