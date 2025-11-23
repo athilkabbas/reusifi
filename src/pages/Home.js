@@ -4,7 +4,6 @@ import {
   Layout,
   Spin,
   Modal,
-  TreeSelect,
   Dropdown,
   Drawer,
   Divider,
@@ -572,21 +571,13 @@ const Home = () => {
   const navigate = useNavigate();
   const onChangePriceFilter = (event) => {
     setPriceFilter(event.target.value);
-    // setMinPrice("");
-    // setMaxPrice("");
     setApplied(false);
   };
-  const [open, setOpen] = useState(false);
-  const [sOpen, setSopen] = useState(false);
-  const [rOpen, setRopen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const showDrawer = () => {
     setDrawerOpen(true);
   };
   const onClose = () => {
-    setOpen(false);
-    setSopen(false);
-    setRopen(false);
     setDrawerOpen(false);
   };
   const locationTimer = useRef(null);

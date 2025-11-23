@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { Col, Popover, Select, Skeleton, Space, Spin, TreeSelect } from "antd";
+import { Col, Popover, Select, Skeleton, Space, Spin } from "antd";
 import { Input, notification } from "antd";
 import { useNavigate } from "react-router-dom";
 import { Layout, Modal } from "antd";
@@ -957,11 +957,6 @@ const AddDress = () => {
                     )}
                   </Space>
                 </Space.Compact>
-                {/* <Space.Compact size="large">
-                  <span style={{ fontSize: "13px", fontWeight: "300" }}>
-                    Max 6 images
-                  </span>
-                </Space.Compact> */}
                 <Space.Compact size="large">
                   <span style={{ fontSize: "13px", fontWeight: "300" }}>
                     The ad will be deactivated automatically after 30 days
