@@ -159,3 +159,7 @@ body {
 .my-custom-select .ant-select-selector {
   border-radius: 9px !important;
 }
+
+.ant-select-dropdown {
+  overscroll-behavior: contain;
+}
