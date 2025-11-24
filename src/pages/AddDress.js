@@ -772,6 +772,27 @@ const AddDress = () => {
                             handleChange(option.keywords, "keywords");
                           }
                         }}
+                        popupRender={(menu) => (
+                          <div
+                            style={{ maxHeight: "400px", overflow: "auto" }}
+                            onTouchMove={(e) => {
+                              const el = e.currentTarget;
+                              const atTop = el.scrollTop === 0;
+                              const atBottom =
+                                el.scrollHeight - el.scrollTop ===
+                                el.clientHeight;
+
+                              if (
+                                (atTop && e.touches[0].clientY > 0) ||
+                                (atBottom && e.touches[0].clientY < 0)
+                              ) {
+                                e.preventDefault(); // Stop scroll from bubbling
+                              }
+                            }}
+                          >
+                            {menu}
+                          </div>
+                        )}
                         placeholder="Subcategory"
                         filterOption={false}
                         onClick={(e) => {
