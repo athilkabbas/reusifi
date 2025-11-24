@@ -713,9 +713,6 @@ const Home = () => {
                 }}
                 placeholder="Category"
                 filterOption={false}
-                onClick={(e) => {
-                  scrollToBottomPrice();
-                }}
                 options={options}
               ></Select>
             </Space.Compact>
@@ -752,9 +749,6 @@ const Home = () => {
                 }}
                 placeholder="Subcategory"
                 filterOption={false}
-                onClick={(e) => {
-                  scrollToBottomPrice();
-                }}
                 options={subCategoryOptions}
               ></Select>
             </Space.Compact>

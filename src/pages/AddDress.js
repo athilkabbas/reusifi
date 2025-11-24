@@ -527,8 +527,7 @@ const AddDress = () => {
         scrollToBottom();
       } else if (
         currentHeight < prevHeight &&
-        (document.activeElement.id === "cascaderId" ||
-          document.activeElement.id === "pincodeId")
+        document.activeElement.id === "pincodeId"
       ) {
         scrollToBottomPrice();
       } else if (
@@ -542,23 +541,6 @@ const AddDress = () => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
-  const findRootOfLeaf = (value, nodes) => {
-    for (const node of nodes) {
-      if (node.children) {
-        // Check if leaf exists in children
-        const found = node.children.find((child) => child.value === value);
-        if (found) {
-          return node.value; // return root value
-        } else {
-          // recursively check deeper levels
-          const deeper = findRootOfLeaf(value, node.children);
-          if (deeper) return deeper;
-        }
-      }
-    }
-    return null;
-  };
 
   const [popOpen, setPopOpen] = useState(false);
 
@@ -728,9 +710,6 @@ const AddDress = () => {
                         }}
                         placeholder="Category"
                         filterOption={false}
-                        onClick={(e) => {
-                          scrollToBottomPrice();
-                        }}
                         options={options}
                       ></Select>
                     </Space.Compact>
@@ -774,9 +753,6 @@ const AddDress = () => {
                         }}
                         placeholder="Subcategory"
                         filterOption={false}
-                        onClick={(e) => {
-                          scrollToBottomPrice();
-                        }}
                         options={subCategoryOptions}
                       ></Select>
                     </Space.Compact>

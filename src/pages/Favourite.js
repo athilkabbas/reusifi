@@ -115,15 +115,6 @@ const Favourites = () => {
     setLoadedImages((prev) => ({ ...prev, [uuid]: true }));
   };
 
-  // useEffect(() => {
-  //   if (scrollableDivRef.current  &&  !loading && !handleFavLoading && !chatLoading && !favLoading) {
-  //     const el = scrollableDivRef.current;
-  //     if (el.scrollHeight <= el.clientHeight && favHasMore && limit) {
-  //       loadMoreData();
-  //     }
-  //   }
-  // }, [loading,favData,handleFavLoading,chatLoading,favLoading,limit]);
-
   useEffect(() => {
     if (scrollableDivRef.current && !loading && !handleFavLoading) {
       requestAnimationFrame(() => {

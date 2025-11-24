@@ -424,6 +424,7 @@ const Account = () => {
         </HeaderWrapper>
       )}
       <Content>
+        {contextHolder}
         <div
           style={{
             background: "#F9FAFB",
