@@ -379,10 +379,13 @@ const Account = () => {
     try {
       setDeleteLoading(true);
       await callApi(
-        `https://api.reusifi.com/prod/deleteAccount?username=${encodeURIComponent(
-          user.username
-        )}&userId=${encodeURIComponent(user.userId)}`,
-        "GET"
+        "https://api.reusifi.com/prod/deleteAccount",
+        "POST",
+        false,
+        {
+          username: user.username,
+          userId: user.userId,
+        }
       );
       setDeleteLoading(false);
       await deleteDB();

@@ -155,12 +155,9 @@ const Details = () => {
   const handleActivate = async () => {
     try {
       setActivateLoading(true);
-      await callApi(
-        `https://api.reusifi.com/prod/activateAd?uuid=${encodeURIComponent(
-          detailData[0]["item"]["uuid"]
-        )}`,
-        "GET"
-      );
+      await callApi("https://api.reusifi.com/prod/activateAd", "POST", false, {
+        uuid: detailData[0]["item"]["uuid"],
+      });
       setActivateLoading(false);
       setDetailData((prevValue) => {
         const newValue = [...prevValue];
@@ -201,14 +198,12 @@ const Details = () => {
   const handleChat = async () => {
     try {
       setUnblockLoading(true);
-      await callApi(
-        `https://api.reusifi.com/prod/unBlockUser?unBlock=${true}&userId1=${encodeURIComponent(
-          user.userId
-        )}&userId2=${encodeURIComponent(
-          chatProduct.userId2
-        )}&productId=${encodeURIComponent(item["item"]["uuid"])}`,
-        "GET"
-      );
+      await callApi("https://api.reusifi.com/prod/unBlockUser", "POST", false, {
+        unBlock: true,
+        userId1: user.userId,
+        userId2: chatProduct.userId2,
+        productId: item["item"]["uuid"],
+      });
       if (actionType === "Selling") {
         setSellingChatData([]);
         setSellingChatLastEvaluatedKey(null);
@@ -240,16 +235,9 @@ const Details = () => {
   const handleDelete = async () => {
     try {
       setDeleteLoading(true);
-      let result = await callApi(
-        `https://api.reusifi.com/prod/deleteAdNew?id=${encodeURIComponent(
-          item["item"]["uuid"]
-        )}&thumbnailS3Keys=${encodeURIComponent(
-          JSON.stringify(detailData[0]["item"]["thumbnailS3Keys"])
-        )}&viewingS3Keys=${encodeURIComponent(
-          JSON.stringify(detailData[0]["item"]["viewingS3Keys"])
-        )}`,
-        "GET"
-      );
+      await callApi("https://api.reusifi.com/prod/deleteAdNew", "POST", false, {
+        id: item["item"]["uuid"],
+      });
       setCount((prevCount) => prevCount - 1);
       setAdData((prevValue) => {
         return prevValue.filter((value) => {

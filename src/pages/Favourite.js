@@ -130,22 +130,26 @@ const Favourites = () => {
       setFavScrollPosition(scrollableDivRef.current.scrollTop);
       setHandleFavLoading(true);
       if (favourite) {
-        const results = await callApi(
-          `https://api.reusifi.com/prod/getFavouritesAdd?id=${encodeURIComponent(
-            id
-          )}&favourite=${encodeURIComponent(
-            favourite
-          )}&email=${encodeURIComponent(user.userId)}`,
-          "GET"
+        await callApi(
+          "https://api.reusifi.com/prod/getFavouritesAdd",
+          "POST",
+          false,
+          {
+            id,
+            favourite,
+            email: user.userId,
+          }
         );
       } else {
-        const results = await callApi(
-          `https://api.reusifi.com/prod/getFavouritesRemove?id=${encodeURIComponent(
-            id
-          )}&favourite=${encodeURIComponent(
-            favourite
-          )}&email=${encodeURIComponent(user.userId)}`,
-          "GET"
+        await callApi(
+          "https://api.reusifi.com/prod/getFavouritesRemove",
+          "POST",
+          false,
+          {
+            id,
+            favourite,
+            email: user.userId,
+          }
         );
       }
       if (!favourite) {

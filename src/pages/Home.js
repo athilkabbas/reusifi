@@ -287,22 +287,26 @@ const Home = () => {
       // setFavInitialLoad(true);
       setHandleFavLoading(true);
       if (favourite) {
-        const results = await callApi(
-          `https://api.reusifi.com/prod/getFavouritesAdd?id=${encodeURIComponent(
-            selectedItem["item"]["uuid"]
-          )}&favourite=${encodeURIComponent(
-            favourite
-          )}&email=${encodeURIComponent(user.userId)}`,
-          "GET"
+        await callApi(
+          "https://api.reusifi.com/prod/getFavouritesAdd",
+          "POST",
+          false,
+          {
+            id: selectedItem["item"]["uuid"],
+            favourite,
+            email: user.userId,
+          }
         );
       } else {
-        const results = await callApi(
-          `https://api.reusifi.com/prod/getFavouritesRemove?id=${encodeURIComponent(
-            selectedItem["item"]["uuid"]
-          )}&favourite=${encodeURIComponent(
-            favourite
-          )}&email=${encodeURIComponent(user.userId)}`,
-          "GET"
+        await callApi(
+          "https://api.reusifi.com/prod/getFavouritesRemove",
+          "POST",
+          false,
+          {
+            id: selectedItem["item"]["uuid"],
+            favourite,
+            email: user.userId,
+          }
         );
       }
       if (!favourite) {

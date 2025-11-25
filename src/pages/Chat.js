@@ -236,13 +236,16 @@ const Chat = () => {
             ]);
 
             try {
-              await callApi(
-                `https://api.reusifi.com/prod/getChatsRead?userId1=${encodeURIComponent(
-                  data.recipientUserId
-                )}&userId2=${encodeURIComponent(data.senderUserId)}&productId=${
-                  data.productId
-                }&read=${encodeURIComponent(true)}`,
-                "GET"
+              callApi(
+                "https://api.reusifi.com/prod/getChatsRead",
+                "POST",
+                false,
+                {
+                  userId1: data.recipientUserId,
+                  userId2: data.senderUserId,
+                  productId: data.productId,
+                  read: true,
+                }
               );
               if (actionType === "Selling") {
                 setSellingChatData([]);
@@ -329,16 +332,12 @@ const Chat = () => {
             )}&limit=${encodeURIComponent(limit)}`,
             "GET"
           ),
-          callApi(
-            `https://api.reusifi.com/prod/getChatsRead?userId1=${encodeURIComponent(
-              user.userId
-            )}&userId2=${encodeURIComponent(
-              recipient["item"]["email"]
-            )}&productId=${encodeURIComponent(
-              recipient["item"]["uuid"]
-            )}&read=${encodeURIComponent(true)}`,
-            "GET"
-          ),
+          callApi("https://api.reusifi.com/prod/getChatsRead", "POST", false, {
+            userId1: user.userId,
+            userId2: recipient["item"]["email"],
+            productId: recipient["item"]["uuid"],
+            read: true,
+          }),
         ]);
         if (actionType === "Selling") {
           setSellingChatData((sellingChatData) => {
@@ -388,16 +387,12 @@ const Chat = () => {
             )}&limit=${encodeURIComponent(limit)}`,
             "GET"
           ),
-          callApi(
-            `https://api.reusifi.com/prod/getChatsRead?userId1=${encodeURIComponent(
-              user.userId
-            )}&userId2=${encodeURIComponent(
-              userId2
-            )}&productId=${encodeURIComponent(
-              productId
-            )}&read=${encodeURIComponent(true)}`,
-            "GET"
-          ),
+          callApi("https://api.reusifi.com/prod/getChatsRead", "POST", false, {
+            userId1: user.userId,
+            userId2,
+            productId,
+            read: true,
+          }),
         ]);
         if (actionType === "Selling") {
           setSellingChatData((sellingChatData) => {

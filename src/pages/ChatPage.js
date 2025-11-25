@@ -224,15 +224,16 @@ const ChatPage = () => {
           }
         }
         if (clickedItemKey === "1") {
-          const result = await callApi(
-            `https://api.reusifi.com/prod/blockUserNew?block=${true}&userId1=${encodeURIComponent(
-              user.userId
-            )}&userId2=${encodeURIComponent(
-              userId2
-            )}&productId=${encodeURIComponent(
-              sellingChatData[index].productId
-            )}`,
-            "GET"
+          await await callApi(
+            "https://api.reusifi.com/prod/blockUserNew",
+            "POST",
+            false,
+            {
+              block: true,
+              userId1: user.userId,
+              userId2,
+              productId: sellingChatData[index].productId,
+            }
           );
           setSellingChatData((prevValue) => {
             return prevValue.map((item) => {
@@ -246,15 +247,16 @@ const ChatPage = () => {
           });
           message.success("User blocked");
         } else if (clickedItemKey === "2") {
-          const result = await callApi(
-            `https://api.reusifi.com/prod/deleteChat?deleteChat=${true}&userId1=${encodeURIComponent(
-              user.userId
-            )}&userId2=${encodeURIComponent(
-              userId2
-            )}&productId=${encodeURIComponent(
-              sellingChatData[index].productId
-            )}`,
-            "GET"
+          await callApi(
+            "https://api.reusifi.com/prod/deleteChat",
+            "POST",
+            false,
+            {
+              deleteChat: true,
+              userId1: user.userId,
+              userId2,
+              productId: sellingChatData[index].productId,
+            }
           );
           setSellingChatData((prevValue) => {
             return prevValue.map((item) => {
@@ -285,12 +287,15 @@ const ChatPage = () => {
           return;
         }
         const getChatsReadPromise = callApi(
-          `https://api.reusifi.com/prod/getChatsRead?userId1=${encodeURIComponent(
-            user.userId
-          )}&userId2=${encodeURIComponent(userId2)}&productId=${
-            sellingChatData[index].productId
-          }&read=${encodeURIComponent(true)}`,
-          "GET"
+          "https://api.reusifi.com/prod/getChatsRead",
+          "POST",
+          false,
+          {
+            userId1: user.userId,
+            userId2,
+            productId: sellingChatData[index].productId,
+            read: true,
+          }
         );
         const getChatCountPromise = callApi(
           `https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(
@@ -333,15 +338,16 @@ const ChatPage = () => {
           }
         }
         if (clickedItemKey === "1") {
-          const result = await callApi(
-            `https://api.reusifi.com/prod/blockUserNew?block=${true}&userId1=${encodeURIComponent(
-              user.userId
-            )}&userId2=${encodeURIComponent(
-              userId2
-            )}&productId=${encodeURIComponent(
-              buyingChatData[index].productId
-            )}`,
-            "GET"
+          await await callApi(
+            `https://api.reusifi.com/prod/blockUserNew`,
+            "POST",
+            false,
+            {
+              block: true,
+              userId1: user.userId,
+              userId2,
+              productId: buyingChatData[index].productId,
+            }
           );
           setBuyingChatData((prevValue) => {
             return prevValue.map((item) => {
@@ -355,15 +361,16 @@ const ChatPage = () => {
           });
           message.success("User blocked");
         } else if (clickedItemKey === "2") {
-          const result = await callApi(
-            `https://api.reusifi.com/prod/deleteChat?deleteChat=${true}&userId1=${encodeURIComponent(
-              user.userId
-            )}&userId2=${encodeURIComponent(
-              userId2
-            )}&productId=${encodeURIComponent(
-              buyingChatData[index].productId
-            )}`,
-            "GET"
+          await callApi(
+            "https://api.reusifi.com/prod/deleteChat",
+            "POST",
+            false,
+            {
+              deleteChat: true,
+              userId1: user.userId,
+              userId2,
+              productId: buyingChatData[index].productId,
+            }
           );
           setBuyingChatData((prevValue) => {
             return prevValue.map((item) => {
@@ -394,12 +401,15 @@ const ChatPage = () => {
           return;
         }
         const getChatsReadPromise = callApi(
-          `https://api.reusifi.com/prod/getChatsRead?userId1=${encodeURIComponent(
-            user.userId
-          )}&userId2=${encodeURIComponent(userId2)}&productId=${
-            buyingChatData[index].productId
-          }&read=${encodeURIComponent(true)}`,
-          "GET"
+          "https://api.reusifi.com/prod/getChatsRead",
+          "POST",
+          false,
+          {
+            userId1: user.userId,
+            userId2,
+            productId: buyingChatData[index].productId,
+            read: true,
+          }
         );
         const getChatCountPromise = callApi(
           `https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(
@@ -459,15 +469,16 @@ const ChatPage = () => {
           }
         }
         if (clickedItemKey === "1") {
-          const result = await callApi(
-            `https://api.reusifi.com/prod/unBlockUser?unBlock=${true}&userId1=${encodeURIComponent(
-              user.userId
-            )}&userId2=${encodeURIComponent(
-              userId2
-            )}&productId=${encodeURIComponent(
-              sellingChatData[index].productId
-            )}`,
-            "GET"
+          await callApi(
+            "https://api.reusifi.com/prod/unBlockUser",
+            "POST",
+            false,
+            {
+              unBlock: true,
+              userId1: user.userId,
+              userId2: userId2,
+              productId: sellingChatData[index].productId,
+            }
           );
           setSellingChatData((prevValue) => {
             return prevValue.map((item) => {
@@ -481,15 +492,16 @@ const ChatPage = () => {
           });
           message.success("User unblocked");
         } else if (clickedItemKey === "2") {
-          const result = await callApi(
-            `https://api.reusifi.com/prod/deleteChat?deleteChat=${true}&userId1=${encodeURIComponent(
-              user.userId
-            )}&userId2=${encodeURIComponent(
-              userId2
-            )}&productId=${encodeURIComponent(
-              sellingChatData[index].productId
-            )}`,
-            "GET"
+          await callApi(
+            "https://api.reusifi.com/prod/deleteChat",
+            "POST",
+            false,
+            {
+              deleteChat: true,
+              userId1: user.userId,
+              userId2,
+              productId: sellingChatData[index].productId,
+            }
           );
           setSellingChatData((prevValue) => {
             return prevValue.map((item) => {
@@ -536,15 +548,16 @@ const ChatPage = () => {
           }
         }
         if (clickedItemKey === "1") {
-          const result = await callApi(
-            `https://api.reusifi.com/prod/unBlockUser?unBlock=${true}&userId1=${encodeURIComponent(
-              user.userId
-            )}&userId2=${encodeURIComponent(
-              userId2
-            )}&productId=${encodeURIComponent(
-              buyingChatData[index].productId
-            )}`,
-            "GET"
+          await callApi(
+            "https://api.reusifi.com/prod/unBlockUser",
+            "POST",
+            false,
+            {
+              unBlock: true,
+              userId1: user.userId,
+              userId2: userId2,
+              productId: buyingChatData[index].productId,
+            }
           );
           setBuyingChatData((prevValue) => {
             return prevValue.map((item) => {
@@ -558,15 +571,16 @@ const ChatPage = () => {
           });
           message.success("User unblocked");
         } else if (clickedItemKey === "2") {
-          const result = await callApi(
-            `https://api.reusifi.com/prod/deleteChat?deleteChat=${true}&userId1=${encodeURIComponent(
-              user.userId
-            )}&userId2=${encodeURIComponent(
-              userId2
-            )}&productId=${encodeURIComponent(
-              buyingChatData[index].productId
-            )}`,
-            "GET"
+          await callApi(
+            "https://api.reusifi.com/prod/deleteChat",
+            "POST",
+            false,
+            {
+              deleteChat: true,
+              userId1: user.userId,
+              userId2,
+              productId: buyingChatData[index].productId,
+            }
           );
           setBuyingChatData((prevValue) => {
             return prevValue.map((item) => {
