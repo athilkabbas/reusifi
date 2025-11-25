@@ -1,34 +1,34 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { Col, Popover, Select, Skeleton, Space, Spin } from "antd";
-import { Input, notification } from "antd";
-import { useNavigate } from "react-router-dom";
-import { Layout, Modal } from "antd";
-import { InfoCircleOutlined, UploadOutlined } from "@ant-design/icons";
-import { LocateFixed } from "lucide-react";
-import { Image, Upload, message } from "antd";
-import { Button, Row } from "antd";
-import axios from "axios";
-import { signInWithRedirect } from "@aws-amplify/auth";
-import imageCompression from "browser-image-compression";
-import { LoadingOutlined } from "@ant-design/icons";
-import { Context } from "../context/provider";
-import { useIsMobile } from "../hooks/windowSize";
-import { callApi } from "../helpers/api";
-import MenuWrapper from "../component/Menu";
-import FooterWrapper from "../component/Footer";
-import HeaderWrapper from "../component/Header";
-import { options } from "../helpers/categories";
-import useLocationComponent from "../hooks/location";
-import { useIndexedDBImages } from "../hooks/indexedDB";
-const { TextArea } = Input;
-const { Content } = Layout;
+import React, { useContext, useEffect, useRef, useState } from 'react'
+import { Col, Popover, Select, Skeleton, Space, Spin } from 'antd'
+import { Input, notification } from 'antd'
+import { useNavigate } from 'react-router-dom'
+import { Layout, Modal } from 'antd'
+import { InfoCircleOutlined, UploadOutlined } from '@ant-design/icons'
+import { LocateFixed } from 'lucide-react'
+import { Image, Upload, message } from 'antd'
+import { Button, Row } from 'antd'
+import axios from 'axios'
+import { signInWithRedirect } from '@aws-amplify/auth'
+import imageCompression from 'browser-image-compression'
+import { LoadingOutlined } from '@ant-design/icons'
+import { Context } from '../context/provider'
+import { useIsMobile } from '../hooks/windowSize'
+import { callApi } from '../helpers/api'
+import MenuWrapper from '../component/Menu'
+import FooterWrapper from '../component/Footer'
+import HeaderWrapper from '../component/Header'
+import { options } from '../helpers/categories'
+import useLocationComponent from '../hooks/location'
+import { useIndexedDBImages } from '../hooks/indexedDB'
+const { TextArea } = Input
+const { Content } = Layout
 const getBase64 = (file) =>
   new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = (error) => reject(error);
-  });
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = () => resolve(reader.result)
+    reader.onerror = (error) => reject(error)
+  })
 
 const AddDress = () => {
   const {
@@ -50,210 +50,210 @@ const AddDress = () => {
     setCurrLocRemoved,
     form,
     setForm,
-  } = useContext(Context);
+  } = useContext(Context)
 
-  const [api, contextHolder] = notification.useNotification();
+  const [api, contextHolder] = notification.useNotification()
 
-  useLocationComponent();
+  useLocationComponent()
 
-  const [subCategoryOptions, setSubCategoryOptions] = useState([]);
+  const [subCategoryOptions, setSubCategoryOptions] = useState([])
 
   useEffect(() => {
     if (form.category) {
       for (let option of options) {
         if (option.value === form.category) {
-          setSubCategoryOptions(option.children);
-          break;
+          setSubCategoryOptions(option.children)
+          break
         }
       }
     } else {
-      setSubCategoryOptions([]);
-      handleChange("", "subCategory");
+      setSubCategoryOptions([])
+      handleChange('', 'subCategory')
     }
-  }, [form.category]);
+  }, [form.category])
 
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const isMobile = useIsMobile();
-  const { deleteDB } = useIndexedDBImages();
-  const isModalVisibleRef = useRef(false);
+  const [isSubmitted, setIsSubmitted] = useState(false)
+  const isMobile = useIsMobile()
+  const { deleteDB } = useIndexedDBImages()
+  const isModalVisibleRef = useRef(false)
   const errorSessionConfig = {
-    title: "Session has expired.",
-    content: "Please login again.",
+    title: 'Session has expired.',
+    content: 'Please login again.',
     closable: false,
     maskClosable: false,
-    okText: "Login",
+    okText: 'Login',
     onOk: async () => {
-      isModalVisibleRef.current = false;
-      await deleteDB();
-      signInWithRedirect();
+      isModalVisibleRef.current = false
+      await deleteDB()
+      signInWithRedirect()
     },
-  };
+  }
   const errorConfig = {
-    title: "An error has occurred.",
-    content: "Please reload.",
+    title: 'An error has occurred.',
+    content: 'Please reload.',
     closable: false,
     maskClosable: false,
-    okText: "Reload",
+    okText: 'Reload',
     onOk: () => {
-      isModalVisibleRef.current = false;
-      window.location.reload();
+      isModalVisibleRef.current = false
+      window.location.reload()
     },
-  };
+  }
 
   const locationInfoConfig = {
-    title: "Enable location access",
+    title: 'Enable location access',
     content:
-      "To enable location access, please click the location icon at the end of the browser’s address bar and allow location permission for this site.",
+      'To enable location access, please click the location icon at the end of the browser’s address bar and allow location permission for this site.',
     closable: false,
     maskClosable: false,
-    okText: "Close",
+    okText: 'Close',
     onOk: () => {},
-  };
+  }
 
   useEffect(() => {
     if (addProductInitialLoad) {
       try {
-        setChatLoading(true);
-        setLoading(true);
+        setChatLoading(true)
+        setLoading(true)
         const getChatCount = callApi(
           `https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(
             user.userId
           )}&count=${encodeURIComponent(true)}`,
-          "GET"
-        );
+          'GET'
+        )
 
         const getAdCount = callApi(
           `https://api.reusifi.com/prod/getProductsCount?count=${true}&email=${encodeURIComponent(
             user.userId
           )}`,
-          "GET"
-        );
+          'GET'
+        )
 
         Promise.all([getChatCount, getAdCount])
           .then(([chatResult, adResult]) => {
-            setUnreadChatCount(chatResult.data.count);
-            setCount(adResult.data.count);
+            setUnreadChatCount(chatResult.data.count)
+            setCount(adResult.data.count)
           })
           .catch((err) => {
             if (isModalVisibleRef.current) {
-              return;
+              return
             }
-            isModalVisibleRef.current = true;
+            isModalVisibleRef.current = true
             if (err?.status === 401) {
-              Modal.error(errorSessionConfig);
+              Modal.error(errorSessionConfig)
             } else {
-              Modal.error(errorConfig);
+              Modal.error(errorConfig)
             }
           })
           .finally(() => {
-            setChatLoading(false);
-            setLoading(false);
-            setAddProductInitialLoad(false);
-          });
+            setChatLoading(false)
+            setLoading(false)
+            setAddProductInitialLoad(false)
+          })
       } catch (err) {
         if (isModalVisibleRef.current) {
-          return;
+          return
         }
-        isModalVisibleRef.current = true;
+        isModalVisibleRef.current = true
         if (err?.status === 401) {
-          Modal.error(errorSessionConfig);
+          Modal.error(errorSessionConfig)
         } else {
-          Modal.error(errorConfig);
+          Modal.error(errorConfig)
         }
-        return;
+        return
       }
     }
-  }, [addProductInitialLoad]);
+  }, [addProductInitialLoad])
   const handleChange = (value, type) => {
     if (
-      type === "price" &&
+      type === 'price' &&
       !/^(|0|[1-9]\d*)(\.\d{0,2})?$/.test(value.target.value)
     ) {
-      return;
+      return
     }
     setForm((prevValue) => {
-      if (type === "title" || type === "description" || type === "price") {
-        return { ...prevValue, [type]: value.target.value };
+      if (type === 'title' || type === 'description' || type === 'price') {
+        return { ...prevValue, [type]: value.target.value }
       }
-      return { ...prevValue, [type]: value };
-    });
-  };
+      return { ...prevValue, [type]: value }
+    })
+  }
 
-  const navigate = useNavigate();
-  const [previewOpen, setPreviewOpen] = useState(false);
-  const [previewImage, setPreviewImage] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [submitLoading, setSubmitLoading] = useState(false);
-  const [chatLoading, setChatLoading] = useState(false);
+  const navigate = useNavigate()
+  const [previewOpen, setPreviewOpen] = useState(false)
+  const [previewImage, setPreviewImage] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [submitLoading, setSubmitLoading] = useState(false)
+  const [chatLoading, setChatLoading] = useState(false)
   const handlePreview = async (file) => {
     if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj);
+      file.preview = await getBase64(file.originFileObj)
     }
-    setPreviewImage(file.url || file.preview);
-    setPreviewOpen(true);
-  };
+    setPreviewImage(file.url || file.preview)
+    setPreviewOpen(true)
+  }
 
-  const prevFilesRef = useRef([]);
+  const prevFilesRef = useRef([])
 
   useEffect(() => {
-    prevFilesRef.current = [...form.images];
-  }, [form.images]);
+    prevFilesRef.current = [...form.images]
+  }, [form.images])
 
   const handleBeforeUpload = async (file) => {
     if (form.keywords.length === 0) {
-      message.info("Please select Subcategory");
-      return Upload.LIST_IGNORE;
+      message.info('Please select Subcategory')
+      return Upload.LIST_IGNORE
     }
-    const value = await getActualMimeType(file);
+    const value = await getActualMimeType(file)
     if (!value) {
-      message.info("Invalid image format");
-      return Upload.LIST_IGNORE;
+      message.info('Invalid image format')
+      return Upload.LIST_IGNORE
     } else if (file.size / 1024 / 1024 > 30) {
-      message.info("Max size 30MB per image");
-      return Upload.LIST_IGNORE;
+      message.info('Max size 30MB per image')
+      return Upload.LIST_IGNORE
     }
-    return false;
-  };
+    return false
+  }
 
-  const timer = useRef(null);
+  const timer = useRef(null)
 
   const openNotificationWithIcon = (type, message) => {
     api[type]({
-      message: "Invalid Image",
+      message: 'Invalid Image',
       description: `${message}`,
       duration: 0,
-    });
-  };
+    })
+  }
 
   const handleChangeImage = async ({ fileList }) => {
     setForm((prevValue) => {
-      return { ...prevValue, images: [...fileList] };
-    });
+      return { ...prevValue, images: [...fileList] }
+    })
     if (fileList.length > 0 && fileList.length > prevFilesRef.current.length) {
       if (timer.current) {
-        clearTimeout(timer.current);
+        clearTimeout(timer.current)
       }
       timer.current = setTimeout(async () => {
         try {
-          setSubmitLoading(true);
-          const { viewingS3Keys } = await uploadImages(fileList);
+          setSubmitLoading(true)
+          const { viewingS3Keys } = await uploadImages(fileList)
           let files = fileList.map((file, index) => {
-            const { preview, originFileObj, ...fileRest } = file;
-            return { ...fileRest, s3Key: viewingS3Keys[index] };
-          });
+            const { preview, originFileObj, ...fileRest } = file
+            return { ...fileRest, s3Key: viewingS3Keys[index] }
+          })
           await callApi(
-            "https://api.reusifi.com/prod/verifyImage",
-            "POST",
+            'https://api.reusifi.com/prod/verifyImage',
+            'POST',
             false,
             {
               files,
               keywords: form.keywords,
             }
-          );
-          setSubmitLoading(false);
+          )
+          setSubmitLoading(false)
         } catch (err) {
           if (err && err.status === 400) {
-            openNotificationWithIcon("error", err.response.data.message);
+            openNotificationWithIcon('error', err.response.data.message)
             setForm((prevValue) => {
               return {
                 ...prevValue,
@@ -263,20 +263,20 @@ const AddDress = () => {
                       !err.response.data.invalidUids.includes(image.uid)
                   ),
                 ],
-              };
-            });
+              }
+            })
           }
-          setSubmitLoading(false);
+          setSubmitLoading(false)
         }
-      }, 500);
+      }, 500)
     }
-  };
+  }
 
   useEffect(() => {
     setForm((prevValue) => {
-      return { ...prevValue, email: user.userId };
-    });
-  }, [user]);
+      return { ...prevValue, email: user.userId }
+    })
+  }, [user])
 
   useEffect(() => {
     if (currentLocation && currentLocationLabel) {
@@ -285,18 +285,18 @@ const AddDress = () => {
           ...prevValue,
           location: currentLocation,
           locationLabel: currentLocationLabel,
-        };
-      });
+        }
+      })
     }
-  }, [currentLocation, currentLocationLabel]);
+  }, [currentLocation, currentLocationLabel])
 
   const getActualMimeType = async (file) => {
-    const buffer = await file.arrayBuffer();
-    const bytes = new Uint8Array(buffer).subarray(0, 4);
+    const buffer = await file.arrayBuffer()
+    const bytes = new Uint8Array(buffer).subarray(0, 4)
 
     // JPEG magic bytes: FF D8 FF
     if (bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) {
-      return true;
+      return true
     }
 
     // PNG magic bytes: 89 50 4E 47
@@ -306,21 +306,21 @@ const AddDress = () => {
       bytes[2] === 0x4e &&
       bytes[3] === 0x47
     ) {
-      return true;
+      return true
     }
 
-    return false;
-  };
+    return false
+  }
 
   const isValid = () => {
-    if (!form.images || form.images.length === 0) return false;
+    if (!form.images || form.images.length === 0) return false
     for (let key in form) {
-      if (key !== "images" && (form[key] === "" || form[key] === null)) {
-        return false;
+      if (key !== 'images' && (form[key] === '' || form[key] === null)) {
+        return false
       }
     }
-    return true;
-  };
+    return true
+  }
 
   const uploadImages = async (fileList) => {
     const thumbnailOptions = {
@@ -328,257 +328,258 @@ const AddDress = () => {
       maxWidthOrHeight: 500,
       useWebWorker: true,
       initialQuality: 0.7,
-      fileType: "image/jpeg",
-    };
+      fileType: 'image/jpeg',
+    }
 
     const viewingOptions = {
       maxSizeMB: 0.5,
       maxWidthOrHeight: 1200,
       useWebWorker: true,
       initialQuality: 0.8,
-      fileType: "image/jpeg",
-    };
+      fileType: 'image/jpeg',
+    }
 
     const compressedThumbnails = [
       await imageCompression(fileList[0].originFileObj, thumbnailOptions),
-    ];
+    ]
     const compressedViewings = await Promise.all(
       fileList.map((image) =>
         imageCompression(image.originFileObj, viewingOptions)
       )
-    );
+    )
 
-    const allCompressed = [...compressedThumbnails, ...compressedViewings];
+    const allCompressed = [...compressedThumbnails, ...compressedViewings]
     const urlRes = await callApi(
       `https://api.reusifi.com/prod/getUrlNew?email=${encodeURIComponent(
         user.userId
-      )}&contentType=${encodeURIComponent("image/jpeg")}&count=${
+      )}&contentType=${encodeURIComponent('image/jpeg')}&count=${
         allCompressed.length
       }`,
-      "GET"
-    );
-    const uploadURLs = urlRes.data.uploadURLs;
-    const s3Keys = urlRes.data.s3Keys;
+      'GET'
+    )
+    const uploadURLs = urlRes.data.uploadURLs
+    const s3Keys = urlRes.data.s3Keys
 
     await Promise.all(
       allCompressed.map((img, idx) =>
         axios.put(uploadURLs[idx], img, {
           headers: {
-            "Content-Type": "image/jpeg",
-            "Cache-Control": "public, max-age=2592000",
+            'Content-Type': 'image/jpeg',
+            'Cache-Control': 'public, max-age=2592000',
           },
         })
       )
-    );
-    const thumbnailS3Keys = [s3Keys[0]];
-    const viewingS3Keys = s3Keys.slice(1);
+    )
+    const thumbnailS3Keys = [s3Keys[0]]
+    const viewingS3Keys = s3Keys.slice(1)
     return {
       thumbnailS3Keys,
       viewingS3Keys,
-    };
-  };
+    }
+  }
 
   const handleSubmit = async () => {
-    setSubmitLoading(true);
+    setSubmitLoading(true)
 
     try {
-      const { thumbnailS3Keys, viewingS3Keys } = await uploadImages(
-        form.images
-      );
+      const { thumbnailS3Keys, viewingS3Keys } = await uploadImages(form.images)
       // Prepare form data with separate keys for thumbnails and viewings
       const data = {
         title: form.title.trim().toLowerCase(),
         description: form.description.trim().toLowerCase(),
         email: user.userId.toLowerCase(),
-        location: form.location.split(",").map(parseFloat),
+        location: form.location.split(',').map(parseFloat),
         locationLabel: form.locationLabel,
         price: parseFloat(form.price).toFixed(2),
         category: form.category.toLowerCase(),
         subCategory: form.subCategory.toLowerCase(),
         thumbnailS3Keys,
         viewingS3Keys,
-      };
+      }
       await callApi(
-        "https://api.reusifi.com/prod/addProduct",
-        "POST",
+        'https://api.reusifi.com/prod/addProduct',
+        'POST',
         false,
         data
-      );
-      setCount((prevValue) => prevValue + 1);
-      setAdData([]);
-      setAdLastEvaluatedKey(null);
-      setAdInitialLoad(true);
-      setSubmitLoading(false);
-      setCurrLocRemoved(true);
-      setCurrentLocationLabel("");
-      setCurrentLocation("");
-      await deleteDB();
+      )
+      setCount((prevValue) => prevValue + 1)
+      setAdData([])
+      setAdLastEvaluatedKey(null)
+      setAdInitialLoad(true)
+      setSubmitLoading(false)
+      setCurrLocRemoved(true)
+      setCurrentLocationLabel('')
+      setCurrentLocation('')
+      await deleteDB()
       message.success(
-        "Your ad is now live on Reusifi. It may take up to 5 minutes to appear."
-      );
-      navigate("/ads");
+        'Your ad is now live on Reusifi. It may take up to 5 minutes to appear.'
+      )
+      navigate('/ads')
     } catch (err) {
-      setSubmitLoading(false);
+      setSubmitLoading(false)
       if (isModalVisibleRef.current) {
-        return;
+        return
       }
-      isModalVisibleRef.current = true;
+      isModalVisibleRef.current = true
       if (err?.status === 401) {
-        Modal.error(errorSessionConfig);
+        Modal.error(errorSessionConfig)
+      } else if (err?.status === 422) {
+        isModalVisibleRef.current = false
+        message.info(err?.response?.data?.message)
       } else {
-        Modal.error(errorConfig);
+        Modal.error(errorConfig)
       }
-      return;
+      return
     }
-  };
+  }
 
   const filter = (inputValue, path) =>
     path.some(
       (option) =>
         option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1
-    );
+    )
 
-  const [pincode, setPincode] = useState("");
-  const [address, setAddress] = useState("");
-  const [postCodeLoading, setPostCodeLoading] = useState(false);
+  const [pincode, setPincode] = useState('')
+  const [address, setAddress] = useState('')
+  const [postCodeLoading, setPostCodeLoading] = useState(false)
 
   const fetchPincodeDetails = async () => {
-    setPostCodeLoading(true);
+    setPostCodeLoading(true)
     try {
       const data = await callApi(
         `https://api.reusifi.com/prod/getLocation?pincode=${encodeURIComponent(
           pincode
         )}`,
-        "GET"
-      );
-      setPostCodeLoading(false);
+        'GET'
+      )
+      setPostCodeLoading(false)
       setAddress(
         data.data.Address.Street ||
           data.data.Address.District ||
           data.data.Address.Locality
-      );
-      handleChange(data.data.Position.reverse().join(","), "location");
+      )
+      handleChange(data.data.Position.reverse().join(','), 'location')
       handleChange(
         data.data.Address.Street ||
           data.data.Address.District ||
           data.data.Address.Locality,
-        "locationLabel"
-      );
-      setCurrLocRemoved(true);
-      setCurrentLocationLabel("");
-      setCurrentLocation("");
+        'locationLabel'
+      )
+      setCurrLocRemoved(true)
+      setCurrentLocationLabel('')
+      setCurrentLocation('')
     } catch (err) {
-      message.info("Pincode not found");
+      message.info('Pincode not found')
     }
-  };
+  }
   const handlePincode = (e) => {
-    const value = e.target.value;
-    setPincode(value);
+    const value = e.target.value
+    setPincode(value)
     if (!value) {
-      setAddress("");
-      handleChange("", "location");
-      handleChange("", "locationLabel");
+      setAddress('')
+      handleChange('', 'location')
+      handleChange('', 'locationLabel')
     }
-  };
-  const [open, setOpen] = useState(false);
-  const bottomRef = useRef(null);
-  const bottomRefPincode = useRef(null);
+  }
+  const [open, setOpen] = useState(false)
+  const bottomRef = useRef(null)
+  const bottomRefPincode = useRef(null)
 
-  const bottomRefPrice = useRef(null);
+  const bottomRefPrice = useRef(null)
 
   const scrollToBottomPincode = () => {
     requestAnimationFrame(() => {
       if (bottomRefPincode?.current) {
         bottomRefPincode.current?.scrollIntoView({
-          behavior: "smooth",
-          block: "end",
-        });
+          behavior: 'smooth',
+          block: 'end',
+        })
       }
-    });
-  };
+    })
+  }
 
   const scrollToBottomPrice = () => {
     requestAnimationFrame(() => {
       if (bottomRefPrice?.current) {
         bottomRefPrice.current?.scrollIntoView({
-          behavior: "smooth",
-          block: "end",
-        });
+          behavior: 'smooth',
+          block: 'end',
+        })
       }
-    });
-  };
+    })
+  }
 
   const scrollToBottom = () => {
     requestAnimationFrame(() => {
       if (bottomRef?.current) {
-        bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+        bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
       }
-    });
-  };
+    })
+  }
 
   useEffect(() => {
-    let prevHeight = window.innerHeight;
+    let prevHeight = window.innerHeight
     const handleResize = () => {
-      const currentHeight = window.innerHeight;
+      const currentHeight = window.innerHeight
       if (
         currentHeight < prevHeight &&
-        document.activeElement.id === "sellPriceId"
+        document.activeElement.id === 'sellPriceId'
       ) {
-        scrollToBottom();
+        scrollToBottom()
       } else if (
         currentHeight < prevHeight &&
-        document.activeElement.id === "pincodeId"
+        document.activeElement.id === 'pincodeId'
       ) {
-        scrollToBottomPrice();
+        scrollToBottomPrice()
       } else if (
         currentHeight < prevHeight &&
-        document.activeElement.id === "descId"
+        document.activeElement.id === 'descId'
       ) {
-        scrollToBottomPincode();
+        scrollToBottomPincode()
       }
-      prevHeight = currentHeight;
-    };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+      prevHeight = currentHeight
+    }
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
-  const [popOpen, setPopOpen] = useState(false);
+  const [popOpen, setPopOpen] = useState(false)
 
   const handleOpenChange = (newOpen) => {
-    setPopOpen(newOpen);
-  };
+    setPopOpen(newOpen)
+  }
 
   return (
     <Layout
       style={{
-        height: "100dvh",
-        overflowX: "hidden",
-        background: "#F9FAFB",
+        height: '100dvh',
+        overflowX: 'hidden',
+        background: '#F9FAFB',
       }}
     >
       {!isMobile && (
         <HeaderWrapper
           style={{
-            display: "flex",
-            alignItems: "center",
-            padding: "0px",
-            height: "50px",
+            display: 'flex',
+            alignItems: 'center',
+            padding: '0px',
+            height: '50px',
           }}
         >
-          <MenuWrapper defaultSelectedKeys={["3"]} isMobile={isMobile} />
+          <MenuWrapper defaultSelectedKeys={['3']} isMobile={isMobile} />
         </HeaderWrapper>
       )}
       <Content>
         {contextHolder}
         <div
-          id={"addProductContainer"}
+          id={'addProductContainer'}
           style={{
-            background: "#F9FAFB",
-            borderRadius: "0px",
-            overflow: "scroll",
-            padding: "15px 15px 70px 15px",
-            height: "100%",
-            scrollbarWidth: "none",
+            background: '#F9FAFB',
+            borderRadius: '0px',
+            overflow: 'scroll',
+            padding: '15px 15px 70px 15px',
+            height: '100%',
+            scrollbarWidth: 'none',
           }}
         >
           {!loading && !chatLoading && user && (
@@ -587,125 +588,125 @@ const AddDress = () => {
                 size="large"
                 direction="vertical"
                 style={{
-                  display: "flex",
-                  alignItems: "center",
+                  display: 'flex',
+                  alignItems: 'center',
                 }}
               >
                 <Space.Compact size="large">
                   <Input
                     className={
-                      isSubmitted ? (form.title ? "" : "my-red-border") : ""
+                      isSubmitted ? (form.title ? '' : 'my-red-border') : ''
                     }
                     status="error"
                     allowClear
                     style={{
                       // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-                      width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
-                      marginTop: "30px",
+                      width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
+                      marginTop: '30px',
                     }}
-                    onChange={(value) => handleChange(value, "title")}
+                    onChange={(value) => handleChange(value, 'title')}
                     placeholder="Title"
                     value={form.title}
                     maxLength={100}
                   />
                 </Space.Compact>
                 <Space.Compact size="large">
-                  <div style={{ position: "relative" }}>
+                  <div style={{ position: 'relative' }}>
                     <TextArea
                       className={
                         isSubmitted
                           ? form.description
-                            ? ""
-                            : "my-red-border"
-                          : ""
+                            ? ''
+                            : 'my-red-border'
+                          : ''
                       }
-                      id={"descId"}
+                      id={'descId'}
                       allowClear
                       style={{
                         // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-                        width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
+                        width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
                       }}
-                      onChange={(value) => handleChange(value, "description")}
+                      onChange={(value) => handleChange(value, 'description')}
                       autoSize={{ minRows: 8, maxRows: 8 }}
                       placeholder="Description"
                       maxLength={300}
                       value={form.description}
                       onClick={() => {
-                        scrollToBottomPincode();
+                        scrollToBottomPincode()
                       }}
                     />
                     <Popover
                       content={
-                        "Please provide all the details about your item (e.g., for a phone: color, memory, condition) to help buyers make informed decisions."
+                        'Please provide all the details about your item (e.g., for a phone: color, memory, condition) to help buyers make informed decisions.'
                       }
                       title=""
                       trigger="click"
                       open={popOpen}
                       placement="topLeft"
-                      styles={{ root: { width: "250px" } }}
+                      styles={{ root: { width: '250px' } }}
                       onOpenChange={handleOpenChange}
                     >
                       <InfoCircleOutlined
                         style={{
-                          position: "absolute",
-                          right: "10px",
-                          bottom: "10px",
+                          position: 'absolute',
+                          right: '10px',
+                          bottom: '10px',
                           zIndex: 10,
-                          color: "#52c41a",
+                          color: '#52c41a',
                         }}
                       />
                     </Popover>
                   </div>
                 </Space.Compact>
                 <Space.Compact
-                  id={"tree-select-container-id"}
+                  id={'tree-select-container-id'}
                   size="large"
                   style={{
-                    position: "relative",
+                    position: 'relative',
                   }}
                 >
                   <Space
                     size="large"
                     direction="vertical"
                     style={{
-                      display: "flex",
-                      alignItems: "center",
+                      display: 'flex',
+                      alignItems: 'center',
                     }}
                   >
                     <Space.Compact
-                      id={"add-product-category-c"}
+                      id={'add-product-category-c'}
                       size="large"
                       style={{
-                        position: "relative",
+                        position: 'relative',
                       }}
                     >
                       <Select
                         className={
                           isSubmitted
                             ? form.category
-                              ? "my-custom-select"
-                              : "my-custom-select my-red-border"
-                            : "my-custom-select"
+                              ? 'my-custom-select'
+                              : 'my-custom-select my-red-border'
+                            : 'my-custom-select'
                         }
                         allowClear
                         styles={{
                           popup: {
-                            root: { maxHeight: "400px", overflow: "auto" },
+                            root: { maxHeight: '400px', overflow: 'auto' },
                           },
                         }}
                         getPopupContainer={() =>
-                          document.getElementById("add-product-category-c")
+                          document.getElementById('add-product-category-c')
                         }
-                        id={"addProductCId"}
+                        id={'addProductCId'}
                         style={{
-                          width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
+                          width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
                         }}
                         value={form.category || undefined}
                         onChange={(value) => {
                           if (!value) {
-                            handleChange("", "category");
+                            handleChange('', 'category')
                           } else {
-                            handleChange(value, "category");
+                            handleChange(value, 'category')
                           }
                         }}
                         placeholder="Category"
@@ -714,41 +715,41 @@ const AddDress = () => {
                       ></Select>
                     </Space.Compact>
                     <Space.Compact
-                      id={"add-product-subcategory-c"}
+                      id={'add-product-subcategory-c'}
                       size="large"
                       style={{
-                        position: "relative",
+                        position: 'relative',
                       }}
                     >
                       <Select
                         className={
                           isSubmitted
                             ? form.subCategory
-                              ? "my-custom-select"
-                              : "my-custom-select my-red-border"
-                            : "my-custom-select"
+                              ? 'my-custom-select'
+                              : 'my-custom-select my-red-border'
+                            : 'my-custom-select'
                         }
                         allowClear
                         styles={{
                           popup: {
-                            root: { maxHeight: "400px", overflow: "auto" },
+                            root: { maxHeight: '400px', overflow: 'auto' },
                           },
                         }}
                         value={form.subCategory || undefined}
                         getPopupContainer={() =>
-                          document.getElementById("add-product-subcategory-c")
+                          document.getElementById('add-product-subcategory-c')
                         }
-                        id={"addProductSCId"}
+                        id={'addProductSCId'}
                         style={{
-                          width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
+                          width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
                         }}
                         onChange={(value, option) => {
                           if (!value) {
-                            handleChange("", "subCategory");
-                            handleChange([], "keywords");
+                            handleChange('', 'subCategory')
+                            handleChange([], 'keywords')
                           } else {
-                            handleChange(value, "subCategory");
-                            handleChange(option.keywords, "keywords");
+                            handleChange(value, 'subCategory')
+                            handleChange(option.keywords, 'keywords')
                           }
                         }}
                         placeholder="Subcategory"
@@ -762,24 +763,24 @@ const AddDress = () => {
                   size="large"
                   style={{
                     // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-                    width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
+                    width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
                   }}
                 >
                   <Input
                     className={
                       isSubmitted
                         ? address || currentLocationLabel
-                          ? ""
-                          : "my-red-border"
-                        : ""
+                          ? ''
+                          : 'my-red-border'
+                        : ''
                     }
-                    id={"pincodeId"}
+                    id={'pincodeId'}
                     value={pincode}
                     onChange={handlePincode}
                     placeholder="Pincode"
                     // allowClear
                     onClick={() => {
-                      scrollToBottomPrice();
+                      scrollToBottomPrice()
                     }}
                   ></Input>
                   <Button
@@ -787,9 +788,9 @@ const AddDress = () => {
                     disabled={!pincode}
                     type="primary"
                     style={{
-                      background: "#52c41a",
-                      fontSize: "13px",
-                      fontWeight: "300",
+                      background: '#52c41a',
+                      fontSize: '13px',
+                      fontWeight: '300',
                     }}
                     onClick={fetchPincodeDetails}
                   >
@@ -799,37 +800,37 @@ const AddDress = () => {
                 &nbsp;&nbsp;or
                 <div
                   ref={bottomRefPincode}
-                  style={{ display: "block", height: 0 }}
+                  style={{ display: 'block', height: 0 }}
                 ></div>
                 <Space.Compact size="large">
                   <Button
                     className={
                       isSubmitted
                         ? address || currentLocationLabel
-                          ? ""
-                          : "my-red-border"
-                        : ""
+                          ? ''
+                          : 'my-red-border'
+                        : ''
                     }
                     disabled={currentLocationLabel}
                     loading={locationAccessLoading}
                     style={{
-                      fontSize: "13px",
-                      fontWeight: "300",
-                      color: "#52c41a",
-                      width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
+                      fontSize: '13px',
+                      fontWeight: '300',
+                      color: '#52c41a',
+                      width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
                     }}
                     onClick={() => {
                       navigator.permissions
-                        .query({ name: "geolocation" })
+                        .query({ name: 'geolocation' })
                         .then(function (result) {
-                          if (result.state === "denied") {
-                            Modal.info(locationInfoConfig);
+                          if (result.state === 'denied') {
+                            Modal.info(locationInfoConfig)
                           }
-                        });
-                      setAddress("");
-                      setPincode("");
-                      setCurrLocRemoved(false);
-                      setTriggerLocation((value) => !value);
+                        })
+                      setAddress('')
+                      setPincode('')
+                      setCurrLocRemoved(false)
+                      setTriggerLocation((value) => !value)
                     }}
                   >
                     <LocateFixed />
@@ -843,18 +844,18 @@ const AddDress = () => {
                         setForm((prevValue) => {
                           return {
                             ...prevValue,
-                            location: "",
-                            locationLabel: "",
-                          };
-                        });
-                        setCurrentLocationLabel("");
-                        setCurrentLocation("");
-                        setCurrLocRemoved(true);
-                        handlePincode(e);
+                            location: '',
+                            locationLabel: '',
+                          }
+                        })
+                        setCurrentLocationLabel('')
+                        setCurrentLocation('')
+                        setCurrLocRemoved(true)
+                        handlePincode(e)
                       }}
                       allowClear
                       style={{
-                        width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
+                        width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
                       }}
                       value={form.locationLabel}
                     />
@@ -863,27 +864,27 @@ const AddDress = () => {
                 <Space.Compact size="large">
                   <Input
                     className={
-                      isSubmitted ? (form.price ? "" : "my-red-border") : ""
+                      isSubmitted ? (form.price ? '' : 'my-red-border') : ''
                     }
                     id="sellPriceId"
                     allowClear
                     style={{
                       // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-                      width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
+                      width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
                     }}
                     prefix="₹"
-                    onChange={(value) => handleChange(value, "price")}
+                    onChange={(value) => handleChange(value, 'price')}
                     placeholder="Price"
                     value={form.price}
                     maxLength={15}
                     onClick={() => {
-                      scrollToBottom();
+                      scrollToBottom()
                     }}
                   />
                 </Space.Compact>
                 <div
                   ref={bottomRefPrice}
-                  style={{ display: "block", height: 0 }}
+                  style={{ display: 'block', height: 0 }}
                 ></div>
                 <Space.Compact size="large">
                   <Space size="large" direction="vertical">
@@ -901,15 +902,15 @@ const AddDress = () => {
                         className={
                           isSubmitted
                             ? form.images.length > 0
-                              ? ""
-                              : "my-red-border"
-                            : ""
+                              ? ''
+                              : 'my-red-border'
+                            : ''
                         }
                         style={{
-                          color: "black",
-                          fontSize: "13px",
-                          fontWeight: "300",
-                          width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
+                          color: 'black',
+                          fontSize: '13px',
+                          fontWeight: '300',
+                          width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
                         }}
                         icon={<UploadOutlined />}
                       >
@@ -919,14 +920,14 @@ const AddDress = () => {
                     {previewImage && (
                       <Image
                         wrapperStyle={{
-                          display: "none",
+                          display: 'none',
                         }}
-                        style={{ objectFit: "cover" }}
+                        style={{ objectFit: 'cover' }}
                         preview={{
                           visible: previewOpen,
                           onVisibleChange: (visible) => setPreviewOpen(visible),
                           afterOpenChange: (visible) =>
-                            !visible && setPreviewImage(""),
+                            !visible && setPreviewImage(''),
                         }}
                         src={previewImage}
                       />
@@ -934,33 +935,33 @@ const AddDress = () => {
                   </Space>
                 </Space.Compact>
                 <Space.Compact size="large">
-                  <span style={{ fontSize: "13px", fontWeight: "300" }}>
+                  <span style={{ fontSize: '13px', fontWeight: '300' }}>
                     The ad will be deactivated automatically after 30 days
                   </span>
                 </Space.Compact>
                 <Space.Compact
                   size="large"
                   style={{
-                    display: "flex",
-                    justifyContent: "center",
+                    display: 'flex',
+                    justifyContent: 'center',
                   }}
                 >
                   <Button
                     style={{
-                      background: "#52c41a",
-                      fontSize: "13px",
-                      fontWeight: "300",
+                      background: '#52c41a',
+                      fontSize: '13px',
+                      fontWeight: '300',
                     }}
                     onClick={() => {
                       if (!isValid()) {
-                        setIsSubmitted(true);
-                        message.info("All fields are mandatory");
-                        return;
+                        setIsSubmitted(true)
+                        message.info('All fields are mandatory')
+                        return
                       }
                       if (count < 5) {
-                        handleSubmit();
+                        handleSubmit()
                       } else {
-                        navigate("/checkout", { state: { adType: "POSTAD" } });
+                        navigate('/checkout', { state: { adType: 'POSTAD' } })
                       }
                     }}
                     type="primary"
@@ -971,7 +972,7 @@ const AddDress = () => {
                 <br />
                 <div
                   ref={bottomRef}
-                  style={{ display: "block", height: 0 }}
+                  style={{ display: 'block', height: 0 }}
                 ></div>
               </Space>
             </>
@@ -988,14 +989,14 @@ const AddDress = () => {
                     lg={24}
                     xl={24}
                     xxl={24}
-                    style={{ display: "flex", justifyContent: "center" }}
+                    style={{ display: 'flex', justifyContent: 'center' }}
                   >
                     {index !== 8 && (
                       <Skeleton.Node
                         style={{
-                          width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
-                          height: index !== 2 ? "40px" : "214px",
-                          borderRadius: "8px",
+                          width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
+                          height: index !== 2 ? '40px' : '214px',
+                          borderRadius: '8px',
                         }}
                         active
                       />
@@ -1003,15 +1004,15 @@ const AddDress = () => {
                     {index === 8 && (
                       <Skeleton.Node
                         style={{
-                          width: "75px",
-                          height: "40px",
-                          borderRadius: "8px",
+                          width: '75px',
+                          height: '40px',
+                          borderRadius: '8px',
                         }}
                         active
                       />
                     )}
                   </Col>
-                );
+                )
               })}
             </Row>
           )}
@@ -1019,18 +1020,18 @@ const AddDress = () => {
       </Content>
       {isMobile && (
         <FooterWrapper>
-          <MenuWrapper defaultSelectedKeys={["3"]} isMobile={isMobile} />
+          <MenuWrapper defaultSelectedKeys={['3']} isMobile={isMobile} />
         </FooterWrapper>
       )}
       {submitLoading && (
         <Spin
           fullscreen
           indicator={
-            <LoadingOutlined style={{ fontSize: 48, color: "#52c41a" }} spin />
+            <LoadingOutlined style={{ fontSize: 48, color: '#52c41a' }} spin />
           }
         />
       )}
     </Layout>
-  );
-};
-export default AddDress;
+  )
+}
+export default AddDress
