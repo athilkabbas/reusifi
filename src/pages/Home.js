@@ -158,19 +158,13 @@ const Home = () => {
   }
   const errorConfig = {
     title: 'An error has occurred.',
-    content: 'Please reload or log out.',
+    content: 'Please reload.',
     closable: false,
     maskClosable: false,
     okText: 'Reload',
-    cancelText: 'Log out',
     onOk: () => {
       isModalVisibleRef.current = false
-      // window.location.reload()
-      signOut()
-    },
-    onCancel: async () => {
-      await deleteDB()
-      signOut()
+      window.location.reload()
     },
   }
   const [limit, setLimit] = useState(0) // default
@@ -333,7 +327,7 @@ const Home = () => {
       if (err?.status === 401) {
         Modal.error(errorSessionConfig)
       } else {
-        Modal.error({ ...errorConfig, content: err.message })
+        Modal.error(errorConfig)
       }
       return
     }
@@ -425,7 +419,7 @@ const Home = () => {
       if (err?.status === 401) {
         Modal.error(errorSessionConfig)
       } else {
-        Modal.error({ ...errorConfig, content: err.message + 'load more' })
+        Modal.error(errorConfig)
       }
       return
     }
@@ -493,7 +487,7 @@ const Home = () => {
             if (err?.status === 401) {
               Modal.error(errorSessionConfig)
             } else {
-              Modal.error({ ...errorConfig, content: err.message + 'initial' })
+              Modal.error(errorConfig)
             }
           })
           .finally(() => {
@@ -512,7 +506,7 @@ const Home = () => {
         if (err?.status === 401) {
           Modal.error(errorSessionConfig)
         } else {
-          Modal.error({ ...errorConfig, content: err.message + 'outer' })
+          Modal.error(errorConfig)
         }
         return
       }
