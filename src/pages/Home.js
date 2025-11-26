@@ -332,7 +332,7 @@ const Home = () => {
       if (err?.status === 401) {
         Modal.error(errorSessionConfig)
       } else {
-        Modal.error(errorConfig)
+        Modal.error({ ...errorConfig, content: err.message })
       }
       return
     }
@@ -424,7 +424,7 @@ const Home = () => {
       if (err?.status === 401) {
         Modal.error(errorSessionConfig)
       } else {
-        Modal.error(errorConfig)
+        Modal.error({ ...errorConfig, content: err.message + 'load more' })
       }
       return
     }
@@ -492,7 +492,7 @@ const Home = () => {
             if (err?.status === 401) {
               Modal.error(errorSessionConfig)
             } else {
-              Modal.error(errorConfig)
+              Modal.error({ ...errorConfig, content: err.message + 'initial' })
             }
           })
           .finally(() => {
@@ -511,7 +511,7 @@ const Home = () => {
         if (err?.status === 401) {
           Modal.error(errorSessionConfig)
         } else {
-          Modal.error(errorConfig)
+          Modal.error({ ...errorConfig, content: err.message + 'outer' })
         }
         return
       }
