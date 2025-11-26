@@ -165,7 +165,8 @@ const Home = () => {
     cancelText: 'Log out',
     onOk: () => {
       isModalVisibleRef.current = false
-      window.location.reload()
+      // window.location.reload()
+      signOut()
     },
     onCancel: async () => {
       await deleteDB()
