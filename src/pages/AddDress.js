@@ -165,12 +165,12 @@ const AddDress = () => {
     }
   }, [addProductInitialLoad])
   const handleChange = (value, type) => {
-    if (
-      type === 'price' &&
-      !/^(|0|[1-9]\d*)(\.\d{0,2})?$/.test(value.target.value)
-    ) {
-      return
-    }
+    // if (
+    //   type === 'price' &&
+    //   !/^(|0|[1-9]\d*)(\.\d{0,2})?$/.test(value.target.value)
+    // ) {
+    //   return
+    // }
     setForm((prevValue) => {
       if (type === 'title' || type === 'description' || type === 'price') {
         return { ...prevValue, [type]: value.target.value }
@@ -315,7 +315,7 @@ const AddDress = () => {
   const isValid = () => {
     if (!form.images || form.images.length === 0) return false
     for (let key in form) {
-      if (key !== 'images' && (form[key] === '' || form[key] === null)) {
+      if (key !== 'images' && (form[key].trim() === '' || form[key] === null)) {
         return false
       }
     }
@@ -549,6 +549,30 @@ const AddDress = () => {
     setPopOpen(newOpen)
   }
 
+  const validateField = async (e, type) => {
+    if (!e.target.value.trim()) {
+      return
+    }
+    try {
+      setSubmitLoading(true)
+      const result = await callApi(
+        'https://api.reusifi.com/prod/verifyLanguage',
+        'POST',
+        false,
+        {
+          title: e.target.value,
+        }
+      )
+    } catch (err) {
+      if (err?.status === 422) {
+        message.error(err?.response?.data?.message)
+        handleChange({ target: { value: '' } }, type)
+      }
+    } finally {
+      setSubmitLoading(false)
+    }
+  }
+
   return (
     <Layout
       style={{
@@ -595,7 +619,11 @@ const AddDress = () => {
                 <Space.Compact size="large">
                   <Input
                     className={
-                      isSubmitted ? (form.title ? '' : 'my-red-border') : ''
+                      isSubmitted
+                        ? form.title.trim()
+                          ? ''
+                          : 'my-red-border'
+                        : ''
                     }
                     status="error"
                     allowClear
@@ -603,6 +631,29 @@ const AddDress = () => {
                       // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                       width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
                       marginTop: '30px',
+                    }}
+                    onBlur={async (e) => {
+                      await validateField(e, 'title')
+                    }}
+                    onKeyDown={(e) => {
+                      if (
+                        [
+                          'Backspace',
+                          'Delete',
+                          'Tab',
+                          'Escape',
+                          'Enter',
+                          'ArrowLeft',
+                          'ArrowRight',
+                          'Home',
+                          'End',
+                        ].includes(e.key)
+                      ) {
+                        return
+                      }
+                      if (!/[a-zA-Z0-9 ]/.test(e.key)) {
+                        e.preventDefault()
+                      }
                     }}
                     onChange={(value) => handleChange(value, 'title')}
                     placeholder="Title"
@@ -615,7 +666,7 @@ const AddDress = () => {
                     <TextArea
                       className={
                         isSubmitted
-                          ? form.description
+                          ? form.description.trim()
                             ? ''
                             : 'my-red-border'
                           : ''
@@ -629,6 +680,29 @@ const AddDress = () => {
                       onChange={(value) => handleChange(value, 'description')}
                       autoSize={{ minRows: 8, maxRows: 8 }}
                       placeholder="Description"
+                      onBlur={async (e) => {
+                        await validateField(e, 'description')
+                      }}
+                      onKeyDown={(e) => {
+                        if (
+                          [
+                            'Backspace',
+                            'Delete',
+                            'Tab',
+                            'Escape',
+                            'Enter',
+                            'ArrowLeft',
+                            'ArrowRight',
+                            'Home',
+                            'End',
+                          ].includes(e.key)
+                        ) {
+                          return
+                        }
+                        if (!/[a-zA-Z0-9 ]/.test(e.key)) {
+                          e.preventDefault()
+                        }
+                      }}
                       maxLength={300}
                       value={form.description}
                       onClick={() => {
@@ -876,6 +950,27 @@ const AddDress = () => {
                     onChange={(value) => handleChange(value, 'price')}
                     placeholder="Price"
                     value={form.price}
+                    onKeyDown={(e) => {
+                      if (
+                        [
+                          'Backspace',
+                          'Delete',
+                          'Tab',
+                          'Escape',
+                          'Enter',
+                          'ArrowLeft',
+                          'ArrowRight',
+                          'Home',
+                          'End',
+                        ].includes(e.key)
+                      ) {
+                        return
+                      }
+
+                      if (!/[0-9]/.test(e.key)) {
+                        e.preventDefault()
+                      }
+                    }}
                     maxLength={15}
                     onClick={() => {
                       scrollToBottom()
