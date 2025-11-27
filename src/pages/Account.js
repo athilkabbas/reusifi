@@ -135,14 +135,23 @@ const Account = () => {
     try {
       if (
         fileList.length === 0 &&
-        Object.keys(account).every((key) => account[key] === form[key])
+        Object.keys(account).every((key) => {
+          if (typeof account[key] !== 'string') {
+            return account[key] === form[key]
+          }
+          return account[key].trim() === form[key].trim()
+        })
       ) {
         message.info('No changes found')
         return
       }
 
       setSubmitLoading(true)
-      let data = { ...form }
+      let data = {
+        ...form,
+        name: form.name.trim(),
+        description: form.description.trim(),
+      }
       if (fileList.length > 0) {
         const s3Keys = await uploadImages(fileList)
         data = {
@@ -343,6 +352,30 @@ const Account = () => {
       return Upload.LIST_IGNORE
     }
     return false
+  }
+
+  const validateField = async (e, type) => {
+    if (!e.target.value.trim()) {
+      return
+    }
+    try {
+      setSubmitLoading(true)
+      const result = await callApi(
+        'https://api.reusifi.com/prod/verifyLanguage',
+        'POST',
+        false,
+        {
+          title: e.target.value,
+        }
+      )
+    } catch (err) {
+      if (err?.status === 422) {
+        message.error(err?.response?.data?.message)
+        handleChange({ target: { value: '' } }, type)
+      }
+    } finally {
+      setSubmitLoading(false)
+    }
   }
 
   const handleChangeImage = async ({ fileList }) => {
@@ -612,7 +645,7 @@ const Account = () => {
                     width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
                     marginTop: '30px',
                   }}
-                  onChange={(value) => handleChange(value, 'title')}
+                  onChange={(value) => handleChange(value, 'email')}
                   placeholder="Email"
                   value={form.email}
                   maxLength={100}
@@ -645,6 +678,29 @@ const Account = () => {
                   }}
                   onChange={(value) => handleChange(value, 'name')}
                   placeholder="Name"
+                  onBlur={async (e) => {
+                    await validateField(e, 'name')
+                  }}
+                  onKeyDown={(e) => {
+                    if (
+                      [
+                        'Backspace',
+                        'Delete',
+                        'Tab',
+                        'Escape',
+                        'Enter',
+                        'ArrowLeft',
+                        'ArrowRight',
+                        'Home',
+                        'End',
+                      ].includes(e.key)
+                    ) {
+                      return
+                    }
+                    if (!/[a-zA-Z0-9 ]/.test(e.key)) {
+                      e.preventDefault()
+                    }
+                  }}
                   id={'accountNameId'}
                   value={form.name}
                   maxLength={100}
@@ -663,6 +719,29 @@ const Account = () => {
                   onChange={(value) => handleChange(value, 'description')}
                   autoSize={{ minRows: 8, maxRows: 8 }}
                   placeholder="Description"
+                  onBlur={async (e) => {
+                    await validateField(e, 'description')
+                  }}
+                  onKeyDown={(e) => {
+                    if (
+                      [
+                        'Backspace',
+                        'Delete',
+                        'Tab',
+                        'Escape',
+                        'Enter',
+                        'ArrowLeft',
+                        'ArrowRight',
+                        'Home',
+                        'End',
+                      ].includes(e.key)
+                    ) {
+                      return
+                    }
+                    if (!/[a-zA-Z0-9 ]/.test(e.key)) {
+                      e.preventDefault()
+                    }
+                  }}
                   id={'accountDescId'}
                   maxLength={300}
                   value={form.description}

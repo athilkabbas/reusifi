@@ -315,7 +315,13 @@ const AddDress = () => {
   const isValid = () => {
     if (!form.images || form.images.length === 0) return false
     for (let key in form) {
-      if (key !== 'images' && (form[key].trim() === '' || form[key] === null)) {
+      if (
+        key !== 'images' &&
+        typeof form[key] !== 'string' &&
+        form[key] === null
+      ) {
+        return false
+      } else if (typeof form[key] === 'string' && form[key].trim() === '') {
         return false
       }
     }
