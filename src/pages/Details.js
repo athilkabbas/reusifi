@@ -1,42 +1,42 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { Skeleton, Spin, Descriptions, Col } from "antd";
-import { useNavigate, Link } from "react-router-dom";
-import { useLocation } from "react-router-dom";
-import { Layout, message, Modal, Popconfirm } from "antd";
-import { Image, Space } from "antd";
-import { Button, Typography, Row } from "antd";
-import { Carousel } from "antd";
-import { LoadingOutlined } from "@ant-design/icons";
-import { signInWithRedirect } from "@aws-amplify/auth";
-import { Context } from "../context/provider";
-import { useIsMobile } from "../hooks/windowSize";
-import { callApi } from "../helpers/api";
-import MenuWrapper from "../component/Menu";
-import FooterWrapper from "../component/Footer";
-import HeaderWrapper from "../component/Header";
-import AwsMap from "../component/Map";
-import CopyButton from "../component/CopyButton";
-import { useIndexedDBImages } from "../hooks/indexedDB";
-const { Content } = Layout;
+import React, { useContext, useEffect, useRef, useState } from 'react'
+import { Skeleton, Spin, Descriptions, Col } from 'antd'
+import { useNavigate, Link } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
+import { Layout, message, Modal, Popconfirm } from 'antd'
+import { Image, Space } from 'antd'
+import { Button, Typography, Row } from 'antd'
+import { Carousel } from 'antd'
+import { LoadingOutlined } from '@ant-design/icons'
+import { signInWithRedirect } from '@aws-amplify/auth'
+import { Context } from '../context/provider'
+import { useIsMobile } from '../hooks/windowSize'
+import { callApi } from '../helpers/api'
+import MenuWrapper from '../component/Menu'
+import FooterWrapper from '../component/Footer'
+import HeaderWrapper from '../component/Header'
+import AwsMap from '../component/Map'
+import CopyButton from '../component/CopyButton'
+import { useIndexedDBImages } from '../hooks/indexedDB'
+const { Content } = Layout
 const Details = () => {
-  const location = useLocation();
-  const isMobile = useIsMobile();
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const { item, ad } = location.state || "";
+  const location = useLocation()
+  const isMobile = useIsMobile()
+  const navigate = useNavigate()
+  const [loading, setLoading] = useState(false)
+  const { item, ad } = location.state || ''
   if (!item && !ad) {
-    navigate("/");
+    navigate('/')
   }
-  const { deleteDB } = useIndexedDBImages();
-  const [chatLoading, setChatLoading] = useState(false);
-  const [chatProductLoading, setChatProductLoading] = useState(false);
-  const [chatProduct, setChatProduct] = useState(false);
-  const [unblockLoading, setUnblockLoading] = useState(false);
-  const [deleteLoading, setDeleteLoading] = useState(false);
-  const [activateLoading, setActivateLoading] = useState(false);
+  const { clearAllIds } = useIndexedDBImages()
+  const [chatLoading, setChatLoading] = useState(false)
+  const [chatProductLoading, setChatProductLoading] = useState(false)
+  const [chatProduct, setChatProduct] = useState(false)
+  const [unblockLoading, setUnblockLoading] = useState(false)
+  const [deleteLoading, setDeleteLoading] = useState(false)
+  const [activateLoading, setActivateLoading] = useState(false)
   const capitalize = (str) => {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  };
+    return str.charAt(0).toUpperCase() + str.slice(1)
+  }
   const {
     setAdData,
     setCount,
@@ -50,332 +50,332 @@ const Details = () => {
     actionType,
     setActionType,
     user,
-  } = useContext(Context);
+  } = useContext(Context)
 
-  const [detailData, setDetailData] = useState([]);
-  const isModalVisibleRef = useRef(false);
+  const [detailData, setDetailData] = useState([])
+  const isModalVisibleRef = useRef(false)
   const errorSessionConfig = {
-    title: "Session has expired.",
-    content: "Please login again.",
+    title: 'Session has expired.',
+    content: 'Please login again.',
     closable: false,
     maskClosable: false,
-    okText: "Login",
+    okText: 'Login',
     onOk: async () => {
-      isModalVisibleRef.current = false;
-      await deleteDB();
-      signInWithRedirect();
+      isModalVisibleRef.current = false
+      await clearAllIds()
+      signInWithRedirect()
     },
-  };
+  }
   const errorConfig = {
-    title: "An error has occurred.",
-    content: "Please try again later.",
+    title: 'An error has occurred.',
+    content: 'Please try again later.',
     closable: false,
     maskClosable: false,
-    okText: "Reload",
+    okText: 'Reload',
     onOk: () => {
-      isModalVisibleRef.current = false;
-      window.location.reload();
+      isModalVisibleRef.current = false
+      window.location.reload()
     },
-  };
+  }
 
-  const { Text } = Typography;
+  const { Text } = Typography
 
   useEffect(() => {
     if (item) {
       try {
-        setChatLoading(true);
-        setLoading(true);
-        setChatProductLoading(true);
+        setChatLoading(true)
+        setLoading(true)
+        setChatProductLoading(true)
         const getChatCount = callApi(
           `https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(
             user.userId
           )}&count=${encodeURIComponent(true)}`,
-          "GET"
-        );
+          'GET'
+        )
 
         const getData = callApi(
           `https://api.reusifi.com/prod/getProductsId?id=${encodeURIComponent(
-            item["item"]["uuid"]
+            item['item']['uuid']
           )}`,
-          "GET"
-        );
+          'GET'
+        )
         const getChatProduct = callApi(
           `https://api.reusifi.com/prod/getChatProduct?userId1=${encodeURIComponent(
             user.userId
-          )}&productId=${encodeURIComponent(item["item"]["uuid"])}`,
-          "GET"
-        );
+          )}&productId=${encodeURIComponent(item['item']['uuid'])}`,
+          'GET'
+        )
         Promise.all([getChatCount, getData, getChatProduct])
           .then(([chatResult, result, chatProductResult]) => {
-            setUnreadChatCount(chatResult.data.count);
-            setDetailData(result.data);
-            setChatProduct(chatProductResult.data);
+            setUnreadChatCount(chatResult.data.count)
+            setDetailData(result.data)
+            setChatProduct(chatProductResult.data)
             if (
               result.data.length === 0 ||
               (!ad && result.data[0]?.item?.deactivated)
             ) {
-              message.info("Ad no longer available");
-              navigate(-1);
+              message.info('Ad no longer available')
+              navigate(-1)
             }
           })
           .catch((err) => {
             if (isModalVisibleRef.current) {
-              return;
+              return
             }
-            isModalVisibleRef.current = true;
+            isModalVisibleRef.current = true
             if (err?.status === 401) {
-              Modal.error(errorSessionConfig);
+              Modal.error(errorSessionConfig)
             } else {
-              Modal.error(errorConfig);
+              Modal.error(errorConfig)
             }
           })
           .finally(() => {
-            setChatLoading(false);
-            setChatProductLoading(false);
-            setLoading(false);
-          });
+            setChatLoading(false)
+            setChatProductLoading(false)
+            setLoading(false)
+          })
       } catch (err) {
-        setChatLoading(false);
-        setChatProductLoading(false);
-        setLoading(false);
+        setChatLoading(false)
+        setChatProductLoading(false)
+        setLoading(false)
         if (isModalVisibleRef.current) {
-          return;
+          return
         }
-        isModalVisibleRef.current = true;
+        isModalVisibleRef.current = true
         if (err?.status === 401) {
-          Modal.error(errorSessionConfig);
+          Modal.error(errorSessionConfig)
         } else {
-          Modal.error(errorConfig);
+          Modal.error(errorConfig)
         }
-        return;
+        return
       }
     }
-  }, [item]);
+  }, [item])
 
   const handleActivate = async () => {
     try {
-      setActivateLoading(true);
-      await callApi("https://api.reusifi.com/prod/activateAd", "POST", false, {
-        uuid: detailData[0]["item"]["uuid"],
-      });
-      setActivateLoading(false);
+      setActivateLoading(true)
+      await callApi('https://api.reusifi.com/prod/activateAd', 'POST', false, {
+        uuid: detailData[0]['item']['uuid'],
+      })
+      setActivateLoading(false)
       setDetailData((prevValue) => {
-        const newValue = [...prevValue];
+        const newValue = [...prevValue]
         newValue[0] = {
           ...newValue[0],
           item: {
             ...newValue[0].item,
             deactivated: false,
           },
-        };
-        return newValue;
-      });
+        }
+        return newValue
+      })
       setAdData((prevValue) => {
-        const newValue = [...prevValue];
+        const newValue = [...prevValue]
         const newAdValue = newValue.map((item) => {
-          if (item.item.uuid === detailData[0]["item"]["uuid"]) {
-            item.item.deactivated = false;
+          if (item.item.uuid === detailData[0]['item']['uuid']) {
+            item.item.deactivated = false
           }
-          return item;
-        });
-        return newAdValue;
-      });
+          return item
+        })
+        return newAdValue
+      })
     } catch (err) {
-      setActivateLoading(false);
+      setActivateLoading(false)
       if (isModalVisibleRef.current) {
-        return;
+        return
       }
-      isModalVisibleRef.current = true;
+      isModalVisibleRef.current = true
       if (err?.status === 401) {
-        Modal.error(errorSessionConfig);
+        Modal.error(errorSessionConfig)
       } else {
-        Modal.error(errorConfig);
+        Modal.error(errorConfig)
       }
-      return;
+      return
     }
-  };
+  }
 
   const handleChat = async () => {
     try {
-      setUnblockLoading(true);
-      await callApi("https://api.reusifi.com/prod/unBlockUser", "POST", false, {
+      setUnblockLoading(true)
+      await callApi('https://api.reusifi.com/prod/unBlockUser', 'POST', false, {
         unBlock: true,
         userId1: user.userId,
         userId2: chatProduct.userId2,
-        productId: item["item"]["uuid"],
-      });
-      if (actionType === "Selling") {
-        setSellingChatData([]);
-        setSellingChatLastEvaluatedKey(null);
-        setSellingChatInitialLoad(true);
+        productId: item['item']['uuid'],
+      })
+      if (actionType === 'Selling') {
+        setSellingChatData([])
+        setSellingChatLastEvaluatedKey(null)
+        setSellingChatInitialLoad(true)
       } else {
-        setBuyingChatData([]);
-        setBuyingChatLastEvaluatedKey(null);
-        setBuyingChatInitialLoad(true);
+        setBuyingChatData([])
+        setBuyingChatLastEvaluatedKey(null)
+        setBuyingChatInitialLoad(true)
       }
-      setUnblockLoading(false);
-      message.success("User unblocked");
-      setActionType("Buying");
-      navigate("/chat", { state: { recipient: item } });
+      setUnblockLoading(false)
+      message.success('User unblocked')
+      setActionType('Buying')
+      navigate('/chat', { state: { recipient: item } })
     } catch (err) {
-      setUnblockLoading(false);
+      setUnblockLoading(false)
       if (isModalVisibleRef.current) {
-        return;
+        return
       }
-      isModalVisibleRef.current = true;
+      isModalVisibleRef.current = true
       if (err?.status === 401) {
-        Modal.error(errorSessionConfig);
+        Modal.error(errorSessionConfig)
       } else {
-        Modal.error(errorConfig);
+        Modal.error(errorConfig)
       }
-      return;
+      return
     }
-  };
+  }
 
   const handleDelete = async () => {
     try {
-      setDeleteLoading(true);
-      await callApi("https://api.reusifi.com/prod/deleteAdNew", "POST", false, {
-        id: item["item"]["uuid"],
-      });
-      setCount((prevCount) => prevCount - 1);
+      setDeleteLoading(true)
+      await callApi('https://api.reusifi.com/prod/deleteAdNew', 'POST', false, {
+        id: item['item']['uuid'],
+      })
+      setCount((prevCount) => prevCount - 1)
       setAdData((prevValue) => {
         return prevValue.filter((value) => {
-          return value["item"]["uuid"] !== item["item"]["uuid"];
-        });
-      });
-      setDeleteLoading(false);
-      message.success("Ad deleted");
-      navigate("/ads");
+          return value['item']['uuid'] !== item['item']['uuid']
+        })
+      })
+      setDeleteLoading(false)
+      message.success('Ad deleted')
+      navigate('/ads')
     } catch (err) {
-      setDeleteLoading(false);
+      setDeleteLoading(false)
       if (isModalVisibleRef.current) {
-        return;
+        return
       }
-      isModalVisibleRef.current = true;
+      isModalVisibleRef.current = true
       if (err?.status === 401) {
-        Modal.error(errorSessionConfig);
+        Modal.error(errorSessionConfig)
       } else {
-        Modal.error(errorConfig);
+        Modal.error(errorConfig)
       }
-      return;
+      return
     }
-  };
-  const [loadedImages, setLoadedImages] = useState([]);
-  const [previewVisible, setPreviewVisible] = useState(false);
-  const [previewIndex, setPreviewIndex] = useState(0);
+  }
+  const [loadedImages, setLoadedImages] = useState([])
+  const [previewVisible, setPreviewVisible] = useState(false)
+  const [previewIndex, setPreviewIndex] = useState(0)
 
   const handleLoad = (index) => {
     setLoadedImages((prev) => {
-      const copy = [...prev];
-      copy[index] = true;
-      return copy;
-    });
-  };
+      const copy = [...prev]
+      copy[index] = true
+      return copy
+    })
+  }
 
   const descriptionItems = [
     {
-      key: "1",
-      label: "Title",
-      children: capitalize(detailData?.[0]?.["item"]["title"] || ""),
+      key: '1',
+      label: 'Title',
+      children: capitalize(detailData?.[0]?.['item']['title'] || ''),
     },
     {
-      key: "2",
-      label: "Description",
-      children: capitalize(detailData?.[0]?.["item"]["description"] || ""),
+      key: '2',
+      label: 'Description',
+      children: capitalize(detailData?.[0]?.['item']['description'] || ''),
     },
     {
-      key: "3",
-      label: "Category",
-      children: capitalize(detailData?.[0]?.["item"]["category"] || ""),
+      key: '3',
+      label: 'Category',
+      children: capitalize(detailData?.[0]?.['item']['category'] || ''),
     },
     {
-      key: "4",
-      label: "SubCategory",
-      children: capitalize(detailData?.[0]?.["item"]["subCategory"] || ""),
+      key: '4',
+      label: 'SubCategory',
+      children: capitalize(detailData?.[0]?.['item']['subCategory'] || ''),
     },
     {
-      key: "5",
-      label: "location",
-      children: detailData?.[0]?.["item"]["locationLabel"],
+      key: '5',
+      label: 'location',
+      children: detailData?.[0]?.['item']['locationLabel'],
     },
     {
-      key: "6",
-      label: "Price",
-      children: detailData?.[0]?.["item"]["price"],
+      key: '6',
+      label: 'Price',
+      children: detailData?.[0]?.['item']['price'],
     },
     {
-      key: "7",
-      label: "Ad Id",
+      key: '7',
+      label: 'Ad Id',
       children: (
         <>
-          {detailData?.[0]?.["item"]["uuid"]}
+          {detailData?.[0]?.['item']['uuid']}
           &nbsp;
-          <CopyButton text={detailData?.[0]?.["item"]["uuid"]}></CopyButton>
+          <CopyButton text={detailData?.[0]?.['item']['uuid']}></CopyButton>
         </>
       ),
     },
     {
-      key: "8",
-      label: "User details",
+      key: '8',
+      label: 'User details',
       children: (
         <>
           <Link
             to="/userDetails"
             state={{ userId: detailData?.[0]?.item?.email }}
           >
-            {detailData?.[0]?.["item"]["email"]}
+            {detailData?.[0]?.['item']['email']}
           </Link>
           &nbsp;
-          <CopyButton text={detailData?.[0]?.["item"]["email"]}></CopyButton>
+          <CopyButton text={detailData?.[0]?.['item']['email']}></CopyButton>
         </>
       ),
     },
     {
-      key: "9",
-      label: "Posted on",
+      key: '9',
+      label: 'Posted on',
       children: new Date(
-        detailData?.[0]?.["item"]["createdAtOrig"]
-      ).toLocaleString("en-GB"),
+        detailData?.[0]?.['item']['createdAtOrig']
+      ).toLocaleString('en-GB'),
     },
     {
-      key: "10",
-      label: "Expires on",
+      key: '10',
+      label: 'Expires on',
       children: new Date(
-        detailData?.[0]?.["item"]["expiresAt"] * 1000
-      ).toLocaleString("en-GB"),
+        detailData?.[0]?.['item']['expiresAt'] * 1000
+      ).toLocaleString('en-GB'),
     },
-  ];
+  ]
   return (
     <Layout
       style={{
-        height: "100dvh",
-        overflow: "hidden",
-        background: "#F9FAFB",
+        height: '100dvh',
+        overflow: 'hidden',
+        background: '#F9FAFB',
       }}
     >
       {!isMobile && (
         <HeaderWrapper
           style={{
-            display: "flex",
-            alignItems: "center",
-            padding: "0px",
-            height: "50px",
+            display: 'flex',
+            alignItems: 'center',
+            padding: '0px',
+            height: '50px',
           }}
         >
-          <MenuWrapper defaultSelectedKeys={["0"]} isMobile={isMobile} />
+          <MenuWrapper defaultSelectedKeys={['0']} isMobile={isMobile} />
         </HeaderWrapper>
       )}
       <Content>
         <div
           style={{
-            background: "#F9FAFB",
-            borderRadius: "0px",
-            overflowY: "scroll",
-            height: "100%",
-            overflowX: "hidden",
-            scrollbarWidth: "none",
-            padding: "15px 15px 70px 15px",
+            background: '#F9FAFB',
+            borderRadius: '0px',
+            overflowY: 'scroll',
+            height: '100%',
+            overflowX: 'hidden',
+            scrollbarWidth: 'none',
+            padding: '15px 15px 70px 15px',
           }}
         >
           {!loading &&
@@ -387,15 +387,15 @@ const Details = () => {
                   size="large"
                   direction="vertical"
                   style={{
-                    display: "flex",
-                    alignItems: "center",
-                    marginTop: "30px",
+                    display: 'flex',
+                    alignItems: 'center',
+                    marginTop: '30px',
                   }}
                 >
                   <Space.Compact
                     size="large"
                     style={{
-                      display: "flex",
+                      display: 'flex',
                     }}
                   >
                     <Image.PreviewGroup
@@ -410,10 +410,10 @@ const Details = () => {
                       {/* Hidden images for preview */}
                       {detailData[0].hiResImg.map((img, i) => (
                         <Image
-                          alt={detailData[0]["item"]["title"]}
+                          alt={detailData[0]['item']['title']}
                           key={`hidden-${i}`}
                           src={img}
-                          style={{ display: "none" }}
+                          style={{ display: 'none' }}
                         />
                       ))}
                       {detailData[0].hiResImg.length === 1 ? (
@@ -421,30 +421,30 @@ const Details = () => {
                           <div
                             key={i}
                             style={{
-                              width: "100%",
-                              height: "100%",
-                              cursor: "pointer",
+                              width: '100%',
+                              height: '100%',
+                              cursor: 'pointer',
                             }}
                             onClick={() => {
-                              setPreviewIndex(i);
-                              setPreviewVisible(true);
+                              setPreviewIndex(i)
+                              setPreviewVisible(true)
                             }}
                           >
                             {!loadedImages[i] && (
                               <div
                                 style={{
-                                  width: "300px",
-                                  height: "400px",
-                                  display: "flex",
-                                  justifyContent: "center",
-                                  alignItems: "center",
-                                  backgroundColor: "#f0f0f0",
+                                  width: '300px',
+                                  height: '400px',
+                                  display: 'flex',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                  backgroundColor: '#f0f0f0',
                                 }}
                               >
                                 <Spin
                                   indicator={
                                     <LoadingOutlined
-                                      style={{ fontSize: 48, color: "#52c41a" }}
+                                      style={{ fontSize: 48, color: '#52c41a' }}
                                       spin
                                     />
                                   }
@@ -454,13 +454,13 @@ const Details = () => {
                             <Image
                               preview={false} // Disable built-in preview to avoid duplicates
                               src={img}
-                              alt={detailData[0]["item"]["title"]}
+                              alt={detailData[0]['item']['title']}
                               style={{
-                                borderRadius: "12px",
-                                display: loadedImages[i] ? "block" : "none",
-                                width: "300px",
-                                height: "400px",
-                                objectFit: "contain",
+                                borderRadius: '12px',
+                                display: loadedImages[i] ? 'block' : 'none',
+                                width: '300px',
+                                height: '400px',
+                                objectFit: 'contain',
                               }}
                               onLoad={() => handleLoad(i)}
                               onError={() => handleLoad(i)}
@@ -471,7 +471,7 @@ const Details = () => {
                         <Carousel
                           arrows
                           style={{
-                            borderRadius: "12px",
+                            borderRadius: '12px',
                             // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                             width: 300,
                             height: 400,
@@ -481,24 +481,24 @@ const Details = () => {
                             <div
                               key={i}
                               style={{
-                                width: "100%",
-                                height: "100%",
-                                cursor: "pointer",
+                                width: '100%',
+                                height: '100%',
+                                cursor: 'pointer',
                               }}
                               onClick={() => {
-                                setPreviewIndex(i);
-                                setPreviewVisible(true);
+                                setPreviewIndex(i)
+                                setPreviewVisible(true)
                               }}
                             >
                               {!loadedImages[i] && (
                                 <div
                                   style={{
-                                    width: "300px",
-                                    height: "400px",
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    backgroundColor: "#f0f0f0",
+                                    width: '300px',
+                                    height: '400px',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    backgroundColor: '#f0f0f0',
                                   }}
                                 >
                                   <Spin
@@ -506,7 +506,7 @@ const Details = () => {
                                       <LoadingOutlined
                                         style={{
                                           fontSize: 48,
-                                          color: "#52c41a",
+                                          color: '#52c41a',
                                         }}
                                         spin
                                       />
@@ -517,13 +517,13 @@ const Details = () => {
                               <Image
                                 preview={false} // Disable built-in preview to avoid duplicates
                                 src={img}
-                                alt={detailData[0]["item"]["title"]}
+                                alt={detailData[0]['item']['title']}
                                 style={{
-                                  borderRadius: "12px",
-                                  display: loadedImages[i] ? "block" : "none",
-                                  width: "300px",
-                                  height: "400px",
-                                  objectFit: "contain",
+                                  borderRadius: '12px',
+                                  display: loadedImages[i] ? 'block' : 'none',
+                                  width: '300px',
+                                  height: '400px',
+                                  objectFit: 'contain',
                                 }}
                                 onLoad={() => handleLoad(i)}
                                 onError={() => handleLoad(i)}
@@ -541,13 +541,13 @@ const Details = () => {
                         bordered
                         extra={
                           ad ? (
-                            detailData[0]["item"]["deactivated"] === true ? (
+                            detailData[0]['item']['deactivated'] === true ? (
                               <Button
                                 onClick={handleActivate}
                                 style={{
-                                  background: "#52c41a",
-                                  fontSize: "13px",
-                                  fontWeight: "300",
+                                  background: '#52c41a',
+                                  fontSize: '13px',
+                                  fontWeight: '300',
                                 }}
                                 type="primary"
                               >
@@ -555,19 +555,19 @@ const Details = () => {
                               </Button>
                             ) : (
                               <>
-                                {" "}
+                                {' '}
                                 <Button
                                   onClick={() => {
-                                    navigate("/boost", {
+                                    navigate('/boost', {
                                       state: {
-                                        uuid: detailData?.[0]?.["item"]["uuid"],
+                                        uuid: detailData?.[0]?.['item']['uuid'],
                                       },
-                                    });
+                                    })
                                   }}
                                   style={{
-                                    background: "#52c41a",
-                                    fontSize: "13px",
-                                    fontWeight: "300",
+                                    background: '#52c41a',
+                                    fontSize: '13px',
+                                    fontWeight: '300',
                                   }}
                                   type="primary"
                                 >
@@ -580,9 +580,9 @@ const Details = () => {
                           )
                         }
                         style={{
-                          borderRadius: "12px",
-                          padding: isMobile ? "12px" : "20px",
-                          fontSize: "13px",
+                          borderRadius: '12px',
+                          padding: isMobile ? '12px' : '20px',
+                          fontSize: '13px',
                           fontWeight: 300,
                         }}
                         title="Ad details"
@@ -590,11 +590,11 @@ const Details = () => {
                       />
                     </Space.Compact>
                   )}
-                  {detailData?.[0]["item"]["location"] &&
+                  {detailData?.[0]['item']['location'] &&
                     Object.values(loadedImages).every((item) => item) && (
                       <AwsMap
                         center={[
-                          ...detailData[0]["item"]["location"],
+                          ...detailData[0]['item']['location'],
                         ].reverse()}
                         zoom={10}
                       />
@@ -605,8 +605,8 @@ const Details = () => {
                         <Space.Compact
                           size="large"
                           style={{
-                            display: "flex",
-                            marginTop: "70px",
+                            display: 'flex',
+                            marginTop: '70px',
                           }}
                         >
                           <Popconfirm
@@ -618,8 +618,8 @@ const Details = () => {
                           >
                             <Button
                               style={{
-                                fontSize: "13px",
-                                fontWeight: "300",
+                                fontSize: '13px',
+                                fontWeight: '300',
                               }}
                               danger
                               type="primary"
@@ -633,8 +633,8 @@ const Details = () => {
                         <Space.Compact
                           size="large"
                           style={{
-                            display: "flex",
-                            marginTop: "30px",
+                            display: 'flex',
+                            marginTop: '30px',
                           }}
                         >
                           {chatProduct.blocked ? (
@@ -647,9 +647,9 @@ const Details = () => {
                             >
                               <Button
                                 style={{
-                                  background: "#52c41a",
-                                  fontSize: "13px",
-                                  fontWeight: "300",
+                                  background: '#52c41a',
+                                  fontSize: '13px',
+                                  fontWeight: '300',
                                 }}
                                 type="primary"
                               >
@@ -659,15 +659,15 @@ const Details = () => {
                           ) : (
                             <Button
                               style={{
-                                background: "#52c41a",
-                                fontSize: "13px",
-                                fontWeight: "300",
+                                background: '#52c41a',
+                                fontSize: '13px',
+                                fontWeight: '300',
                               }}
                               onClick={() => {
-                                setActionType("Buying");
-                                navigate("/chat", {
+                                setActionType('Buying')
+                                navigate('/chat', {
                                   state: { recipient: item },
-                                });
+                                })
                               }}
                               type="primary"
                             >
@@ -682,16 +682,16 @@ const Details = () => {
                     <Space.Compact>
                       <Button
                         onClick={() => {
-                          navigate("/report", {
+                          navigate('/report', {
                             state: {
-                              productId: detailData?.[0]?.["item"]["uuid"],
+                              productId: detailData?.[0]?.['item']['uuid'],
                             },
-                          });
+                          })
                         }}
                         style={{
-                          fontSize: "13px",
-                          fontWeight: "300",
-                          marginTop: "50px",
+                          fontSize: '13px',
+                          fontWeight: '300',
+                          marginTop: '50px',
                         }}
                         danger
                         type="primary"
@@ -709,19 +709,19 @@ const Details = () => {
             !Object.values(loadedImages).every((item) => item)) && (
             <Row gutter={[10, 10]}>
               <Col key={0} xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-                <div style={{ display: "flex", justifyContent: "center" }}>
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
                   <Skeleton.Node
-                    style={{ height: "400px", width: "300px" }}
+                    style={{ height: '400px', width: '300px' }}
                     active
                   />
                 </div>
               </Col>
               <Col key={1} xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-                <div style={{ display: "flex", justifyContent: "center" }}>
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
                   <Skeleton.Node
                     style={{
-                      height: "400px",
-                      width: isMobile ? "calc(100dvw - 50px)" : "50dvw",
+                      height: '400px',
+                      width: isMobile ? 'calc(100dvw - 50px)' : '50dvw',
                     }}
                     active
                   />
@@ -733,18 +733,18 @@ const Details = () => {
       </Content>
       {isMobile && (
         <FooterWrapper>
-          <MenuWrapper defaultSelectedKeys={["0"]} isMobile={isMobile} />
+          <MenuWrapper defaultSelectedKeys={['0']} isMobile={isMobile} />
         </FooterWrapper>
       )}
       {(unblockLoading || deleteLoading || activateLoading) && (
         <Spin
           fullscreen
           indicator={
-            <LoadingOutlined style={{ fontSize: 48, color: "#52c41a" }} spin />
+            <LoadingOutlined style={{ fontSize: 48, color: '#52c41a' }} spin />
           }
         />
       )}
     </Layout>
-  );
-};
-export default Details;
+  )
+}
+export default Details

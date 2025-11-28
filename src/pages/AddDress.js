@@ -74,7 +74,7 @@ const AddDress = () => {
 
   const [isSubmitted, setIsSubmitted] = useState(false)
   const isMobile = useIsMobile()
-  const { deleteDB } = useIndexedDBImages()
+  const { clearAllIds } = useIndexedDBImages()
   const isModalVisibleRef = useRef(false)
   const errorSessionConfig = {
     title: 'Session has expired.',
@@ -84,7 +84,7 @@ const AddDress = () => {
     okText: 'Login',
     onOk: async () => {
       isModalVisibleRef.current = false
-      await deleteDB()
+      await clearAllIds()
       signInWithRedirect()
     },
   }
@@ -252,7 +252,15 @@ const AddDress = () => {
           )
           setSubmitLoading(false)
         } catch (err) {
-          if (err && err.status === 400) {
+          setSubmitLoading(false)
+          if (isModalVisibleRef.current) {
+            return
+          }
+          isModalVisibleRef.current = true
+          if (err?.status === 401) {
+            Modal.error(errorSessionConfig)
+          } else if (err && err.status === 422) {
+            isModalVisibleRef.current = false
             openNotificationWithIcon('error', err.response.data.message)
             setForm((prevValue) => {
               return {
@@ -265,17 +273,21 @@ const AddDress = () => {
                 ],
               }
             })
+          } else {
+            Modal.error(errorConfig)
           }
-          setSubmitLoading(false)
+          return
         }
       }, 500)
     }
   }
 
   useEffect(() => {
-    setForm((prevValue) => {
-      return { ...prevValue, email: user.userId }
-    })
+    if (user) {
+      setForm((prevValue) => {
+        return { ...prevValue, email: user.userId }
+      })
+    }
   }, [user])
 
   useEffect(() => {
@@ -416,7 +428,19 @@ const AddDress = () => {
       setCurrLocRemoved(true)
       setCurrentLocationLabel('')
       setCurrentLocation('')
-      await deleteDB()
+      await clearAllIds()
+      setForm({
+        title: '',
+        description: '',
+        category: '',
+        subCategory: '',
+        keywords: [],
+        email: '',
+        images: [],
+        price: null,
+        location: '',
+        locationLabel: '',
+      })
       message.success(
         'Your ad is now live on Reusifi. It may take up to 5 minutes to appear.'
       )
@@ -491,6 +515,11 @@ const AddDress = () => {
   const bottomRef = useRef(null)
   const bottomRefPincode = useRef(null)
 
+  const [badLanguage, setBadLanguage] = useState({
+    title: false,
+    description: false,
+  })
+
   const bottomRefPrice = useRef(null)
 
   const scrollToBottomPincode = () => {
@@ -555,10 +584,7 @@ const AddDress = () => {
     setPopOpen(newOpen)
   }
 
-  const validateField = async (e, type) => {
-    if (!e.target.value.trim()) {
-      return
-    }
+  const validateField = async () => {
     try {
       setSubmitLoading(true)
       const result = await callApi(
@@ -566,15 +592,32 @@ const AddDress = () => {
         'POST',
         false,
         {
-          title: e.target.value,
+          title: form.title,
+          description: form.description,
         }
       )
+      return true
     } catch (err) {
-      if (err?.status === 422) {
+      if (isModalVisibleRef.current) {
+        return
+      }
+      isModalVisibleRef.current = true
+      if (err?.status === 401) {
+        Modal.error(errorSessionConfig)
+      } else if (err?.status === 422) {
+        isModalVisibleRef.current = false
         message.error(err?.response?.data?.message)
-        handleChange({ target: { value: '' } }, type)
+        setBadLanguage((prevValue) => {
+          return {
+            ...prevValue,
+            ...err?.response.data.badLanguage,
+          }
+        })
+      } else {
+        Modal.error(errorConfig)
       }
     } finally {
+      setIsSubmitted(true)
       setSubmitLoading(false)
     }
   }
@@ -625,10 +668,8 @@ const AddDress = () => {
                 <Space.Compact size="large">
                   <Input
                     className={
-                      isSubmitted
-                        ? form.title.trim()
-                          ? ''
-                          : 'my-red-border'
+                      isSubmitted && (!form.title.trim() || badLanguage.title)
+                        ? 'my-red-border'
                         : ''
                     }
                     status="error"
@@ -637,9 +678,6 @@ const AddDress = () => {
                       // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                       width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
                       marginTop: '30px',
-                    }}
-                    onBlur={async (e) => {
-                      await validateField(e, 'title')
                     }}
                     onKeyDown={(e) => {
                       if (
@@ -671,10 +709,9 @@ const AddDress = () => {
                   <div style={{ position: 'relative' }}>
                     <TextArea
                       className={
-                        isSubmitted
-                          ? form.description.trim()
-                            ? ''
-                            : 'my-red-border'
+                        isSubmitted &&
+                        (!form.description.trim() || badLanguage.description)
+                          ? 'my-red-border'
                           : ''
                       }
                       id={'descId'}
@@ -686,9 +723,6 @@ const AddDress = () => {
                       onChange={(value) => handleChange(value, 'description')}
                       autoSize={{ minRows: 8, maxRows: 8 }}
                       placeholder="Description"
-                      onBlur={async (e) => {
-                        await validateField(e, 'description')
-                      }}
                       onKeyDown={(e) => {
                         if (
                           [
@@ -849,7 +883,7 @@ const AddDress = () => {
                   <Input
                     className={
                       isSubmitted
-                        ? address || currentLocationLabel
+                        ? form.locationLabel
                           ? ''
                           : 'my-red-border'
                         : ''
@@ -886,7 +920,7 @@ const AddDress = () => {
                   <Button
                     className={
                       isSubmitted
-                        ? address || currentLocationLabel
+                        ? form.locationLabel
                           ? ''
                           : 'my-red-border'
                         : ''
@@ -1053,10 +1087,14 @@ const AddDress = () => {
                       fontSize: '13px',
                       fontWeight: '300',
                     }}
-                    onClick={() => {
+                    onClick={async () => {
                       if (!isValid()) {
                         setIsSubmitted(true)
                         message.info('All fields are mandatory')
+                        return
+                      }
+                      const result = await validateField()
+                      if (!result) {
                         return
                       }
                       if (count < 5) {

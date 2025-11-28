@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import {
   Layout,
   Space,
@@ -9,53 +9,53 @@ import {
   Button,
   Spin,
   Card,
-} from "antd";
-import { signInWithRedirect } from "@aws-amplify/auth";
-import { Context } from "../context/provider";
-import { useIsMobile } from "../hooks/windowSize";
-import { callApi } from "../helpers/api";
-import MenuWrapper from "../component/Menu";
-import FooterWrapper from "../component/Footer";
-import HeaderWrapper from "../component/Header";
-import { LoadingOutlined } from "@ant-design/icons";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useIndexedDBImages } from "../hooks/indexedDB";
-const { Content } = Layout;
+} from 'antd'
+import { signInWithRedirect } from '@aws-amplify/auth'
+import { Context } from '../context/provider'
+import { useIsMobile } from '../hooks/windowSize'
+import { callApi } from '../helpers/api'
+import MenuWrapper from '../component/Menu'
+import FooterWrapper from '../component/Footer'
+import HeaderWrapper from '../component/Header'
+import { LoadingOutlined } from '@ant-design/icons'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { useIndexedDBImages } from '../hooks/indexedDB'
+const { Content } = Layout
 const BoostAd = () => {
-  const { deleteDB } = useIndexedDBImages();
-  const isMobile = useIsMobile();
-  const isModalVisibleRef = useRef(false);
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { uuid } = location.state || "";
+  const { clearAllIds } = useIndexedDBImages()
+  const isMobile = useIsMobile()
+  const isModalVisibleRef = useRef(false)
+  const navigate = useNavigate()
+  const location = useLocation()
+  const { uuid } = location.state || ''
   if (!uuid) {
-    navigate("/");
+    navigate('/')
   }
-  const [submitLoading, setSubmitLoading] = useState(false);
+  const [submitLoading, setSubmitLoading] = useState(false)
   const errorSessionConfig = {
-    title: "Session has expired.",
-    content: "Please login again.",
+    title: 'Session has expired.',
+    content: 'Please login again.',
     closable: false,
     maskClosable: false,
-    okText: "Login",
+    okText: 'Login',
     onOk: async () => {
-      isModalVisibleRef.current = false;
-      await deleteDB();
-      signInWithRedirect();
+      isModalVisibleRef.current = false
+      await clearAllIds()
+      signInWithRedirect()
     },
-  };
+  }
   const errorConfig = {
-    title: "An error has occurred.",
-    content: "Please reload.",
+    title: 'An error has occurred.',
+    content: 'Please reload.',
     closable: false,
     maskClosable: false,
-    okText: "Reload",
+    okText: 'Reload',
     onOk: () => {
-      isModalVisibleRef.current = false;
-      window.location.reload();
+      isModalVisibleRef.current = false
+      window.location.reload()
     },
-  };
-  const [loading, setLoading] = useState(false);
+  }
+  const [loading, setLoading] = useState(false)
 
   const {
     setUnreadChatCount,
@@ -63,72 +63,72 @@ const BoostAd = () => {
     boostInitialLoad,
     setBoostInitialLoad,
     setBoostForm,
-  } = useContext(Context);
+  } = useContext(Context)
 
   useEffect(() => {
     const getChat = async () => {
       try {
-        setLoading(true);
-        const currentUser = user;
+        setLoading(true)
+        const currentUser = user
         const chatCountPromise = callApi(
           `https://api.reusifi.com/prod/getChatsCount?userId1=${encodeURIComponent(
             currentUser.userId
           )}&count=${encodeURIComponent(true)}`,
-          "GET"
-        );
-        const [chatCount] = await Promise.all([chatCountPromise]);
-        setUnreadChatCount(chatCount.data.count);
-        setLoading(false);
-        setBoostInitialLoad(false);
+          'GET'
+        )
+        const [chatCount] = await Promise.all([chatCountPromise])
+        setUnreadChatCount(chatCount.data.count)
+        setLoading(false)
+        setBoostInitialLoad(false)
       } catch (err) {
         // message.error("An Error has occurred")
         if (isModalVisibleRef.current) {
-          return;
+          return
         }
-        isModalVisibleRef.current = true;
+        isModalVisibleRef.current = true
         if (err?.status === 401) {
-          Modal.error(errorSessionConfig);
+          Modal.error(errorSessionConfig)
         } else {
-          Modal.error(errorConfig);
+          Modal.error(errorConfig)
         }
-        return;
+        return
       }
-    };
-    if (boostInitialLoad) {
-      getChat();
     }
-  }, []);
+    if (boostInitialLoad) {
+      getChat()
+    }
+  }, [])
 
   return (
     <Layout
       style={{
-        height: "100dvh",
-        overflow: "hidden",
-        background: "#F9FAFB",
+        height: '100dvh',
+        overflow: 'hidden',
+        background: '#F9FAFB',
       }}
     >
       {!isMobile && (
         <HeaderWrapper
           style={{
-            display: "flex",
-            alignItems: "center",
-            padding: "0px",
-            height: "50px",
+            display: 'flex',
+            alignItems: 'center',
+            padding: '0px',
+            height: '50px',
           }}
         >
-          <MenuWrapper defaultSelectedKeys={["6-1"]} isMobile={isMobile} />
+          <MenuWrapper defaultSelectedKeys={['6-1']} isMobile={isMobile} />
         </HeaderWrapper>
       )}
       <Content>
         <div
           style={{
-            background: "#F9FAFB",
-            borderRadius: "0px",
-            overflowY: "scroll",
-            height: "100%",
-            overflowX: "hidden",
-            padding: "15px 15px 70px 15px",
-            scrollbarWidth: "none",
+            background: '#F9FAFB',
+            borderRadius: '0px',
+            overflowY: 'scroll',
+            height: '100%',
+            overflowX: 'hidden',
+            padding: '15px 15px 70px 15px',
+            scrollbarWidth: 'none',
           }}
         >
           {!loading && (
@@ -136,19 +136,19 @@ const BoostAd = () => {
               size="middle"
               direction="vertical"
               style={{
-                display: "flex",
-                alignItems: "center",
-                padding: "20px",
-                justifyContent: "center",
-                height: "100%",
+                display: 'flex',
+                alignItems: 'center',
+                padding: '20px',
+                justifyContent: 'center',
+                height: '100%',
               }}
             >
               <Space size="large">
                 <div
                   style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    whiteSpace: "nowrap",
+                    display: 'flex',
+                    justifyContent: 'center',
+                    whiteSpace: 'nowrap',
                   }}
                 >
                   Please check your ad’s expiry before applying a boost.
@@ -156,13 +156,13 @@ const BoostAd = () => {
               </Space>
               <Space
                 size="middle"
-                direction={isMobile ? "vertical" : "horizontal"}
+                direction={isMobile ? 'vertical' : 'horizontal'}
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  padding: "20px",
-                  justifyContent: "center",
-                  height: "100%",
+                  display: 'flex',
+                  alignItems: 'center',
+                  padding: '20px',
+                  justifyContent: 'center',
+                  height: '100%',
                 }}
               >
                 <Space.Compact size="large">
@@ -171,13 +171,13 @@ const BoostAd = () => {
                     <Button
                       onClick={() => {
                         setBoostForm((prevValue) => {
-                          return { ...prevValue, uuid };
-                        });
-                        navigate("/checkout", {
-                          state: { adType: "BOOSTAD3" },
-                        });
+                          return { ...prevValue, uuid }
+                        })
+                        navigate('/checkout', {
+                          state: { adType: 'BOOSTAD3' },
+                        })
                       }}
-                      style={{ backgroundColor: "#52c41a" }}
+                      style={{ backgroundColor: '#52c41a' }}
                       type="primary"
                     >
                       Select
@@ -190,13 +190,13 @@ const BoostAd = () => {
                     <Button
                       onClick={() => {
                         setBoostForm((prevValue) => {
-                          return { ...prevValue, uuid };
-                        });
-                        navigate("/checkout", {
-                          state: { adType: "BOOSTAD7" },
-                        });
+                          return { ...prevValue, uuid }
+                        })
+                        navigate('/checkout', {
+                          state: { adType: 'BOOSTAD7' },
+                        })
                       }}
-                      style={{ backgroundColor: "#52c41a" }}
+                      style={{ backgroundColor: '#52c41a' }}
                       type="primary"
                     >
                       Select
@@ -218,21 +218,21 @@ const BoostAd = () => {
                     lg={24}
                     xl={24}
                     xxl={24}
-                    style={{ display: "flex", justifyContent: "center" }}
+                    style={{ display: 'flex', justifyContent: 'center' }}
                   >
                     {index === 0 && (
                       <Skeleton.Node
                         style={{
-                          width: !isMobile ? "50dvw" : "calc(100dvw - 30px)",
-                          height: "214px",
-                          borderRadius: "8px",
+                          width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
+                          height: '214px',
+                          borderRadius: '8px',
                         }}
                         active
                       />
                     )}
                     {index === 1 && <Skeleton.Button active />}
                   </Col>
-                );
+                )
               })}
             </Row>
           )}
@@ -240,18 +240,18 @@ const BoostAd = () => {
       </Content>
       {isMobile && (
         <FooterWrapper>
-          <MenuWrapper defaultSelectedKeys={["6-1"]} isMobile={isMobile} />
+          <MenuWrapper defaultSelectedKeys={['6-1']} isMobile={isMobile} />
         </FooterWrapper>
       )}
       {submitLoading && (
         <Spin
           fullscreen
           indicator={
-            <LoadingOutlined style={{ fontSize: 48, color: "#52c41a" }} spin />
+            <LoadingOutlined style={{ fontSize: 48, color: '#52c41a' }} spin />
           }
         />
       )}
     </Layout>
-  );
-};
-export default BoostAd;
+  )
+}
+export default BoostAd

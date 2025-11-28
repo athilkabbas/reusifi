@@ -36,7 +36,7 @@ const { Content } = Layout
 const { TextArea } = Input
 const Account = () => {
   const isMobile = useIsMobile()
-  const { deleteDB } = useIndexedDBImages()
+  const { clearAllIds } = useIndexedDBImages()
   const isModalVisibleRef = useRef(false)
   const errorSessionConfig = {
     title: 'Session has expired.',
@@ -46,7 +46,7 @@ const Account = () => {
     okText: 'Login',
     onOk: async () => {
       isModalVisibleRef.current = false
-      await deleteDB()
+      await clearAllIds()
       signInWithRedirect()
     },
   }
@@ -146,6 +146,10 @@ const Account = () => {
         return
       }
 
+      const result = await validateField()
+      if (!result) {
+        return
+      }
       setSubmitLoading(true)
       let data = {
         ...form,
@@ -172,6 +176,10 @@ const Account = () => {
       setSubmitLoading(false)
       setDeleteImage(false)
       setFileList([])
+      setBadLanguage({
+        name: false,
+        description: false,
+      })
     } catch (err) {
       setSubmitLoading(false)
       if (isModalVisibleRef.current) {
@@ -342,6 +350,11 @@ const Account = () => {
     prevFilesRef.current = [...fileList]
   }, [fileList])
 
+  const [badLanguage, setBadLanguage] = useState({
+    name: false,
+    description: false,
+  })
+
   const handleBeforeUpload = async (file) => {
     const value = await getActualMimeType(file)
     if (!value) {
@@ -354,25 +367,39 @@ const Account = () => {
     return false
   }
 
-  const validateField = async (e, type) => {
-    if (!e.target.value.trim()) {
-      return
-    }
+  const validateField = async () => {
     try {
       setSubmitLoading(true)
-      const result = await callApi(
+      await callApi(
         'https://api.reusifi.com/prod/verifyLanguage',
         'POST',
         false,
         {
-          title: e.target.value,
+          name: form.name,
+          description: form.description,
         }
       )
+      return true
     } catch (err) {
-      if (err?.status === 422) {
-        message.error(err?.response?.data?.message)
-        handleChange({ target: { value: '' } }, type)
+      if (isModalVisibleRef.current) {
+        return
       }
+      isModalVisibleRef.current = true
+      if (err?.status === 401) {
+        Modal.error(errorSessionConfig)
+      } else if (err?.status === 422) {
+        isModalVisibleRef.current = false
+        message.error(err?.response?.data?.message)
+        setBadLanguage((prevValue) => {
+          return {
+            ...prevValue,
+            ...err?.response.data.badLanguage,
+          }
+        })
+      } else {
+        Modal.error(errorConfig)
+      }
+      return false
     } finally {
       setSubmitLoading(false)
     }
@@ -403,15 +430,25 @@ const Account = () => {
           )
           setSubmitLoading(false)
         } catch (err) {
-          if (err && err.status === 400) {
+          setSubmitLoading(false)
+          if (isModalVisibleRef.current) {
+            return
+          }
+          isModalVisibleRef.current = true
+          if (err?.status === 401) {
+            Modal.error(errorSessionConfig)
+          } else if (err && err.status === 422) {
+            isModalVisibleRef.current = false
             openNotificationWithIcon('error', err.response.data.message)
             setFileList((prevValue) => {
               return prevValue.filter(
                 (image) => !err.response.data.invalidUids.includes(image.uid)
               )
             })
+          } else {
+            Modal.error(errorConfig)
           }
-          setSubmitLoading(false)
+          return
         }
       }, 500)
     }
@@ -432,7 +469,7 @@ const Account = () => {
         }
       )
       setDeleteLoading(false)
-      await deleteDB()
+      await clearAllIds()
       signOut()
     } catch (err) {
       setDeleteLoading(false)
@@ -676,11 +713,9 @@ const Account = () => {
                     width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
                     marginTop: '30px',
                   }}
+                  className={badLanguage.name ? 'my-red-border' : ''}
                   onChange={(value) => handleChange(value, 'name')}
                   placeholder="Name"
-                  onBlur={async (e) => {
-                    await validateField(e, 'name')
-                  }}
                   onKeyDown={(e) => {
                     if (
                       [
@@ -716,12 +751,10 @@ const Account = () => {
                     // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                     width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
                   }}
+                  className={badLanguage.description ? 'my-red-border' : ''}
                   onChange={(value) => handleChange(value, 'description')}
                   autoSize={{ minRows: 8, maxRows: 8 }}
                   placeholder="Description"
-                  onBlur={async (e) => {
-                    await validateField(e, 'description')
-                  }}
                   onKeyDown={(e) => {
                     if (
                       [

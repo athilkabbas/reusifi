@@ -22,7 +22,7 @@ const Chat = () => {
   const [ichatData, setIChatData] = useState([])
   const location = useLocation()
   const navigate = useNavigate()
-  const { deleteDB } = useIndexedDBImages()
+  const { clearAllIds } = useIndexedDBImages()
   const { recipient } = location.state || ''
   const { conversationId, productId, title, email, image } =
     location.state || ''
@@ -100,7 +100,7 @@ const Chat = () => {
     okText: 'Login',
     onOk: async () => {
       isModalVisibleRef.current = false
-      await deleteDB()
+      await clearAllIds()
       signInWithRedirect()
     },
   }

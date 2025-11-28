@@ -46,7 +46,7 @@ const { Content } = Layout
 const { useBreakpoint } = Grid
 const Home = () => {
   useLocationComponent()
-  const { deleteDB } = useIndexedDBImages()
+  const { clearAllIds } = useIndexedDBImages()
   const [loading, setLoading] = useState(false)
   const timer = useRef(null)
   const scrollableDivRef = useRef(null)
@@ -143,7 +143,7 @@ const Home = () => {
     okText: 'Login',
     onOk: async () => {
       isModalVisibleRef.current = false
-      await deleteDB()
+      await clearAllIds()
       signInWithRedirect()
     },
   }
@@ -267,7 +267,7 @@ const Home = () => {
     } else if (key === '2') {
       navigate('/query')
     } else if (key === '3') {
-      await deleteDB()
+      await clearAllIds()
       signOut()
     }
   }

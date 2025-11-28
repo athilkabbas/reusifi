@@ -102,7 +102,7 @@ const ChatPage = () => {
   const capitalize = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1)
   }
-  const { deleteDB } = useIndexedDBImages()
+  const { clearAllIds } = useIndexedDBImages()
 
   const isMobile = useIsMobile()
 
@@ -189,7 +189,7 @@ const ChatPage = () => {
     okText: 'Login',
     onOk: async () => {
       isModalVisibleRef.current = false
-      await deleteDB()
+      await clearAllIds()
       signInWithRedirect()
     },
   }

@@ -1,85 +1,85 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
-import { Navigate } from "react-router-dom";
-import { callApi } from "../helpers/api";
-import { Button, Result, Modal, Spin } from "antd";
-import { useNavigate } from "react-router-dom";
-import imageCompression from "browser-image-compression";
-import { Context } from "../context/provider";
-import { signInWithRedirect } from "@aws-amplify/auth";
-import axios from "axios";
-import { LoadingOutlined } from "@ant-design/icons";
-import { useIndexedDBImages } from "../hooks/indexedDB";
+import React, { useState, useEffect, useContext, useRef } from 'react'
+import { Navigate } from 'react-router-dom'
+import { callApi } from '../helpers/api'
+import { Button, Result, Modal, Spin } from 'antd'
+import { useNavigate } from 'react-router-dom'
+import imageCompression from 'browser-image-compression'
+import { Context } from '../context/provider'
+import { signInWithRedirect } from '@aws-amplify/auth'
+import axios from 'axios'
+import { LoadingOutlined } from '@ant-design/icons'
+import { useIndexedDBImages } from '../hooks/indexedDB'
 
 const Return = () => {
-  const { deleteDB } = useIndexedDBImages();
-  const [status, setStatus] = useState(null);
-  const [customerEmail, setCustomerEmail] = useState("");
-  const navigate = useNavigate();
-  const [submitLoading, setSubmitLoading] = useState(false);
+  const { clearAllIds } = useIndexedDBImages()
+  const [status, setStatus] = useState(null)
+  const [customerEmail, setCustomerEmail] = useState('')
+  const navigate = useNavigate()
+  const [submitLoading, setSubmitLoading] = useState(false)
 
-  const isModalVisibleRef = useRef(false);
+  const isModalVisibleRef = useRef(false)
   const errorSessionConfig = {
-    title: "Session has expired.",
+    title: 'Session has expired.',
     content:
-      "Your payment has been refunded because the ad submission didn’t go through. Please try again.",
+      'Your payment has been refunded because the ad submission didn’t go through. Please try again.',
     closable: false,
     maskClosable: false,
-    okText: "Login",
+    okText: 'Login',
     onOk: async () => {
-      isModalVisibleRef.current = false;
-      await deleteDB();
-      signInWithRedirect();
+      isModalVisibleRef.current = false
+      await clearAllIds()
+      signInWithRedirect()
     },
-  };
+  }
   const errorSessionConfigRefundFailure = {
-    title: "Session has expired.",
-    content: "Please raise a query",
+    title: 'Session has expired.',
+    content: 'Please raise a query',
     closable: false,
     maskClosable: false,
-    okText: "Login",
+    okText: 'Login',
     onOk: async () => {
-      isModalVisibleRef.current = false;
-      await deleteDB();
-      signInWithRedirect();
+      isModalVisibleRef.current = false
+      await clearAllIds()
+      signInWithRedirect()
     },
-  };
+  }
   const errorConfig = {
-    title: "An error has occurred.",
+    title: 'An error has occurred.',
     content:
-      "Your payment has been refunded because the ad submission didn’t go through. Please try again.",
+      'Your payment has been refunded because the ad submission didn’t go through. Please try again.',
     closable: false,
     maskClosable: false,
-    okText: "OK",
+    okText: 'OK',
     onOk: () => {
-      isModalVisibleRef.current = false;
-      navigate("/addProduct");
+      isModalVisibleRef.current = false
+      navigate('/addProduct')
     },
-  };
+  }
 
   const errorConfigBoost = {
-    title: "An error has occurred.",
+    title: 'An error has occurred.',
     content:
-      "Your payment has been refunded because the ad boost didn’t go through. Please try again.",
+      'Your payment has been refunded because the ad boost didn’t go through. Please try again.',
     closable: false,
     maskClosable: false,
-    okText: "OK",
+    okText: 'OK',
     onOk: () => {
-      isModalVisibleRef.current = false;
-      navigate("/ads");
+      isModalVisibleRef.current = false
+      navigate('/ads')
     },
-  };
+  }
 
   const errorConfigRefundFailure = {
-    title: "An error has occurred.",
-    content: "Please raise a query",
+    title: 'An error has occurred.',
+    content: 'Please raise a query',
     closable: false,
     maskClosable: false,
-    okText: "OK",
+    okText: 'OK',
     onOk: () => {
-      isModalVisibleRef.current = false;
-      navigate("/");
+      isModalVisibleRef.current = false
+      navigate('/')
     },
-  };
+  }
 
   const {
     setCount,
@@ -92,131 +92,132 @@ const Return = () => {
     setCurrLocRemoved,
     form,
     boostForm,
-  } = useContext(Context);
+    setForm,
+  } = useContext(Context)
 
-  const [submit, setSubmit] = useState(false);
-  const [sessionId, setSessionId] = useState("");
+  const [submit, setSubmit] = useState(false)
+  const [sessionId, setSessionId] = useState('')
 
-  const [adType, setAdType] = useState("");
+  const [adType, setAdType] = useState('')
 
   useEffect(() => {
-    if (status === "complete" && adType === "POSTAD") {
-      handleSubmit();
+    if (status === 'complete' && adType === 'POSTAD') {
+      handleSubmit()
     } else if (
-      status === "complete" &&
-      (adType === "BOOSTAD3" || adType === "BOOSTAD7")
+      status === 'complete' &&
+      (adType === 'BOOSTAD3' || adType === 'BOOSTAD7')
     ) {
-      handleBoost(adType);
+      handleBoost(adType)
     }
-  }, [status]);
+  }, [status])
 
   const handleBoost = async (adType) => {
     try {
-      setSubmitLoading(true);
-      await callApi("https://api.reusifi.com/prod/boostAd", "POST", false, {
+      setSubmitLoading(true)
+      await callApi('https://api.reusifi.com/prod/boostAd', 'POST', false, {
         adType,
         boostForm,
-      });
-      setAdData([]);
-      setAdLastEvaluatedKey(null);
-      setAdInitialLoad(true);
-      setCurrLocRemoved(true);
-      setCurrentLocationLabel("");
-      setCurrentLocation("");
-      setSubmit(true);
-      setSubmitLoading(false);
+      })
+      setAdData([])
+      setAdLastEvaluatedKey(null)
+      setAdInitialLoad(true)
+      setCurrLocRemoved(true)
+      setCurrentLocationLabel('')
+      setCurrentLocation('')
+      setSubmit(true)
+      setSubmitLoading(false)
     } catch (err) {
-      setSubmitLoading(false);
+      setSubmitLoading(false)
       try {
-        await callApi("https://api.reusifi.com/prod/refund", "POST", false, {
+        await callApi('https://api.reusifi.com/prod/refund', 'POST', false, {
           session_id: sessionId,
-        });
+        })
         if (isModalVisibleRef.current) {
-          return;
+          return
         }
-        isModalVisibleRef.current = true;
+        isModalVisibleRef.current = true
         if (err?.status === 401) {
-          Modal.error(errorSessionConfig);
+          Modal.error(errorSessionConfig)
         } else {
-          Modal.error(errorConfigBoost);
+          Modal.error(errorConfigBoost)
         }
       } catch (err) {
         if (isModalVisibleRef.current) {
-          return;
+          return
         }
-        isModalVisibleRef.current = true;
+        isModalVisibleRef.current = true
         if (err?.status === 401) {
-          Modal.error(errorSessionConfigRefundFailure);
+          Modal.error(errorSessionConfigRefundFailure)
         } else {
-          Modal.error(errorConfigRefundFailure);
+          Modal.error(errorConfigRefundFailure)
         }
       }
-      return;
+      return
     }
-  };
+  }
 
   const handleSubmit = async () => {
-    setSubmitLoading(true);
+    setSubmitLoading(true)
 
     const thumbnailOptions = {
       maxSizeMB: 0.15,
       maxWidthOrHeight: 500,
       useWebWorker: true,
       initialQuality: 0.7,
-      fileType: "image/jpeg",
-    };
+      fileType: 'image/jpeg',
+    }
 
     const viewingOptions = {
       maxSizeMB: 0.5,
       maxWidthOrHeight: 1200,
       useWebWorker: true,
       initialQuality: 0.8,
-      fileType: "image/jpeg",
-    };
+      fileType: 'image/jpeg',
+    }
 
     try {
       // Compress thumbnails and viewings in parallel
       const compressedThumbnails = [
         await imageCompression(form.images[0].originFileObj, thumbnailOptions),
-      ];
+      ]
       const compressedViewings = await Promise.all(
         form.images.map((image) =>
           imageCompression(image.originFileObj, viewingOptions)
         )
-      );
+      )
 
-      const allCompressed = [...compressedThumbnails, ...compressedViewings];
+      const allCompressed = [...compressedThumbnails, ...compressedViewings]
       const urlRes = await callApi(
         `https://api.reusifi.com/prod/getUrlNew?email=${encodeURIComponent(
           user.userId
-        )}&contentType=${encodeURIComponent("image/jpeg")}&count=${
+        )}&contentType=${encodeURIComponent('image/jpeg')}&count=${
           allCompressed.length
         }`,
-        "GET"
-      );
-      const uploadURLs = urlRes.data.uploadURLs;
-      const s3Keys = urlRes.data.s3Keys;
+        'GET'
+      )
+      const uploadURLs = urlRes.data.uploadURLs
+      const s3Keys = urlRes.data.s3Keys
 
       await Promise.all(
         allCompressed.map((img, idx) =>
           axios.put(uploadURLs[idx], img, {
             headers: {
-              "Content-Type": "image/jpeg",
-              "Cache-Control": "public, max-age=2592000",
+              'Content-Type': 'image/jpeg',
+              'Cache-Control': 'public, max-age=2592000',
             },
           })
         )
-      );
+      )
 
-      const thumbnailS3Keys = [s3Keys[0]];
-      const viewingS3Keys = s3Keys.slice(1);
+      const thumbnailS3Keys = [s3Keys[0]]
+      const viewingS3Keys = s3Keys.slice(1)
 
       // Prepare form data with separate keys for thumbnails and viewings
       const data = {
         title: form.title.trim().toLowerCase(),
         description: form.description.trim().toLowerCase(),
         email: user.userId.toLowerCase(),
-        location: form.location.split(",").map(parseFloat),
+        location: form.location.split(',').map(parseFloat),
         locationLabel: form.locationLabel,
         price: parseFloat(form.price).toFixed(2),
         category: form.category.toLowerCase(),
@@ -224,76 +225,88 @@ const Return = () => {
         thumbnailS3Keys,
         viewingS3Keys,
         sessionId,
-      };
+      }
       await callApi(
-        "https://api.reusifi.com/prod/addProduct",
-        "POST",
+        'https://api.reusifi.com/prod/addProduct',
+        'POST',
         false,
         data
-      );
-      setCount((prevValue) => prevValue + 1);
-      setAdData([]);
-      setAdLastEvaluatedKey(null);
-      setAdInitialLoad(true);
-      setCurrLocRemoved(true);
-      setCurrentLocationLabel("");
-      setCurrentLocation("");
-      setSubmit(true);
-      await deleteDB();
-      setSubmitLoading(false);
+      )
+      setCount((prevValue) => prevValue + 1)
+      setAdData([])
+      setAdLastEvaluatedKey(null)
+      setAdInitialLoad(true)
+      setCurrLocRemoved(true)
+      setCurrentLocationLabel('')
+      setCurrentLocation('')
+      setSubmit(true)
+      await clearAllIds()
+      setForm({
+        title: '',
+        description: '',
+        category: '',
+        subCategory: '',
+        keywords: [],
+        email: '',
+        images: [],
+        price: null,
+        location: '',
+        locationLabel: '',
+      })
+      setSubmitLoading(false)
     } catch (err) {
-      setSubmitLoading(false);
+      setSubmitLoading(false)
       try {
-        await callApi("https://api.reusifi.com/prod/refund", "POST", false, {
+        await callApi('https://api.reusifi.com/prod/refund', 'POST', false, {
           session_id: sessionId,
-        });
+        })
         if (isModalVisibleRef.current) {
-          return;
+          return
         }
-        isModalVisibleRef.current = true;
+        isModalVisibleRef.current = true
         if (err?.status === 401) {
-          Modal.error(errorSessionConfig);
+          Modal.error(errorSessionConfig)
         } else {
-          Modal.error(errorConfig);
+          Modal.error(errorConfig)
         }
       } catch (err) {
         if (isModalVisibleRef.current) {
-          return;
+          return
         }
-        isModalVisibleRef.current = true;
+        isModalVisibleRef.current = true
         if (err?.status === 401) {
-          Modal.error(errorSessionConfigRefundFailure);
+          Modal.error(errorSessionConfigRefundFailure)
         } else {
-          Modal.error(errorConfigRefundFailure);
+          Modal.error(errorConfigRefundFailure)
         }
       }
-      return;
+      return
     }
-  };
+  }
 
   useEffect(() => {
     const fetchStatus = async () => {
-      const queryString = window.location.search;
-      const urlParams = new URLSearchParams(queryString);
-      const sessionId = urlParams.get("session_id");
-      const adType = urlParams.get("adType");
+      const queryString = window.location.search
+      const urlParams = new URLSearchParams(queryString)
+      const sessionId = urlParams.get('session_id')
+      const adType = urlParams.get('adType')
       const result = await callApi(
         `https://api.reusifi.com/prod/checkoutSessionStatus?session_id=${sessionId}`,
-        "GET"
-      );
-      setSessionId(sessionId);
-      setAdType(adType);
-      setStatus(result.data.status);
-      setCustomerEmail(result.data.customer_email);
-    };
-    fetchStatus();
-  }, []);
+        'GET'
+      )
+      setSessionId(sessionId)
+      setAdType(adType)
+      setStatus(result.data.status)
+      setCustomerEmail(result.data.customer_email)
+    }
+    fetchStatus()
+  }, [])
 
-  if (status === "open") {
-    return <Navigate to="/checkout" />;
+  if (status === 'open') {
+    return <Navigate to="/checkout" />
   }
 
-  if (status === "complete" && submit && adType === "POSTAD") {
+  if (status === 'complete' && submit && adType === 'POSTAD') {
     return (
       <Result
         status="success"
@@ -302,12 +315,12 @@ const Return = () => {
         extra={[
           <Button
             style={{
-              background: "#52c41a",
-              fontSize: "13px",
-              fontWeight: "300",
+              background: '#52c41a',
+              fontSize: '13px',
+              fontWeight: '300',
             }}
             onClick={() => {
-              navigate("/ads");
+              navigate('/ads')
             }}
             type="primary"
             key="console"
@@ -316,9 +329,9 @@ const Return = () => {
           </Button>,
         ]}
       />
-    );
+    )
   }
-  if (status === "complete" && submit && adType === "BOOSTAD3") {
+  if (status === 'complete' && submit && adType === 'BOOSTAD3') {
     return (
       <Result
         status="success"
@@ -327,12 +340,12 @@ const Return = () => {
         extra={[
           <Button
             style={{
-              background: "#52c41a",
-              fontSize: "13px",
-              fontWeight: "300",
+              background: '#52c41a',
+              fontSize: '13px',
+              fontWeight: '300',
             }}
             onClick={() => {
-              navigate("/ads");
+              navigate('/ads')
             }}
             type="primary"
             key="console"
@@ -341,9 +354,9 @@ const Return = () => {
           </Button>,
         ]}
       />
-    );
+    )
   }
-  if (status === "complete" && submit && adType === "BOOSTAD7") {
+  if (status === 'complete' && submit && adType === 'BOOSTAD7') {
     return (
       <Result
         status="success"
@@ -352,12 +365,12 @@ const Return = () => {
         extra={[
           <Button
             style={{
-              background: "#52c41a",
-              fontSize: "13px",
-              fontWeight: "300",
+              background: '#52c41a',
+              fontSize: '13px',
+              fontWeight: '300',
             }}
             onClick={() => {
-              navigate("/ads");
+              navigate('/ads')
             }}
             type="primary"
             key="console"
@@ -366,16 +379,16 @@ const Return = () => {
           </Button>,
         ]}
       />
-    );
+    )
   }
   return (
     <Spin
       fullscreen
       indicator={
-        <LoadingOutlined style={{ fontSize: 48, color: "#52c41a" }} spin />
+        <LoadingOutlined style={{ fontSize: 48, color: '#52c41a' }} spin />
       }
     />
-  );
-};
+  )
+}
 
-export default Return;
+export default Return
