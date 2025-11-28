@@ -172,9 +172,6 @@ const AddDress = () => {
     //   return
     // }
     setForm((prevValue) => {
-      if (type === 'title' || type === 'description' || type === 'price') {
-        return { ...prevValue, [type]: value.target.value }
-      }
       return { ...prevValue, [type]: value }
     })
   }
@@ -679,27 +676,11 @@ const AddDress = () => {
                       width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
                       marginTop: '30px',
                     }}
-                    onKeyDown={(e) => {
-                      if (
-                        [
-                          'Backspace',
-                          'Delete',
-                          'Tab',
-                          'Escape',
-                          'Enter',
-                          'ArrowLeft',
-                          'ArrowRight',
-                          'Home',
-                          'End',
-                        ].includes(e.key)
-                      ) {
-                        return
-                      }
-                      if (!/[a-zA-Z0-9 ]/.test(e.key)) {
-                        e.preventDefault()
-                      }
+                    onChange={(e) => {
+                      const text = e.target.value
+                      const sanitized = text.replace(/[^a-zA-Z0-9 ]/g, '')
+                      handleChange(sanitized, 'title')
                     }}
-                    onChange={(value) => handleChange(value, 'title')}
                     placeholder="Title"
                     value={form.title}
                     maxLength={100}
@@ -720,29 +701,13 @@ const AddDress = () => {
                         // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                         width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
                       }}
-                      onChange={(value) => handleChange(value, 'description')}
+                      onChange={(e) => {
+                        const text = e.target.value
+                        const sanitized = text.replace(/[^a-zA-Z0-9 ]/g, '')
+                        handleChange(sanitized, 'description')
+                      }}
                       autoSize={{ minRows: 8, maxRows: 8 }}
                       placeholder="Description"
-                      onKeyDown={(e) => {
-                        if (
-                          [
-                            'Backspace',
-                            'Delete',
-                            'Tab',
-                            'Escape',
-                            'Enter',
-                            'ArrowLeft',
-                            'ArrowRight',
-                            'Home',
-                            'End',
-                          ].includes(e.key)
-                        ) {
-                          return
-                        }
-                        if (!/[a-zA-Z0-9 ]/.test(e.key)) {
-                          e.preventDefault()
-                        }
-                      }}
                       maxLength={300}
                       value={form.description}
                       onClick={() => {
@@ -987,30 +952,13 @@ const AddDress = () => {
                       width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
                     }}
                     prefix="₹"
-                    onChange={(value) => handleChange(value, 'price')}
+                    onChange={(e) => {
+                      const text = e.target.value
+                      const sanitized = text.replace(/[^0-9]/g, '')
+                      handleChange(sanitized, 'price')
+                    }}
                     placeholder="Price"
                     value={form.price}
-                    onKeyDown={(e) => {
-                      if (
-                        [
-                          'Backspace',
-                          'Delete',
-                          'Tab',
-                          'Escape',
-                          'Enter',
-                          'ArrowLeft',
-                          'ArrowRight',
-                          'Home',
-                          'End',
-                        ].includes(e.key)
-                      ) {
-                        return
-                      }
-
-                      if (!/[0-9]/.test(e.key)) {
-                        e.preventDefault()
-                      }
-                    }}
                     maxLength={15}
                     onClick={() => {
                       scrollToBottom()

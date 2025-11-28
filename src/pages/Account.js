@@ -124,9 +124,6 @@ const Account = () => {
 
   const handleChange = (value, type) => {
     setForm((prevValue) => {
-      if (type === 'name' || type === 'description') {
-        return { ...prevValue, [type]: value.target.value }
-      }
       return { ...prevValue, [type]: value }
     })
   }
@@ -714,28 +711,12 @@ const Account = () => {
                     marginTop: '30px',
                   }}
                   className={badLanguage.name ? 'my-red-border' : ''}
-                  onChange={(value) => handleChange(value, 'name')}
-                  placeholder="Name"
-                  onKeyDown={(e) => {
-                    if (
-                      [
-                        'Backspace',
-                        'Delete',
-                        'Tab',
-                        'Escape',
-                        'Enter',
-                        'ArrowLeft',
-                        'ArrowRight',
-                        'Home',
-                        'End',
-                      ].includes(e.key)
-                    ) {
-                      return
-                    }
-                    if (!/[a-zA-Z0-9 ]/.test(e.key)) {
-                      e.preventDefault()
-                    }
+                  onChange={(e) => {
+                    const text = e.target.value
+                    const sanitized = text.replace(/[^a-zA-Z0-9 ]/g, '')
+                    handleChange(sanitized, 'name')
                   }}
+                  placeholder="Name"
                   id={'accountNameId'}
                   value={form.name}
                   maxLength={100}
@@ -752,29 +733,13 @@ const Account = () => {
                     width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
                   }}
                   className={badLanguage.description ? 'my-red-border' : ''}
-                  onChange={(value) => handleChange(value, 'description')}
+                  onChange={(e) => {
+                    const text = e.target.value
+                    const sanitized = text.replace(/[^a-zA-Z0-9 ]/g, '')
+                    handleChange(sanitized, 'description')
+                  }}
                   autoSize={{ minRows: 8, maxRows: 8 }}
                   placeholder="Description"
-                  onKeyDown={(e) => {
-                    if (
-                      [
-                        'Backspace',
-                        'Delete',
-                        'Tab',
-                        'Escape',
-                        'Enter',
-                        'ArrowLeft',
-                        'ArrowRight',
-                        'Home',
-                        'End',
-                      ].includes(e.key)
-                    ) {
-                      return
-                    }
-                    if (!/[a-zA-Z0-9 ]/.test(e.key)) {
-                      e.preventDefault()
-                    }
-                  }}
                   id={'accountDescId'}
                   maxLength={300}
                   value={form.description}
