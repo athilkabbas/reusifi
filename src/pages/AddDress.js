@@ -212,8 +212,6 @@ const AddDress = () => {
     return false
   }
 
-  const timer = useRef(null)
-
   const openNotificationWithIcon = (type, message) => {
     api[type]({
       message: 'Invalid Image',
@@ -227,55 +225,49 @@ const AddDress = () => {
       return { ...prevValue, images: [...fileList] }
     })
     if (fileList.length > 0 && fileList.length > prevFilesRef.current.length) {
-      if (timer.current) {
-        clearTimeout(timer.current)
-      }
-      timer.current = setTimeout(async () => {
-        try {
-          setSubmitLoading(true)
-          const { viewingS3Keys } = await uploadImages(fileList)
-          let files = fileList.map((file, index) => {
-            const { preview, originFileObj, ...fileRest } = file
-            return { ...fileRest, s3Key: viewingS3Keys[index] }
-          })
-          await callApi(
-            'https://api.reusifi.com/prod/verifyImage',
-            'POST',
-            false,
-            {
-              files,
-              keywords: form.keywords,
-            }
-          )
-          setSubmitLoading(false)
-        } catch (err) {
-          setSubmitLoading(false)
-          if (isModalVisibleRef.current) {
-            return
+      try {
+        setSubmitLoading(true)
+        const { viewingS3Keys } = await uploadImages(fileList)
+        let files = fileList.map((file, index) => {
+          const { preview, originFileObj, ...fileRest } = file
+          return { ...fileRest, s3Key: viewingS3Keys[index] }
+        })
+        await callApi(
+          'https://api.reusifi.com/prod/verifyImage',
+          'POST',
+          false,
+          {
+            files,
+            keywords: form.keywords,
           }
-          isModalVisibleRef.current = true
-          if (err?.status === 401) {
-            Modal.error(errorSessionConfig)
-          } else if (err && err.status === 422) {
-            isModalVisibleRef.current = false
-            openNotificationWithIcon('error', err.response.data.message)
-            setForm((prevValue) => {
-              return {
-                ...prevValue,
-                images: [
-                  ...prevValue.images.filter(
-                    (image) =>
-                      !err.response.data.invalidUids.includes(image.uid)
-                  ),
-                ],
-              }
-            })
-          } else {
-            Modal.error(errorConfig)
-          }
+        )
+        setSubmitLoading(false)
+      } catch (err) {
+        setSubmitLoading(false)
+        if (isModalVisibleRef.current) {
           return
         }
-      }, 0)
+        isModalVisibleRef.current = true
+        if (err?.status === 401) {
+          Modal.error(errorSessionConfig)
+        } else if (err && err.status === 422) {
+          isModalVisibleRef.current = false
+          openNotificationWithIcon('error', err.response.data.message)
+          setForm((prevValue) => {
+            return {
+              ...prevValue,
+              images: [
+                ...prevValue.images.filter(
+                  (image) => !err.response.data.invalidUids.includes(image.uid)
+                ),
+              ],
+            }
+          })
+        } else {
+          Modal.error(errorConfig)
+        }
+        return
+      }
     }
   }
 
