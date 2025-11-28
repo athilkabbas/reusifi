@@ -275,7 +275,7 @@ const AddDress = () => {
           }
           return
         }
-      }, 500)
+      }, 0)
     }
   }
 
