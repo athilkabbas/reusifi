@@ -89,13 +89,13 @@ const Account = () => {
   const [deleteLoading, setDeleteLoading] = useState(false)
   const [api, contextHolder] = notification.useNotification()
 
-  const uploadImages = async (fileList) => {
+  const uploadImages = async (fileList, imageType) => {
     const viewingOptions = {
       maxSizeMB: 0.5,
       maxWidthOrHeight: 1200,
       useWebWorker: true,
       initialQuality: 0.8,
-      fileType: 'image/jpeg',
+      fileType: imageType,
     }
 
     const compressedImage = await imageCompression(
@@ -106,7 +106,7 @@ const Account = () => {
     const urlRes = await callApi(
       `https://api.reusifi.com/prod/getUrlNew?email=${encodeURIComponent(
         user.userId
-      )}&contentType=${encodeURIComponent('image/jpeg')}&count=${1}`,
+      )}&contentType=${encodeURIComponent(imageType)}&count=${1}`,
       'GET'
     )
     const uploadURLs = urlRes.data.uploadURLs
@@ -114,7 +114,7 @@ const Account = () => {
 
     await axios.put(uploadURLs[0], compressedImage, {
       headers: {
-        'Content-Type': 'image/jpeg',
+        'Content-Type': imageType,
         'Cache-Control': 'public, max-age=2592000',
       },
     })
@@ -127,6 +127,8 @@ const Account = () => {
       return { ...prevValue, [type]: value }
     })
   }
+
+  console.log(account)
 
   const handleSubmit = async () => {
     try {
@@ -142,19 +144,22 @@ const Account = () => {
         message.info('No changes found')
         return
       }
-
-      const result = await validateField()
-      if (!result) {
+      setSubmitLoading(true)
+      const [resultLanguage, resultImage] = await Promise.all([
+        validateField(),
+        verifyImage(),
+      ])
+      if (!resultLanguage || !resultImage) {
+        setSubmitLoading(false)
         return
       }
-      setSubmitLoading(true)
       let data = {
         ...form,
         name: form.name.trim(),
         description: form.description.trim(),
       }
       if (fileList.length > 0) {
-        const s3Keys = await uploadImages(fileList)
+        const s3Keys = await uploadImages(fileList, 'image/webp')
         data = {
           ...data,
           image: `https://digpfxl7t6jra.cloudfront.net/${s3Keys[0]}`,
@@ -313,9 +318,9 @@ const Account = () => {
 
   const timer = useRef(null)
 
-  const openNotificationWithIcon = (type, message) => {
+  const openNotificationWithIcon = (type, message, title) => {
     api[type]({
-      message: 'Invalid Image',
+      message: title,
       description: `${message}`,
       duration: 0,
     })
@@ -355,10 +360,18 @@ const Account = () => {
   const handleBeforeUpload = async (file) => {
     const value = await getActualMimeType(file)
     if (!value) {
-      message.info('Invalid image format')
+      openNotificationWithIcon(
+        'error',
+        `${file.name} is in an unsupported format.`,
+        'Invalid Image'
+      )
       return Upload.LIST_IGNORE
     } else if (file.size / 1024 / 1024 > 30) {
-      message.info('Max size 30MB per image')
+      openNotificationWithIcon(
+        'error',
+        `${file.name} is over 30MB`,
+        'Invalid Image'
+      )
       return Upload.LIST_IGNORE
     }
     return false
@@ -366,7 +379,6 @@ const Account = () => {
 
   const validateField = async () => {
     try {
-      setSubmitLoading(true)
       await callApi(
         'https://api.reusifi.com/prod/verifyLanguage',
         'POST',
@@ -386,7 +398,11 @@ const Account = () => {
         Modal.error(errorSessionConfig)
       } else if (err?.status === 422) {
         isModalVisibleRef.current = false
-        message.error(err?.response?.data?.message)
+        openNotificationWithIcon(
+          'error',
+          err.response.data.message,
+          'Invalid Text'
+        )
         setBadLanguage((prevValue) => {
           return {
             ...prevValue,
@@ -397,58 +413,52 @@ const Account = () => {
         Modal.error(errorConfig)
       }
       return false
-    } finally {
-      setSubmitLoading(false)
+    }
+  }
+
+  const verifyImage = async () => {
+    try {
+      if (fileList.length === 0) {
+        return true
+      }
+      const s3Keys = await uploadImages(fileList, 'image/jpeg')
+      let files = fileList.map((file, index) => {
+        const { preview, originFileObj, ...fileRest } = file
+        return { ...fileRest, s3Key: s3Keys[index] }
+      })
+      await callApi('https://api.reusifi.com/prod/verifyImage', 'POST', false, {
+        files,
+        keywords: [],
+      })
+      return true
+    } catch (err) {
+      if (isModalVisibleRef.current) {
+        return
+      }
+      isModalVisibleRef.current = true
+      if (err?.status === 401) {
+        Modal.error(errorSessionConfig)
+      } else if (err && err.status === 422) {
+        isModalVisibleRef.current = false
+        openNotificationWithIcon(
+          'error',
+          err.response.data.message,
+          'Invalid Image'
+        )
+        setFileList((prevValue) => {
+          return prevValue.filter(
+            (image) => !err.response.data.invalidUids.includes(image.uid)
+          )
+        })
+      } else {
+        Modal.error(errorConfig)
+      }
+      return false
     }
   }
 
   const handleChangeImage = async ({ fileList }) => {
     setFileList(fileList)
-    if (fileList.length > 0 && fileList.length >= prevFilesRef.current.length) {
-      if (timer.current) {
-        clearTimeout(timer.current)
-      }
-      timer.current = setTimeout(async () => {
-        try {
-          setSubmitLoading(true)
-          const s3Keys = await uploadImages(fileList)
-          let files = fileList.map((file, index) => {
-            const { preview, originFileObj, ...fileRest } = file
-            return { ...fileRest, s3Key: s3Keys[index] }
-          })
-          await callApi(
-            'https://api.reusifi.com/prod/verifyImage',
-            'POST',
-            false,
-            {
-              files,
-              keywords: [],
-            }
-          )
-          setSubmitLoading(false)
-        } catch (err) {
-          setSubmitLoading(false)
-          if (isModalVisibleRef.current) {
-            return
-          }
-          isModalVisibleRef.current = true
-          if (err?.status === 401) {
-            Modal.error(errorSessionConfig)
-          } else if (err && err.status === 422) {
-            isModalVisibleRef.current = false
-            openNotificationWithIcon('error', err.response.data.message)
-            setFileList((prevValue) => {
-              return prevValue.filter(
-                (image) => !err.response.data.invalidUids.includes(image.uid)
-              )
-            })
-          } else {
-            Modal.error(errorConfig)
-          }
-          return
-        }
-      }, 500)
-    }
   }
 
   const [deleteImage, setDeleteImage] = useState(false)
