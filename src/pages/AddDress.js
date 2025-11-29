@@ -165,12 +165,6 @@ const AddDress = () => {
     }
   }, [addProductInitialLoad])
   const handleChange = (value, type) => {
-    // if (
-    //   type === 'price' &&
-    //   !/^(|0|[1-9]\d*)(\.\d{0,2})?$/.test(value.target.value)
-    // ) {
-    //   return
-    // }
     setForm((prevValue) => {
       return { ...prevValue, [type]: value }
     })
@@ -450,14 +444,7 @@ const AddDress = () => {
     }
   }
 
-  const filter = (inputValue, path) =>
-    path.some(
-      (option) =>
-        option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1
-    )
-
   const [pincode, setPincode] = useState('')
-  const [address, setAddress] = useState('')
   const [postCodeLoading, setPostCodeLoading] = useState(false)
 
   const fetchPincodeDetails = async () => {
@@ -470,18 +457,8 @@ const AddDress = () => {
         'GET'
       )
       setPostCodeLoading(false)
-      setAddress(
-        data.data.Address.Street ||
-          data.data.Address.District ||
-          data.data.Address.Locality
-      )
       handleChange(data.data.Position.reverse().join(','), 'location')
-      handleChange(
-        data.data.Address.Street ||
-          data.data.Address.District ||
-          data.data.Address.Locality,
-        'locationLabel'
-      )
+      handleChange(data.data.Address.Label, 'locationLabel')
       setCurrLocRemoved(true)
       setCurrentLocationLabel('')
       setCurrentLocation('')
@@ -493,12 +470,10 @@ const AddDress = () => {
     const value = e.target.value
     setPincode(value)
     if (!value) {
-      setAddress('')
       handleChange('', 'location')
       handleChange('', 'locationLabel')
     }
   }
-  const [open, setOpen] = useState(false)
   const bottomRef = useRef(null)
   const bottomRefPincode = useRef(null)
 
@@ -896,7 +871,6 @@ const AddDress = () => {
                             Modal.info(locationInfoConfig)
                           }
                         })
-                      setAddress('')
                       setPincode('')
                       setCurrLocRemoved(false)
                       setTriggerLocation((value) => !value)
