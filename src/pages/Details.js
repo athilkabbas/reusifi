@@ -338,14 +338,17 @@ const Details = () => {
         detailData?.[0]?.['item']['createdAtOrig']
       ).toLocaleString('en-GB'),
     },
-    {
+  ]
+
+  if (ad) {
+    descriptionItems.push({
       key: '10',
       label: 'Expires on',
       children: new Date(
-        detailData?.[0]?.['item']['expiresAt'] * 1000
+        detailData?.[0]?.item?.expiresAt * 1000
       ).toLocaleString('en-GB'),
-    },
-  ]
+    })
+  }
   return (
     <Layout
       style={{
