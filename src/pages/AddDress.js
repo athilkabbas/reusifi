@@ -430,9 +430,7 @@ const AddDress = () => {
         location: '',
         locationLabel: '',
       })
-      message.success(
-        'Your ad is now live on Reusifi. It may take up to 5 minutes to appear.'
-      )
+      message.success('Your ad is now live on Reusifi.')
       navigate('/ads')
     } catch (err) {
       setSubmitLoading(false)

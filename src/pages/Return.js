@@ -311,7 +311,7 @@ const Return = () => {
       <Result
         status="success"
         title="Successfully posted an Ad"
-        subTitle="Your ad is now live on Reusifi. It may take up to 5 minutes to appear."
+        subTitle="Your ad is now live on Reusifi."
         extra={[
           <Button
             style={{
@@ -336,7 +336,7 @@ const Return = () => {
       <Result
         status="success"
         title="Successfully boosted Ad"
-        subTitle="Your ad has been successfully boosted for 3 days. It may take up to 5 minutes to appear."
+        subTitle="Your ad has been successfully boosted for 3 days."
         extra={[
           <Button
             style={{
@@ -361,7 +361,7 @@ const Return = () => {
       <Result
         status="success"
         title="Successfully boosted Ad"
-        subTitle="Your ad has been successfully boosted for 7 days. It may take up to 5 minutes to appear."
+        subTitle="Your ad has been successfully boosted for 7 days."
         extra={[
           <Button
             style={{
