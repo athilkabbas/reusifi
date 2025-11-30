@@ -50,6 +50,7 @@ const Details = () => {
     actionType,
     setActionType,
     user,
+    setBoostForm,
   } = useContext(Context)
 
   const [detailData, setDetailData] = useState([])
@@ -151,49 +152,6 @@ const Details = () => {
       }
     }
   }, [item])
-
-  const handleActivate = async () => {
-    try {
-      setActivateLoading(true)
-      await callApi('https://api.reusifi.com/prod/activateAd', 'POST', false, {
-        uuid: detailData[0]['item']['uuid'],
-      })
-      setActivateLoading(false)
-      setDetailData((prevValue) => {
-        const newValue = [...prevValue]
-        newValue[0] = {
-          ...newValue[0],
-          item: {
-            ...newValue[0].item,
-            deactivated: false,
-          },
-        }
-        return newValue
-      })
-      setAdData((prevValue) => {
-        const newValue = [...prevValue]
-        const newAdValue = newValue.map((item) => {
-          if (item.item.uuid === detailData[0]['item']['uuid']) {
-            item.item.deactivated = false
-          }
-          return item
-        })
-        return newAdValue
-      })
-    } catch (err) {
-      setActivateLoading(false)
-      if (isModalVisibleRef.current) {
-        return
-      }
-      isModalVisibleRef.current = true
-      if (err?.status === 401) {
-        Modal.error(errorSessionConfig)
-      } else {
-        Modal.error(errorConfig)
-      }
-      return
-    }
-  }
 
   const handleChat = async () => {
     try {
@@ -546,7 +504,17 @@ const Details = () => {
                           ad ? (
                             detailData[0]['item']['deactivated'] === true ? (
                               <Button
-                                onClick={handleActivate}
+                                onClick={() => {
+                                  setBoostForm((prevValue) => {
+                                    return {
+                                      ...prevValue,
+                                      uuid: detailData[0]['item']['uuid'],
+                                    }
+                                  })
+                                  navigate('/checkout', {
+                                    state: { adType: 'ACTIVATE' },
+                                  })
+                                }}
                                 style={{
                                   background: '#52c41a',
                                   fontSize: '13px',

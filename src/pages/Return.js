@@ -108,8 +108,36 @@ const Return = () => {
       (adType === 'BOOSTAD3' || adType === 'BOOSTAD7')
     ) {
       handleBoost(adType)
+    } else if (status === 'complete' && adType === 'ACTIVATE') {
+      handleActivate()
     }
   }, [status])
+
+  const handleActivate = async () => {
+    try {
+      setSubmitLoading(true)
+      await callApi('https://api.reusifi.com/prod/activateAd', 'POST', false, {
+        uuid: boostForm.uuid,
+      })
+      setAdData([])
+      setAdLastEvaluatedKey(null)
+      setAdInitialLoad(true)
+      setSubmit(true)
+      setSubmitLoading(false)
+    } catch (err) {
+      setSubmitLoading(false)
+      if (isModalVisibleRef.current) {
+        return
+      }
+      isModalVisibleRef.current = true
+      if (err?.status === 401) {
+        Modal.error(errorSessionConfig)
+      } else {
+        Modal.error(errorConfig)
+      }
+      return
+    }
+  }
 
   const handleBoost = async (adType) => {
     try {
@@ -121,9 +149,6 @@ const Return = () => {
       setAdData([])
       setAdLastEvaluatedKey(null)
       setAdInitialLoad(true)
-      setCurrLocRemoved(true)
-      setCurrentLocationLabel('')
-      setCurrentLocation('')
       setSubmit(true)
       setSubmitLoading(false)
     } catch (err) {
@@ -362,6 +387,32 @@ const Return = () => {
         status="success"
         title="Successfully boosted Ad"
         subTitle="Your ad has been successfully boosted for 7 days."
+        extra={[
+          <Button
+            style={{
+              background: '#52c41a',
+              fontSize: '13px',
+              fontWeight: '300',
+            }}
+            onClick={() => {
+              navigate('/ads')
+            }}
+            type="primary"
+            key="console"
+          >
+            Go to My Ads
+          </Button>,
+        ]}
+      />
+    )
+  }
+
+  if (status === 'complete' && submit && adType === 'ACTIVATE') {
+    return (
+      <Result
+        status="success"
+        title="Successfully posted an Ad"
+        subTitle="Your ad is now live on Reusifi."
         extra={[
           <Button
             style={{
