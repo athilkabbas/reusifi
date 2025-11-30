@@ -459,7 +459,13 @@ const AddDress = () => {
       )
       setPostCodeLoading(false)
       handleChange(data.data.Position.reverse().join(','), 'location')
-      handleChange(data.data.Address.Label, 'locationLabel')
+      handleChange(
+        data.data.Address.Street ||
+          data.data.Address.District ||
+          data.data.Address.Locality ||
+          data.data.Address.Label,
+        'locationLabel'
+      )
       setCurrLocRemoved(true)
       setCurrentLocationLabel('')
       setCurrentLocation('')

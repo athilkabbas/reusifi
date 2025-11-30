@@ -31,7 +31,12 @@ const useLocationComponent = () => {
             )}`,
             'GET'
           )
-          setCurrentLocationLabel(data.data.Address.Label)
+          setCurrentLocationLabel(
+            data.data.Address.Street ||
+              data.data.Address.District ||
+              data.data.Address.Locality ||
+              data.data.Address.Label
+          )
           setLocationAccessLoading(false)
         } catch (err) {
           setLocationAccessLoading(false)
