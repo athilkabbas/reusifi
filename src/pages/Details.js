@@ -495,8 +495,8 @@ const Details = () => {
                   {detailData?.[0]['item']['boosted'] && (
                     <Space.Compact>
                       <Tag
-                        style={{ transform: 'scale(1.5)' }}
-                        color={'#52c41a'}
+                        style={{ transform: 'scale(1.5)', color: '#52c41a' }}
+                        color={'white'}
                       >
                         Boosted until{' '}
                         {formatTimestamp(detailData?.[0]['item']['createdAt'])}
