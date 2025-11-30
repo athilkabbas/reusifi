@@ -16,6 +16,7 @@ import FooterWrapper from '../component/Footer'
 import HeaderWrapper from '../component/Header'
 import { EllipsisVertical } from 'lucide-react'
 import { useIndexedDBImages } from '../hooks/indexedDB'
+import { formatTimestamp } from '../helpers/formatTime'
 const { TextArea } = Input
 const { Content } = Layout
 const Chat = () => {
@@ -565,31 +566,6 @@ const Chat = () => {
     setMessageValue('')
   }
 
-  function formatChatTimestamp(timestamp) {
-    const date = new Date(timestamp)
-    const now = new Date()
-
-    const isToday = date.toDateString() === now.toDateString()
-
-    const yesterday = new Date()
-    yesterday.setDate(now.getDate() - 1)
-    const isYesterday = date.toDateString() === yesterday.toDateString()
-
-    const day = String(date.getDate()).padStart(2, '0')
-    const month = String(date.getMonth() + 1).padStart(2, '0')
-    const year = date.getFullYear()
-
-    const timeString = date.toLocaleTimeString([], {
-      hour: '2-digit',
-      minute: '2-digit',
-    })
-
-    if (isToday) return timeString
-    if (isYesterday) return `Yesterday ${timeString}`
-
-    return `${day}/${month}/${year} ${timeString}`
-  }
-
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
@@ -903,7 +879,7 @@ const Chat = () => {
                                   fontSize: '10px',
                                 }}
                               >
-                                {formatChatTimestamp(item.timestamp)}
+                                {formatTimestamp(item.timestamp)}
                               </Text>
                             </div>
                           </div>
@@ -956,7 +932,7 @@ const Chat = () => {
                                   fontSize: '10px',
                                 }}
                               >
-                                {formatChatTimestamp(item.timestamp)}
+                                {formatTimestamp(item.timestamp)}
                               </Text>
                             </div>
                           </div>

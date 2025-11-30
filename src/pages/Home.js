@@ -1333,7 +1333,7 @@ const Home = () => {
                                     color: '#237804',
                                   }}
                                 >
-                                  ₹{item['item']['price']}
+                                  £{item['item']['price']}
                                 </span>
                                 <div
                                   onClick={(event) => {

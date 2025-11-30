@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import { Skeleton, Spin, Descriptions, Col } from 'antd'
+import { Skeleton, Spin, Descriptions, Col, Tag } from 'antd'
 import { useNavigate, Link } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
 import { Layout, message, Modal, Popconfirm } from 'antd'
@@ -17,6 +17,7 @@ import HeaderWrapper from '../component/Header'
 import AwsMap from '../component/Map'
 import CopyButton from '../component/CopyButton'
 import { useIndexedDBImages } from '../hooks/indexedDB'
+import { formatTimestamp } from '../helpers/formatTime'
 const { Content } = Layout
 const Details = () => {
   const location = useLocation()
@@ -260,7 +261,7 @@ const Details = () => {
     {
       key: '6',
       label: 'Price',
-      children: detailData?.[0]?.['item']['price'],
+      children: `£${detailData?.[0]?.['item']['price']}`,
     },
     {
       key: '7',
@@ -292,9 +293,7 @@ const Details = () => {
     {
       key: '9',
       label: 'Posted on',
-      children: new Date(
-        detailData?.[0]?.['item']['createdAtOrig']
-      ).toLocaleString('en-GB'),
+      children: formatTimestamp(detailData?.[0]?.['item']['createdAtOrig']),
     },
   ]
 
@@ -302,9 +301,7 @@ const Details = () => {
     descriptionItems.push({
       key: '10',
       label: 'Expires on',
-      children: new Date(
-        detailData?.[0]?.item?.expiresAt * 1000
-      ).toLocaleString('en-GB'),
+      children: formatTimestamp(detailData?.[0]?.item?.expiresAt * 1000),
     })
   }
   return (
@@ -495,6 +492,17 @@ const Details = () => {
                       )}
                     </Image.PreviewGroup>
                   </Space.Compact>
+                  {detailData?.[0]['item']['boosted'] && (
+                    <Space.Compact>
+                      <Tag
+                        style={{ transform: 'scale(1.5)' }}
+                        color={'#52c41a'}
+                      >
+                        Boosted until{' '}
+                        {formatTimestamp(detailData?.[0]['item']['createdAt'])}
+                      </Tag>
+                    </Space.Compact>
+                  )}
                   {Object.values(loadedImages).every((item) => item) && (
                     <Space.Compact size="large">
                       <Descriptions

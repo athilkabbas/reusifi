@@ -418,7 +418,7 @@ const Ads = () => {
                                     overflow: 'hidden',
                                   }}
                                 >
-                                  ₹{item['item']['price']}
+                                  £{item['item']['price']}
                                 </span>
                               </div>
                             </div>

@@ -924,7 +924,7 @@ const AddDress = () => {
                       // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                       width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
                     }}
-                    prefix="₹"
+                    prefix="£"
                     onChange={(e) => {
                       const text = e.target.value
                       const sanitized = text.replace(/[^0-9]/g, '')

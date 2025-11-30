@@ -474,7 +474,7 @@ const Favourites = () => {
                                     overflow: 'hidden',
                                   }}
                                 >
-                                  ₹{item['item']['price']}
+                                  £{item['item']['price']}
                                 </span>
                                 <div
                                   onClick={(event) => {
