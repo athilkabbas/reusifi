@@ -21,7 +21,7 @@ const Return = () => {
   const errorSessionConfig = {
     title: 'Session has expired.',
     content:
-      'Your payment has been refunded because the ad submission didn’t go through. Please try again.',
+      'Ad submission failed. Your payment has been refunded. Please try again shortly.',
     closable: false,
     maskClosable: false,
     okText: 'Login',
@@ -46,7 +46,7 @@ const Return = () => {
   const errorConfig = {
     title: 'An error has occurred.',
     content:
-      'Your payment has been refunded because the ad submission didn’t go through. Please try again.',
+      'Ad submission failed. Your payment has been refunded. Please try again shortly.',
     closable: false,
     maskClosable: false,
     okText: 'OK',
@@ -59,7 +59,20 @@ const Return = () => {
   const errorConfigBoost = {
     title: 'An error has occurred.',
     content:
-      'Your payment has been refunded because the ad boost didn’t go through. Please try again.',
+      'Ad boost failed. Your payment has been refunded. Please try again shortly.',
+    closable: false,
+    maskClosable: false,
+    okText: 'OK',
+    onOk: () => {
+      isModalVisibleRef.current = false
+      navigate('/ads')
+    },
+  }
+
+  const errorConfigActive = {
+    title: 'An error has occurred.',
+    content:
+      'Ad activation failed. Your payment has been refunded. Please try again shortly.',
     closable: false,
     maskClosable: false,
     okText: 'OK',
@@ -78,6 +91,18 @@ const Return = () => {
     onOk: () => {
       isModalVisibleRef.current = false
       navigate('/')
+    },
+  }
+
+  const errorActivateORBoost = {
+    title: 'Invalid action',
+    content: 'Your payment has been refunded.',
+    closable: false,
+    maskClosable: false,
+    okText: 'OK',
+    onOk: () => {
+      isModalVisibleRef.current = false
+      navigate('/ads')
     },
   }
 
@@ -126,14 +151,34 @@ const Return = () => {
       setSubmitLoading(false)
     } catch (err) {
       setSubmitLoading(false)
-      if (isModalVisibleRef.current) {
-        return
-      }
-      isModalVisibleRef.current = true
-      if (err?.status === 401) {
-        Modal.error(errorSessionConfig)
-      } else {
-        Modal.error(errorConfig)
+      try {
+        await callApi('https://api.reusifi.com/prod/refund', 'POST', false, {
+          session_id: sessionId,
+        })
+        if (isModalVisibleRef.current) {
+          return
+        }
+        isModalVisibleRef.current = true
+        if (err?.status === 401) {
+          Modal.error(errorSessionConfig)
+        } else if (err?.status === 422) {
+          Modal.error({
+            ...errorActivateORBoost,
+            content: err.response.data.message + errorActivateORBoost.content,
+          })
+        } else {
+          Modal.error(errorConfigActive)
+        }
+      } catch (err) {
+        if (isModalVisibleRef.current) {
+          return
+        }
+        isModalVisibleRef.current = true
+        if (err?.status === 401) {
+          Modal.error(errorSessionConfigRefundFailure)
+        } else {
+          Modal.error(errorConfigRefundFailure)
+        }
       }
       return
     }
@@ -163,6 +208,11 @@ const Return = () => {
         isModalVisibleRef.current = true
         if (err?.status === 401) {
           Modal.error(errorSessionConfig)
+        } else if (err?.status === 422) {
+          Modal.error({
+            ...errorActivateORBoost,
+            content: err.response.data.message + errorActivateORBoost.content,
+          })
         } else {
           Modal.error(errorConfigBoost)
         }

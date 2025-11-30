@@ -9,6 +9,7 @@ import {
   Button,
   Spin,
   Card,
+  message,
 } from 'antd'
 import { signInWithRedirect } from '@aws-amplify/auth'
 import { Context } from '../context/provider'
@@ -27,8 +28,8 @@ const BoostAd = () => {
   const isModalVisibleRef = useRef(false)
   const navigate = useNavigate()
   const location = useLocation()
-  const { uuid } = location.state || ''
-  if (!uuid) {
+  const { uuid, expiresAtOrig, boosted, createdAt } = location.state || ''
+  if (!uuid && !expiresAtOrig && !boosted && !createdAt) {
     navigate('/')
   }
   const [submitLoading, setSubmitLoading] = useState(false)
@@ -166,10 +167,30 @@ const BoostAd = () => {
                 }}
               >
                 <Space.Compact size="large">
-                  <Card title="3-Day Ad Boost" bordered style={{ width: 300 }}>
-                    <p>Increase your ad’s visibility for 3 days for £1.</p>
+                  <Card
+                    title="7-Day Ad Boost"
+                    variant="bordered"
+                    style={{ width: 300 }}
+                  >
+                    <p>Increase your ad’s visibility for 7 days for £12.</p>
                     <Button
                       onClick={() => {
+                        if (boosted) {
+                          let createdAtNew = createdAt + 7 * 24 * 60 * 60 * 1000
+                          if (createdAtNew > expiresAtOrig) {
+                            message.error(
+                              "The boost duration cannot extend past the ad's current expiration date."
+                            )
+                          }
+                        } else {
+                          let createdAtNew =
+                            Date.now() + 7 * 24 * 60 * 60 * 1000
+                          if (createdAtNew > expiresAtOrig) {
+                            message.error(
+                              "The boost duration cannot extend past the ad's current expiration date."
+                            )
+                          }
+                        }
                         setBoostForm((prevValue) => {
                           return { ...prevValue, uuid }
                         })
@@ -185,10 +206,31 @@ const BoostAd = () => {
                   </Card>
                 </Space.Compact>
                 <Space.Compact size="large">
-                  <Card title="7-Day Ad Boost" bordered style={{ width: 300 }}>
-                    <p>Increase your ad’s visibility for 7 days for £2.</p>
+                  <Card
+                    title="14-Day Ad Boost"
+                    variant="bordered"
+                    style={{ width: 300 }}
+                  >
+                    <p>Increase your ad’s visibility for 14 days for £18.</p>
                     <Button
                       onClick={() => {
+                        if (boosted) {
+                          let createdAtNew =
+                            createdAt + 14 * 24 * 60 * 60 * 1000
+                          if (createdAtNew > expiresAtOrig) {
+                            message.error(
+                              "The boost duration cannot extend past the ad's current expiration date."
+                            )
+                          }
+                        } else {
+                          let createdAtNew =
+                            Date.now() + 14 * 24 * 60 * 60 * 1000
+                          if (createdAtNew > expiresAtOrig) {
+                            message.error(
+                              "The boost duration cannot extend past the ad's current expiration date."
+                            )
+                          }
+                        }
                         setBoostForm((prevValue) => {
                           return { ...prevValue, uuid }
                         })

@@ -301,7 +301,7 @@ const Details = () => {
     descriptionItems.push({
       key: '10',
       label: 'Expires on',
-      children: formatTimestamp(detailData?.[0]?.item?.expiresAt * 1000),
+      children: formatTimestamp(detailData?.[0]?.item?.expiresAtOrig * 1000),
     })
   }
   return (
@@ -540,6 +540,16 @@ const Details = () => {
                                     navigate('/boost', {
                                       state: {
                                         uuid: detailData?.[0]?.['item']['uuid'],
+                                        expiresAtOrig:
+                                          detailData?.[0]?.['item'][
+                                            'expiresAtOrig'
+                                          ],
+                                        boosted:
+                                          detailData?.[0]?.['item']['boosted'],
+                                        createdAt:
+                                          detailData?.[0]?.['item'][
+                                            'createdAt'
+                                          ],
                                       },
                                     })
                                   }}

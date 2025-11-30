@@ -437,7 +437,11 @@ const AddDress = () => {
         Modal.error(errorSessionConfig)
       } else if (err?.status === 422) {
         isModalVisibleRef.current = false
-        message.info(err?.response?.data?.message)
+        openNotificationWithIcon(
+          'error',
+          err.response.data.message,
+          'Invalid action'
+        )
       } else {
         Modal.error(errorConfig)
       }
@@ -1023,7 +1027,7 @@ const AddDress = () => {
                         setSubmitLoading(false)
                         return
                       }
-                      if (count < 5) {
+                      if (count < 3) {
                         handleSubmit()
                       } else {
                         navigate('/checkout', { state: { adType: 'POSTAD' } })
