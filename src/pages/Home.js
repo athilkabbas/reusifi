@@ -361,51 +361,36 @@ const Home = () => {
       let results
       if (search.trim() || applied || currentLocation) {
         results = await callApi(
-          `https://api.reusifi.com/prod/getProductsSearch?&search=${encodeURIComponent(
-            search.trim()
-          )}&page=${encodeURIComponent(
-            currentPage
-          )}&perPage=${encodeURIComponent(limit)}&location=${encodeURIComponent(
-            location
-          )}&currentLocation=${encodeURIComponent(
-            currentLocation
-          )}&minPrice=${encodeURIComponent(
-            minPrice
-          )}&maxPrice=${encodeURIComponent(
-            maxPrice
-          )}&sortByPrice=${encodeURIComponent(
-            priceFilter
-          )}&category=${encodeURIComponent(
-            category
-          )}&subCategory=${encodeURIComponent(
-            subCategory
-          )}&radius=${encodeURIComponent(radiusValue)}`,
-          'GET'
+          'https://api.reusifi.com/prod/getProductsSearch',
+          'POST',
+          false,
+          {
+            search: search.trim(),
+            page: currentPage,
+            perPage: limit,
+            location,
+            currentLocation,
+            minPrice,
+            maxPrice,
+            sortByPrice: priceFilter,
+            category,
+            subCategory,
+            radius: radiusValue,
+            userId: user.userId,
+          }
         )
       } else {
         results = await callApi(
           `https://api.reusifi.com/prod/getProducts?&page=${encodeURIComponent(
             currentPage
-          )}&perPage=${encodeURIComponent(limit)}`,
+          )}&perPage=${encodeURIComponent(limit)}&userId=${user.userId}`,
           'GET'
         )
       }
       setCurrentPage((currentPage) => currentPage + 1)
       setHasMore(results.data.pagination.hasMore)
-      const notUserData = results.data.items.filter(
-        (item) => user.userId !== item['item']['email']
-      )
-      setData([...data, ...notUserData])
-      const favList = notUserData.map((item) => item['item']['uuid'])
-      const favState = { email: user.userId, favList }
-      const cursorFav = encodeCursor(favState)
-      const favResult = await callApi(
-        `https://api.reusifi.com/prod/getFavouritesList`,
-        'POST',
-        false,
-        { cursorFav }
-      )
-      setFilterList([...filterList, ...favResult.data.finalResult])
+      setData([...data, ...results.data.items])
+      setFilterList([...filterList, ...results.data.favList])
       setLoading(false)
       setScrollPosition(scrollPosition)
       setInitialLoad(false)
