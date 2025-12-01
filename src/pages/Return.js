@@ -95,7 +95,7 @@ const Return = () => {
   }
 
   const errorActivateORBoost = {
-    title: 'Invalid action',
+    title: 'An error has occurred.',
     content: 'Your payment has been refunded.',
     closable: false,
     maskClosable: false,
@@ -103,6 +103,18 @@ const Return = () => {
     onOk: () => {
       isModalVisibleRef.current = false
       navigate('/ads')
+    },
+  }
+
+  const errorAdSubmit = {
+    title: 'An error has occurred.',
+    content: 'Your payment has been refunded.',
+    closable: false,
+    maskClosable: false,
+    okText: 'OK',
+    onOk: () => {
+      isModalVisibleRef.current = false
+      navigate('/addProduct')
     },
   }
 
@@ -127,7 +139,7 @@ const Return = () => {
 
   useEffect(() => {
     if (status === 'complete' && adType === 'POSTAD') {
-      handleSubmit()
+      handleSubmit(true, true)
     } else if (
       status === 'complete' &&
       (adType === 'BOOSTAD3' || adType === 'BOOSTAD7')
@@ -231,15 +243,13 @@ const Return = () => {
     }
   }
 
-  const handleSubmit = async () => {
-    setSubmitLoading(true)
-
+  const uploadImages = async (fileList, imageType) => {
     const thumbnailOptions = {
       maxSizeMB: 0.15,
       maxWidthOrHeight: 500,
       useWebWorker: true,
       initialQuality: 0.7,
-      fileType: 'image/jpeg',
+      fileType: imageType,
     }
 
     const viewingOptions = {
@@ -247,45 +257,59 @@ const Return = () => {
       maxWidthOrHeight: 1200,
       useWebWorker: true,
       initialQuality: 0.8,
-      fileType: 'image/jpeg',
+      fileType: imageType,
     }
 
+    const compressedThumbnails = [
+      await imageCompression(fileList[0].originFileObj, thumbnailOptions),
+    ]
+    const compressedViewings = await Promise.all(
+      fileList.map((image) =>
+        imageCompression(image.originFileObj, viewingOptions)
+      )
+    )
+
+    const allCompressed = [...compressedThumbnails, ...compressedViewings]
+    const urlRes = await callApi(
+      `https://api.reusifi.com/prod/getUrlNew?email=${encodeURIComponent(
+        user.userId
+      )}&contentType=${encodeURIComponent(imageType)}&count=${
+        allCompressed.length
+      }`,
+      'GET'
+    )
+    const uploadURLs = urlRes.data.uploadURLs
+    const s3Keys = urlRes.data.s3Keys
+
+    await Promise.all(
+      allCompressed.map((img, idx) =>
+        axios.put(uploadURLs[idx], img, {
+          headers: {
+            'Content-Type': imageType,
+            'Cache-Control': 'public, max-age=2592000',
+          },
+        })
+      )
+    )
+    const thumbnailS3Keys = [s3Keys[0]]
+    const viewingS3Keys = s3Keys.slice(1)
+    return {
+      thumbnailS3Keys,
+      viewingS3Keys,
+    }
+  }
+
+  const handleSubmit = async (submit, paid) => {
     try {
-      // Compress thumbnails and viewings in parallel
-      const compressedThumbnails = [
-        await imageCompression(form.images[0].originFileObj, thumbnailOptions),
-      ]
-      const compressedViewings = await Promise.all(
-        form.images.map((image) =>
-          imageCompression(image.originFileObj, viewingOptions)
-        )
+      setSubmitLoading(true)
+      const { thumbnailS3Keys, viewingS3Keys } = await uploadImages(
+        form.images,
+        'image/jpeg'
       )
-
-      const allCompressed = [...compressedThumbnails, ...compressedViewings]
-      const urlRes = await callApi(
-        `https://api.reusifi.com/prod/getUrlNew?email=${encodeURIComponent(
-          user.userId
-        )}&contentType=${encodeURIComponent('image/jpeg')}&count=${
-          allCompressed.length
-        }`,
-        'GET'
-      )
-      const uploadURLs = urlRes.data.uploadURLs
-      const s3Keys = urlRes.data.s3Keys
-
-      await Promise.all(
-        allCompressed.map((img, idx) =>
-          axios.put(uploadURLs[idx], img, {
-            headers: {
-              'Content-Type': 'image/jpeg',
-              'Cache-Control': 'public, max-age=2592000',
-            },
-          })
-        )
-      )
-
-      const thumbnailS3Keys = [s3Keys[0]]
-      const viewingS3Keys = s3Keys.slice(1)
+      let files = form.images.map((file, index) => {
+        const { preview, originFileObj, ...fileRest } = file
+        return { ...fileRest, s3Key: viewingS3Keys[index] }
+      })
 
       // Prepare form data with separate keys for thumbnails and viewings
       const data = {
@@ -300,6 +324,10 @@ const Return = () => {
         thumbnailS3Keys,
         viewingS3Keys,
         sessionId,
+        files,
+        keywords: form.keywords,
+        submit,
+        paid,
       }
       await callApi(
         'https://api.reusifi.com/prod/addProduct',
@@ -341,6 +369,11 @@ const Return = () => {
         isModalVisibleRef.current = true
         if (err?.status === 401) {
           Modal.error(errorSessionConfig)
+        } else if (err?.status === 422) {
+          Modal.error({
+            ...errorAdSubmit,
+            content: err.response.data.message + errorAdSubmit.content,
+          })
         } else {
           Modal.error(errorConfig)
         }

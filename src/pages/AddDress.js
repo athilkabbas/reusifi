@@ -194,15 +194,11 @@ const AddDress = () => {
       openNotificationWithIcon(
         'error',
         `${file.name} is in an unsupported format.`,
-        'Invalid Image'
+        'Error'
       )
       return Upload.LIST_IGNORE
     } else if (file.size / 1024 / 1024 > 30) {
-      openNotificationWithIcon(
-        'error',
-        `${file.name} is over 30MB`,
-        'Invalid Image'
-      )
+      openNotificationWithIcon('error', `${file.name} is over 30MB`, 'Error')
       return Upload.LIST_IGNORE
     }
     return false
@@ -213,50 +209,10 @@ const AddDress = () => {
       message: title,
       description: `${message}`,
       duration: 0,
+      style: {
+        whiteSpace: 'pre-wrap',
+      },
     })
-  }
-
-  const verifyImage = async () => {
-    try {
-      const { viewingS3Keys } = await uploadImages(form.images, 'image/jpeg')
-      let files = form.images.map((file, index) => {
-        const { preview, originFileObj, ...fileRest } = file
-        return { ...fileRest, s3Key: viewingS3Keys[index] }
-      })
-      await callApi('https://api.reusifi.com/prod/verifyImage', 'POST', false, {
-        files,
-        keywords: form.keywords,
-      })
-      return true
-    } catch (err) {
-      if (isModalVisibleRef.current) {
-        return
-      }
-      isModalVisibleRef.current = true
-      if (err?.status === 401) {
-        Modal.error(errorSessionConfig)
-      } else if (err && err.status === 422) {
-        isModalVisibleRef.current = false
-        openNotificationWithIcon(
-          'error',
-          err.response.data.message,
-          'Invalid Image'
-        )
-        setForm((prevValue) => {
-          return {
-            ...prevValue,
-            images: [
-              ...prevValue.images.filter(
-                (image) => !err.response.data.invalidUids.includes(image.uid)
-              ),
-            ],
-          }
-        })
-      } else {
-        Modal.error(errorConfig)
-      }
-      return false
-    }
   }
 
   const handleChangeImage = async ({ fileList }) => {
@@ -379,12 +335,21 @@ const AddDress = () => {
     }
   }
 
-  const handleSubmit = async () => {
+  const [badLanguage, setBadLanguage] = useState({
+    title: false,
+    description: false,
+  })
+
+  const handleSubmit = async (submit, paid) => {
     try {
       const { thumbnailS3Keys, viewingS3Keys } = await uploadImages(
         form.images,
-        'image/webp'
+        'image/jpeg'
       )
+      let files = form.images.map((file, index) => {
+        const { preview, originFileObj, ...fileRest } = file
+        return { ...fileRest, s3Key: viewingS3Keys[index] }
+      })
       // Prepare form data with separate keys for thumbnails and viewings
       const data = {
         title: form.title.trim().toLowerCase(),
@@ -397,6 +362,10 @@ const AddDress = () => {
         subCategory: form.subCategory.toLowerCase(),
         thumbnailS3Keys,
         viewingS3Keys,
+        submit,
+        files,
+        keywords: form.keywords,
+        paid,
       }
       await callApi(
         'https://api.reusifi.com/prod/addProduct',
@@ -404,6 +373,10 @@ const AddDress = () => {
         false,
         data
       )
+      if (!submit) {
+        setSubmitLoading(false)
+        return true
+      }
       setCount((prevValue) => prevValue + 1)
       setAdData([])
       setAdLastEvaluatedKey(null)
@@ -427,6 +400,7 @@ const AddDress = () => {
       })
       message.success('Your ad is now live on Reusifi.')
       navigate('/ads')
+      return true
     } catch (err) {
       setSubmitLoading(false)
       if (isModalVisibleRef.current) {
@@ -437,15 +411,31 @@ const AddDress = () => {
         Modal.error(errorSessionConfig)
       } else if (err?.status === 422) {
         isModalVisibleRef.current = false
-        openNotificationWithIcon(
-          'error',
-          err.response.data.message,
-          'Invalid action'
-        )
+        openNotificationWithIcon('error', err.response.data.message, 'Error')
+        if (err.response.data.invalidImage) {
+          setForm((prevValue) => {
+            return {
+              ...prevValue,
+              images: [
+                ...prevValue.images.filter(
+                  (image) => !err.response.data.invalidUids.includes(image.uid)
+                ),
+              ],
+            }
+          })
+        }
+        if (err.response.data.invalidText) {
+          setBadLanguage((prevValue) => {
+            return {
+              ...prevValue,
+              ...err?.response.data.badLanguage,
+            }
+          })
+        }
       } else {
         Modal.error(errorConfig)
       }
-      return
+      return false
     }
   }
 
@@ -487,11 +477,6 @@ const AddDress = () => {
   }
   const bottomRef = useRef(null)
   const bottomRefPincode = useRef(null)
-
-  const [badLanguage, setBadLanguage] = useState({
-    title: false,
-    description: false,
-  })
 
   const bottomRefPrice = useRef(null)
 
@@ -555,46 +540,6 @@ const AddDress = () => {
 
   const handleOpenChange = (newOpen) => {
     setPopOpen(newOpen)
-  }
-
-  const validateField = async () => {
-    try {
-      const result = await callApi(
-        'https://api.reusifi.com/prod/verifyLanguage',
-        'POST',
-        false,
-        {
-          title: form.title,
-          description: form.description,
-        }
-      )
-      return true
-    } catch (err) {
-      if (isModalVisibleRef.current) {
-        return
-      }
-      isModalVisibleRef.current = true
-      if (err?.status === 401) {
-        Modal.error(errorSessionConfig)
-      } else if (err?.status === 422) {
-        isModalVisibleRef.current = false
-        openNotificationWithIcon(
-          'error',
-          err.response.data.message,
-          'Invalid Text'
-        )
-        setBadLanguage((prevValue) => {
-          return {
-            ...prevValue,
-            ...err?.response.data.badLanguage,
-          }
-        })
-      } else {
-        Modal.error(errorConfig)
-      }
-    } finally {
-      setIsSubmitted(true)
-    }
   }
 
   return (
@@ -1013,24 +958,19 @@ const AddDress = () => {
                       fontWeight: '300',
                     }}
                     onClick={async () => {
+                      setIsSubmitted(true)
                       if (!isValid()) {
-                        setIsSubmitted(true)
                         message.info('All fields are mandatory')
                         return
                       }
                       setSubmitLoading(true)
-                      const [resultLanguage, resultImage] = await Promise.all([
-                        validateField(),
-                        verifyImage(),
-                      ])
-                      if (!resultLanguage || !resultImage) {
-                        setSubmitLoading(false)
-                        return
-                      }
                       if (count < 3) {
-                        handleSubmit()
+                        await handleSubmit(true, false)
                       } else {
-                        navigate('/checkout', { state: { adType: 'POSTAD' } })
+                        const isValid = await handleSubmit(false, true)
+                        if (isValid) {
+                          navigate('/checkout', { state: { adType: 'POSTAD' } })
+                        }
                       }
                     }}
                     type="primary"

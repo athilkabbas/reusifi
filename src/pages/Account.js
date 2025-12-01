@@ -128,42 +128,41 @@ const Account = () => {
     })
   }
 
-  console.log(account)
-
   const handleSubmit = async () => {
     try {
       if (
         fileList.length === 0 &&
         Object.keys(account).every((key) => {
-          if (typeof account[key] !== 'string') {
+          if (typeof account[key] === 'boolean') {
             return account[key] === form[key]
+          } else if (typeof account[key] === 'string') {
+            return account[key].trim() === form[key].trim()
           }
-          return account[key].trim() === form[key].trim()
+          return true
         })
       ) {
         message.info('No changes found')
         return
       }
       setSubmitLoading(true)
-      const [resultLanguage, resultImage] = await Promise.all([
-        validateField(),
-        verifyImage(),
-      ])
-      if (!resultLanguage || !resultImage) {
-        setSubmitLoading(false)
-        return
-      }
       let data = {
         ...form,
         name: form.name.trim(),
         description: form.description.trim(),
       }
       if (fileList.length > 0) {
-        const s3Keys = await uploadImages(fileList, 'image/webp')
+        const s3Keys = await uploadImages(fileList, 'image/jpeg')
+        let files = fileList.map((file, index) => {
+          const { preview, originFileObj, ...fileRest } = file
+          return { ...fileRest, s3Key: s3Keys[index] }
+        })
         data = {
           ...data,
           image: `https://digpfxl7t6jra.cloudfront.net/${s3Keys[0]}`,
           s3Key: s3Keys[0],
+          files,
+          keywords: [],
+          submit: true,
         }
       }
 
@@ -190,6 +189,24 @@ const Account = () => {
       isModalVisibleRef.current = true
       if (err?.status === 401) {
         Modal.error(errorSessionConfig)
+      } else if (err?.status === 422) {
+        isModalVisibleRef.current = false
+        openNotificationWithIcon('error', err.response.data.message, 'Error')
+        if (err.response.data.invalidImage) {
+          setFileList((prevValue) => {
+            return prevValue.filter(
+              (image) => !err.response.data.invalidUids.includes(image.uid)
+            )
+          })
+        }
+        if (err.response.data.invalidText) {
+          setBadLanguage((prevValue) => {
+            return {
+              ...prevValue,
+              ...err?.response.data.badLanguage,
+            }
+          })
+        }
       } else {
         Modal.error(errorConfig)
       }
@@ -323,6 +340,9 @@ const Account = () => {
       message: title,
       description: `${message}`,
       duration: 0,
+      style: {
+        whiteSpace: 'pre-wrap',
+      },
     })
   }
 
@@ -363,15 +383,11 @@ const Account = () => {
       openNotificationWithIcon(
         'error',
         `${file.name} is in an unsupported format.`,
-        'Invalid Image'
+        'Error'
       )
       return Upload.LIST_IGNORE
     } else if (file.size / 1024 / 1024 > 30) {
-      openNotificationWithIcon(
-        'error',
-        `${file.name} is over 30MB`,
-        'Invalid Image'
-      )
+      openNotificationWithIcon('error', `${file.name} is over 30MB`, 'Error')
       return Upload.LIST_IGNORE
     }
     return false
@@ -398,11 +414,7 @@ const Account = () => {
         Modal.error(errorSessionConfig)
       } else if (err?.status === 422) {
         isModalVisibleRef.current = false
-        openNotificationWithIcon(
-          'error',
-          err.response.data.message,
-          'Invalid Text'
-        )
+        openNotificationWithIcon('error', err.response.data.message, 'Error')
         setBadLanguage((prevValue) => {
           return {
             ...prevValue,
@@ -440,11 +452,7 @@ const Account = () => {
         Modal.error(errorSessionConfig)
       } else if (err && err.status === 422) {
         isModalVisibleRef.current = false
-        openNotificationWithIcon(
-          'error',
-          err.response.data.message,
-          'Invalid Image'
-        )
+        openNotificationWithIcon('error', err.response.data.message, 'Error')
         setFileList((prevValue) => {
           return prevValue.filter(
             (image) => !err.response.data.invalidUids.includes(image.uid)
