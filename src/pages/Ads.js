@@ -317,6 +317,7 @@ const Ads = () => {
                                   borderTopLeftRadius: '8px',
                                   borderTopRightRadius: '8px',
                                   overflow: 'hidden',
+                                  height: '220px',
                                 }}
                               >
                                 {!loadedImages[item['item']['uuid']] && (
