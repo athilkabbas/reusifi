@@ -13,6 +13,7 @@
     "aws-amplify": "^6.6.0",
     "axios": "^1.7.7",
     "browser-image-compression": "^2.0.2",
+    "jwt-decode": "^4.0.0",
     "lodash": "^4.17.21",
     "lucide-react": "^0.536.0",
     "maplibre-gl": "^5.10.0",

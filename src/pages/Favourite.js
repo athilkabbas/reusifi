@@ -352,7 +352,7 @@ const Favourites = () => {
                     gutter: 10,
                   }}
                   dataSource={favData}
-                  renderItem={(item) => {
+                  renderItem={(item, index) => {
                     return (
                       <>
                         <List.Item
@@ -416,6 +416,7 @@ const Favourites = () => {
                                 )}
                                 <img
                                   src={item['images'][0]}
+                                  {...(index < 6 && { fetchpriority: 'high' })}
                                   alt={item['item']['title']}
                                   style={{
                                     height: '220px',

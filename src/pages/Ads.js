@@ -276,7 +276,7 @@ const Ads = () => {
                     gutter: 10,
                   }}
                   dataSource={adData}
-                  renderItem={(item) => {
+                  renderItem={(item, index) => {
                     return (
                       <>
                         <List.Item
@@ -345,6 +345,7 @@ const Ads = () => {
                                 <img
                                   src={item['images'][0]}
                                   alt={item['item']['title']}
+                                  {...(index < 6 && { fetchpriority: 'high' })}
                                   style={{
                                     height: '220px',
                                     objectFit: 'cover',

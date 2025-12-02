@@ -1196,7 +1196,7 @@ const Home = () => {
                     gutter: 10,
                   }}
                   dataSource={data}
-                  renderItem={(item) => {
+                  renderItem={(item, index) => {
                     return (
                       <>
                         <List.Item
@@ -1260,6 +1260,7 @@ const Home = () => {
                                 )}
                                 <img
                                   src={item['images'][0]}
+                                  {...(index < 6 && { fetchpriority: 'high' })}
                                   alt={item['item']['title']}
                                   style={{
                                     height: '220px',
