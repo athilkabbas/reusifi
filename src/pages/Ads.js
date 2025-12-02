@@ -346,13 +346,11 @@ const Ads = () => {
                                   src={item['images'][0]}
                                   alt={item['item']['title']}
                                   {...(index < 6 && { fetchpriority: 'high' })}
+                                  loading={index > 6 ? 'lazy' : 'eager'}
                                   style={{
                                     height: '220px',
                                     objectFit: 'cover',
                                     width: '100%',
-                                    display: loadedImages[item['item']['uuid']]
-                                      ? 'block'
-                                      : 'none',
                                   }}
                                   onLoad={() =>
                                     handleImageLoad(item['item']['uuid'])

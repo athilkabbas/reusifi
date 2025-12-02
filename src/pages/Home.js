@@ -1261,13 +1261,11 @@ const Home = () => {
                                 <img
                                   src={item['images'][0]}
                                   {...(index < 6 && { fetchpriority: 'high' })}
+                                  loading={index > 6 ? 'lazy' : 'eager'}
                                   alt={item['item']['title']}
                                   style={{
                                     height: '220px',
                                     objectFit: 'cover',
-                                    display: loadedImages[item['item']['uuid']]
-                                      ? 'block'
-                                      : 'none',
                                   }}
                                   onLoad={() =>
                                     handleImageLoad(item['item']['uuid'])
