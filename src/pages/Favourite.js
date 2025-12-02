@@ -416,8 +416,8 @@ const Favourites = () => {
                                 )}
                                 <img
                                   src={item['images'][0]}
-                                  {...(index < 6 && { fetchpriority: 'high' })}
-                                  loading={index > 6 ? 'lazy' : 'eager'}
+                                  {...(index <= 5 && { fetchpriority: 'high' })}
+                                  loading={index > 5 ? 'lazy' : 'eager'}
                                   alt={item['item']['title']}
                                   style={{
                                     height: '220px',

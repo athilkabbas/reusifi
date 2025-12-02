@@ -346,8 +346,8 @@ const Ads = () => {
                                 <img
                                   src={item['images'][0]}
                                   alt={item['item']['title']}
-                                  {...(index < 6 && { fetchpriority: 'high' })}
-                                  loading={index > 6 ? 'lazy' : 'eager'}
+                                  {...(index <= 5 && { fetchpriority: 'high' })}
+                                  loading={index > 5 ? 'lazy' : 'eager'}
                                   style={{
                                     height: '220px',
                                     objectFit: 'cover',
