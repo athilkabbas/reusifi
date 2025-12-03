@@ -868,6 +868,8 @@ const ChatPage = () => {
                                 : 'calc(100dvw - 30px)',
                               backgroundColor:
                                 item.read === 'false' ? '#f6ffed' : '#ffffff',
+                              boxShadow:
+                                '0 1px 2px 0 rgba(0, 0, 0, 0.05),  0 5px 15px rgba(0, 0, 0, 0.1)',
                             }}
                             onClick={() => {
                               if (item.blocked) {
