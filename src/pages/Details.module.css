@@ -11,7 +11,7 @@
 }
 
 :global(.slick-dots li) {
-  background: #52c41a !important;
+  background: black !important;
 }
 
 :global(.slick-dots li.slick-active) {
