@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
+import styles from './AddDress.module.css'
 import { Col, Popover, Select, Skeleton, Space, Spin } from 'antd'
 import { Input, notification } from 'antd'
 import { useNavigate } from 'react-router-dom'
@@ -892,7 +893,11 @@ const AddDress = () => {
                   style={{ display: 'block', height: 0 }}
                 ></div>
                 <Space.Compact size="large">
-                  <Space size="large" direction="vertical">
+                  <Space
+                    size="large"
+                    direction="vertical"
+                    className="ad-upload"
+                  >
                     <Upload
                       accept="image/png,image/jpeg"
                       listType="picture"

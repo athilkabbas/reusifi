@@ -1,0 +1,15 @@
+:global(.ant-drawer-body) {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+:global(.ant-drawer-body::-webkit-scrollbar) {
+  display: none;
+}
+
+:global(.ant-radio-button-wrapper-checked) {
+  /* your styles for the checked radio button */
+  background: #52c41a !important;
+}

@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
+import styles from './Details.module.css'
 import { Skeleton, Spin, Descriptions, Col, Tag } from 'antd'
 import { useNavigate, Link } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'

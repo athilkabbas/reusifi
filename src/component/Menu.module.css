@@ -1,0 +1,17 @@
+/* Make all top-level menu items (including submenus) take equal space */
+:global(.ant-menu-horizontal > .ant-menu-item) {
+  flex: 1 !important;
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  padding: 0 !important;
+  height: 60px !important;
+}
+
+:global(.ant-menu-item-selected) {
+  color: black !important;
+}
+
+:global(.ant-menu-horizontal > .ant-menu-item-selected::after) {
+  border-bottom-color: white !important;
+}

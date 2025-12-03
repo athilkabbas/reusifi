@@ -1,0 +1,40 @@
+:global(.hero-section) {
+  background: linear-gradient(135deg, #f6ffed 0%, #f0f9ff 100%);
+  min-height: 300px;
+}
+
+:global(.stats-section) {
+  background: #ffffff;
+}
+
+:global(.features-section) {
+  background: #fafafa;
+}
+
+:global(.cta-section) {
+  background: #52c41a;
+}
+
+:global(.ant-card-hoverable:hover) {
+  transform: translateY(-4px);
+  transition: all 0.3s ease;
+}
+
+:global(.category-card) {
+  transition: all 0.3s ease;
+}
+
+:global(.category-card:hover) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+@media (max-width: 768px) {
+  :global(.hero-title) {
+    font-size: 2rem !important;
+  }
+
+  :global(.hero-subtitle) {
+    font-size: 1rem !important;
+  }
+}

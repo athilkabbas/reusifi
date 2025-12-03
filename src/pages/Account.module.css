@@ -1,0 +1,19 @@
+:global(.ant-switch-checked) {
+  background-color: #52c41a !important;
+}
+
+@media (max-width: 767px) {
+  :global(.account-upload .ant-upload-list-item) {
+    width: 74dvw !important;
+  }
+}
+
+@media (min-width: 768px) {
+  :global(.account-upload .ant-upload-list-item) {
+    width: 40dvw !important;
+  }
+}
+
+:global(.my-red-border) {
+  border-color: #ff4d4f !important;
+}

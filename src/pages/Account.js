@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
+import styles from './Account.module.css'
 import {
   Layout,
   Space,
@@ -638,7 +639,7 @@ const Account = () => {
                           color: 'black',
                           fontSize: '13px',
                           fontWeight: '300',
-                          width: !isMobile ? '50dvw' : '70dvw',
+                          width: !isMobile ? '40dvw' : '74dvw',
                         }}
                         icon={<UploadOutlined />}
                       >

@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef, useContext } from 'react'
+import styles from './Home.module.css'
 import { useNavigate } from 'react-router-dom'
 import {
   Layout,

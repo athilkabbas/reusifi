@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef, useContext } from 'react'
+import styles from './ChatPage.module.css'
 import { Col, message, Row, Spin } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import { Layout, Modal } from 'antd'

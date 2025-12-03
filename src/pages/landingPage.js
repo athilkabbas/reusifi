@@ -1,5 +1,5 @@
-"use client";
-import { signInWithRedirect } from "@aws-amplify/auth";
+'use client'
+import { signInWithRedirect } from '@aws-amplify/auth'
 import {
   Layout,
   Row,
@@ -10,7 +10,8 @@ import {
   Space,
   Tag,
   Grid,
-} from "antd";
+} from 'antd'
+import styles from './landingPage.module.css'
 import {
   DollarSign,
   ShieldCheck,
@@ -21,54 +22,54 @@ import {
   Camera,
   MessageCircle,
   Users,
-} from "lucide-react";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+} from 'lucide-react'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-const { Header, Content, Footer } = Layout;
-const { Title, Paragraph, Text } = Typography;
-const { Meta } = Card;
-const { useBreakpoint } = Grid;
+const { Header, Content, Footer } = Layout
+const { Title, Paragraph, Text } = Typography
+const { Meta } = Card
+const { useBreakpoint } = Grid
 
 const ReusifiLanding = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
-  const [mobileMenuVisible, setMobileMenuVisible] = useState(false);
-  const screens = useBreakpoint();
+  const [mobileMenuVisible, setMobileMenuVisible] = useState(false)
+  const screens = useBreakpoint()
 
   const showMobileMenu = () => {
-    setMobileMenuVisible(true);
-  };
+    setMobileMenuVisible(true)
+  }
 
   const hideMobileMenu = () => {
-    setMobileMenuVisible(false);
-  };
+    setMobileMenuVisible(false)
+  }
 
   const menuItems = [
-    { key: "how-it-works", label: "How it Works" },
-    { key: "features", label: "Features" },
-    { key: "about", label: "About" },
-    { key: "contact", label: "Contact" },
-  ];
+    { key: 'how-it-works', label: 'How it Works' },
+    { key: 'features', label: 'Features' },
+    { key: 'about', label: 'About' },
+    { key: 'contact', label: 'Contact' },
+  ]
 
   return (
     <Layout>
       {/* Header */}
       <Header
         style={{
-          background: "#fff",
-          padding: screens.md ? "0 50px" : "0 20px",
-          boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-          position: "sticky",
+          background: '#fff',
+          padding: screens.md ? '0 50px' : '0 20px',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+          position: 'sticky',
           top: 0,
           zIndex: 1000,
         }}
       >
-        <Row justify="space-between" align="middle" style={{ height: "64px" }}>
+        <Row justify="space-between" align="middle" style={{ height: '64px' }}>
           <Col>
             <Space align="center">
-              <Recycling style={{ fontSize: "32px", color: "#52c41a" }} />
-              <Title level={3} style={{ margin: 0, color: "#262626" }}>
+              <Recycling style={{ fontSize: '32px', color: '#52c41a' }} />
+              <Title level={3} style={{ margin: 0, color: '#262626' }}>
                 Reusifi
               </Title>
             </Space>
@@ -90,13 +91,13 @@ const ReusifiLanding = () => {
                     <Button
                       onClick={async () => {
                         try {
-                          signInWithRedirect();
+                          signInWithRedirect()
                         } catch (err) {
-                          navigate("/");
+                          navigate('/')
                         }
                       }}
                       type="primary"
-                      style={{ backgroundColor: "#52c41a" }}
+                      style={{ backgroundColor: '#52c41a' }}
                     >
                       Get Started
                     </Button>
@@ -110,14 +111,14 @@ const ReusifiLanding = () => {
                 <Button
                   onClick={async () => {
                     try {
-                      signInWithRedirect();
+                      signInWithRedirect()
                     } catch (err) {
-                      navigate("/");
+                      navigate('/')
                     }
                   }}
                   type="primary"
                   size="small"
-                  style={{ backgroundColor: "#52c41a" }}
+                  style={{ backgroundColor: '#52c41a' }}
                 >
                   Get Started
                 </Button>
@@ -150,17 +151,17 @@ const ReusifiLanding = () => {
       <Content>
         {/* Hero Section */}
         <div className="hero-section">
-          <div style={{ padding: screens.md ? "80px 50px" : "40px 20px" }}>
+          <div style={{ padding: screens.md ? '80px 50px' : '40px 20px' }}>
             <Row gutter={[48, 48]} align="middle">
               <Col xs={24} lg={14}>
                 <Space
                   direction="vertical"
                   size="large"
-                  style={{ width: "100%" }}
+                  style={{ width: '100%' }}
                 >
                   <Tag
                     color="green"
-                    style={{ fontSize: "14px", padding: "4px 12px" }}
+                    style={{ fontSize: '14px', padding: '4px 12px' }}
                   >
                     🌱 Sustainable Shopping
                   </Tag>
@@ -169,13 +170,13 @@ const ReusifiLanding = () => {
                     level={1}
                     className="hero-title"
                     style={{
-                      fontSize: screens.md ? "3.5rem" : "2rem",
+                      fontSize: screens.md ? '3.5rem' : '2rem',
                       lineHeight: 1.2,
                       marginBottom: 0,
                     }}
                   >
-                    Buy & Sell Used Items with{" "}
-                    <span style={{ color: "#52c41a" }}>Confidence</span>
+                    Buy & Sell Used Items with{' '}
+                    <span style={{ color: '#52c41a' }}>Confidence</span>
                   </Title>
 
                   {/* <Paragraph
@@ -192,21 +193,21 @@ const ReusifiLanding = () => {
                   </Paragraph> */}
 
                   <Space
-                    direction={screens.sm ? "horizontal" : "vertical"}
+                    direction={screens.sm ? 'horizontal' : 'vertical'}
                     size="middle"
-                    style={{ width: screens.sm ? "auto" : "100%" }}
+                    style={{ width: screens.sm ? 'auto' : '100%' }}
                   >
                     <Button
                       onClick={async () => {
                         try {
-                          signInWithRedirect();
+                          signInWithRedirect()
                         } catch (err) {
-                          navigate("/");
+                          navigate('/')
                         }
                       }}
                       type="primary"
                       size="large"
-                      style={{ backgroundColor: "#52c41a", minWidth: "160px" }}
+                      style={{ backgroundColor: '#52c41a', minWidth: '160px' }}
                       icon={<ArrowRight />}
                       iconPosition="end"
                     >
@@ -217,22 +218,22 @@ const ReusifiLanding = () => {
                     </Button> */}
                   </Space>
 
-                  <Row gutter={[24, 8]} style={{ marginTop: "20px" }}>
+                  <Row gutter={[24, 8]} style={{ marginTop: '20px' }}>
                     <Col xs={24} sm={8}>
                       <Space>
-                        <CheckCircle style={{ color: "#52c41a" }} />
+                        <CheckCircle style={{ color: '#52c41a' }} />
                         <Text type="secondary">Free to list</Text>
                       </Space>
                     </Col>
                     <Col xs={24} sm={8}>
                       <Space>
-                        <CheckCircle style={{ color: "#52c41a" }} />
+                        <CheckCircle style={{ color: '#52c41a' }} />
                         <Text type="secondary">Secure payments</Text>
                       </Space>
                     </Col>
                     <Col xs={24} sm={8}>
                       <Space>
-                        <CheckCircle style={{ color: "#52c41a" }} />
+                        <CheckCircle style={{ color: '#52c41a' }} />
                         <Text type="secondary">Local pickup</Text>
                       </Space>
                     </Col>
@@ -323,21 +324,21 @@ const ReusifiLanding = () => {
         {/* How It Works Section */}
         <div
           className="features-section"
-          style={{ padding: screens.md ? "80px 50px" : "40px 20px" }}
+          style={{ padding: screens.md ? '80px 50px' : '40px 20px' }}
         >
-          <div style={{ textAlign: "center", marginBottom: "60px" }}>
+          <div style={{ textAlign: 'center', marginBottom: '60px' }}>
             <Title
               level={2}
-              style={{ fontSize: screens.md ? "2.5rem" : "2rem" }}
+              style={{ fontSize: screens.md ? '2.5rem' : '2rem' }}
             >
               How Reusifi Works
             </Title>
             <Paragraph
               style={{
-                fontSize: "1.1rem",
-                color: "#595959",
-                maxWidth: "800px",
-                margin: "0 auto",
+                fontSize: '1.1rem',
+                color: '#595959',
+                maxWidth: '800px',
+                margin: '0 auto',
               }}
             >
               Simple steps to start buying and selling used items in your
@@ -349,25 +350,25 @@ const ReusifiLanding = () => {
             <Col xs={24} md={8}>
               <Card
                 hoverable
-                style={{ textAlign: "center", height: "100%" }}
-                styles={{ body: { padding: "32px 24px" } }}
+                style={{ textAlign: 'center', height: '100%' }}
+                styles={{ body: { padding: '32px 24px' } }}
               >
                 <div
                   style={{
-                    width: "80px",
-                    height: "80px",
-                    backgroundColor: "#f6ffed",
-                    borderRadius: "50%",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    margin: "0 auto 24px",
+                    width: '80px',
+                    height: '80px',
+                    backgroundColor: '#f6ffed',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    margin: '0 auto 24px',
                   }}
                 >
-                  <Camera style={{ fontSize: "32px", color: "#52c41a" }} />
+                  <Camera style={{ fontSize: '32px', color: '#52c41a' }} />
                 </div>
                 <Title level={4}>1. List Your Item</Title>
-                <Paragraph style={{ color: "#595959" }}>
+                <Paragraph style={{ color: '#595959' }}>
                   Take photos, write a description, and set your price. Listing
                   is completely free!
                 </Paragraph>
@@ -377,27 +378,27 @@ const ReusifiLanding = () => {
             <Col xs={24} md={8}>
               <Card
                 hoverable
-                style={{ textAlign: "center", height: "100%" }}
-                styles={{ body: { padding: "32px 24px" } }}
+                style={{ textAlign: 'center', height: '100%' }}
+                styles={{ body: { padding: '32px 24px' } }}
               >
                 <div
                   style={{
-                    width: "80px",
-                    height: "80px",
-                    backgroundColor: "#f6ffed",
-                    borderRadius: "50%",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    margin: "0 auto 24px",
+                    width: '80px',
+                    height: '80px',
+                    backgroundColor: '#f6ffed',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    margin: '0 auto 24px',
                   }}
                 >
                   <MessageCircle
-                    style={{ fontSize: "32px", color: "#52c41a" }}
+                    style={{ fontSize: '32px', color: '#52c41a' }}
                   />
                 </div>
                 <Title level={4}>2. Connect with Buyers</Title>
-                <Paragraph style={{ color: "#595959" }}>
+                <Paragraph style={{ color: '#595959' }}>
                   Chat with interested buyers, answer questions, and arrange
                   pickup or delivery.
                 </Paragraph>
@@ -407,25 +408,25 @@ const ReusifiLanding = () => {
             <Col xs={24} md={8}>
               <Card
                 hoverable
-                style={{ textAlign: "center", height: "100%" }}
-                styles={{ body: { padding: "32px 24px" } }}
+                style={{ textAlign: 'center', height: '100%' }}
+                styles={{ body: { padding: '32px 24px' } }}
               >
                 <div
                   style={{
-                    width: "80px",
-                    height: "80px",
-                    backgroundColor: "#f6ffed",
-                    borderRadius: "50%",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    margin: "0 auto 24px",
+                    width: '80px',
+                    height: '80px',
+                    backgroundColor: '#f6ffed',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    margin: '0 auto 24px',
                   }}
                 >
-                  <DollarSign style={{ fontSize: "32px", color: "#52c41a" }} />
+                  <DollarSign style={{ fontSize: '32px', color: '#52c41a' }} />
                 </div>
                 <Title level={4}>3. Get Paid</Title>
-                <Paragraph style={{ color: "#595959" }}>
+                <Paragraph style={{ color: '#595959' }}>
                   Complete the sale with secure payment options and earn money
                   from items you no longer need.
                 </Paragraph>
@@ -435,26 +436,26 @@ const ReusifiLanding = () => {
         </div>
 
         {/* Features Section */}
-        <div style={{ padding: screens.md ? "80px 50px" : "40px 20px" }}>
+        <div style={{ padding: screens.md ? '80px 50px' : '40px 20px' }}>
           <Row gutter={[48, 48]} align="middle">
             <Col xs={24} lg={14}>
               <Space
                 direction="vertical"
                 size="large"
-                style={{ width: "100%" }}
+                style={{ width: '100%' }}
               >
                 <div>
                   <Title
                     level={2}
-                    style={{ fontSize: screens.md ? "2.5rem" : "2rem" }}
+                    style={{ fontSize: screens.md ? '2.5rem' : '2rem' }}
                   >
                     Why Choose Reusifi?
                   </Title>
                   <Paragraph
                     style={{
-                      fontSize: "1.1rem",
-                      color: "#595959",
-                      maxWidth: "600px",
+                      fontSize: '1.1rem',
+                      color: '#595959',
+                      maxWidth: '600px',
                     }}
                   >
                     We've built the most trusted platform for buying and selling
@@ -465,23 +466,23 @@ const ReusifiLanding = () => {
                 <Space
                   direction="vertical"
                   size="large"
-                  style={{ width: "100%" }}
+                  style={{ width: '100%' }}
                 >
                   <Row gutter={[16, 16]} align="top">
                     <Col flex="none">
                       <ShieldCheck
                         style={{
-                          fontSize: "24px",
-                          color: "#52c41a",
-                          marginTop: "4px",
+                          fontSize: '24px',
+                          color: '#52c41a',
+                          marginTop: '4px',
                         }}
                       />
                     </Col>
                     <Col flex="auto">
-                      <Title level={4} style={{ marginBottom: "8px" }}>
+                      <Title level={4} style={{ marginBottom: '8px' }}>
                         Secure & Safe
                       </Title>
-                      <Paragraph style={{ color: "#595959", marginBottom: 0 }}>
+                      <Paragraph style={{ color: '#595959', marginBottom: 0 }}>
                         Verified profiles, secure messaging, and buyer
                         protection for peace of mind.
                       </Paragraph>
@@ -492,17 +493,17 @@ const ReusifiLanding = () => {
                     <Col flex="none">
                       <Smartphone
                         style={{
-                          fontSize: "24px",
-                          color: "#52c41a",
-                          marginTop: "4px",
+                          fontSize: '24px',
+                          color: '#52c41a',
+                          marginTop: '4px',
                         }}
                       />
                     </Col>
                     <Col flex="auto">
-                      <Title level={4} style={{ marginBottom: "8px" }}>
+                      <Title level={4} style={{ marginBottom: '8px' }}>
                         Mobile-First
                       </Title>
-                      <Paragraph style={{ color: "#595959", marginBottom: 0 }}>
+                      <Paragraph style={{ color: '#595959', marginBottom: 0 }}>
                         Easy-to-use mobile app for listing, browsing, and
                         managing your sales on the go.
                       </Paragraph>
@@ -513,17 +514,17 @@ const ReusifiLanding = () => {
                     <Col flex="none">
                       <Users
                         style={{
-                          fontSize: "24px",
-                          color: "#52c41a",
-                          marginTop: "4px",
+                          fontSize: '24px',
+                          color: '#52c41a',
+                          marginTop: '4px',
                         }}
                       />
                     </Col>
                     <Col flex="auto">
-                      <Title level={4} style={{ marginBottom: "8px" }}>
+                      <Title level={4} style={{ marginBottom: '8px' }}>
                         Local Community
                       </Title>
-                      <Paragraph style={{ color: "#595959", marginBottom: 0 }}>
+                      <Paragraph style={{ color: '#595959', marginBottom: 0 }}>
                         Connect with buyers and sellers in your neighborhood for
                         easy pickup and delivery.
                       </Paragraph>
@@ -553,16 +554,16 @@ const ReusifiLanding = () => {
         {/* Categories Section */}
         <div
           className="features-section"
-          style={{ padding: screens.md ? "80px 50px" : "40px 20px" }}
+          style={{ padding: screens.md ? '80px 50px' : '40px 20px' }}
         >
-          <div style={{ textAlign: "center", marginBottom: "60px" }}>
+          <div style={{ textAlign: 'center', marginBottom: '60px' }}>
             <Title
               level={2}
-              style={{ fontSize: screens.md ? "2.5rem" : "2rem" }}
+              style={{ fontSize: screens.md ? '2.5rem' : '2rem' }}
             >
               Popular Categories
             </Title>
-            <Paragraph style={{ fontSize: "1.1rem", color: "#595959" }}>
+            <Paragraph style={{ fontSize: '1.1rem', color: '#595959' }}>
               Find great deals across all categories
             </Paragraph>
           </div>
@@ -721,49 +722,49 @@ const ReusifiLanding = () => {
         {/* CTA Section */}
         <div
           className="cta-section"
-          style={{ padding: screens.md ? "80px 50px" : "40px 20px" }}
+          style={{ padding: screens.md ? '80px 50px' : '40px 20px' }}
         >
-          <div style={{ textAlign: "center" }}>
-            <Space direction="vertical" size="large" style={{ width: "100%" }}>
+          <div style={{ textAlign: 'center' }}>
+            <Space direction="vertical" size="large" style={{ width: '100%' }}>
               <Title
                 level={2}
                 style={{
-                  color: "white",
-                  fontSize: screens.md ? "2.5rem" : "2rem",
+                  color: 'white',
+                  fontSize: screens.md ? '2.5rem' : '2rem',
                 }}
               >
                 Ready to Start Selling?
               </Title>
               <Paragraph
                 style={{
-                  color: "rgba(255,255,255,0.85)",
-                  fontSize: "1.1rem",
-                  maxWidth: "600px",
-                  margin: "0 auto",
+                  color: 'rgba(255,255,255,0.85)',
+                  fontSize: '1.1rem',
+                  maxWidth: '600px',
+                  margin: '0 auto',
                 }}
               >
                 Join Reusifi today and turn your unused items into cash while
                 helping the environment.
               </Paragraph>
               <Space
-                direction={screens.sm ? "horizontal" : "vertical"}
+                direction={screens.sm ? 'horizontal' : 'vertical'}
                 size="middle"
-                style={{ width: screens.sm ? "auto" : "100%" }}
+                style={{ width: screens.sm ? 'auto' : '100%' }}
               >
                 <Button
                   onClick={async () => {
                     try {
-                      signInWithRedirect();
+                      signInWithRedirect()
                     } catch (err) {
-                      navigate("/");
+                      navigate('/')
                     }
                   }}
                   size="large"
                   style={{
-                    backgroundColor: "white",
-                    color: "#52c41a",
-                    border: "none",
-                    minWidth: "180px",
+                    backgroundColor: 'white',
+                    color: '#52c41a',
+                    border: 'none',
+                    minWidth: '180px',
                   }}
                 >
                   Get Started for Free
@@ -841,17 +842,17 @@ const ReusifiLanding = () => {
       {/* Footer */}
       <Footer
         style={{
-          backgroundColor: "#fafafa",
-          borderTop: "1px solid #f0f0f0",
-          padding: "10px",
+          backgroundColor: '#fafafa',
+          borderTop: '1px solid #f0f0f0',
+          padding: '10px',
         }}
       >
         <Row justify="space-between" align="middle" gutter={[16, 16]}>
           <Col xs={24} sm={12}>
             <Space align="center">
-              <Recycling style={{ fontSize: "24px", color: "#52c41a" }} />
+              <Recycling style={{ fontSize: '24px', color: '#52c41a' }} />
               <Text strong>Reusifi</Text>
-              <Text type="secondary" style={{ marginLeft: "16px" }}>
+              <Text type="secondary" style={{ marginLeft: '16px' }}>
                 © 2025 Reusifi. All rights reserved.
               </Text>
             </Space>
@@ -874,7 +875,7 @@ const ReusifiLanding = () => {
         </Row>
       </Footer>
     </Layout>
-  );
-};
+  )
+}
 
-export default ReusifiLanding;
+export default ReusifiLanding

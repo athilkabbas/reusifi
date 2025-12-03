@@ -1,0 +1,31 @@
+@media (max-width: 767px) {
+  :global(.ad-upload .ant-upload-list-item) {
+    width: calc(100dvw - 30px) !important;
+  }
+}
+
+@media (min-width: 768px) {
+  :global(.ad-upload .ant-upload-list-item) {
+    width: 50dvw !important;
+  }
+}
+
+:global(.my-red-border) {
+  border-color: #ff4d4f !important;
+}
+
+:global(.my-red-border .ant-select-selector) {
+  border-color: #ff4d4f !important;
+}
+
+:global(.my-custom-cascader .ant-select-selector) {
+  border-radius: 9px !important;
+}
+
+:global(.my-custom-tree-select .ant-select-selector) {
+  border-radius: 9px !important;
+}
+
+:global(.my-custom-select .ant-select-selector) {
+  border-radius: 9px !important;
+}

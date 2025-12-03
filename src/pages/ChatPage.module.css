@@ -1,0 +1,8 @@
+:global(.ant-segmented-thumb) {
+  background-color: #52c41a !important;
+}
+
+:global(.ant-segmented-item-selected) {
+  background-color: #52c41a !important;
+  color: white !important;
+}
