@@ -1,15 +1,19 @@
-:global(.ant-carousel .slick-slide) {
+/* :global(.ant-carousel .slick-slide) {
   flex: 0 0 auto !important;
   width: 300px !important;
   display: flex !important;
   justify-content: center;
   align-items: center;
-}
+} */
 
 :global(.ant-carousel .slick-arrow) {
   color: #52c41a !important;
 }
 
-:global(.ant-carousel .slick-dots li.slick-active) {
-  background: #1890ff !important;
+:global(.slick-dots li) {
+  background: #52c41a !important;
+}
+
+:global(.slick-dots li.slick-active) {
+  background: #135200 !important;
 }
