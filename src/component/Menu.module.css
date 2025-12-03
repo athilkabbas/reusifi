@@ -13,5 +13,5 @@
 }
 
 :global(.ant-menu-horizontal > .ant-menu-item-selected::after) {
-  border-bottom-color: white !important;
+  border-bottom-color: transparent !important;
 }
