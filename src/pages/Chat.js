@@ -140,6 +140,8 @@ const Chat = () => {
     return 8 // xxl
   }
 
+  const [wsConfig, setWsConfig] = useState(null)
+
   const [limit, setLimit] = useState(0) // default
   const scrollToBottom = () => {
     requestAnimationFrame(() => {
@@ -205,7 +207,7 @@ const Chat = () => {
       try {
         setSocketLoading(true)
         const currentUser = user
-        await connect({
+        const connectConfig = {
           getUrlFn: () =>
             getWebSocketUrl(currentUser, productId || recipient?.item?.uuid),
           onOpen: () => {
@@ -257,7 +259,9 @@ const Chat = () => {
           },
           onError: () => {},
           onClose: () => {},
-        })
+        }
+        setWsConfig(connectConfig)
+        await connect(connectConfig)
       } catch {
         setSocketLoading(false)
         if (isModalVisibleRef.current) return
@@ -272,6 +276,26 @@ const Chat = () => {
       disconnect()
     }
   }, [])
+
+  useEffect(() => {
+    const handleVisibilityChange = async () => {
+      if (document.visibilityState === 'visible') {
+        if (wsConfig) {
+          const isClosed =
+            !socketRef.current ||
+            socketRef.current.readyState === WebSocket.CLOSED
+
+          if (isClosed) {
+            await connect(wsConfig)
+          }
+        }
+      }
+    }
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
+  }, [wsConfig, connect, socketRef.current?.readyState])
 
   const getChats = async () => {
     try {

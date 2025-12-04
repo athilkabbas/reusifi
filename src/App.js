@@ -74,6 +74,8 @@ function AppWithSession() {
     setBuyingChatLastEvaluatedKey,
   } = useContext(Context)
 
+  const [wsConfig, setWsConfig] = useState(null)
+
   const location = useLocation()
   const locationRef = useRef(location.pathname)
   useEffect(() => {
@@ -112,7 +114,7 @@ function AppWithSession() {
 
         setSocketLoading(true)
 
-        await connect({
+        const connectConfig = {
           getUrlFn: () => getWebSocketUrl(currentUser),
           onOpen: () => {
             setSocketLoading(false)
@@ -134,7 +136,11 @@ function AppWithSession() {
           },
           onError: () => {},
           onClose: () => {},
-        })
+        }
+
+        setWsConfig(connectConfig)
+
+        await connect(connectConfig)
       } catch (err) {
         setIsSignedIn(false)
         setChecked(true)
@@ -148,6 +154,26 @@ function AppWithSession() {
       disconnect()
     }
   }, [])
+
+  useEffect(() => {
+    const handleVisibilityChange = async () => {
+      if (document.visibilityState === 'visible') {
+        if (isSignedIn && wsConfig) {
+          const isClosed =
+            !socketRef.current ||
+            socketRef.current.readyState === WebSocket.CLOSED
+
+          if (isClosed) {
+            await connect(wsConfig)
+          }
+        }
+      }
+    }
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
+  }, [isSignedIn, wsConfig, connect, socketRef.current?.readyState])
 
   if (checked && !isSignedIn) return <ReusifiLanding />
 
