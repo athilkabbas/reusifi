@@ -97,10 +97,7 @@ const ChatPage = () => {
     actionType,
     setActionType,
   } = useContext(Context)
-  const [loadedImages, setLoadedImages] = useState({})
-  const handleImageLoad = (uuid) => {
-    setLoadedImages((prev) => ({ ...prev, [uuid]: true }))
-  }
+
   const capitalize = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1)
   }
@@ -1026,17 +1023,22 @@ const ChatPage = () => {
                                   {formatTimestamp(item.timestamp)}{' '}
                                 </div>
                               </div>
-                              <div
-                                onClick={(e) => e.stopPropagation()}
+                              <Image
+                                {...(index <= 5 && { fetchpriority: 'high' })}
+                                loading="lazy"
+                                preview={true}
+                                src={item.image}
+                                width={'50px'}
+                                alt={'No Longer Available'}
                                 style={{
-                                  width: '50px',
                                   height: '60px',
-                                  display: 'flex',
-                                  justifyContent: 'center',
-                                  alignItems: 'center',
+                                  objectFit: 'cover',
+                                  borderRadius: '5px',
                                 }}
-                              >
-                                {!loadedImages[item.productId] && (
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                }}
+                                placeholder={
                                   <div
                                     style={{
                                       width: '50px',
@@ -1059,31 +1061,8 @@ const ChatPage = () => {
                                       }
                                     />
                                   </div>
-                                )}
-                                <Image
-                                  imgProps={{
-                                    loading: 'lazy',
-                                    ...(index <= 5 && {
-                                      fetchpriority: 'high',
-                                    }),
-                                  }}
-                                  preview={true}
-                                  src={item.image}
-                                  alt={'No Longer Available'}
-                                  style={{
-                                    height: '60px',
-                                    objectFit: 'cover',
-                                    borderRadius: '5px',
-                                  }}
-                                  onClick={(e) => {
-                                    e.stopPropagation()
-                                  }}
-                                  onLoad={() => handleImageLoad(item.productId)}
-                                  onError={() =>
-                                    handleImageLoad(item.productId)
-                                  }
-                                />
-                              </div>
+                                }
+                              />
                             </div>
                           </Card>
                         </List.Item>

@@ -105,12 +105,6 @@ const UserDetails = () => {
     }
   }, [userId])
 
-  const [loadedImages, setLoadedImages] = useState([])
-
-  const handleImageLoad = (uuid) => {
-    setLoadedImages((prev) => ({ ...prev, [uuid]: true }))
-  }
-
   return (
     <Layout
       style={{
@@ -160,17 +154,22 @@ const UserDetails = () => {
                     display: 'flex',
                   }}
                 >
-                  <div
-                    onClick={(e) => e.stopPropagation()}
-                    style={{
-                      height: '150px',
-                      width: '100px',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
+                  <Image
+                    imgProps={{
+                      loading: 'lazy',
                     }}
-                  >
-                    {!loadedImages[userId] && (
+                    width={'100px'}
+                    preview={true}
+                    src={account?.image}
+                    alt={'No Longer Available'}
+                    style={{
+                      objectFit: 'cover',
+                      borderRadius: '5px',
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                    }}
+                    placeholder={
                       <div
                         style={{
                           height: '150px',
@@ -193,25 +192,8 @@ const UserDetails = () => {
                           }
                         />
                       </div>
-                    )}
-                    <Image
-                      imgProps={{
-                        loading: 'lazy',
-                      }}
-                      preview={true}
-                      src={account?.image}
-                      alt={'No Longer Available'}
-                      style={{
-                        objectFit: 'cover',
-                        borderRadius: '5px',
-                      }}
-                      onClick={(e) => {
-                        e.stopPropagation()
-                      }}
-                      onLoad={() => handleImageLoad(userId)}
-                      onError={() => handleImageLoad(userId)}
-                    />
-                  </div>
+                    }
+                  />
                 </Space.Compact>
               )}
               {!account?.image && <Avatar size={150} icon={<UserOutlined />} />}

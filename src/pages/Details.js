@@ -221,17 +221,8 @@ const Details = () => {
       return
     }
   }
-  const [loadedImages, setLoadedImages] = useState([])
   const [previewVisible, setPreviewVisible] = useState(false)
   const [previewIndex, setPreviewIndex] = useState(0)
-
-  const handleLoad = (index) => {
-    setLoadedImages((prev) => {
-      const copy = [...prev]
-      copy[index] = true
-      return copy
-    })
-  }
 
   const descriptionItems = [
     {
@@ -369,9 +360,7 @@ const Details = () => {
                       {/* Hidden images for preview */}
                       {detailData[0].hiResImg.map((img, i) => (
                         <Image
-                          imgProps={{
-                            loading: 'lazy',
-                          }}
+                          loading="lazy"
                           alt={detailData[0]['item']['title']}
                           key={`hidden-${i}`}
                           src={img}
@@ -392,31 +381,8 @@ const Details = () => {
                               setPreviewVisible(true)
                             }}
                           >
-                            {!loadedImages[i] && (
-                              <div
-                                style={{
-                                  width: '300px',
-                                  height: '400px',
-                                  display: 'flex',
-                                  justifyContent: 'center',
-                                  alignItems: 'center',
-                                  backgroundColor: '#f0f0f0',
-                                }}
-                              >
-                                <Spin
-                                  indicator={
-                                    <LoadingOutlined
-                                      style={{ fontSize: 48, color: '#52c41a' }}
-                                      spin
-                                    />
-                                  }
-                                />
-                              </div>
-                            )}
                             <Image
-                              imgProps={{
-                                loading: 'lazy',
-                              }}
+                              loading="lazy"
                               preview={false} // Disable built-in preview to avoid duplicates
                               src={img}
                               alt={detailData[0]['item']['title']}
@@ -426,8 +392,30 @@ const Details = () => {
                                 height: '400px',
                                 objectFit: 'contain',
                               }}
-                              onLoad={() => handleLoad(i)}
-                              onError={() => handleLoad(i)}
+                              placeholder={
+                                <div
+                                  style={{
+                                    width: '300px',
+                                    height: '400px',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    backgroundColor: '#f0f0f0',
+                                  }}
+                                >
+                                  <Spin
+                                    indicator={
+                                      <LoadingOutlined
+                                        style={{
+                                          fontSize: 48,
+                                          color: '#52c41a',
+                                        }}
+                                        spin
+                                      />
+                                    }
+                                  />
+                                </div>
+                              }
                             />
                           </div>
                         ))
@@ -454,34 +442,8 @@ const Details = () => {
                                 setPreviewVisible(true)
                               }}
                             >
-                              {!loadedImages[i] && (
-                                <div
-                                  style={{
-                                    width: '300px',
-                                    height: '400px',
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    backgroundColor: '#f0f0f0',
-                                  }}
-                                >
-                                  <Spin
-                                    indicator={
-                                      <LoadingOutlined
-                                        style={{
-                                          fontSize: 48,
-                                          color: '#52c41a',
-                                        }}
-                                        spin
-                                      />
-                                    }
-                                  />
-                                </div>
-                              )}
                               <Image
-                                imgProps={{
-                                  loading: 'lazy',
-                                }}
+                                loading="lazy"
                                 preview={false} // Disable built-in preview to avoid duplicates
                                 src={img}
                                 alt={detailData[0]['item']['title']}
@@ -491,8 +453,30 @@ const Details = () => {
                                   height: '400px',
                                   objectFit: 'contain',
                                 }}
-                                onLoad={() => handleLoad(i)}
-                                onError={() => handleLoad(i)}
+                                placeholder={
+                                  <div
+                                    style={{
+                                      width: '300px',
+                                      height: '400px',
+                                      display: 'flex',
+                                      justifyContent: 'center',
+                                      alignItems: 'center',
+                                      backgroundColor: '#f0f0f0',
+                                    }}
+                                  >
+                                    <Spin
+                                      indicator={
+                                        <LoadingOutlined
+                                          style={{
+                                            fontSize: 48,
+                                            color: '#52c41a',
+                                          }}
+                                          spin
+                                        />
+                                      }
+                                    />
+                                  </div>
+                                }
                               />
                             </div>
                           ))}
@@ -511,7 +495,7 @@ const Details = () => {
                       </Tag>
                     </Space.Compact>
                   )}
-                  {Object.values(loadedImages).every((item) => item) && (
+                  {
                     <Space.Compact size="large">
                       <Descriptions
                         size="small"
@@ -586,17 +570,14 @@ const Details = () => {
                         items={descriptionItems}
                       />
                     </Space.Compact>
+                  }
+                  {detailData?.[0]['item']['location'] && (
+                    <AwsMap
+                      center={[...detailData[0]['item']['location']].reverse()}
+                      zoom={10}
+                    />
                   )}
-                  {detailData?.[0]['item']['location'] &&
-                    Object.values(loadedImages).every((item) => item) && (
-                      <AwsMap
-                        center={[
-                          ...detailData[0]['item']['location'],
-                        ].reverse()}
-                        zoom={10}
-                      />
-                    )}
-                  {Object.values(loadedImages).every((item) => item) && (
+                  {
                     <>
                       {ad && (
                         <Space.Compact
@@ -674,7 +655,7 @@ const Details = () => {
                         </Space.Compact>
                       )}
                     </>
-                  )}
+                  }
                   {!ad && (
                     <Space.Compact>
                       <Button
@@ -700,10 +681,7 @@ const Details = () => {
                 </Space>
               </>
             )}
-          {(loading ||
-            chatLoading ||
-            chatProductLoading ||
-            !Object.values(loadedImages).every((item) => item)) && (
+          {(loading || chatLoading || chatProductLoading) && (
             <Row gutter={[10, 10]}>
               <Col key={0} xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
                 <div style={{ display: 'flex', justifyContent: 'center' }}>

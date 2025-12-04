@@ -929,9 +929,7 @@ const AddDress = () => {
                     </Upload>
                     {previewImage && (
                       <Image
-                        imgProps={{
-                          loading: 'lazy',
-                        }}
+                        loading="lazy"
                         wrapperStyle={{
                           display: 'none',
                         }}

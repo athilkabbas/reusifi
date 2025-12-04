@@ -13,6 +13,7 @@ import {
   Col,
   Select,
   Popover,
+  Image,
 } from 'antd'
 import { EllipsisVertical, Settings2, Search } from 'lucide-react'
 import {
@@ -100,7 +101,6 @@ const Home = () => {
   const [handleFavLoading, setHandleFavLoading] = useState(false)
 
   const isMobile = useIsMobile()
-  const [loadedImages, setLoadedImages] = useState({})
 
   const [subCategoryOptions, setSubCategoryOptions] = useState([])
 
@@ -220,7 +220,6 @@ const Home = () => {
         setData([])
         setCurrentPage(1)
         setInitialLoad(true)
-        setLoadedImages({})
         updateLimit()
       }
       prevWidth = currentWidth
@@ -241,10 +240,6 @@ const Home = () => {
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
   }, [hasMore])
-
-  const handleImageLoad = (uuid) => {
-    setLoadedImages((prev) => ({ ...prev, [uuid]: true }))
-  }
 
   useEffect(() => {
     if (
@@ -1027,7 +1022,6 @@ const Home = () => {
                   setCurrentPage(1)
                   setData([])
                   setInitialLoad(true)
-                  setLoadedImages({})
                   setCurrentLocation('')
                   setCurrentLocationLabel('')
                   setCurrLocRemoved(true)
@@ -1066,7 +1060,6 @@ const Home = () => {
                   setCurrentPage(1)
                   setData([])
                   setInitialLoad(true)
-                  setLoadedImages({})
                   setApplied(true)
                   onClose()
                 }}
@@ -1106,7 +1099,6 @@ const Home = () => {
                 setCurrentPage(1)
                 setData([])
                 setInitialLoad(true)
-                setLoadedImages({})
               }}
               suffix={
                 <Popover
@@ -1237,30 +1229,7 @@ const Home = () => {
                             }}
                             cover={
                               <>
-                                {!loadedImages[item['item']['uuid']] && (
-                                  <div
-                                    style={{
-                                      display: 'flex',
-                                      justifyContent: 'center',
-                                      height: '220px',
-                                      alignItems: 'center',
-                                      backgroundColor: '#f0f0f0',
-                                    }}
-                                  >
-                                    <Spin
-                                      indicator={
-                                        <LoadingOutlined
-                                          style={{
-                                            fontSize: 48,
-                                            color: '#52c41a',
-                                          }}
-                                          spin
-                                        />
-                                      }
-                                    />
-                                  </div>
-                                )}
-                                <img
+                                <Image
                                   src={item['images'][0]}
                                   {...(index <= 5 && { fetchpriority: 'high' })}
                                   loading={'lazy'}
@@ -1269,11 +1238,28 @@ const Home = () => {
                                     height: '220px',
                                     objectFit: 'cover',
                                   }}
-                                  onLoad={() =>
-                                    handleImageLoad(item['item']['uuid'])
-                                  }
-                                  onError={() =>
-                                    handleImageLoad(item['item']['uuid'])
+                                  placeholder={
+                                    <div
+                                      style={{
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        height: '220px',
+                                        alignItems: 'center',
+                                        backgroundColor: '#f0f0f0',
+                                      }}
+                                    >
+                                      <Spin
+                                        indicator={
+                                          <LoadingOutlined
+                                            style={{
+                                              fontSize: 48,
+                                              color: '#52c41a',
+                                            }}
+                                            spin
+                                          />
+                                        }
+                                      />
+                                    </div>
                                   }
                                 />
                               </>

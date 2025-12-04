@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Layout, Spin, Modal, Grid } from 'antd'
+import { Layout, Spin, Modal, Grid, Image } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { List, Skeleton, Empty } from 'antd'
@@ -63,7 +63,6 @@ const Ads = () => {
   }
   const isMobile = useIsMobile()
   const screens = useBreakpoint()
-  const [loadedImages, setLoadedImages] = useState({})
 
   const calculateLimit = () => {
     const viewportHeight = window.innerHeight
@@ -105,10 +104,6 @@ const Ads = () => {
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
   }, [adHasMore])
-
-  const handleImageLoad = (uuid) => {
-    setLoadedImages((prev) => ({ ...prev, [uuid]: true }))
-  }
 
   useEffect(() => {
     if (scrollableDivRef.current && !loading && !chatLoading) {
@@ -321,44 +316,38 @@ const Ads = () => {
                                   height: '220px',
                                 }}
                               >
-                                {!loadedImages[item['item']['uuid']] && (
-                                  <div
-                                    style={{
-                                      height: '220px',
-                                      display: 'flex',
-                                      justifyContent: 'center',
-                                      alignItems: 'center',
-                                      backgroundColor: '#f0f0f0',
-                                    }}
-                                  >
-                                    <Spin
-                                      indicator={
-                                        <LoadingOutlined
-                                          style={{
-                                            fontSize: 48,
-                                            color: '#52c41a',
-                                          }}
-                                          spin
-                                        />
-                                      }
-                                    />
-                                  </div>
-                                )}
-                                <img
+                                <Image
                                   src={item['images'][0]}
                                   alt={item['item']['title']}
                                   {...(index <= 5 && { fetchpriority: 'high' })}
                                   loading={'lazy'}
+                                  width="100%"
                                   style={{
                                     height: '220px',
                                     objectFit: 'cover',
-                                    width: '100%',
                                   }}
-                                  onLoad={() =>
-                                    handleImageLoad(item['item']['uuid'])
-                                  }
-                                  onError={() =>
-                                    handleImageLoad(item['item']['uuid'])
+                                  placeholder={
+                                    <div
+                                      style={{
+                                        height: '220px',
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        backgroundColor: '#f0f0f0',
+                                      }}
+                                    >
+                                      <Spin
+                                        indicator={
+                                          <LoadingOutlined
+                                            style={{
+                                              fontSize: 48,
+                                              color: '#52c41a',
+                                            }}
+                                            spin
+                                          />
+                                        }
+                                      />
+                                    </div>
                                   }
                                 />
                                 {item['item']['deactivated'] === true && (

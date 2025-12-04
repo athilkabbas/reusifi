@@ -467,10 +467,7 @@ const Chat = () => {
   const handleChange = (value) => {
     setMessageValue(value)
   }
-  const [loadedImages, setLoadedImages] = useState({})
-  const handleImageLoad = (uuid) => {
-    setLoadedImages((prev) => ({ ...prev, [uuid]: true }))
-  }
+
   const handleSubmit = () => {
     if (messageValue) {
       if (recipient && recipient?.['item']?.['email']) {
@@ -607,34 +604,8 @@ const Chat = () => {
                 alignItems: 'center',
               }}
             >
-              {!loadedImages[recipient?.['item']?.['uuid'] || productId] && (
-                <div
-                  style={{
-                    width: '30px',
-                    height: '40px',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: '#f0f0f0',
-                  }}
-                >
-                  <Spin
-                    indicator={
-                      <LoadingOutlined
-                        style={{
-                          fontSize: 12,
-                          color: '#52c41a',
-                        }}
-                        spin
-                      />
-                    }
-                  />
-                </div>
-              )}
               <Image
-                imgProps={{
-                  loading: 'lazy',
-                }}
+                loading="lazy"
                 preview={true}
                 src={recipient?.['images']?.[0] || image}
                 alt={'No Longer Available'}
@@ -646,11 +617,29 @@ const Chat = () => {
                 onClick={(e) => {
                   e.stopPropagation()
                 }}
-                onLoad={() =>
-                  handleImageLoad(recipient?.['item']?.['uuid'] || productId)
-                }
-                onError={() =>
-                  handleImageLoad(recipient?.['item']?.['uuid'] || productId)
+                placeholder={
+                  <div
+                    style={{
+                      width: '30px',
+                      height: '40px',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      backgroundColor: '#f0f0f0',
+                    }}
+                  >
+                    <Spin
+                      indicator={
+                        <LoadingOutlined
+                          style={{
+                            fontSize: 12,
+                            color: '#52c41a',
+                          }}
+                          spin
+                        />
+                      }
+                    />
+                  </div>
                 }
               />
             </div>

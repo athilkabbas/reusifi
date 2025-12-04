@@ -307,12 +307,6 @@ const Account = () => {
     }
   }, [accountInitialLoad])
 
-  const [loadedImages, setLoadedImages] = useState({})
-
-  const handleImageLoad = (uuid) => {
-    setLoadedImages((prev) => ({ ...prev, [uuid]: true }))
-  }
-
   const [fileList, setFileList] = useState([])
   const [previewOpen, setPreviewOpen] = useState(false)
   const [previewImage, setPreviewImage] = useState('')
@@ -563,38 +557,13 @@ const Account = () => {
                         display: 'flex',
                         justifyContent: 'center',
                         alignItems: 'center',
+                        position: 'relative',
                       }}
                     >
-                      {!loadedImages[form.email] && (
-                        <div
-                          style={{
-                            height: '150px',
-                            width: '100px',
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            backgroundColor: '#f0f0f0',
-                          }}
-                        >
-                          <Spin
-                            indicator={
-                              <LoadingOutlined
-                                style={{
-                                  fontSize: 48,
-                                  color: '#52c41a',
-                                }}
-                                spin
-                              />
-                            }
-                          />
-                        </div>
-                      )}
                       <Image
-                        imgProps={{
-                          loading: 'lazy',
-                        }}
+                        loading="lazy"
                         preview={true}
-                        src={form.image}
+                        src={account.image}
                         alt={'No Longer Available'}
                         style={{
                           height: '150px',
@@ -605,8 +574,30 @@ const Account = () => {
                         onClick={(e) => {
                           e.stopPropagation()
                         }}
-                        onLoad={() => handleImageLoad(form.email)}
-                        onError={() => handleImageLoad(form.email)}
+                        placeholder={
+                          <div
+                            style={{
+                              height: '150px',
+                              width: '100px',
+                              display: 'flex',
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              backgroundColor: '#f0f0f0',
+                            }}
+                          >
+                            <Spin
+                              indicator={
+                                <LoadingOutlined
+                                  style={{
+                                    fontSize: 42,
+                                    color: '#52c41a',
+                                  }}
+                                  spin
+                                />
+                              }
+                            />
+                          </div>
+                        }
                       />
                     </div>
                   </Space.Compact>
@@ -676,9 +667,7 @@ const Account = () => {
                   </div>
                   {previewImage && (
                     <Image
-                      imgProps={{
-                        loading: 'lazy',
-                      }}
+                      loading="lazy"
                       wrapperStyle={{
                         display: 'none',
                       }}

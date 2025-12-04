@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Layout, Spin, theme, Modal, Grid } from 'antd'
+import { Layout, Spin, theme, Modal, Grid, Image } from 'antd'
 import { HeartOutlined, HeartFilled, LoadingOutlined } from '@ant-design/icons'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { List, Skeleton, Empty, Row, Col } from 'antd'
@@ -68,7 +68,6 @@ const Favourites = () => {
       window.location.reload()
     },
   }
-  const [loadedImages, setLoadedImages] = useState({})
 
   const calculateLimit = () => {
     const viewportHeight = window.innerHeight
@@ -110,10 +109,6 @@ const Favourites = () => {
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
   }, [favHasMore])
-
-  const handleImageLoad = (uuid) => {
-    setLoadedImages((prev) => ({ ...prev, [uuid]: true }))
-  }
 
   useEffect(() => {
     if (scrollableDivRef.current && !loading && !handleFavLoading) {
@@ -392,30 +387,7 @@ const Favourites = () => {
                             }}
                             cover={
                               <>
-                                {!loadedImages[item['item']['uuid']] && (
-                                  <div
-                                    style={{
-                                      height: '220px',
-                                      display: 'flex',
-                                      justifyContent: 'center',
-                                      alignItems: 'center',
-                                      backgroundColor: '#f0f0f0',
-                                    }}
-                                  >
-                                    <Spin
-                                      indicator={
-                                        <LoadingOutlined
-                                          style={{
-                                            fontSize: 48,
-                                            color: '#52c41a',
-                                          }}
-                                          spin
-                                        />
-                                      }
-                                    />
-                                  </div>
-                                )}
-                                <img
+                                <Image
                                   src={item['images'][0]}
                                   {...(index <= 5 && { fetchpriority: 'high' })}
                                   loading={'lazy'}
@@ -424,11 +396,28 @@ const Favourites = () => {
                                     height: '220px',
                                     objectFit: 'cover',
                                   }}
-                                  onLoad={() =>
-                                    handleImageLoad(item['item']['uuid'])
-                                  }
-                                  onError={() =>
-                                    handleImageLoad(item['item']['uuid'])
+                                  placeholder={
+                                    <div
+                                      style={{
+                                        height: '220px',
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        backgroundColor: '#f0f0f0',
+                                      }}
+                                    >
+                                      <Spin
+                                        indicator={
+                                          <LoadingOutlined
+                                            style={{
+                                              fontSize: 48,
+                                              color: '#52c41a',
+                                            }}
+                                            spin
+                                          />
+                                        }
+                                      />
+                                    </div>
                                   }
                                 />
                               </>
