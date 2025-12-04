@@ -1023,46 +1023,46 @@ const ChatPage = () => {
                                   {formatTimestamp(item.timestamp)}{' '}
                                 </div>
                               </div>
-                              <Image
-                                {...(index <= 5 && { fetchpriority: 'high' })}
-                                loading="lazy"
-                                preview={true}
-                                src={item.image}
-                                width={'50px'}
-                                alt={'No Longer Available'}
-                                style={{
-                                  height: '60px',
-                                  objectFit: 'cover',
-                                  borderRadius: '5px',
-                                }}
-                                onClick={(e) => {
-                                  e.stopPropagation()
-                                }}
-                                placeholder={
-                                  <div
-                                    style={{
-                                      width: '50px',
-                                      height: '60px',
-                                      display: 'flex',
-                                      justifyContent: 'center',
-                                      alignItems: 'center',
-                                      backgroundColor: '#f0f0f0',
-                                    }}
-                                  >
-                                    <Spin
-                                      indicator={
-                                        <LoadingOutlined
-                                          style={{
-                                            fontSize: 24,
-                                            color: '#52c41a',
-                                          }}
-                                          spin
-                                        />
-                                      }
-                                    />
-                                  </div>
-                                }
-                              />
+                              <div onClick={(e) => e.stopPropagation()}>
+                                <Image
+                                  {...(index <= 5 && { fetchpriority: 'high' })}
+                                  loading="lazy"
+                                  preview={true}
+                                  src={item.image}
+                                  width={'50px'}
+                                  alt={'No Longer Available'}
+                                  style={{
+                                    height: '60px',
+                                    objectFit: 'cover',
+                                    borderRadius: '5px',
+                                  }}
+                                  onClick={(e) => e.stopPropagation()}
+                                  placeholder={
+                                    <div
+                                      style={{
+                                        width: '50px',
+                                        height: '60px',
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        backgroundColor: '#f0f0f0',
+                                      }}
+                                    >
+                                      <Spin
+                                        indicator={
+                                          <LoadingOutlined
+                                            style={{
+                                              fontSize: 24,
+                                              color: '#52c41a',
+                                            }}
+                                            spin
+                                          />
+                                        }
+                                      />
+                                    </div>
+                                  }
+                                />
+                              </div>
                             </div>
                           </Card>
                         </List.Item>
