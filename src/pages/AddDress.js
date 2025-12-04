@@ -662,7 +662,6 @@ const AddDress = () => {
                   </div>
                 </Space.Compact>
                 <Space.Compact
-                  id={'tree-select-container-id'}
                   size="large"
                   style={{
                     position: 'relative',
@@ -677,7 +676,6 @@ const AddDress = () => {
                     }}
                   >
                     <Space.Compact
-                      id={'add-product-category-c'}
                       size="large"
                       style={{
                         position: 'relative',
@@ -698,7 +696,7 @@ const AddDress = () => {
                           },
                         }}
                         getPopupContainer={() =>
-                          document.getElementById('add-product-category-c')
+                          document.getElementById('addProductContainer')
                         }
                         id={'addProductCId'}
                         style={{
@@ -718,7 +716,6 @@ const AddDress = () => {
                       ></Select>
                     </Space.Compact>
                     <Space.Compact
-                      id={'add-product-subcategory-c'}
                       size="large"
                       style={{
                         position: 'relative',
@@ -740,7 +737,7 @@ const AddDress = () => {
                         }}
                         value={form.subCategory || undefined}
                         getPopupContainer={() =>
-                          document.getElementById('add-product-subcategory-c')
+                          document.getElementById('addProductContainer')
                         }
                         id={'addProductSCId'}
                         style={{

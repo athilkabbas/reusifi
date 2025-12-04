@@ -659,7 +659,6 @@ const Home = () => {
               Category
             </Divider>
             <Space.Compact
-              id={'home-category-c'}
               size="large"
               style={{
                 position: 'relative',
@@ -672,9 +671,7 @@ const Home = () => {
                     root: { maxHeight: '400px', overflow: 'auto' },
                   },
                 }}
-                getPopupContainer={() =>
-                  document.getElementById('home-category-c')
-                }
+                getPopupContainer={(triggerNode) => triggerNode.parentNode}
                 className={'my-custom-select'}
                 id={'homeCId'}
                 style={{
@@ -695,7 +692,6 @@ const Home = () => {
               ></Select>
             </Space.Compact>
             <Space.Compact
-              id={'home-subcategory-c'}
               size="large"
               style={{
                 position: 'relative',
@@ -709,9 +705,7 @@ const Home = () => {
                   },
                 }}
                 value={subCategory || undefined}
-                getPopupContainer={() =>
-                  document.getElementById('home-subcategory-c')
-                }
+                getPopupContainer={(triggerNode) => triggerNode.parentNode}
                 className={'my-custom-select'}
                 id={'homeSCId'}
                 style={{
@@ -735,11 +729,7 @@ const Home = () => {
             <Divider style={{ fontSize: '15px', fontWeight: '300' }} plain>
               Location
             </Divider>
-            <Space.Compact
-              id={'select-container-id'}
-              size="large"
-              style={{ position: 'relative' }}
-            >
+            <Space.Compact size="large" style={{ position: 'relative' }}>
               <Select
                 allowClear
                 styles={{
@@ -747,9 +737,7 @@ const Home = () => {
                     root: { maxHeight: '400px', overflow: 'auto' },
                   },
                 }}
-                getPopupContainer={() =>
-                  document.getElementById('select-container-id')
-                }
+                getPopupContainer={(triggerNode) => triggerNode.parentNode}
                 className={'my-custom-select'}
                 id={'locationId'}
                 style={{
@@ -856,7 +844,7 @@ const Home = () => {
                 allowClear
               ></Input>
             </Space.Compact>
-            <Space.Compact size="large" id={'radius-select-container-id'}>
+            <Space.Compact size="large">
               <Input value="Radius" style={{ width: '20dvw' }} readOnly />
               <Select
                 styles={{
@@ -864,9 +852,7 @@ const Home = () => {
                     root: { maxHeight: '400px', overflow: 'auto' },
                   },
                 }}
-                getPopupContainer={() =>
-                  document.getElementById('radius-select-container-id')
-                }
+                getPopupContainer={(triggerNode) => triggerNode.parentNode}
                 disabled={!currentLocation && !location}
                 style={{
                   width: !isMobile ? '20dvw' : '45dvw',
