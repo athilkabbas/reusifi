@@ -1051,7 +1051,7 @@ const ChatPage = () => {
                                       indicator={
                                         <LoadingOutlined
                                           style={{
-                                            fontSize: 48,
+                                            fontSize: 24,
                                             color: '#52c41a',
                                           }}
                                           spin
@@ -1061,13 +1061,16 @@ const ChatPage = () => {
                                   </div>
                                 )}
                                 <Image
+                                  imgProps={{
+                                    loading: 'lazy',
+                                    ...(index <= 5 && {
+                                      fetchpriority: 'high',
+                                    }),
+                                  }}
                                   preview={true}
                                   src={item.image}
                                   alt={'No Longer Available'}
                                   style={{
-                                    display: loadedImages[item.productId]
-                                      ? 'block'
-                                      : 'none',
                                     height: '60px',
                                     objectFit: 'cover',
                                     borderRadius: '5px',

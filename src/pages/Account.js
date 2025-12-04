@@ -307,7 +307,7 @@ const Account = () => {
     }
   }, [accountInitialLoad])
 
-  const [loadedImages, setLoadedImages] = useState([])
+  const [loadedImages, setLoadedImages] = useState({})
 
   const handleImageLoad = (uuid) => {
     setLoadedImages((prev) => ({ ...prev, [uuid]: true }))
@@ -590,11 +590,13 @@ const Account = () => {
                         </div>
                       )}
                       <Image
+                        imgProps={{
+                          loading: 'lazy',
+                        }}
                         preview={true}
                         src={form.image}
                         alt={'No Longer Available'}
                         style={{
-                          display: loadedImages[form.email] ? 'block' : 'none',
                           height: '150px',
                           width: '100px',
                           objectFit: 'cover',
@@ -674,6 +676,9 @@ const Account = () => {
                   </div>
                   {previewImage && (
                     <Image
+                      imgProps={{
+                        loading: 'lazy',
+                      }}
                       wrapperStyle={{
                         display: 'none',
                       }}

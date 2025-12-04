@@ -18,6 +18,7 @@ import { Context } from './context/provider'
 import './App.css'
 
 import ReusifiLanding from './pages/landingPage'
+import useWebSocketManager from './hooks/webSocketManager'
 
 const Layout = lazy(() => import('./pages/Layout'))
 const Home = lazy(() => import('./pages/Home'))
@@ -47,97 +48,6 @@ const FullscreenSpinner = memo(function FullscreenSpinner() {
     />
   )
 })
-
-function useWebSocketManager() {
-  const socketRef = useRef(null)
-  const reconnectAttemptsRef = useRef(0)
-  const backoffTimeoutRef = useRef(null)
-  const heartbeatIntervalRef = useRef(null)
-  const isManuallyClosedRef = useRef(false)
-
-  const connect = ({
-    url,
-    onOpen,
-    onMessage,
-    onError,
-    onClose,
-    maxAttempts = 6,
-  }) => {
-    if (socketRef.current) return
-
-    const ws = new WebSocket(url)
-    socketRef.current = ws
-
-    ws.onopen = () => {
-      reconnectAttemptsRef.current = 0
-      onOpen?.()
-
-      // heartbeat ping to keep connection alive
-      if (heartbeatIntervalRef.current)
-        clearInterval(heartbeatIntervalRef.current)
-      heartbeatIntervalRef.current = setInterval(() => {
-        try {
-          if (ws.readyState === WebSocket.OPEN)
-            ws.send(JSON.stringify({ type: 'ping' }))
-        } catch (e) {
-          // ignore
-        }
-      }, 25_000) // 25s
-    }
-
-    ws.onmessage = (ev) => {
-      onMessage?.(ev)
-    }
-
-    ws.onerror = (ev) => {
-      onError?.(ev)
-    }
-
-    ws.onclose = (ev) => {
-      if (heartbeatIntervalRef.current) {
-        clearInterval(heartbeatIntervalRef.current)
-        heartbeatIntervalRef.current = null
-      }
-
-      socketRef.current = null
-      onClose?.(ev)
-
-      if (isManuallyClosedRef.current) return
-
-      // exponential backoff reconnect
-      reconnectAttemptsRef.current += 1
-      const attempt = reconnectAttemptsRef.current
-      if (attempt <= maxAttempts) {
-        const backoff = Math.min(30_000, 1000 * 2 ** attempt)
-        backoffTimeoutRef.current = setTimeout(() => {
-          connect({ url, onOpen, onMessage, onError, onClose, maxAttempts })
-        }, backoff)
-      }
-    }
-  }
-
-  const disconnect = () => {
-    isManuallyClosedRef.current = true
-    if (backoffTimeoutRef.current) {
-      clearTimeout(backoffTimeoutRef.current)
-      backoffTimeoutRef.current = null
-    }
-    if (heartbeatIntervalRef.current) {
-      clearInterval(heartbeatIntervalRef.current)
-      heartbeatIntervalRef.current = null
-    }
-    if (socketRef.current) {
-      try {
-        socketRef.current.close()
-      } catch (e) {
-        // ignore
-      }
-      socketRef.current = null
-    }
-  }
-
-  return { connect, disconnect, socketRef }
-}
 
 function App() {
   return (
@@ -172,9 +82,18 @@ function AppWithSession() {
 
   const { connect, disconnect, socketRef } = useWebSocketManager()
 
-  useEffect(() => {
-    let mounted = true
+  const getWebSocketUrl = async (currentUser) => {
+    const session = await fetchAuthSession()
+    const tokens = session?.tokens
 
+    if (!tokens?.idToken) throw new Error('no-id-token-on-refresh')
+
+    const token = tokens.idToken.toString()
+    const baseUrl = `wss://apichat.reusifi.com/production`
+    return `${baseUrl}?userId=${currentUser.userId}&token=${token}`
+  }
+
+  useEffect(() => {
     const init = async () => {
       try {
         const session = await fetchAuthSession()
@@ -185,7 +104,6 @@ function AppWithSession() {
         const decoded = jwtDecode(token)
 
         const currentUser = await getCurrentUser()
-        if (!mounted) return
 
         setUser(currentUser)
         setEmail(decoded.email)
@@ -194,12 +112,9 @@ function AppWithSession() {
 
         setSocketLoading(true)
 
-        const url = `wss://apichat.reusifi.com/production?userId=${currentUser.userId}&token=${token}`
-
-        connect({
-          url,
+        await connect({
+          getUrlFn: () => getWebSocketUrl(currentUser),
           onOpen: () => {
-            if (!mounted) return
             setSocketLoading(false)
           },
           onMessage: (ev) => {
@@ -221,7 +136,6 @@ function AppWithSession() {
           onClose: () => {},
         })
       } catch (err) {
-        if (!mounted) return
         setIsSignedIn(false)
         setChecked(true)
         setSocketLoading(false)
@@ -231,7 +145,6 @@ function AppWithSession() {
     init()
 
     return () => {
-      mounted = false
       disconnect()
     }
   }, [])

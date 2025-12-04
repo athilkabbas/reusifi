@@ -195,11 +195,13 @@ const UserDetails = () => {
                       </div>
                     )}
                     <Image
+                      imgProps={{
+                        loading: 'lazy',
+                      }}
                       preview={true}
                       src={account?.image}
                       alt={'No Longer Available'}
                       style={{
-                        display: loadedImages[userId] ? 'block' : 'none',
                         objectFit: 'cover',
                         borderRadius: '5px',
                       }}

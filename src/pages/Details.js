@@ -369,6 +369,9 @@ const Details = () => {
                       {/* Hidden images for preview */}
                       {detailData[0].hiResImg.map((img, i) => (
                         <Image
+                          imgProps={{
+                            loading: 'lazy',
+                          }}
                           alt={detailData[0]['item']['title']}
                           key={`hidden-${i}`}
                           src={img}
@@ -411,12 +414,14 @@ const Details = () => {
                               </div>
                             )}
                             <Image
+                              imgProps={{
+                                loading: 'lazy',
+                              }}
                               preview={false} // Disable built-in preview to avoid duplicates
                               src={img}
                               alt={detailData[0]['item']['title']}
                               style={{
                                 borderRadius: '12px',
-                                display: loadedImages[i] ? 'block' : 'none',
                                 width: '300px',
                                 height: '400px',
                                 objectFit: 'contain',
@@ -474,12 +479,14 @@ const Details = () => {
                                 </div>
                               )}
                               <Image
+                                imgProps={{
+                                  loading: 'lazy',
+                                }}
                                 preview={false} // Disable built-in preview to avoid duplicates
                                 src={img}
                                 alt={detailData[0]['item']['title']}
                                 style={{
                                   borderRadius: '12px',
-                                  display: loadedImages[i] ? 'block' : 'none',
                                   width: '300px',
                                   height: '400px',
                                   objectFit: 'contain',
