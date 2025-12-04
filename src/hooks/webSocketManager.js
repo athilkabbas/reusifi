@@ -26,17 +26,14 @@ function useWebSocketManager() {
       reconnectAttemptsRef.current = 0
       onOpen?.()
 
-      // heartbeat ping to keep connection alive
       if (heartbeatIntervalRef.current)
         clearInterval(heartbeatIntervalRef.current)
       heartbeatIntervalRef.current = setInterval(() => {
         try {
           if (ws.readyState === WebSocket.OPEN)
             ws.send(JSON.stringify({ type: 'ping' }))
-        } catch (e) {
-          // ignore
-        }
-      }, 25_000) // 25s
+        } catch (e) {}
+      }, 25_000)
     }
 
     ws.onmessage = (ev) => {
@@ -58,13 +55,19 @@ function useWebSocketManager() {
 
       if (isManuallyClosedRef.current) return
 
-      // exponential backoff reconnect
       reconnectAttemptsRef.current += 1
       const attempt = reconnectAttemptsRef.current
       if (attempt <= maxAttempts) {
         const backoff = Math.min(30_000, 1000 * 2 ** attempt)
         backoffTimeoutRef.current = setTimeout(() => {
-          connect({ url, onOpen, onMessage, onError, onClose, maxAttempts })
+          connect({
+            getUrlFn,
+            onOpen,
+            onMessage,
+            onError,
+            onClose,
+            maxAttempts,
+          })
         }, backoff)
       }
     }
@@ -83,9 +86,7 @@ function useWebSocketManager() {
     if (socketRef.current) {
       try {
         socketRef.current.close()
-      } catch (e) {
-        // ignore
-      }
+      } catch (e) {}
       socketRef.current = null
     }
   }
