@@ -563,7 +563,7 @@ const AddDress = () => {
           <MenuWrapper defaultSelectedKeys={['3']} isMobile={isMobile} />
         </HeaderWrapper>
       )}
-      <Content>
+      <Content style={{ overscrollBehaviorY: 'contain' }}>
         {contextHolder}
         <div
           id={'addProductContainer'}
@@ -574,7 +574,6 @@ const AddDress = () => {
             padding: '15px 15px 70px 15px',
             height: '100%',
             scrollbarWidth: 'none',
-            overscrollBehaviorY: 'contain',
           }}
         >
           {!loading && !chatLoading && user && (
