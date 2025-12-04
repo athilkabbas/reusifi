@@ -549,6 +549,7 @@ const AddDress = () => {
         height: '100dvh',
         overflowX: 'hidden',
         background: '#F9FAFB',
+        overscrollBehaviorY: 'contain',
       }}
     >
       {!isMobile && (
@@ -563,7 +564,7 @@ const AddDress = () => {
           <MenuWrapper defaultSelectedKeys={['3']} isMobile={isMobile} />
         </HeaderWrapper>
       )}
-      <Content style={{ overscrollBehaviorY: 'contain' }}>
+      <Content>
         {contextHolder}
         <div
           id={'addProductContainer'}
