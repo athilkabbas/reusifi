@@ -648,6 +648,12 @@ const Home = () => {
         onClose={onClose}
         open={drawerOpen}
         width={isMobile ? '100%' : '60dvw'}
+        id={'drawerContainerId'}
+        styles={{
+          body: {
+            overscrollBehaviorY: 'contain',
+          },
+        }}
       >
         <Space
           size="middle"
@@ -671,7 +677,9 @@ const Home = () => {
                     root: { maxHeight: '400px', overflow: 'auto' },
                   },
                 }}
-                getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                getPopupContainer={() =>
+                  document.getElementById('drawerContainerId')
+                }
                 className={'my-custom-select'}
                 id={'homeCId'}
                 style={{
@@ -705,7 +713,9 @@ const Home = () => {
                   },
                 }}
                 value={subCategory || undefined}
-                getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                getPopupContainer={() =>
+                  document.getElementById('drawerContainerId')
+                }
                 className={'my-custom-select'}
                 id={'homeSCId'}
                 style={{
@@ -737,7 +747,9 @@ const Home = () => {
                     root: { maxHeight: '400px', overflow: 'auto' },
                   },
                 }}
-                getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                getPopupContainer={() =>
+                  document.getElementById('drawerContainerId')
+                }
                 className={'my-custom-select'}
                 id={'locationId'}
                 style={{
@@ -852,7 +864,9 @@ const Home = () => {
                     root: { maxHeight: '400px', overflow: 'auto' },
                   },
                 }}
-                getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                getPopupContainer={() =>
+                  document.getElementById('drawerContainerId')
+                }
                 disabled={!currentLocation && !location}
                 style={{
                   width: !isMobile ? '20dvw' : '45dvw',
