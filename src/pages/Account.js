@@ -549,57 +549,45 @@ const Account = () => {
                       display: 'flex',
                     }}
                   >
-                    <div
-                      onClick={(e) => e.stopPropagation()}
+                    <Image
+                      loading="lazy"
+                      preview={true}
+                      src={account.image}
+                      alt={'No Longer Available'}
                       style={{
                         height: '150px',
                         width: '100px',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        position: 'relative',
+                        objectFit: 'cover',
+                        borderRadius: '5px',
                       }}
-                    >
-                      <Image
-                        loading="lazy"
-                        preview={true}
-                        src={account.image}
-                        alt={'No Longer Available'}
-                        style={{
-                          height: '150px',
-                          width: '100px',
-                          objectFit: 'cover',
-                          borderRadius: '5px',
-                        }}
-                        onClick={(e) => {
-                          e.stopPropagation()
-                        }}
-                        placeholder={
-                          <div
-                            style={{
-                              height: '150px',
-                              width: '100px',
-                              display: 'flex',
-                              justifyContent: 'center',
-                              alignItems: 'center',
-                              backgroundColor: '#f0f0f0',
-                            }}
-                          >
-                            <Spin
-                              indicator={
-                                <LoadingOutlined
-                                  style={{
-                                    fontSize: 42,
-                                    color: '#52c41a',
-                                  }}
-                                  spin
-                                />
-                              }
-                            />
-                          </div>
-                        }
-                      />
-                    </div>
+                      onClick={(e) => {
+                        e.stopPropagation()
+                      }}
+                      placeholder={
+                        <div
+                          style={{
+                            height: '150px',
+                            width: '100px',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: '#f0f0f0',
+                          }}
+                        >
+                          <Spin
+                            indicator={
+                              <LoadingOutlined
+                                style={{
+                                  fontSize: 42,
+                                  color: '#52c41a',
+                                }}
+                                spin
+                              />
+                            }
+                          />
+                        </div>
+                      }
+                    />
                   </Space.Compact>
                 )}
               {(!account?.image ||

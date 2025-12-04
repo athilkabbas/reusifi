@@ -594,55 +594,45 @@ const Chat = () => {
             {title || recipient?.['item']?.['title']}
           </div>
           <div style={{ display: 'flex', gap: '15px' }}>
-            <div
-              onClick={(e) => e.stopPropagation()}
+            <Image
+              loading="lazy"
+              preview={true}
+              width={'30px'}
+              src={recipient?.['images']?.[0] || image}
+              alt={'No Longer Available'}
               style={{
-                width: '30px',
                 height: '40px',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
+                objectFit: 'cover',
+                borderRadius: '5px',
               }}
-            >
-              <Image
-                loading="lazy"
-                preview={true}
-                src={recipient?.['images']?.[0] || image}
-                alt={'No Longer Available'}
-                style={{
-                  height: '40px',
-                  objectFit: 'cover',
-                  borderRadius: '5px',
-                }}
-                onClick={(e) => {
-                  e.stopPropagation()
-                }}
-                placeholder={
-                  <div
-                    style={{
-                      width: '30px',
-                      height: '40px',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      backgroundColor: '#f0f0f0',
-                    }}
-                  >
-                    <Spin
-                      indicator={
-                        <LoadingOutlined
-                          style={{
-                            fontSize: 12,
-                            color: '#52c41a',
-                          }}
-                          spin
-                        />
-                      }
-                    />
-                  </div>
-                }
-              />
-            </div>
+              onClick={(e) => {
+                e.stopPropagation()
+              }}
+              placeholder={
+                <div
+                  style={{
+                    width: '30px',
+                    height: '40px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: '#f0f0f0',
+                  }}
+                >
+                  <Spin
+                    indicator={
+                      <LoadingOutlined
+                        style={{
+                          fontSize: 12,
+                          color: '#52c41a',
+                        }}
+                        spin
+                      />
+                    }
+                  />
+                </div>
+              }
+            />
             <Dropdown
               trigger={['click']}
               menu={{
