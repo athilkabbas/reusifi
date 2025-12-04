@@ -71,9 +71,15 @@ const Chat = () => {
         )
       }
     } catch (err) {
-      if (isModalVisibleRef.current) return
+      if (isModalVisibleRef.current) {
+        return
+      }
       isModalVisibleRef.current = true
-      Modal.error(errorSessionConfig)
+      if (err?.status === 401) {
+        Modal.error(errorSessionConfig)
+      } else {
+        Modal.error(errorConfig)
+      }
     }
   }
   const {
