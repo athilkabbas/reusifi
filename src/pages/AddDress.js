@@ -565,6 +565,7 @@ const AddDress = () => {
         </HeaderWrapper>
       )}
       <Content
+        id={'addProductCId'}
         style={{
           scrollbarWidth: 'none',
           overflowY: 'scroll',
@@ -689,6 +690,9 @@ const AddDress = () => {
                       onClick={() => {
                         scrollToBottom()
                       }}
+                      getPopupContainer={() =>
+                        document.getElementById('addProductCId')
+                      }
                       id={'addProductCId'}
                       style={{
                         width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
@@ -724,6 +728,9 @@ const AddDress = () => {
                       onClick={() => {
                         scrollToBottom()
                       }}
+                      getPopupContainer={() =>
+                        document.getElementById('addProductCId')
+                      }
                       value={form.subCategory || undefined}
                       id={'addProductSCId'}
                       style={{
