@@ -565,7 +565,6 @@ const AddDress = () => {
         </HeaderWrapper>
       )}
       <Content
-        id={'addProductCId'}
         style={{
           scrollbarWidth: 'none',
           overflowY: 'scroll',
@@ -673,6 +672,7 @@ const AddDress = () => {
                   }}
                 >
                   <Space.Compact
+                    id={'addProductContainerCId'}
                     size="large"
                     style={{
                       position: 'relative',
@@ -691,7 +691,7 @@ const AddDress = () => {
                         scrollToBottom()
                       }}
                       getPopupContainer={() =>
-                        document.getElementById('addProductCId')
+                        document.getElementById('addProductContainerCId')
                       }
                       id={'addProductCId'}
                       style={{
@@ -711,6 +711,7 @@ const AddDress = () => {
                     ></Select>
                   </Space.Compact>
                   <Space.Compact
+                    id={'addProductContainerSCId'}
                     size="large"
                     style={{
                       position: 'relative',
@@ -729,7 +730,7 @@ const AddDress = () => {
                         scrollToBottom()
                       }}
                       getPopupContainer={() =>
-                        document.getElementById('addProductCId')
+                        document.getElementById('addProductContainerSCId')
                       }
                       value={form.subCategory || undefined}
                       id={'addProductSCId'}
