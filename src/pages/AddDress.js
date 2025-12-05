@@ -564,7 +564,6 @@ const AddDress = () => {
         </HeaderWrapper>
       )}
       <Content
-        id={'addProductContainer'}
         style={{
           height: '100%',
           scrollbarWidth: 'none',
@@ -699,9 +698,6 @@ const AddDress = () => {
                             root: { maxHeight: '400px', overflow: 'auto' },
                           },
                         }}
-                        getPopupContainer={() =>
-                          document.getElementById('addProductContainer')
-                        }
                         id={'addProductCId'}
                         style={{
                           width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
@@ -740,9 +736,6 @@ const AddDress = () => {
                           },
                         }}
                         value={form.subCategory || undefined}
-                        getPopupContainer={() =>
-                          document.getElementById('addProductContainer')
-                        }
                         id={'addProductSCId'}
                         style={{
                           width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',

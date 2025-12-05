@@ -677,9 +677,9 @@ const Home = () => {
                     root: { maxHeight: '400px', overflow: 'auto' },
                   },
                 }}
-                getPopupContainer={() =>
-                  document.getElementById('drawerContainerId')
-                }
+                // getPopupContainer={() =>
+                //   document.getElementById('drawerContainerId')
+                // }
                 className={'my-custom-select'}
                 id={'homeCId'}
                 style={{
