@@ -564,6 +564,7 @@ const AddDress = () => {
         </HeaderWrapper>
       )}
       <Content
+        id={'addProductContainer'}
         style={{
           height: '100%',
           scrollbarWidth: 'none',
@@ -573,7 +574,6 @@ const AddDress = () => {
       >
         {contextHolder}
         <div
-          id={'addProductContainer'}
           style={{
             background: '#F9FAFB',
             borderRadius: '0px',
