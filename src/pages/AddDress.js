@@ -698,6 +698,7 @@ const AddDress = () => {
                             root: { maxHeight: '400px', overflow: 'auto' },
                           },
                         }}
+                        getPopupContainer={() => document.body}
                         id={'addProductCId'}
                         style={{
                           width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
@@ -735,6 +736,7 @@ const AddDress = () => {
                             root: { maxHeight: '400px', overflow: 'auto' },
                           },
                         }}
+                        getPopupContainer={() => document.body}
                         value={form.subCategory || undefined}
                         id={'addProductSCId'}
                         style={{

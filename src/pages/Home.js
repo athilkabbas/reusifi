@@ -648,7 +648,6 @@ const Home = () => {
         onClose={onClose}
         open={drawerOpen}
         width={isMobile ? '100%' : '60dvw'}
-        id={'drawerContainerId'}
         styles={{
           body: {
             overscrollBehaviorY: 'contain',
@@ -677,9 +676,7 @@ const Home = () => {
                     root: { maxHeight: '400px', overflow: 'auto' },
                   },
                 }}
-                // getPopupContainer={() =>
-                //   document.getElementById('drawerContainerId')
-                // }
+                getPopupContainer={() => document.body}
                 className={'my-custom-select'}
                 id={'homeCId'}
                 style={{
@@ -747,9 +744,7 @@ const Home = () => {
                     root: { maxHeight: '400px', overflow: 'auto' },
                   },
                 }}
-                getPopupContainer={() =>
-                  document.getElementById('drawerContainerId')
-                }
+                getPopupContainer={() => document.body}
                 className={'my-custom-select'}
                 id={'locationId'}
                 style={{
@@ -864,9 +859,7 @@ const Home = () => {
                     root: { maxHeight: '400px', overflow: 'auto' },
                   },
                 }}
-                getPopupContainer={() =>
-                  document.getElementById('drawerContainerId')
-                }
+                getPopupContainer={() => document.body}
                 disabled={!currentLocation && !location}
                 style={{
                   width: !isMobile ? '20dvw' : '45dvw',
