@@ -481,6 +481,8 @@ const AddDress = () => {
 
   const bottomRefPrice = useRef(null)
 
+  const containerRef = useRef(null)
+
   const scrollToBottomPincode = () => {
     requestAnimationFrame(() => {
       if (bottomRefPincode?.current) {
@@ -511,15 +513,21 @@ const AddDress = () => {
     })
   }
 
+  const scrollABit = () => {
+    requestAnimationFrame(() => {
+      if (containerRef?.current) {
+        containerRef.current?.scrollTo(0, 1)
+      }
+    })
+  }
+
   useEffect(() => {
     let prevHeight = window.innerHeight
     const handleResize = () => {
       const currentHeight = window.innerHeight
       if (
         currentHeight < prevHeight &&
-        (document.activeElement.id === 'sellPriceId' ||
-          document.activeElement.id === 'addProductCId' ||
-          document.activeElement.id === 'addProductSCId')
+        document.activeElement.id === 'sellPriceId'
       ) {
         scrollToBottom()
       } else if (
@@ -532,6 +540,12 @@ const AddDress = () => {
         document.activeElement.id === 'descId'
       ) {
         scrollToBottomPincode()
+      } else if (
+        currentHeight < prevHeight &&
+        (document.activeElement.id === 'addProductCId' ||
+          document.activeElement.id === 'addProductSCId')
+      ) {
+        scrollABit()
       }
       prevHeight = currentHeight
     }
@@ -565,6 +579,7 @@ const AddDress = () => {
         </HeaderWrapper>
       )}
       <Content
+        ref={containerRef}
         style={{
           scrollbarWidth: 'none',
           overflowY: 'scroll',
@@ -687,9 +702,8 @@ const AddDress = () => {
                       }
                       allowClear
                       onClick={() => {
-                        scrollToBottom()
+                        scrollABit()
                       }}
-                      getPopupContainer={(triggerNode) => triggerNode}
                       id={'addProductCId'}
                       style={{
                         width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
@@ -723,9 +737,8 @@ const AddDress = () => {
                       }
                       allowClear
                       onClick={() => {
-                        scrollToBottom()
+                        scrollABit()
                       }}
-                      getPopupContainer={(triggerNode) => triggerNode}
                       value={form.subCategory || undefined}
                       id={'addProductSCId'}
                       style={{
