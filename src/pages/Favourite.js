@@ -389,7 +389,7 @@ const Favourites = () => {
                               <>
                                 <Image
                                   src={item['images'][0]}
-                                  fetchpriority={index <= 5 ? 'high' : 'auto'}
+                                  {...(index <= 5 && { fetchPriority: 'high' })}
                                   loading={'lazy'}
                                   alt={item['item']['title']}
                                   style={{

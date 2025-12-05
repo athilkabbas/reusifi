@@ -319,7 +319,7 @@ const Ads = () => {
                                 <Image
                                   src={item['images'][0]}
                                   alt={item['item']['title']}
-                                  fetchpriority={index <= 5 ? 'high' : 'auto'}
+                                  {...(index <= 5 && { fetchPriority: 'high' })}
                                   loading={'lazy'}
                                   width="100%"
                                   style={{

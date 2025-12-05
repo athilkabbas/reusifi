@@ -1025,7 +1025,7 @@ const ChatPage = () => {
                               </div>
                               <div onClick={(e) => e.stopPropagation()}>
                                 <Image
-                                  fetchpriority={index <= 5 ? 'high' : 'auto'}
+                                  {...(index <= 5 && { fetchPriority: 'high' })}
                                   loading="lazy"
                                   preview={true}
                                   src={item.image}
