@@ -547,7 +547,7 @@ const AddDress = () => {
     <Layout
       style={{
         height: '100dvh',
-        overflowX: 'hidden',
+        overflow: 'hidden',
         background: '#F9FAFB',
       }}
     >
@@ -563,18 +563,21 @@ const AddDress = () => {
           <MenuWrapper defaultSelectedKeys={['3']} isMobile={isMobile} />
         </HeaderWrapper>
       )}
-      <Content style={{ overscrollBehaviorY: 'contain' }}>
+      <Content
+        style={{
+          height: '100%',
+          scrollbarWidth: 'none',
+          overflowY: 'scroll',
+          overscrollBehaviorY: 'contain',
+        }}
+      >
         {contextHolder}
         <div
           id={'addProductContainer'}
           style={{
             background: '#F9FAFB',
             borderRadius: '0px',
-            overflow: 'scroll',
             padding: '15px 15px 70px 15px',
-            height: '100%',
-            scrollbarWidth: 'none',
-            overscrollBehaviorY: 'contain',
           }}
         >
           {!loading && !chatLoading && user && (
