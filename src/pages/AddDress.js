@@ -566,7 +566,6 @@ const AddDress = () => {
         style={{
           scrollbarWidth: 'none',
           overflowY: 'scroll',
-          overscrollBehaviorY: 'contain',
           padding: '15px 15px 70px 15px',
         }}
       >
@@ -690,7 +689,6 @@ const AddDress = () => {
                           root: {
                             maxHeight: '400px',
                             overflow: 'auto',
-                            overscrollBehaviorY: 'contain',
                           },
                         },
                       }}
@@ -731,7 +729,6 @@ const AddDress = () => {
                           root: {
                             maxHeight: '400px',
                             overflow: 'auto',
-                            overscrollBehaviorY: 'contain',
                           },
                         },
                       }}
