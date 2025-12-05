@@ -547,8 +547,11 @@ const AddDress = () => {
     <Layout
       style={{
         height: '100dvh',
-        overflow: 'hidden',
         background: '#F9FAFB',
+        scrollbarWidth: 'none',
+        overflowY: 'scroll',
+        overscrollBehaviorY: 'contain',
+        padding: '15px 15px 70px 15px',
       }}
     >
       {!isMobile && (
@@ -563,471 +566,450 @@ const AddDress = () => {
           <MenuWrapper defaultSelectedKeys={['3']} isMobile={isMobile} />
         </HeaderWrapper>
       )}
-      <Content
-        style={{
-          height: '100%',
-          scrollbarWidth: 'none',
-          overflowY: 'scroll',
-          overscrollBehaviorY: 'contain',
-        }}
-      >
+      <Content>
         {contextHolder}
-        <div
-          style={{
-            background: '#F9FAFB',
-            borderRadius: '0px',
-            padding: '15px 15px 70px 15px',
-          }}
-        >
-          {!loading && !chatLoading && user && (
-            <>
-              <Space
-                size="large"
-                direction="vertical"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                }}
-              >
-                <Space.Compact size="large">
-                  <Input
+        {!loading && !chatLoading && user && (
+          <>
+            <Space
+              size="large"
+              direction="vertical"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
+              <Space.Compact size="large">
+                <Input
+                  className={
+                    isSubmitted && (!form.title.trim() || badLanguage.title)
+                      ? 'my-red-border'
+                      : ''
+                  }
+                  status="error"
+                  allowClear
+                  style={{
+                    // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+                    width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
+                    marginTop: '30px',
+                  }}
+                  onChange={(e) => {
+                    const text = e.target.value
+                    const sanitized = text.replace(/[^a-zA-Z0-9 ]/g, '')
+                    handleChange(sanitized, 'title')
+                  }}
+                  placeholder="Title"
+                  value={form.title}
+                  maxLength={100}
+                />
+              </Space.Compact>
+              <Space.Compact size="large">
+                <div style={{ position: 'relative' }}>
+                  <TextArea
                     className={
-                      isSubmitted && (!form.title.trim() || badLanguage.title)
+                      isSubmitted &&
+                      (!form.description.trim() || badLanguage.description)
                         ? 'my-red-border'
                         : ''
                     }
-                    status="error"
+                    id={'descId'}
                     allowClear
                     style={{
                       // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                       width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
-                      marginTop: '30px',
                     }}
                     onChange={(e) => {
                       const text = e.target.value
                       const sanitized = text.replace(/[^a-zA-Z0-9 ]/g, '')
-                      handleChange(sanitized, 'title')
+                      handleChange(sanitized, 'description')
                     }}
-                    placeholder="Title"
-                    value={form.title}
-                    maxLength={100}
+                    autoSize={{ minRows: 8, maxRows: 8 }}
+                    placeholder="Description"
+                    maxLength={300}
+                    value={form.description}
+                    onClick={() => {
+                      scrollToBottomPincode()
+                    }}
                   />
-                </Space.Compact>
-                <Space.Compact size="large">
-                  <div style={{ position: 'relative' }}>
-                    <TextArea
-                      className={
-                        isSubmitted &&
-                        (!form.description.trim() || badLanguage.description)
-                          ? 'my-red-border'
-                          : ''
-                      }
-                      id={'descId'}
-                      allowClear
+                  <Popover
+                    content={
+                      'Please provide all the details about your item (e.g., for a phone: color, memory, condition) to help buyers make informed decisions.'
+                    }
+                    title=""
+                    trigger="click"
+                    open={popOpen}
+                    placement="topLeft"
+                    styles={{ root: { width: '250px' } }}
+                    onOpenChange={handleOpenChange}
+                  >
+                    <InfoCircleOutlined
                       style={{
-                        // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-                        width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
-                      }}
-                      onChange={(e) => {
-                        const text = e.target.value
-                        const sanitized = text.replace(/[^a-zA-Z0-9 ]/g, '')
-                        handleChange(sanitized, 'description')
-                      }}
-                      autoSize={{ minRows: 8, maxRows: 8 }}
-                      placeholder="Description"
-                      maxLength={300}
-                      value={form.description}
-                      onClick={() => {
-                        scrollToBottomPincode()
+                        position: 'absolute',
+                        right: '10px',
+                        bottom: '10px',
+                        zIndex: 10,
+                        color: '#52c41a',
                       }}
                     />
-                    <Popover
-                      content={
-                        'Please provide all the details about your item (e.g., for a phone: color, memory, condition) to help buyers make informed decisions.'
-                      }
-                      title=""
-                      trigger="click"
-                      open={popOpen}
-                      placement="topLeft"
-                      styles={{ root: { width: '250px' } }}
-                      onOpenChange={handleOpenChange}
-                    >
-                      <InfoCircleOutlined
-                        style={{
-                          position: 'absolute',
-                          right: '10px',
-                          bottom: '10px',
-                          zIndex: 10,
-                          color: '#52c41a',
-                        }}
-                      />
-                    </Popover>
-                  </div>
-                </Space.Compact>
-                <Space.Compact
+                  </Popover>
+                </div>
+              </Space.Compact>
+              <Space.Compact
+                size="large"
+                style={{
+                  position: 'relative',
+                }}
+              >
+                <Space
                   size="large"
+                  direction="vertical"
                   style={{
-                    position: 'relative',
+                    display: 'flex',
+                    alignItems: 'center',
                   }}
                 >
-                  <Space
+                  <Space.Compact
                     size="large"
-                    direction="vertical"
                     style={{
-                      display: 'flex',
-                      alignItems: 'center',
+                      position: 'relative',
                     }}
                   >
-                    <Space.Compact
-                      size="large"
-                      style={{
-                        position: 'relative',
+                    <Select
+                      className={
+                        isSubmitted
+                          ? form.category
+                            ? 'my-custom-select'
+                            : 'my-custom-select my-red-border'
+                          : 'my-custom-select'
+                      }
+                      allowClear
+                      styles={{
+                        popup: {
+                          root: { maxHeight: '400px', overflow: 'auto' },
+                        },
                       }}
-                    >
-                      <Select
-                        className={
-                          isSubmitted
-                            ? form.category
-                              ? 'my-custom-select'
-                              : 'my-custom-select my-red-border'
-                            : 'my-custom-select'
-                        }
-                        allowClear
-                        styles={{
-                          popup: {
-                            root: { maxHeight: '400px', overflow: 'auto' },
-                          },
-                        }}
-                        getPopupContainer={() => document.body}
-                        id={'addProductCId'}
-                        style={{
-                          width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
-                        }}
-                        value={form.category || undefined}
-                        onChange={(value) => {
-                          if (!value) {
-                            handleChange('', 'category')
-                          } else {
-                            handleChange(value, 'category')
-                          }
-                        }}
-                        placeholder="Category"
-                        filterOption={false}
-                        options={options}
-                      ></Select>
-                    </Space.Compact>
-                    <Space.Compact
-                      size="large"
+                      id={'addProductCId'}
                       style={{
-                        position: 'relative',
+                        width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
                       }}
-                    >
-                      <Select
-                        className={
-                          isSubmitted
-                            ? form.subCategory
-                              ? 'my-custom-select'
-                              : 'my-custom-select my-red-border'
-                            : 'my-custom-select'
+                      value={form.category || undefined}
+                      onChange={(value) => {
+                        if (!value) {
+                          handleChange('', 'category')
+                        } else {
+                          handleChange(value, 'category')
                         }
-                        allowClear
-                        styles={{
-                          popup: {
-                            root: { maxHeight: '400px', overflow: 'auto' },
-                          },
-                        }}
-                        getPopupContainer={() => document.body}
-                        value={form.subCategory || undefined}
-                        id={'addProductSCId'}
-                        style={{
-                          width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
-                        }}
-                        onChange={(value, option) => {
-                          if (!value) {
-                            handleChange('', 'subCategory')
-                            handleChange([], 'keywords')
-                          } else {
-                            handleChange(value, 'subCategory')
-                            handleChange(option.keywords, 'keywords')
-                          }
-                        }}
-                        placeholder="Subcategory"
-                        filterOption={false}
-                        options={subCategoryOptions}
-                      ></Select>
-                    </Space.Compact>
-                  </Space>
+                      }}
+                      placeholder="Category"
+                      filterOption={false}
+                      options={options}
+                    ></Select>
+                  </Space.Compact>
+                  <Space.Compact
+                    size="large"
+                    style={{
+                      position: 'relative',
+                    }}
+                  >
+                    <Select
+                      className={
+                        isSubmitted
+                          ? form.subCategory
+                            ? 'my-custom-select'
+                            : 'my-custom-select my-red-border'
+                          : 'my-custom-select'
+                      }
+                      allowClear
+                      styles={{
+                        popup: {
+                          root: { maxHeight: '400px', overflow: 'auto' },
+                        },
+                      }}
+                      value={form.subCategory || undefined}
+                      id={'addProductSCId'}
+                      style={{
+                        width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
+                      }}
+                      onChange={(value, option) => {
+                        if (!value) {
+                          handleChange('', 'subCategory')
+                          handleChange([], 'keywords')
+                        } else {
+                          handleChange(value, 'subCategory')
+                          handleChange(option.keywords, 'keywords')
+                        }
+                      }}
+                      placeholder="Subcategory"
+                      filterOption={false}
+                      options={subCategoryOptions}
+                    ></Select>
+                  </Space.Compact>
+                </Space>
+              </Space.Compact>
+              <Space.Compact
+                size="large"
+                style={{
+                  // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+                  width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
+                }}
+              >
+                <Input
+                  className={
+                    isSubmitted
+                      ? form.locationLabel
+                        ? ''
+                        : 'my-red-border'
+                      : ''
+                  }
+                  id={'pincodeId'}
+                  value={pincode}
+                  onChange={handlePincode}
+                  placeholder="Pincode"
+                  // allowClear
+                  onClick={() => {
+                    scrollToBottomPrice()
+                  }}
+                ></Input>
+                <Button
+                  loading={postCodeLoading}
+                  disabled={!pincode}
+                  type="primary"
+                  style={{
+                    background: '#52c41a',
+                    fontSize: '13px',
+                    fontWeight: '300',
+                  }}
+                  onClick={fetchPincodeDetails}
+                >
+                  Check Pincode
+                </Button>
+              </Space.Compact>
+              &nbsp;&nbsp;or
+              <div
+                ref={bottomRefPincode}
+                style={{ display: 'block', height: 0 }}
+              ></div>
+              <Space.Compact size="large">
+                <Button
+                  className={
+                    isSubmitted
+                      ? form.locationLabel
+                        ? ''
+                        : 'my-red-border'
+                      : ''
+                  }
+                  disabled={currentLocationLabel}
+                  loading={locationAccessLoading}
+                  style={{
+                    fontSize: '13px',
+                    fontWeight: '300',
+                    color: '#52c41a',
+                    width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
+                  }}
+                  onClick={() => {
+                    navigator.permissions
+                      .query({ name: 'geolocation' })
+                      .then(function (result) {
+                        if (result.state === 'denied') {
+                          Modal.info(locationInfoConfig)
+                        }
+                      })
+                    setPincode('')
+                    setCurrLocRemoved(false)
+                    setTriggerLocation((value) => !value)
+                  }}
+                >
+                  <LocateFixed />
+                  Use your current location
+                </Button>
+              </Space.Compact>
+              {form.locationLabel && (
+                <Space.Compact size="large">
+                  <Input
+                    onChange={(e) => {
+                      setForm((prevValue) => {
+                        return {
+                          ...prevValue,
+                          location: '',
+                          locationLabel: '',
+                        }
+                      })
+                      setCurrentLocationLabel('')
+                      setCurrentLocation('')
+                      setCurrLocRemoved(true)
+                      handlePincode(e)
+                    }}
+                    allowClear
+                    style={{
+                      width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
+                    }}
+                    value={form.locationLabel}
+                  />
                 </Space.Compact>
-                <Space.Compact
-                  size="large"
+              )}
+              <Space.Compact size="large">
+                <Input
+                  className={
+                    isSubmitted ? (form.price ? '' : 'my-red-border') : ''
+                  }
+                  id="sellPriceId"
+                  allowClear
                   style={{
                     // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                     width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
                   }}
-                >
-                  <Input
-                    className={
-                      isSubmitted
-                        ? form.locationLabel
-                          ? ''
-                          : 'my-red-border'
-                        : ''
-                    }
-                    id={'pincodeId'}
-                    value={pincode}
-                    onChange={handlePincode}
-                    placeholder="Pincode"
-                    // allowClear
-                    onClick={() => {
-                      scrollToBottomPrice()
-                    }}
-                  ></Input>
-                  <Button
-                    loading={postCodeLoading}
-                    disabled={!pincode}
-                    type="primary"
-                    style={{
-                      background: '#52c41a',
-                      fontSize: '13px',
-                      fontWeight: '300',
-                    }}
-                    onClick={fetchPincodeDetails}
+                  prefix="£"
+                  onChange={(e) => {
+                    const text = e.target.value
+                    const sanitized = text.replace(/[^0-9]/g, '')
+                    handleChange(sanitized, 'price')
+                  }}
+                  placeholder="Price"
+                  value={form.price}
+                  maxLength={15}
+                  onClick={() => {
+                    scrollToBottom()
+                  }}
+                />
+              </Space.Compact>
+              <div
+                ref={bottomRefPrice}
+                style={{ display: 'block', height: 0 }}
+              ></div>
+              <Space.Compact size="large">
+                <Space size="large" direction="vertical" className="ad-upload">
+                  <Upload
+                    accept="image/png,image/jpeg"
+                    listType="picture"
+                    fileList={form.images}
+                    onPreview={handlePreview}
+                    beforeUpload={handleBeforeUpload}
+                    onChange={handleChangeImage}
+                    maxCount={6}
+                    multiple
                   >
-                    Check Pincode
-                  </Button>
-                </Space.Compact>
-                &nbsp;&nbsp;or
-                <div
-                  ref={bottomRefPincode}
-                  style={{ display: 'block', height: 0 }}
-                ></div>
-                <Space.Compact size="large">
-                  <Button
-                    className={
-                      isSubmitted
-                        ? form.locationLabel
-                          ? ''
-                          : 'my-red-border'
-                        : ''
-                    }
-                    disabled={currentLocationLabel}
-                    loading={locationAccessLoading}
-                    style={{
-                      fontSize: '13px',
-                      fontWeight: '300',
-                      color: '#52c41a',
-                      width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
-                    }}
-                    onClick={() => {
-                      navigator.permissions
-                        .query({ name: 'geolocation' })
-                        .then(function (result) {
-                          if (result.state === 'denied') {
-                            Modal.info(locationInfoConfig)
-                          }
-                        })
-                      setPincode('')
-                      setCurrLocRemoved(false)
-                      setTriggerLocation((value) => !value)
-                    }}
-                  >
-                    <LocateFixed />
-                    Use your current location
-                  </Button>
-                </Space.Compact>
-                {form.locationLabel && (
-                  <Space.Compact size="large">
-                    <Input
-                      onChange={(e) => {
-                        setForm((prevValue) => {
-                          return {
-                            ...prevValue,
-                            location: '',
-                            locationLabel: '',
-                          }
-                        })
-                        setCurrentLocationLabel('')
-                        setCurrentLocation('')
-                        setCurrLocRemoved(true)
-                        handlePincode(e)
-                      }}
-                      allowClear
+                    <Button
+                      className={
+                        isSubmitted
+                          ? form.images.length > 0
+                            ? ''
+                            : 'my-red-border'
+                          : ''
+                      }
                       style={{
+                        color: 'black',
+                        fontSize: '13px',
+                        fontWeight: '300',
                         width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
                       }}
-                      value={form.locationLabel}
-                    />
-                  </Space.Compact>
-                )}
-                <Space.Compact size="large">
-                  <Input
-                    className={
-                      isSubmitted ? (form.price ? '' : 'my-red-border') : ''
-                    }
-                    id="sellPriceId"
-                    allowClear
-                    style={{
-                      // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-                      width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
-                    }}
-                    prefix="£"
-                    onChange={(e) => {
-                      const text = e.target.value
-                      const sanitized = text.replace(/[^0-9]/g, '')
-                      handleChange(sanitized, 'price')
-                    }}
-                    placeholder="Price"
-                    value={form.price}
-                    maxLength={15}
-                    onClick={() => {
-                      scrollToBottom()
-                    }}
-                  />
-                </Space.Compact>
-                <div
-                  ref={bottomRefPrice}
-                  style={{ display: 'block', height: 0 }}
-                ></div>
-                <Space.Compact size="large">
-                  <Space
-                    size="large"
-                    direction="vertical"
-                    className="ad-upload"
-                  >
-                    <Upload
-                      accept="image/png,image/jpeg"
-                      listType="picture"
-                      fileList={form.images}
-                      onPreview={handlePreview}
-                      beforeUpload={handleBeforeUpload}
-                      onChange={handleChangeImage}
-                      maxCount={6}
-                      multiple
+                      icon={<UploadOutlined />}
                     >
-                      <Button
-                        className={
-                          isSubmitted
-                            ? form.images.length > 0
-                              ? ''
-                              : 'my-red-border'
-                            : ''
-                        }
-                        style={{
-                          color: 'black',
-                          fontSize: '13px',
-                          fontWeight: '300',
-                          width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
-                        }}
-                        icon={<UploadOutlined />}
-                      >
-                        Upload (Max: 6)
-                      </Button>
-                    </Upload>
-                    {previewImage && (
-                      <Image
-                        loading="lazy"
-                        wrapperStyle={{
-                          display: 'none',
-                        }}
-                        style={{ objectFit: 'cover' }}
-                        preview={{
-                          visible: previewOpen,
-                          onVisibleChange: (visible) => setPreviewOpen(visible),
-                          afterOpenChange: (visible) =>
-                            !visible && setPreviewImage(''),
-                        }}
-                        src={previewImage}
-                      />
-                    )}
-                  </Space>
-                </Space.Compact>
-                <Space.Compact size="large">
-                  <span style={{ fontSize: '13px', fontWeight: '300' }}>
-                    The ad will be deactivated automatically after 30 days
-                  </span>
-                </Space.Compact>
-                <Space.Compact
-                  size="large"
+                      Upload (Max: 6)
+                    </Button>
+                  </Upload>
+                  {previewImage && (
+                    <Image
+                      loading="lazy"
+                      wrapperStyle={{
+                        display: 'none',
+                      }}
+                      style={{ objectFit: 'cover' }}
+                      preview={{
+                        visible: previewOpen,
+                        onVisibleChange: (visible) => setPreviewOpen(visible),
+                        afterOpenChange: (visible) =>
+                          !visible && setPreviewImage(''),
+                      }}
+                      src={previewImage}
+                    />
+                  )}
+                </Space>
+              </Space.Compact>
+              <Space.Compact size="large">
+                <span style={{ fontSize: '13px', fontWeight: '300' }}>
+                  The ad will be deactivated automatically after 30 days
+                </span>
+              </Space.Compact>
+              <Space.Compact
+                size="large"
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                }}
+              >
+                <Button
                   style={{
-                    display: 'flex',
-                    justifyContent: 'center',
+                    background: '#52c41a',
+                    fontSize: '13px',
+                    fontWeight: '300',
                   }}
+                  onClick={async () => {
+                    setIsSubmitted(true)
+                    if (!isValid()) {
+                      message.info('All fields are mandatory')
+                      return
+                    }
+                    setSubmitLoading(true)
+                    if (count < 3) {
+                      await handleSubmit(true, false)
+                    } else {
+                      const isValid = await handleSubmit(false, true)
+                      if (isValid) {
+                        navigate('/checkout', { state: { adType: 'POSTAD' } })
+                      }
+                    }
+                  }}
+                  type="primary"
                 >
-                  <Button
-                    style={{
-                      background: '#52c41a',
-                      fontSize: '13px',
-                      fontWeight: '300',
-                    }}
-                    onClick={async () => {
-                      setIsSubmitted(true)
-                      if (!isValid()) {
-                        message.info('All fields are mandatory')
-                        return
-                      }
-                      setSubmitLoading(true)
-                      if (count < 3) {
-                        await handleSubmit(true, false)
-                      } else {
-                        const isValid = await handleSubmit(false, true)
-                        if (isValid) {
-                          navigate('/checkout', { state: { adType: 'POSTAD' } })
-                        }
-                      }
-                    }}
-                    type="primary"
-                  >
-                    Submit
-                  </Button>
-                </Space.Compact>
-                <br />
-                <div
-                  ref={bottomRef}
-                  style={{ display: 'block', height: 0 }}
-                ></div>
-              </Space>
-            </>
-          )}
-          {(loading || chatLoading) && (
-            <Row gutter={[30, 30]}>
-              {Array.from({ length: 9 }).map((_, index) => {
-                return (
-                  <Col
-                    key={index}
-                    xs={24}
-                    sm={24}
-                    md={24}
-                    lg={24}
-                    xl={24}
-                    xxl={24}
-                    style={{ display: 'flex', justifyContent: 'center' }}
-                  >
-                    {index !== 8 && (
-                      <Skeleton.Node
-                        style={{
-                          width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
-                          height: index !== 2 ? '40px' : '214px',
-                          borderRadius: '8px',
-                        }}
-                        active
-                      />
-                    )}
-                    {index === 8 && (
-                      <Skeleton.Node
-                        style={{
-                          width: '75px',
-                          height: '40px',
-                          borderRadius: '8px',
-                        }}
-                        active
-                      />
-                    )}
-                  </Col>
-                )
-              })}
-            </Row>
-          )}
-        </div>
+                  Submit
+                </Button>
+              </Space.Compact>
+              <br />
+              <div
+                ref={bottomRef}
+                style={{ display: 'block', height: 0 }}
+              ></div>
+            </Space>
+          </>
+        )}
+        {(loading || chatLoading) && (
+          <Row gutter={[30, 30]}>
+            {Array.from({ length: 9 }).map((_, index) => {
+              return (
+                <Col
+                  key={index}
+                  xs={24}
+                  sm={24}
+                  md={24}
+                  lg={24}
+                  xl={24}
+                  xxl={24}
+                  style={{ display: 'flex', justifyContent: 'center' }}
+                >
+                  {index !== 8 && (
+                    <Skeleton.Node
+                      style={{
+                        width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
+                        height: index !== 2 ? '40px' : '214px',
+                        borderRadius: '8px',
+                      }}
+                      active
+                    />
+                  )}
+                  {index === 8 && (
+                    <Skeleton.Node
+                      style={{
+                        width: '75px',
+                        height: '40px',
+                        borderRadius: '8px',
+                      }}
+                      active
+                    />
+                  )}
+                </Col>
+              )
+            })}
+          </Row>
+        )}
       </Content>
       {isMobile && (
         <FooterWrapper>
