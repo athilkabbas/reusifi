@@ -676,7 +676,6 @@ const Home = () => {
                     root: { maxHeight: '400px', overflow: 'auto' },
                   },
                 }}
-                getPopupContainer={() => document.body}
                 className={'my-custom-select'}
                 id={'homeCId'}
                 style={{
@@ -710,9 +709,6 @@ const Home = () => {
                   },
                 }}
                 value={subCategory || undefined}
-                getPopupContainer={() =>
-                  document.getElementById('drawerContainerId')
-                }
                 className={'my-custom-select'}
                 id={'homeSCId'}
                 style={{
@@ -744,7 +740,6 @@ const Home = () => {
                     root: { maxHeight: '400px', overflow: 'auto' },
                   },
                 }}
-                getPopupContainer={() => document.body}
                 className={'my-custom-select'}
                 id={'locationId'}
                 style={{
@@ -859,7 +854,6 @@ const Home = () => {
                     root: { maxHeight: '400px', overflow: 'auto' },
                   },
                 }}
-                getPopupContainer={() => document.body}
                 disabled={!currentLocation && !location}
                 style={{
                   width: !isMobile ? '20dvw' : '45dvw',
