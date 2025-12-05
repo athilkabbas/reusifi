@@ -548,10 +548,6 @@ const AddDress = () => {
       style={{
         height: '100dvh',
         background: '#F9FAFB',
-        scrollbarWidth: 'none',
-        overflowY: 'scroll',
-        overscrollBehaviorY: 'contain',
-        padding: '15px 15px 70px 15px',
       }}
     >
       {!isMobile && (
@@ -566,7 +562,14 @@ const AddDress = () => {
           <MenuWrapper defaultSelectedKeys={['3']} isMobile={isMobile} />
         </HeaderWrapper>
       )}
-      <Content>
+      <Content
+        style={{
+          scrollbarWidth: 'none',
+          overflowY: 'scroll',
+          overscrollBehaviorY: 'contain',
+          padding: '15px 15px 70px 15px',
+        }}
+      >
         {contextHolder}
         {!loading && !chatLoading && user && (
           <>
