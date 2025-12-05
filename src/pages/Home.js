@@ -648,11 +648,6 @@ const Home = () => {
         onClose={onClose}
         open={drawerOpen}
         width={isMobile ? '100%' : '60dvw'}
-        styles={{
-          body: {
-            overscrollBehaviorY: 'contain',
-          },
-        }}
       >
         <Space
           size="middle"

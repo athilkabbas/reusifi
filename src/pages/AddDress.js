@@ -687,7 +687,11 @@ const AddDress = () => {
                       allowClear
                       styles={{
                         popup: {
-                          root: { maxHeight: '400px', overflow: 'auto' },
+                          root: {
+                            maxHeight: '400px',
+                            overflow: 'auto',
+                            overscrollBehaviorY: 'contain',
+                          },
                         },
                       }}
                       id={'addProductCId'}
@@ -724,7 +728,11 @@ const AddDress = () => {
                       allowClear
                       styles={{
                         popup: {
-                          root: { maxHeight: '400px', overflow: 'auto' },
+                          root: {
+                            maxHeight: '400px',
+                            overflow: 'auto',
+                            overscrollBehaviorY: 'contain',
+                          },
                         },
                       }}
                       value={form.subCategory || undefined}
