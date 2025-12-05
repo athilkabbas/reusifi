@@ -666,11 +666,6 @@ const Home = () => {
             >
               <Select
                 allowClear
-                styles={{
-                  popup: {
-                    root: { maxHeight: '400px', overflow: 'auto' },
-                  },
-                }}
                 className={'my-custom-select'}
                 id={'homeCId'}
                 style={{
@@ -698,11 +693,6 @@ const Home = () => {
             >
               <Select
                 allowClear
-                styles={{
-                  popup: {
-                    root: { maxHeight: '400px', overflow: 'auto' },
-                  },
-                }}
                 value={subCategory || undefined}
                 className={'my-custom-select'}
                 id={'homeSCId'}
@@ -730,11 +720,6 @@ const Home = () => {
             <Space.Compact size="large" style={{ position: 'relative' }}>
               <Select
                 allowClear
-                styles={{
-                  popup: {
-                    root: { maxHeight: '400px', overflow: 'auto' },
-                  },
-                }}
                 className={'my-custom-select'}
                 id={'locationId'}
                 style={{
@@ -844,11 +829,6 @@ const Home = () => {
             <Space.Compact size="large">
               <Input value="Radius" style={{ width: '20dvw' }} readOnly />
               <Select
-                styles={{
-                  popup: {
-                    root: { maxHeight: '400px', overflow: 'auto' },
-                  },
-                }}
                 disabled={!currentLocation && !location}
                 style={{
                   width: !isMobile ? '20dvw' : '45dvw',

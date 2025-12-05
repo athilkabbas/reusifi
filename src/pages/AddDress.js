@@ -517,7 +517,9 @@ const AddDress = () => {
       const currentHeight = window.innerHeight
       if (
         currentHeight < prevHeight &&
-        document.activeElement.id === 'sellPriceId'
+        (document.activeElement.id === 'sellPriceId' ||
+          document.activeElement.id === 'addProductCId' ||
+          document.activeElement.id === 'addProductSCId')
       ) {
         scrollToBottom()
       } else if (
@@ -684,13 +686,8 @@ const AddDress = () => {
                           : 'my-custom-select'
                       }
                       allowClear
-                      styles={{
-                        popup: {
-                          root: {
-                            maxHeight: '400px',
-                            overflow: 'auto',
-                          },
-                        },
+                      onClick={() => {
+                        scrollToBottom()
                       }}
                       id={'addProductCId'}
                       style={{
@@ -724,13 +721,8 @@ const AddDress = () => {
                           : 'my-custom-select'
                       }
                       allowClear
-                      styles={{
-                        popup: {
-                          root: {
-                            maxHeight: '400px',
-                            overflow: 'auto',
-                          },
-                        },
+                      onClick={() => {
+                        scrollToBottom()
                       }}
                       value={form.subCategory || undefined}
                       id={'addProductSCId'}
