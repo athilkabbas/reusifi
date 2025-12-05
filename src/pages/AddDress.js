@@ -672,7 +672,6 @@ const AddDress = () => {
                   }}
                 >
                   <Space.Compact
-                    id={'addProductContainerCId'}
                     size="large"
                     style={{
                       position: 'relative',
@@ -690,9 +689,7 @@ const AddDress = () => {
                       onClick={() => {
                         scrollToBottom()
                       }}
-                      getPopupContainer={() =>
-                        document.getElementById('addProductContainerCId')
-                      }
+                      getPopupContainer={(triggerNode) => triggerNode}
                       id={'addProductCId'}
                       style={{
                         width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
@@ -711,7 +708,6 @@ const AddDress = () => {
                     ></Select>
                   </Space.Compact>
                   <Space.Compact
-                    id={'addProductContainerSCId'}
                     size="large"
                     style={{
                       position: 'relative',
@@ -729,9 +725,7 @@ const AddDress = () => {
                       onClick={() => {
                         scrollToBottom()
                       }}
-                      getPopupContainer={() =>
-                        document.getElementById('addProductContainerSCId')
-                      }
+                      getPopupContainer={(triggerNode) => triggerNode}
                       value={form.subCategory || undefined}
                       id={'addProductSCId'}
                       style={{
