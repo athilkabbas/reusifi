@@ -516,7 +516,7 @@ const AddDress = () => {
   const scrollABit = () => {
     requestAnimationFrame(() => {
       if (containerRef?.current) {
-        containerRef.current?.scrollBy(0, 10)
+        containerRef.current?.scrollBy(0, 1)
       }
     })
   }
@@ -563,7 +563,6 @@ const AddDress = () => {
     <Layout
       style={{
         height: '100dvh',
-        overflow: 'hidden',
         background: '#F9FAFB',
       }}
     >
@@ -702,9 +701,9 @@ const AddDress = () => {
                           : 'my-custom-select'
                       }
                       allowClear
-                      // onClick={() => {
-                      //   scrollABit()
-                      // }}
+                      onClick={() => {
+                        scrollABit()
+                      }}
                       id={'addProductCId'}
                       style={{
                         width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
