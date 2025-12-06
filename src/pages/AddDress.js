@@ -506,7 +506,7 @@ const AddDress = () => {
   const scrollToBottom = () => {
     requestAnimationFrame(() => {
       if (bottomRef?.current) {
-        bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
+        bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
       }
     })
   }
@@ -876,10 +876,6 @@ const AddDress = () => {
                   }}
                 />
               </Space.Compact>
-              <div
-                ref={bottomRefPrice}
-                style={{ display: 'block', height: 0 }}
-              ></div>
               <Space.Compact size="large">
                 <Space
                   size="large"
@@ -935,6 +931,10 @@ const AddDress = () => {
                   )}
                 </Space>
               </Space.Compact>
+              <div
+                ref={bottomRefPrice}
+                style={{ display: 'block', height: 0 }}
+              ></div>
               <Space.Compact size="large">
                 <span style={{ fontSize: '13px', fontWeight: '300' }}>
                   The ad will be deactivated automatically after 30 days

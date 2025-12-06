@@ -200,7 +200,7 @@ const Home = () => {
   const scrollToBottom = () => {
     requestAnimationFrame(() => {
       if (bottomRef?.current) {
-        bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
+        bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
       }
     })
   }
