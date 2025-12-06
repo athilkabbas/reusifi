@@ -767,6 +767,9 @@ const AddDress = () => {
                   value={pincode}
                   onChange={handlePincode}
                   placeholder="Pincode"
+                  onClick={() => {
+                    scrollToBottomPrice()
+                  }}
                 ></Input>
                 <Button
                   loading={postCodeLoading}
@@ -865,6 +868,9 @@ const AddDress = () => {
                   placeholder="Price"
                   value={form.price}
                   maxLength={15}
+                  onClick={() => {
+                    scrollToBottom()
+                  }}
                 />
               </Space.Compact>
               <div
