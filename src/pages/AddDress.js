@@ -702,9 +702,9 @@ const AddDress = () => {
                           : 'my-custom-select'
                       }
                       allowClear
-                      onClick={() => {
-                        scrollABit()
-                      }}
+                      // onClick={() => {
+                      //   scrollABit()
+                      // }}
                       id={'addProductCId'}
                       style={{
                         width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
