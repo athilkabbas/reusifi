@@ -610,14 +610,6 @@ const Account = () => {
                       beforeUpload={handleBeforeUpload}
                       onChange={handleChangeImage}
                       maxCount={1}
-                      multiple
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        height: '40px',
-                        width: '100%',
-                      }}
                     >
                       <Button
                         style={{
