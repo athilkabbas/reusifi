@@ -563,6 +563,7 @@ const AddDress = () => {
     <Layout
       style={{
         height: '100dvh',
+        overflow: 'hidden',
         background: '#F9FAFB',
       }}
     >
