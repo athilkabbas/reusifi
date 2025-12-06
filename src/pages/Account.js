@@ -726,9 +726,9 @@ const Account = () => {
                   id={'accountNameId'}
                   value={form.name}
                   maxLength={100}
-                  onClick={() => {
-                    scrollToBottom()
-                  }}
+                  // onClick={() => {
+                  //   scrollToBottom()
+                  // }}
                 />
               </Space.Compact>
               <Space.Compact size="large">
@@ -749,9 +749,9 @@ const Account = () => {
                   id={'accountDescId'}
                   maxLength={300}
                   value={form.description}
-                  onClick={() => {
-                    scrollToBottom()
-                  }}
+                  // onClick={() => {
+                  //   scrollToBottom()
+                  // }}
                 />
               </Space.Compact>
               <Space.Compact
