@@ -516,7 +516,7 @@ const AddDress = () => {
   const scrollABit = () => {
     requestAnimationFrame(() => {
       if (containerRef?.current) {
-        containerRef.current?.scrollTo(0, 3)
+        containerRef.current?.scrollBy(0, 10)
       }
     })
   }
