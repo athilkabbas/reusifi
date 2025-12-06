@@ -29,3 +29,7 @@
 :global(.my-custom-select .ant-select-selector) {
   border-radius: 9px !important;
 }
+
+:global(.ant-select-dropdown) {
+  overscroll-behavior: contain !important;
+}
