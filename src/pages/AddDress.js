@@ -702,6 +702,9 @@ const AddDress = () => {
                           : 'my-custom-select'
                       }
                       allowClear
+                      getPopupContainer={(triggerNode) =>
+                        triggerNode.parentNode
+                      }
                       onClick={() => {
                         scrollABit()
                       }}
@@ -735,6 +738,9 @@ const AddDress = () => {
                             ? 'my-custom-select'
                             : 'my-custom-select my-red-border'
                           : 'my-custom-select'
+                      }
+                      getPopupContainer={(triggerNode) =>
+                        triggerNode.parentNode
                       }
                       allowClear
                       onClick={() => {
