@@ -553,6 +553,7 @@ const AddDress = () => {
         height: '100dvh',
         background: '#F9FAFB',
         overflow: 'hidden',
+        overscrollBehaviorY: 'none',
       }}
     >
       {!isMobile && (
