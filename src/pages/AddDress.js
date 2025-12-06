@@ -628,9 +628,6 @@ const AddDress = () => {
                     placeholder="Description"
                     maxLength={300}
                     value={form.description}
-                    onClick={() => {
-                      scrollToBottomPincode()
-                    }}
                   />
                   <Popover
                     content={
@@ -770,10 +767,6 @@ const AddDress = () => {
                   value={pincode}
                   onChange={handlePincode}
                   placeholder="Pincode"
-                  // allowClear
-                  onClick={() => {
-                    scrollToBottomPrice()
-                  }}
                 ></Input>
                 <Button
                   loading={postCodeLoading}
@@ -872,9 +865,6 @@ const AddDress = () => {
                   placeholder="Price"
                   value={form.price}
                   maxLength={15}
-                  onClick={() => {
-                    scrollToBottom()
-                  }}
                 />
               </Space.Compact>
               <div
@@ -975,9 +965,6 @@ const AddDress = () => {
                   Submit
                 </Button>
               </Space.Compact>
-              <br />
-              <br />
-              <br />
               <div
                 ref={bottomRef}
                 style={{ display: 'block', height: 0 }}

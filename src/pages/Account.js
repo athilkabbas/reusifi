@@ -726,9 +726,6 @@ const Account = () => {
                   id={'accountNameId'}
                   value={form.name}
                   maxLength={100}
-                  // onClick={() => {
-                  //   scrollToBottom()
-                  // }}
                 />
               </Space.Compact>
               <Space.Compact size="large">
@@ -749,9 +746,6 @@ const Account = () => {
                   id={'accountDescId'}
                   maxLength={300}
                   value={form.description}
-                  // onClick={() => {
-                  //   scrollToBottom()
-                  // }}
                 />
               </Space.Compact>
               <Space.Compact
@@ -773,7 +767,10 @@ const Account = () => {
                   }
                 />
               </Space.Compact>
-              <br />
+              <div
+                ref={bottomRef}
+                style={{ display: 'block', height: 0 }}
+              ></div>
               <Space>
                 <Space.Compact size="large">
                   <Button
@@ -830,10 +827,6 @@ const Account = () => {
               <br />
               <br />
               <br />
-              <div
-                ref={bottomRef}
-                style={{ display: 'block', height: 0 }}
-              ></div>
               <Space.Compact size="large">
                 <Popconfirm
                   title="Do you want to delete the Account?"

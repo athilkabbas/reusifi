@@ -757,9 +757,6 @@ const Home = () => {
                     <Empty />
                   )
                 }
-                onClick={(e) => {
-                  scrollToBottomPrice()
-                }}
                 onSelect={(value, options) => {
                   handleLocationSelect(value, options)
                 }}
@@ -842,9 +839,6 @@ const Home = () => {
                   label: item.label,
                   key: index,
                 }))}
-                onClick={() => {
-                  scrollToBottom()
-                }}
               ></Select>
             </Space.Compact>
           </Space>
@@ -900,7 +894,6 @@ const Home = () => {
                     allowClear
                     id="homeMinId"
                     onChange={(event) => {
-                      // setPriceFilter("");
                       if (
                         !/^(|0|[1-9]\d*)(\.\d{0,2})?$/.test(event.target.value)
                       ) {
@@ -912,9 +905,6 @@ const Home = () => {
                     value={minPrice || null}
                     placeholder="min"
                     style={{ width: '150px' }}
-                    onClick={() => {
-                      scrollToBottom()
-                    }}
                     maxLength={15}
                   ></Input>
                 </Space.Compact>
@@ -923,7 +913,6 @@ const Home = () => {
                     allowClear
                     id="homeMaxId"
                     onChange={(event) => {
-                      // setPriceFilter("");
                       if (
                         !/^(|0|[1-9]\d*)(\.\d{0,2})?$/.test(event.target.value)
                       ) {
@@ -935,9 +924,6 @@ const Home = () => {
                     value={maxPrice || null}
                     placeholder="max"
                     style={{ width: '150px' }}
-                    onClick={() => {
-                      scrollToBottom()
-                    }}
                     maxLength={15}
                   ></Input>
                 </Space.Compact>
@@ -1029,9 +1015,6 @@ const Home = () => {
             </Space.Compact>
           </Space>
         </Space>
-        <br />
-        <br />
-        <br />
         <div ref={bottomRef} style={{ display: 'block', height: 0 }}></div>
       </Drawer>
       <Space
