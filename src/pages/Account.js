@@ -596,8 +596,11 @@ const Account = () => {
               <Space.Compact size="large">
                 <Space size="large" direction="vertical">
                   <div
-                    className="account-upload"
-                    style={{ display: 'flex', alignItems: 'center' }}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
+                    }}
                   >
                     <Upload
                       accept="image/png,image/jpeg"
@@ -613,6 +616,7 @@ const Account = () => {
                         justifyContent: 'center',
                         alignItems: 'center',
                         height: '40px',
+                        width: '100%',
                       }}
                     >
                       <Button
@@ -620,7 +624,7 @@ const Account = () => {
                           color: 'black',
                           fontSize: '13px',
                           fontWeight: '300',
-                          width: !isMobile ? '40dvw' : '74dvw',
+                          width: '100%',
                         }}
                         icon={<UploadOutlined />}
                       >
@@ -635,6 +639,7 @@ const Account = () => {
                           marginLeft: '5px',
                           display: 'flex',
                           alignSelf: 'flex-start',
+                          width: '20%',
                         }}
                         type="primary"
                         danger

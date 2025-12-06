@@ -1,13 +1,5 @@
-@media (max-width: 767px) {
-  :global(.ad-upload .ant-upload-list-item) {
-    width: calc(100dvw - 30px) !important;
-  }
-}
-
-@media (min-width: 768px) {
-  :global(.ad-upload .ant-upload-list-item) {
-    width: 50dvw !important;
-  }
+:global(.ant-upload-wrapper) {
+  width: 100%;
 }
 
 :global(.my-red-border) {
@@ -18,7 +10,7 @@
   border-color: #ff4d4f !important;
 }
 
-:global(.my-custom-select .ant-select-selector) {
+:global(.ant-select-selector) {
   border-radius: 9px !important;
 }
 
@@ -44,10 +36,3 @@
   ) {
   border-color: #52c41a !important;
 }
-
-/* :global(#addProductContainerId) {
-  overflow-y: scroll;
-  overflow-x: hidden;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-} */

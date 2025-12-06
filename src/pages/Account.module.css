@@ -2,18 +2,6 @@
   background-color: #52c41a !important;
 }
 
-@media (max-width: 767px) {
-  :global(.account-upload .ant-upload-list-item) {
-    width: 74dvw !important;
-  }
-}
-
-@media (min-width: 768px) {
-  :global(.account-upload .ant-upload-list-item) {
-    width: 40dvw !important;
-  }
-}
-
 :global(.my-red-border) {
   border-color: #ff4d4f !important;
 }
@@ -26,4 +14,12 @@
 :global(.ant-btn-variant-outlined:not(:disabled):not(.ant-btn-disabled):hover),
 :global(.ant-btn-variant-dashed:not(:disabled):not(.ant-btn-disabled):hover) {
   border-color: #52c41a !important;
+}
+
+:global(.ant-upload-wrapper) {
+  width: 80%;
+}
+
+:global(.ant-upload) {
+  width: 100%;
 }

@@ -549,10 +549,8 @@ const AddDress = () => {
     <Layout
       style={{
         height: '100dvh',
-        overflowY: 'scroll',
-        overflowX: 'hidden',
         background: '#F9FAFB',
-        scrollbarWidth: 'none',
+        overflow: 'hidden',
       }}
     >
       {!isMobile && (
@@ -570,6 +568,8 @@ const AddDress = () => {
       <Content
         style={{
           padding: '15px 15px 70px 15px',
+          overflowY: 'scroll',
+          scrollbarWidth: 'none',
         }}
       >
         {contextHolder}
@@ -681,9 +681,9 @@ const AddDress = () => {
                       className={
                         isSubmitted
                           ? form.category
-                            ? 'my-custom-select'
-                            : 'my-custom-select my-red-border'
-                          : 'my-custom-select'
+                            ? ''
+                            : 'my-red-border'
+                          : ''
                       }
                       allowClear
                       id={'addProductCId'}
@@ -870,7 +870,11 @@ const AddDress = () => {
                 style={{ display: 'block', height: 0 }}
               ></div>
               <Space.Compact size="large">
-                <Space size="large" direction="vertical" className="ad-upload">
+                <Space
+                  size="large"
+                  direction="vertical"
+                  style={{ width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)' }}
+                >
                   <Upload
                     accept="image/png,image/jpeg"
                     listType="picture"
@@ -893,7 +897,7 @@ const AddDress = () => {
                         color: 'black',
                         fontSize: '13px',
                         fontWeight: '300',
-                        width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
+                        width: '100%',
                       }}
                       icon={<UploadOutlined />}
                     >
