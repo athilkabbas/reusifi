@@ -17,3 +17,13 @@
 :global(.my-red-border) {
   border-color: #ff4d4f !important;
 }
+
+:global(.ant-input-outlined:focus),
+:global(.ant-input-outlined:focus-within) {
+  border-color: #52c41a !important;
+}
+
+:global(.ant-btn-variant-outlined:not(:disabled):not(.ant-btn-disabled):hover),
+:global(.ant-btn-variant-dashed:not(:disabled):not(.ant-btn-disabled):hover) {
+  border-color: #52c41a !important;
+}

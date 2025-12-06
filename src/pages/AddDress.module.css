@@ -18,14 +18,6 @@
   border-color: #ff4d4f !important;
 }
 
-:global(.my-custom-cascader .ant-select-selector) {
-  border-radius: 9px !important;
-}
-
-:global(.my-custom-tree-select .ant-select-selector) {
-  border-radius: 9px !important;
-}
-
 :global(.my-custom-select .ant-select-selector) {
   border-radius: 9px !important;
 }
@@ -33,3 +25,29 @@
 :global(.ant-select-dropdown) {
   overscroll-behavior: contain !important;
 }
+
+:global(.ant-input-outlined:focus),
+:global(.ant-input-outlined:focus-within) {
+  border-color: #52c41a !important;
+}
+
+:global(.ant-btn-variant-outlined:not(:disabled):not(.ant-btn-disabled):hover),
+:global(.ant-btn-variant-dashed:not(:disabled):not(.ant-btn-disabled):hover) {
+  border-color: #52c41a !important;
+}
+
+:global(
+    .ant-select-focused.ant-select-outlined:not(.ant-select-disabled):not(
+        .ant-select-customize-input
+      ):not(.ant-pagination-size-changer)
+      .ant-select-selector
+  ) {
+  border-color: #52c41a !important;
+}
+
+/* :global(#addProductContainerId) {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+} */

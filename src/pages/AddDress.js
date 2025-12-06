@@ -549,8 +549,10 @@ const AddDress = () => {
     <Layout
       style={{
         height: '100dvh',
-        overflow: 'hidden',
+        overflowY: 'scroll',
+        overflowX: 'hidden',
         background: '#F9FAFB',
+        scrollbarWidth: 'none',
       }}
     >
       {!isMobile && (
@@ -566,12 +568,8 @@ const AddDress = () => {
         </HeaderWrapper>
       )}
       <Content
-        ref={containerRef}
         style={{
-          scrollbarWidth: 'none',
-          overflowY: 'scroll',
           padding: '15px 15px 70px 15px',
-          overscrollBehavior: 'contain',
         }}
       >
         {contextHolder}

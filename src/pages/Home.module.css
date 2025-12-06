@@ -10,6 +10,5 @@
 }
 
 :global(.ant-radio-button-wrapper-checked) {
-  /* your styles for the checked radio button */
   background: #52c41a !important;
 }
