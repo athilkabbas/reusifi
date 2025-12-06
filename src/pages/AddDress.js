@@ -513,14 +513,6 @@ const AddDress = () => {
     })
   }
 
-  const scrollABit = () => {
-    // requestAnimationFrame(() => {
-    //   if (containerRef?.current) {
-    //     containerRef.current?.scrollBy(0, 30)
-    //   }
-    // })
-  }
-
   useEffect(() => {
     let prevHeight = window.innerHeight
     const handleResize = () => {
@@ -541,13 +533,6 @@ const AddDress = () => {
       ) {
         scrollToBottomPincode()
       }
-      // else if (
-      //   currentHeight < prevHeight &&
-      //   (document.activeElement.id === 'addProductCId' ||
-      //     document.activeElement.id === 'addProductSCId')
-      // ) {
-      //   scrollABit()
-      // }
       prevHeight = currentHeight
     }
     window.addEventListener('resize', handleResize)
@@ -566,7 +551,6 @@ const AddDress = () => {
         height: '100dvh',
         overflow: 'hidden',
         background: '#F9FAFB',
-        position: 'fixed',
       }}
     >
       {!isMobile && (
@@ -703,9 +687,6 @@ const AddDress = () => {
                           : 'my-custom-select'
                       }
                       allowClear
-                      onClick={() => {
-                        scrollABit()
-                      }}
                       id={'addProductCId'}
                       style={{
                         width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
@@ -738,9 +719,6 @@ const AddDress = () => {
                           : 'my-custom-select'
                       }
                       allowClear
-                      onClick={() => {
-                        scrollABit()
-                      }}
                       value={form.subCategory || undefined}
                       id={'addProductSCId'}
                       style={{
