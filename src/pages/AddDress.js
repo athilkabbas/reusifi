@@ -481,8 +481,6 @@ const AddDress = () => {
 
   const bottomRefPrice = useRef(null)
 
-  const containerRef = useRef(null)
-
   const scrollToBottomPincode = () => {
     requestAnimationFrame(() => {
       if (bottomRefPincode?.current) {
@@ -690,7 +688,13 @@ const AddDress = () => {
                       style={{
                         width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
                       }}
-                      getPopupContainer={() => document.body}
+                      onOpenChange={(open) => {
+                        if (open) {
+                          document.body.style.overflow = 'hidden'
+                        } else {
+                          document.body.style.overflow = 'auto'
+                        }
+                      }}
                       value={form.category || undefined}
                       onChange={(value) => {
                         if (!value) {
@@ -724,7 +728,13 @@ const AddDress = () => {
                       style={{
                         width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
                       }}
-                      getPopupContainer={() => document.body}
+                      onOpenChange={(open) => {
+                        if (open) {
+                          document.body.style.overflow = 'hidden'
+                        } else {
+                          document.body.style.overflow = 'auto'
+                        }
+                      }}
                       onChange={(value, option) => {
                         if (!value) {
                           handleChange('', 'subCategory')
