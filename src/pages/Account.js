@@ -826,7 +826,6 @@ const Account = () => {
 
               <br />
               <br />
-              <br />
               <Space.Compact size="large">
                 <Popconfirm
                   title="Do you want to delete the Account?"
