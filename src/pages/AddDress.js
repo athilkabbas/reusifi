@@ -566,6 +566,7 @@ const AddDress = () => {
         height: '100dvh',
         overflow: 'hidden',
         background: '#F9FAFB',
+        position: 'fixed',
       }}
     >
       {!isMobile && (
@@ -702,9 +703,6 @@ const AddDress = () => {
                           : 'my-custom-select'
                       }
                       allowClear
-                      getPopupContainer={(triggerNode) =>
-                        triggerNode.parentNode
-                      }
                       onClick={() => {
                         scrollABit()
                       }}
@@ -738,9 +736,6 @@ const AddDress = () => {
                             ? 'my-custom-select'
                             : 'my-custom-select my-red-border'
                           : 'my-custom-select'
-                      }
-                      getPopupContainer={(triggerNode) =>
-                        triggerNode.parentNode
                       }
                       allowClear
                       onClick={() => {
