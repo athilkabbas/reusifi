@@ -729,6 +729,9 @@ const Home = () => {
                     setLocationLabel(value)
                   }
                 }}
+                onClick={() => {
+                  scrollToBottomPrice()
+                }}
                 onChange={(value) => {
                   if (!value) {
                     setLocationLabels([])
@@ -901,6 +904,9 @@ const Home = () => {
                       setMinPrice(event.target.value)
                       setApplied(false)
                     }}
+                    onClick={() => {
+                      scrollToBottom()
+                    }}
                     value={minPrice || null}
                     placeholder="min"
                     style={{ width: '150px' }}
@@ -919,6 +925,9 @@ const Home = () => {
                       }
                       setMaxPrice(event.target.value)
                       setApplied(false)
+                    }}
+                    onClick={() => {
+                      scrollToBottom()
                     }}
                     value={maxPrice || null}
                     placeholder="max"
