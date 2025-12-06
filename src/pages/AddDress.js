@@ -571,6 +571,7 @@ const AddDress = () => {
           scrollbarWidth: 'none',
           overflowY: 'scroll',
           padding: '15px 15px 70px 15px',
+          overscrollBehavior: 'contain',
         }}
       >
         {contextHolder}
