@@ -606,7 +606,6 @@ const AddDress = () => {
                       ? 'my-red-border'
                       : ''
                   }
-                  status="error"
                   allowClear
                   style={{
                     // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
