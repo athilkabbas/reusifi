@@ -937,11 +937,11 @@ const Home = () => {
                 </Space.Compact>
               </Space>
             </Space.Compact>
+            <div
+              ref={bottomRefPrice}
+              style={{ display: 'block', height: 0 }}
+            ></div>
           </Space>
-          <div
-            ref={bottomRefPrice}
-            style={{ display: 'block', height: 0 }}
-          ></div>
           <br />
           <Space
             size="large"
