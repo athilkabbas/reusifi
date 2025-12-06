@@ -516,7 +516,7 @@ const AddDress = () => {
   const scrollABit = () => {
     requestAnimationFrame(() => {
       if (containerRef?.current) {
-        containerRef.current?.scrollBy(0, 1)
+        containerRef.current?.scrollBy(0, 30)
       }
     })
   }
@@ -563,6 +563,7 @@ const AddDress = () => {
     <Layout
       style={{
         height: '100dvh',
+        overflow: 'hidden',
         background: '#F9FAFB',
       }}
     >
