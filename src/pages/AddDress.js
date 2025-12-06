@@ -541,8 +541,6 @@ const AddDress = () => {
 
   const [popOpen, setPopOpen] = useState(false)
 
-  const contentRef = useRef(null)
-
   const handleOpenChange = (newOpen) => {
     setPopOpen(newOpen)
   }
@@ -553,7 +551,6 @@ const AddDress = () => {
         height: '100dvh',
         background: '#F9FAFB',
         overflow: 'hidden',
-        overscrollBehaviorY: 'none',
       }}
     >
       {!isMobile && (
@@ -569,12 +566,10 @@ const AddDress = () => {
         </HeaderWrapper>
       )}
       <Content
-        ref={contentRef}
         style={{
           padding: '15px 15px 70px 15px',
           overflowY: 'scroll',
           scrollbarWidth: 'none',
-          overscrollBehaviorY: 'none',
         }}
       >
         {contextHolder}
@@ -695,7 +690,7 @@ const AddDress = () => {
                       style={{
                         width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
                       }}
-                      getPopupContainer={() => contentRef.current}
+                      getPopupContainer={() => document.body}
                       value={form.category || undefined}
                       onChange={(value) => {
                         if (!value) {
@@ -729,7 +724,7 @@ const AddDress = () => {
                       style={{
                         width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
                       }}
-                      getPopupContainer={() => contentRef.current}
+                      getPopupContainer={() => document.body}
                       onChange={(value, option) => {
                         if (!value) {
                           handleChange('', 'subCategory')
