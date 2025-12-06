@@ -514,11 +514,11 @@ const AddDress = () => {
   }
 
   const scrollABit = () => {
-    requestAnimationFrame(() => {
-      if (containerRef?.current) {
-        containerRef.current?.scrollBy(0, 30)
-      }
-    })
+    // requestAnimationFrame(() => {
+    //   if (containerRef?.current) {
+    //     containerRef.current?.scrollBy(0, 30)
+    //   }
+    // })
   }
 
   useEffect(() => {
@@ -540,13 +540,14 @@ const AddDress = () => {
         document.activeElement.id === 'descId'
       ) {
         scrollToBottomPincode()
-      } else if (
-        currentHeight < prevHeight &&
-        (document.activeElement.id === 'addProductCId' ||
-          document.activeElement.id === 'addProductSCId')
-      ) {
-        scrollABit()
       }
+      // else if (
+      //   currentHeight < prevHeight &&
+      //   (document.activeElement.id === 'addProductCId' ||
+      //     document.activeElement.id === 'addProductSCId')
+      // ) {
+      //   scrollABit()
+      // }
       prevHeight = currentHeight
     }
     window.addEventListener('resize', handleResize)
