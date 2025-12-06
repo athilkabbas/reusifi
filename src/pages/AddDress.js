@@ -713,9 +713,9 @@ const AddDress = () => {
                       className={
                         isSubmitted
                           ? form.subCategory
-                            ? 'my-custom-select'
-                            : 'my-custom-select my-red-border'
-                          : 'my-custom-select'
+                            ? ''
+                            : 'my-red-border'
+                          : ''
                       }
                       allowClear
                       value={form.subCategory || undefined}

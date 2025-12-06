@@ -666,7 +666,6 @@ const Home = () => {
             >
               <Select
                 allowClear
-                className={'my-custom-select'}
                 id={'homeCId'}
                 style={{
                   width: !isMobile ? '50dvw' : 'calc(100dvw - 50px)',
@@ -694,7 +693,6 @@ const Home = () => {
               <Select
                 allowClear
                 value={subCategory || undefined}
-                className={'my-custom-select'}
                 id={'homeSCId'}
                 style={{
                   width: !isMobile ? '50dvw' : 'calc(100dvw - 50px)',
@@ -720,7 +718,6 @@ const Home = () => {
             <Space.Compact size="large" style={{ position: 'relative' }}>
               <Select
                 allowClear
-                className={'my-custom-select'}
                 id={'locationId'}
                 style={{
                   width: !isMobile ? '50dvw' : 'calc(100dvw - 50px)',
