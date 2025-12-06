@@ -873,7 +873,9 @@ const AddDress = () => {
                 <Space
                   size="large"
                   direction="vertical"
-                  style={{ width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)' }}
+                  style={{
+                    width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
+                  }}
                 >
                   <Upload
                     accept="image/png,image/jpeg"

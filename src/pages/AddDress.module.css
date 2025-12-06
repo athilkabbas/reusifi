@@ -2,6 +2,10 @@
   width: 100%;
 }
 
+:global(.ant-upload) {
+  width: 100%;
+}
+
 :global(.my-red-border) {
   border-color: #ff4d4f !important;
 }
