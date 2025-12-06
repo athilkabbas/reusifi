@@ -104,7 +104,7 @@ const AddDress = () => {
   const locationInfoConfig = {
     title: 'Enable location access',
     content:
-      'To enable location access, please click the location icon at the end of the browser’s address bar and allow location permission for this site.',
+      'To enable location access, please allow location permission for this site in the browser’s address bar',
     closable: false,
     maskClosable: false,
     okText: 'Close',
