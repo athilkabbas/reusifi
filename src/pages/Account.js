@@ -750,12 +750,12 @@ const Account = () => {
                   </Button>
                 </Space.Compact>
               </Space>
+              <br />
+              <br />
               <div
                 ref={bottomRef}
                 style={{ display: 'block', height: 0 }}
               ></div>
-              <br />
-              <br />
               <Space.Compact size="large">
                 <Popconfirm
                   title="Do you want to delete the Account?"
