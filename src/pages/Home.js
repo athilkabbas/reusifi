@@ -1022,9 +1022,9 @@ const Home = () => {
                 Apply
               </Button>
             </Space.Compact>
+            <div ref={bottomRef} style={{ display: 'block', height: 0 }}></div>
           </Space>
         </Space>
-        <div ref={bottomRef} style={{ display: 'block', height: 0 }}></div>
       </Drawer>
       <Space
         size="large"

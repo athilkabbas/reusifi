@@ -19,10 +19,6 @@
   border-color: #d9d9d9 !important;
 }
 
-:global(.ant-select-dropdown) {
-  overscroll-behavior: contain !important;
-}
-
 :global(.ant-input-outlined:focus),
 :global(.ant-input-outlined:focus-within) {
   border-color: #52c41a !important;
