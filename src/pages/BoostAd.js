@@ -177,18 +177,20 @@ const BoostAd = () => {
                       onClick={() => {
                         if (boosted) {
                           let createdAtNew = createdAt + 7 * 24 * 60 * 60 * 1000
-                          if (createdAtNew > expiresAtOrig) {
+                          if (createdAtNew > expiresAtOrig * 1000) {
                             message.error(
                               "The boost duration cannot extend past the ad's current expiration date."
                             )
+                            return
                           }
                         } else {
                           let createdAtNew =
                             Date.now() + 7 * 24 * 60 * 60 * 1000
-                          if (createdAtNew > expiresAtOrig) {
+                          if (createdAtNew > expiresAtOrig * 1000) {
                             message.error(
                               "The boost duration cannot extend past the ad's current expiration date."
                             )
+                            return
                           }
                         }
                         setBoostForm((prevValue) => {
@@ -217,18 +219,20 @@ const BoostAd = () => {
                         if (boosted) {
                           let createdAtNew =
                             createdAt + 14 * 24 * 60 * 60 * 1000
-                          if (createdAtNew > expiresAtOrig) {
+                          if (createdAtNew > expiresAtOrig * 1000) {
                             message.error(
                               "The boost duration cannot extend past the ad's current expiration date."
                             )
+                            return
                           }
                         } else {
                           let createdAtNew =
                             Date.now() + 14 * 24 * 60 * 60 * 1000
-                          if (createdAtNew > expiresAtOrig) {
+                          if (createdAtNew > expiresAtOrig * 1000) {
                             message.error(
                               "The boost duration cannot extend past the ad's current expiration date."
                             )
+                            return
                           }
                         }
                         setBoostForm((prevValue) => {
