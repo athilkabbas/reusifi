@@ -220,6 +220,7 @@ const Account = () => {
         if (bottomRef?.current) {
           bottomRef.current?.scrollIntoView({
             behavior: 'smooth',
+            block: 'end',
           })
         }
       }, 300)
