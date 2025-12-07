@@ -10,10 +10,11 @@ import {
   Space,
   Tag,
   Grid,
+  Image,
 } from 'antd'
 import styles from './landingPage.module.css'
 import {
-  DollarSign,
+  PoundSterling,
   ShieldCheck,
   RecycleIcon as Recycling,
   CheckCircle,
@@ -25,6 +26,8 @@ import {
 } from 'lucide-react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+
+import logo from '../assets/reusifi_favicon.png'
 
 const { Header, Content, Footer } = Layout
 const { Title, Paragraph, Text } = Typography
@@ -68,7 +71,8 @@ const ReusifiLanding = () => {
         <Row justify="space-between" align="middle" style={{ height: '64px' }}>
           <Col>
             <Space align="center">
-              <Recycling style={{ fontSize: '32px', color: '#52c41a' }} />
+              {/* <Recycling style={{ fontSize: '32px', color: '#52c41a' }} /> */}
+              <Image src={logo} width={64} style={{ height: '60px' }} />
               <Title level={3} style={{ margin: 0, color: '#262626' }}>
                 Reusifi
               </Title>
@@ -179,18 +183,18 @@ const ReusifiLanding = () => {
                     <span style={{ color: '#52c41a' }}>Confidence</span>
                   </Title>
 
-                  {/* <Paragraph
+                  <Paragraph
                     className="hero-subtitle"
                     style={{
-                      fontSize: screens.md ? "1.25rem" : "1rem",
-                      color: "#595959",
-                      maxWidth: "600px",
+                      fontSize: screens.md ? '1.25rem' : '1rem',
+                      color: '#595959',
+                      maxWidth: '600px',
                     }}
                   >
                     Join thousands of people giving items a second life. Find
                     great deals, declutter your space, and help the environment
                     - all in one place.
-                  </Paragraph> */}
+                  </Paragraph>
 
                   <Space
                     direction={screens.sm ? 'horizontal' : 'vertical'}
@@ -229,12 +233,6 @@ const ReusifiLanding = () => {
                       <Space>
                         <CheckCircle style={{ color: '#52c41a' }} />
                         <Text type="secondary">Secure payments</Text>
-                      </Space>
-                    </Col>
-                    <Col xs={24} sm={8}>
-                      <Space>
-                        <CheckCircle style={{ color: '#52c41a' }} />
-                        <Text type="secondary">Local pickup</Text>
                       </Space>
                     </Col>
                   </Row>
@@ -423,7 +421,9 @@ const ReusifiLanding = () => {
                     margin: '0 auto 24px',
                   }}
                 >
-                  <DollarSign style={{ fontSize: '32px', color: '#52c41a' }} />
+                  <PoundSterling
+                    style={{ fontSize: '32px', color: '#52c41a' }}
+                  />
                 </div>
                 <Title level={4}>3. Get Paid</Title>
                 <Paragraph style={{ color: '#595959' }}>
@@ -436,7 +436,7 @@ const ReusifiLanding = () => {
         </div>
 
         {/* Features Section */}
-        <div style={{ padding: screens.md ? '80px 50px' : '40px 20px' }}>
+        {/* <div style={{ padding: screens.md ? '80px 50px' : '40px 20px' }}>
           <Row gutter={[48, 48]} align="middle">
             <Col xs={24} lg={14}>
               <Space
@@ -534,7 +534,7 @@ const ReusifiLanding = () => {
               </Space>
             </Col>
 
-            {/* <Col xs={24} lg={10}>
+            <Col xs={24} lg={10}>
               <div style={{ textAlign: "center" }}>
                 <Image
                   src="/images/mobile-app-features.png"
@@ -547,9 +547,9 @@ const ReusifiLanding = () => {
                   preview={false}
                 />
               </div>
-            </Col> */}
+            </Col>
           </Row>
-        </div>
+        </div> */}
 
         {/* Categories Section */}
         <div
@@ -643,8 +643,8 @@ const ReusifiLanding = () => {
                 // }
               >
                 <Meta
-                  title="Sports & Outdoors"
-                  description="Exercise equipment, bikes & outdoor gear"
+                  title="Vehicles"
+                  description="Cars, Motorcycles & Scooters"
                 />
               </Card>
             </Col>
@@ -850,7 +850,8 @@ const ReusifiLanding = () => {
         <Row justify="space-between" align="middle" gutter={[16, 16]}>
           <Col xs={24} sm={12}>
             <Space align="center">
-              <Recycling style={{ fontSize: '24px', color: '#52c41a' }} />
+              {/* <Recycling style={{ fontSize: '24px', color: '#52c41a' }} /> */}
+              <Image src={logo} width={64} />
               <Text strong>Reusifi</Text>
               <Text type="secondary" style={{ marginLeft: '16px' }}>
                 © 2025 Reusifi. All rights reserved.
