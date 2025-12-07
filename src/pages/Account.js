@@ -63,7 +63,8 @@ const Account = () => {
     },
   }
   const [loading, setLoading] = useState(false)
-  const bottomRef = useRef(null)
+  const bottomRefDesc = useRef(null)
+  const bottomRefName = useRef(null)
 
   const {
     accountInitialLoad,
@@ -214,11 +215,24 @@ const Account = () => {
       return
     }
   }
-  const scrollToBottom = () => {
+  const scrollToBottomDesc = () => {
     requestAnimationFrame(() => {
       setTimeout(() => {
-        if (bottomRef?.current) {
-          bottomRef.current?.scrollIntoView({
+        if (bottomRefDesc?.current) {
+          bottomRefDesc.current?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'end',
+          })
+        }
+      }, 300)
+    })
+  }
+
+  const scrollToBottomName = () => {
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        if (bottomRefName?.current) {
+          bottomRefName.current?.scrollIntoView({
             behavior: 'smooth',
             block: 'end',
           })
@@ -649,7 +663,7 @@ const Account = () => {
                   }}
                   placeholder="Name"
                   onClick={() => {
-                    scrollToBottom()
+                    scrollToBottomName()
                   }}
                   id={'accountNameId'}
                   value={form.name}
@@ -671,7 +685,7 @@ const Account = () => {
                   }}
                   autoSize={{ minRows: 8, maxRows: 8 }}
                   onClick={() => {
-                    scrollToBottom()
+                    scrollToBottomDesc()
                   }}
                   placeholder="Description"
                   id={'accountDescId'}
@@ -750,10 +764,14 @@ const Account = () => {
                   </Button>
                 </Space.Compact>
               </Space>
+              <div
+                ref={bottomRefName}
+                style={{ display: 'block', height: 0 }}
+              ></div>
               <br />
               <br />
               <div
-                ref={bottomRef}
+                ref={bottomRefDesc}
                 style={{ display: 'block', height: 0 }}
               ></div>
               <Space.Compact size="large">
