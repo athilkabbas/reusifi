@@ -188,26 +188,29 @@ const Home = () => {
 
   const scrollToBottomPrice = () => {
     requestAnimationFrame(() => {
-      if (bottomRefPrice?.current) {
-        bottomRefPrice.current?.scrollIntoView({
-          behavior: 'smooth',
-          block: 'end',
-        })
-      }
+      setTimeout(() => {
+        if (bottomRefPrice?.current) {
+          bottomRefPrice.current?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'end',
+          })
+        }
+      }, 300)
     })
   }
 
   const scrollToBottom = () => {
     requestAnimationFrame(() => {
-      if (bottomRef?.current) {
-        bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
-      }
+      setTimeout(() => {
+        if (bottomRef?.current) {
+          bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+        }
+      }, 300)
     })
   }
 
   useEffect(() => {
     let prevWidth = window.innerWidth
-    let prevHeight = window.innerHeight
     const updateLimit = () => {
       const newLimit = calculateLimit()
       setLimit(newLimit)
@@ -215,7 +218,6 @@ const Home = () => {
     updateLimit() // on mount
     const handleResize = () => {
       const currentWidth = window.innerWidth
-      const currentHeight = window.innerHeight
       if (hasMore && currentWidth > prevWidth) {
         setData([])
         setCurrentPage(1)
@@ -223,19 +225,6 @@ const Home = () => {
         updateLimit()
       }
       prevWidth = currentWidth
-      if (
-        currentHeight < prevHeight &&
-        (document.activeElement.id === 'homeMinId' ||
-          document.activeElement.id === 'homeMaxId')
-      ) {
-        scrollToBottom()
-      } else if (
-        currentHeight < prevHeight &&
-        document.activeElement.id === 'locationId'
-      ) {
-        scrollToBottomPrice()
-      }
-      prevHeight = currentHeight
     }
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
@@ -1022,8 +1011,8 @@ const Home = () => {
                 Apply
               </Button>
             </Space.Compact>
-            <div ref={bottomRef} style={{ display: 'block', height: 0 }}></div>
           </Space>
+          <div ref={bottomRef} style={{ display: 'block', height: 0 }}></div>
         </Space>
       </Drawer>
       <Space

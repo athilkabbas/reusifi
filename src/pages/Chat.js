@@ -145,18 +145,18 @@ const Chat = () => {
   const [limit, setLimit] = useState(0) // default
   const scrollToBottom = () => {
     requestAnimationFrame(() => {
-      if (bottomRef?.current) {
-        bottomRef.current?.scrollIntoView({
-          behavior: 'auto',
-          block: 'end',
-        })
-      }
+      setTimeout(() => {
+        if (bottomRef?.current) {
+          bottomRef.current?.scrollIntoView({
+            behavior: 'auto',
+          })
+        }
+      }, 300)
     })
   }
 
   useEffect(() => {
     let prevWidth = window.innerWidth
-    let prevHeight = window.innerHeight
     const updateLimit = () => {
       const newLimit = calculateLimit()
       setLimit(newLimit)
@@ -166,7 +166,6 @@ const Chat = () => {
 
     const handleResize = () => {
       const currentWidth = window.innerWidth
-      const currentHeight = window.innerHeight
       if (currentWidth > prevWidth) {
         setIChatData([])
         setLastEvaluatedKey(null)
@@ -176,14 +175,7 @@ const Chat = () => {
       } else {
         setMoreWidth(false)
       }
-      if (
-        currentHeight < prevHeight &&
-        document.activeElement.id === 'chatTextAreaId'
-      ) {
-        scrollToBottom()
-      }
       prevWidth = currentWidth
-      prevHeight = currentHeight
     }
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)

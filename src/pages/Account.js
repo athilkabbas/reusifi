@@ -216,28 +216,32 @@ const Account = () => {
   }
   const scrollToBottom = () => {
     requestAnimationFrame(() => {
-      if (bottomRef?.current) {
-        bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
-      }
+      setTimeout(() => {
+        if (bottomRef?.current) {
+          bottomRef.current?.scrollIntoView({
+            behavior: 'smooth',
+          })
+        }
+      }, 300)
     })
   }
 
-  useEffect(() => {
-    let prevHeight = window.innerHeight
-    const handleResize = () => {
-      const currentHeight = window.innerHeight
-      if (
-        currentHeight < prevHeight &&
-        (document.activeElement.id === 'accountDescId' ||
-          document.activeElement.id === 'accountNameId')
-      ) {
-        scrollToBottom()
-      }
-      prevHeight = currentHeight
-    }
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
+  // useEffect(() => {
+  //   let prevHeight = window.innerHeight
+  //   const handleResize = () => {
+  //     const currentHeight = window.innerHeight
+  //     if (
+  //       currentHeight < prevHeight &&
+  //       (document.activeElement.id === 'accountDescId' ||
+  //         document.activeElement.id === 'accountNameId')
+  //     ) {
+  //       scrollToBottom()
+  //     }
+  //     prevHeight = currentHeight
+  //   }
+  //   window.addEventListener('resize', handleResize)
+  //   return () => window.removeEventListener('resize', handleResize)
+  // }, [])
 
   useEffect(() => {
     setForm({
@@ -386,78 +390,6 @@ const Account = () => {
       return Upload.LIST_IGNORE
     }
     return false
-  }
-
-  const validateField = async () => {
-    try {
-      await callApi(
-        'https://api.reusifi.com/prod/verifyLanguage',
-        'POST',
-        false,
-        {
-          name: form.name,
-          description: form.description,
-        }
-      )
-      return true
-    } catch (err) {
-      if (isModalVisibleRef.current) {
-        return
-      }
-      isModalVisibleRef.current = true
-      if (err?.status === 401) {
-        Modal.error(errorSessionConfig)
-      } else if (err?.status === 422) {
-        isModalVisibleRef.current = false
-        openNotificationWithIcon('error', err.response.data.message, 'Error')
-        setBadLanguage((prevValue) => {
-          return {
-            ...prevValue,
-            ...err?.response.data.badLanguage,
-          }
-        })
-      } else {
-        Modal.error(errorConfig)
-      }
-      return false
-    }
-  }
-
-  const verifyImage = async () => {
-    try {
-      if (fileList.length === 0) {
-        return true
-      }
-      const s3Keys = await uploadImages(fileList, 'image/jpeg')
-      let files = fileList.map((file, index) => {
-        const { preview, originFileObj, ...fileRest } = file
-        return { ...fileRest, s3Key: s3Keys[index] }
-      })
-      await callApi('https://api.reusifi.com/prod/verifyImage', 'POST', false, {
-        files,
-        keywords: [],
-      })
-      return true
-    } catch (err) {
-      if (isModalVisibleRef.current) {
-        return
-      }
-      isModalVisibleRef.current = true
-      if (err?.status === 401) {
-        Modal.error(errorSessionConfig)
-      } else if (err && err.status === 422) {
-        isModalVisibleRef.current = false
-        openNotificationWithIcon('error', err.response.data.message, 'Error')
-        setFileList((prevValue) => {
-          return prevValue.filter(
-            (image) => !err.response.data.invalidUids.includes(image.uid)
-          )
-        })
-      } else {
-        Modal.error(errorConfig)
-      }
-      return false
-    }
   }
 
   const handleChangeImage = async ({ fileList }) => {
@@ -715,6 +647,9 @@ const Account = () => {
                     handleChange(sanitized, 'name')
                   }}
                   placeholder="Name"
+                  onClick={() => {
+                    scrollToBottom()
+                  }}
                   id={'accountNameId'}
                   value={form.name}
                   maxLength={100}
@@ -734,6 +669,9 @@ const Account = () => {
                     handleChange(sanitized, 'description')
                   }}
                   autoSize={{ minRows: 8, maxRows: 8 }}
+                  onClick={() => {
+                    scrollToBottom()
+                  }}
                   placeholder="Description"
                   id={'accountDescId'}
                   maxLength={300}
@@ -810,12 +748,11 @@ const Account = () => {
                     Cancel
                   </Button>
                 </Space.Compact>
-                <div
-                  ref={bottomRef}
-                  style={{ display: 'block', height: 0 }}
-                ></div>
               </Space>
-
+              <div
+                ref={bottomRef}
+                style={{ display: 'block', height: 0 }}
+              ></div>
               <br />
               <br />
               <Space.Compact size="large">
