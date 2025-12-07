@@ -18,6 +18,7 @@ import { EllipsisVertical } from 'lucide-react'
 import { useIndexedDBImages } from '../hooks/indexedDB'
 import { formatTimestamp } from '../helpers/formatTime'
 import useWebSocketManager from '../hooks/webSocketManager'
+import styles from './Chat.module.css'
 const { TextArea } = Input
 const { Content } = Layout
 const Chat = () => {
@@ -151,7 +152,7 @@ const Chat = () => {
             behavior: 'auto',
           })
         }
-      }, 50)
+      }, 100)
     })
   }
 

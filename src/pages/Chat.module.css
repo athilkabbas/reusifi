@@ -1,0 +1,4 @@
+:global(.ant-input-outlined:focus),
+:global(.ant-input-outlined:focus-within) {
+  border-color: #52c41a !important;
+}
