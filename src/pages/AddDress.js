@@ -483,23 +483,27 @@ const AddDress = () => {
 
   const scrollToBottomPincode = () => {
     requestAnimationFrame(() => {
-      if (bottomRefPincode?.current) {
-        bottomRefPincode.current?.scrollIntoView({
-          behavior: 'smooth',
-          block: 'end',
-        })
-      }
+      setTimeout(() => {
+        if (bottomRefPincode?.current) {
+          bottomRefPincode.current?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'end',
+          })
+        }
+      }, 100)
     })
   }
 
   const scrollToBottomPrice = () => {
     requestAnimationFrame(() => {
-      if (bottomRefPrice?.current) {
-        bottomRefPrice.current?.scrollIntoView({
-          behavior: 'smooth',
-          block: 'end',
-        })
-      }
+      setTimeout(() => {
+        if (bottomRefPrice?.current) {
+          bottomRefPrice.current?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'end',
+          })
+        }
+      }, 100)
     })
   }
 
@@ -509,7 +513,6 @@ const AddDress = () => {
         if (bottomRef?.current) {
           bottomRef.current?.scrollIntoView({
             behavior: 'smooth',
-            block: 'center',
           })
         }
       }, 100)
