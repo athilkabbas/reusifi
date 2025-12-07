@@ -147,7 +147,7 @@ const UserDetails = () => {
                 padding: '20px',
               }}
             >
-              {account?.image && (
+              {account?.image && account?.image !== 'DELETE_IMAGE' && (
                 <Space.Compact
                   size="large"
                   style={{
@@ -196,7 +196,9 @@ const UserDetails = () => {
                   />
                 </Space.Compact>
               )}
-              {!account?.image && <Avatar size={150} icon={<UserOutlined />} />}
+              {(!account?.image || account?.image === 'DELETE_IMAGE') && (
+                <Avatar size={150} icon={<UserOutlined />} />
+              )}
               {account?.email && (
                 <Space.Compact size="large">
                   <Input
