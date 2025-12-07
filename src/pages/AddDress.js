@@ -490,7 +490,7 @@ const AddDress = () => {
             block: 'end',
           })
         }
-      }, 500)
+      }, 200)
     })
   }
 
@@ -503,7 +503,7 @@ const AddDress = () => {
             block: 'end',
           })
         }
-      }, 500)
+      }, 200)
     })
   }
 
@@ -515,7 +515,7 @@ const AddDress = () => {
             behavior: 'smooth',
           })
         }
-      }, 500)
+      }, 200)
     })
   }
 
