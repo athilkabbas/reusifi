@@ -151,7 +151,7 @@ const Chat = () => {
             behavior: 'auto',
           })
         }
-      }, 100)
+      }, 0)
     })
   }
 
