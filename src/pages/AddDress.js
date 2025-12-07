@@ -505,9 +505,11 @@ const AddDress = () => {
 
   const scrollToBottom = () => {
     requestAnimationFrame(() => {
-      if (bottomRef?.current) {
-        bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
-      }
+      setTimeout(() => {
+        if (bottomRef?.current) {
+          bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+        }
+      }, 100)
     })
   }
 
