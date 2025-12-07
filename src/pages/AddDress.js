@@ -519,31 +519,31 @@ const AddDress = () => {
     })
   }
 
-  useEffect(() => {
-    let prevHeight = window.innerHeight
-    const handleResize = () => {
-      const currentHeight = window.innerHeight
-      if (
-        currentHeight < prevHeight &&
-        document.activeElement.id === 'sellPriceId'
-      ) {
-        scrollToBottom()
-      } else if (
-        currentHeight < prevHeight &&
-        document.activeElement.id === 'pincodeId'
-      ) {
-        scrollToBottomPrice()
-      } else if (
-        currentHeight < prevHeight &&
-        document.activeElement.id === 'descId'
-      ) {
-        scrollToBottomPincode()
-      }
-      prevHeight = currentHeight
-    }
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
+  // useEffect(() => {
+  //   let prevHeight = window.innerHeight
+  //   const handleResize = () => {
+  //     const currentHeight = window.innerHeight
+  //     if (
+  //       currentHeight < prevHeight &&
+  //       document.activeElement.id === 'sellPriceId'
+  //     ) {
+  //       scrollToBottom()
+  //     } else if (
+  //       currentHeight < prevHeight &&
+  //       document.activeElement.id === 'pincodeId'
+  //     ) {
+  //       scrollToBottomPrice()
+  //     } else if (
+  //       currentHeight < prevHeight &&
+  //       document.activeElement.id === 'descId'
+  //     ) {
+  //       scrollToBottomPincode()
+  //     }
+  //     prevHeight = currentHeight
+  //   }
+  //   window.addEventListener('resize', handleResize)
+  //   return () => window.removeEventListener('resize', handleResize)
+  // }, [])
 
   const [popOpen, setPopOpen] = useState(false)
 
