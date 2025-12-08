@@ -664,6 +664,10 @@ const Account = () => {
                   value={form.description}
                 />
               </Space.Compact>
+              <div
+                ref={bottomRef}
+                style={{ display: 'block', height: 0 }}
+              ></div>
               <Space.Compact
                 size="large"
                 style={{
@@ -735,10 +739,6 @@ const Account = () => {
                   </Button>
                 </Space.Compact>
               </Space>
-              <div
-                ref={bottomRef}
-                style={{ display: 'block', height: 0 }}
-              ></div>
               <br />
               <br />
               <Space.Compact size="large">
