@@ -64,7 +64,9 @@ const Account = () => {
     },
   }
   const [loading, setLoading] = useState(false)
-  const bottomRef = useRef(null)
+  const bottomRefDesc = useRef(null)
+  const bottomRefName = useRef(null)
+  const containerRef = useRef(null)
 
   const {
     accountInitialLoad,
@@ -215,13 +217,27 @@ const Account = () => {
       return
     }
   }
-
-  const scrollToBottom = () => {
+  const scrollToBottomDesc = () => {
     requestAnimationFrame(() => {
       if (!Platform.isIOS) {
         setTimeout(() => {
-          if (bottomRef?.current) {
-            bottomRef.current?.scrollIntoView({
+          if (bottomRefDesc?.current) {
+            bottomRefDesc.current?.scrollIntoView({
+              behavior: 'smooth',
+              block: 'end',
+            })
+          }
+        }, 300)
+      }
+    })
+  }
+
+  const scrollToBottomName = () => {
+    requestAnimationFrame(() => {
+      if (!Platform.isIOS) {
+        setTimeout(() => {
+          if (bottomRefName?.current) {
+            bottomRefName.current?.scrollIntoView({
               behavior: 'smooth',
               block: 'end',
             })
@@ -437,7 +453,7 @@ const Account = () => {
           <MenuWrapper defaultSelectedKeys={['6-1']} isMobile={isMobile} />
         </HeaderWrapper>
       )}
-      <Content>
+      <Content ref={containerRef}>
         {contextHolder}
         <div
           style={{
@@ -636,7 +652,7 @@ const Account = () => {
                   }}
                   placeholder="Name"
                   onClick={() => {
-                    scrollToBottom()
+                    scrollToBottomName()
                   }}
                   id={'accountNameId'}
                   value={form.name}
@@ -658,7 +674,7 @@ const Account = () => {
                   }}
                   autoSize={{ minRows: 8, maxRows: 8 }}
                   onClick={() => {
-                    scrollToBottom()
+                    scrollToBottomDesc()
                   }}
                   placeholder="Description"
                   id={'accountDescId'}
@@ -666,10 +682,6 @@ const Account = () => {
                   value={form.description}
                 />
               </Space.Compact>
-              <div
-                ref={bottomRef}
-                style={{ display: 'block', height: 0 }}
-              ></div>
               <Space.Compact
                 size="large"
                 style={{
@@ -741,8 +753,16 @@ const Account = () => {
                   </Button>
                 </Space.Compact>
               </Space>
+              <div
+                ref={bottomRefName}
+                style={{ display: 'block', height: 0 }}
+              ></div>
               <br />
               <br />
+              <div
+                ref={bottomRefDesc}
+                style={{ display: 'block', height: 0 }}
+              ></div>
               <Space.Compact size="large">
                 <Popconfirm
                   title="Do you want to delete the Account?"

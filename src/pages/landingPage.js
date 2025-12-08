@@ -892,9 +892,7 @@ const ReusifiLanding = () => {
             <Space align="center">
               {/* <Recycling style={{ fontSize: '24px', color: '#52c41a' }} /> */}
               <Image src={logo} width={64} />
-              <Text style={{ whiteSpace: 'nowrap' }} strong>
-                Reusifi
-              </Text>
+              <Text strong>Reusifi</Text>
               <Text type="secondary">© 2025 Reusifi. All rights reserved.</Text>
             </Space>
           </Col>
