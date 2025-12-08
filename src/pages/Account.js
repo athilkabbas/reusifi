@@ -272,7 +272,7 @@ const Account = () => {
               block: 'end',
             })
           }
-        }, 500)
+        }, 0)
       } else {
         setTimeout(() => {
           if (bottomRef.current) {
