@@ -21,6 +21,7 @@ import HeaderWrapper from '../component/Header'
 import { options } from '../helpers/categories'
 import useLocationComponent from '../hooks/location'
 import { useIndexedDBImages } from '../hooks/indexedDB'
+import { Platform } from '../helpers/config'
 const { TextArea } = Input
 const { Content } = Layout
 const getBase64 = (file) =>
@@ -483,39 +484,65 @@ const AddDress = () => {
 
   const scrollToBottomPincode = () => {
     requestAnimationFrame(() => {
-      setTimeout(() => {
+      if (Platform.isIOS) {
         if (bottomRefPincode?.current) {
           bottomRefPincode.current?.scrollIntoView({
             behavior: 'smooth',
             block: 'end',
           })
         }
-      }, 300)
+      } else {
+        setTimeout(() => {
+          if (bottomRefPincode?.current) {
+            bottomRefPincode.current?.scrollIntoView({
+              behavior: 'smooth',
+              block: 'end',
+            })
+          }
+        }, 300)
+      }
     })
   }
 
   const scrollToBottomPrice = () => {
     requestAnimationFrame(() => {
-      setTimeout(() => {
+      if (Platform.isIOS) {
         if (bottomRefPrice?.current) {
           bottomRefPrice.current?.scrollIntoView({
             behavior: 'smooth',
             block: 'end',
           })
         }
-      }, 300)
+      } else {
+        setTimeout(() => {
+          if (bottomRefPrice?.current) {
+            bottomRefPrice.current?.scrollIntoView({
+              behavior: 'smooth',
+              block: 'end',
+            })
+          }
+        }, 300)
+      }
     })
   }
 
   const scrollToBottom = () => {
     requestAnimationFrame(() => {
-      setTimeout(() => {
+      if (Platform.isIOS) {
         if (bottomRef?.current) {
           bottomRef.current?.scrollIntoView({
             behavior: 'smooth',
           })
         }
-      }, 300)
+      } else {
+        setTimeout(() => {
+          if (bottomRef?.current) {
+            bottomRef.current?.scrollIntoView({
+              behavior: 'smooth',
+            })
+          }
+        }, 300)
+      }
     })
   }
 
