@@ -219,12 +219,12 @@ const Account = () => {
   const scrollToBottomDesc = () => {
     requestAnimationFrame(() => {
       if (Platform.isIOS) {
-        // if (bottomRefDesc?.current) {
-        //   bottomRefDesc.current?.scrollIntoView({
-        //     behavior: 'smooth',
-        //     block: 'end',
-        //   })
-        // }
+        if (bottomRefDesc?.current) {
+          bottomRefDesc.current?.scrollIntoView({
+            behavior: 'smooth',
+            // block: 'end',
+          })
+        }
       } else {
         setTimeout(() => {
           if (bottomRefDesc?.current) {
@@ -241,12 +241,12 @@ const Account = () => {
   const scrollToBottomName = () => {
     requestAnimationFrame(() => {
       if (Platform.isIOS) {
-        // if (bottomRefName?.current) {
-        //   bottomRefName.current?.scrollIntoView({
-        //     behavior: 'smooth',
-        //     block: 'end',
-        //   })
-        // }
+        if (bottomRefName?.current) {
+          bottomRefName.current?.scrollIntoView({
+            behavior: 'smooth',
+            // block: 'end',
+          })
+        }
       } else {
         setTimeout(() => {
           if (bottomRefName?.current) {
