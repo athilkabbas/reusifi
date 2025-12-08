@@ -651,7 +651,7 @@ const Account = () => {
                   }}
                   placeholder="Name"
                   onClick={() => {
-                    scrollToBottomName()
+                    // scrollToBottomName()
                   }}
                   id={'accountNameId'}
                   value={form.name}
@@ -673,7 +673,7 @@ const Account = () => {
                   }}
                   autoSize={{ minRows: 8, maxRows: 8 }}
                   onClick={() => {
-                    scrollToBottomDesc()
+                    // scrollToBottomDesc()
                   }}
                   placeholder="Description"
                   id={'accountDescId'}
