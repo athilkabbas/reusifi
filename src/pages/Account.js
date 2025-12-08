@@ -64,7 +64,8 @@ const Account = () => {
     },
   }
   const [loading, setLoading] = useState(false)
-  const bottomRef = useRef(null)
+  const bottomRefDesc = useRef(null)
+  const bottomRefName = useRef(null)
 
   const {
     accountInitialLoad,
@@ -215,39 +216,47 @@ const Account = () => {
       return
     }
   }
-
-  // const scrollToBottom = () => {
-  //   requestAnimationFrame(() => {
-  //     if (Platform.isIOS) {
-  //       if (bottomRef?.current) {
-  //         bottomRef.current?.scrollIntoView({
-  //           behavior: 'smooth',
-  //           block: 'end',
-  //         })
-  //       }
-  //     } else {
-  //       setTimeout(() => {
-  //         if (bottomRef?.current) {
-  //           bottomRef.current?.scrollIntoView({
-  //             behavior: 'smooth',
-  //             block: 'end',
-  //           })
-  //         }
-  //       }, 300)
-  //     }
-  //   })
-  // }
-
-  const scrollToBottom = () => {
+  const scrollToBottomDesc = () => {
     requestAnimationFrame(() => {
-      setTimeout(() => {
-        if (bottomRef?.current) {
-          bottomRef.current?.scrollIntoView({
-            behavior: 'smooth',
-            block: 'end',
-          })
-        }
-      }, 300)
+      if (Platform.isIOS) {
+        // if (bottomRefDesc?.current) {
+        //   bottomRefDesc.current?.scrollIntoView({
+        //     behavior: 'smooth',
+        //     block: 'end',
+        //   })
+        // }
+      } else {
+        setTimeout(() => {
+          if (bottomRefDesc?.current) {
+            bottomRefDesc.current?.scrollIntoView({
+              behavior: 'smooth',
+              block: 'end',
+            })
+          }
+        }, 300)
+      }
+    })
+  }
+
+  const scrollToBottomName = () => {
+    requestAnimationFrame(() => {
+      if (Platform.isIOS) {
+        // if (bottomRefName?.current) {
+        //   bottomRefName.current?.scrollIntoView({
+        //     behavior: 'smooth',
+        //     block: 'end',
+        //   })
+        // }
+      } else {
+        setTimeout(() => {
+          if (bottomRefName?.current) {
+            bottomRefName.current?.scrollIntoView({
+              behavior: 'smooth',
+              block: 'end',
+            })
+          }
+        }, 300)
+      }
     })
   }
 
@@ -673,7 +682,7 @@ const Account = () => {
                   }}
                   placeholder="Name"
                   onClick={() => {
-                    scrollToBottom()
+                    scrollToBottomName()
                   }}
                   id={'accountNameId'}
                   value={form.name}
@@ -695,7 +704,7 @@ const Account = () => {
                   }}
                   autoSize={{ minRows: 8, maxRows: 8 }}
                   onClick={() => {
-                    scrollToBottom()
+                    scrollToBottomDesc()
                   }}
                   placeholder="Description"
                   id={'accountDescId'}
@@ -722,10 +731,6 @@ const Account = () => {
                   }
                 />
               </Space.Compact>
-              <div
-                ref={bottomRef}
-                style={{ display: 'block', height: 0 }}
-              ></div>
               <Space>
                 <Space.Compact size="large">
                   <Button
@@ -778,8 +783,16 @@ const Account = () => {
                   </Button>
                 </Space.Compact>
               </Space>
+              <div
+                ref={bottomRefName}
+                style={{ display: 'block', height: 0 }}
+              ></div>
               <br />
               <br />
+              <div
+                ref={bottomRefDesc}
+                style={{ display: 'block', height: 0 }}
+              ></div>
               <Space.Compact size="large">
                 <Popconfirm
                   title="Do you want to delete the Account?"
