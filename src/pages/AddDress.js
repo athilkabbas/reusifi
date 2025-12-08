@@ -484,14 +484,7 @@ const AddDress = () => {
 
   const scrollToBottomPincode = () => {
     requestAnimationFrame(() => {
-      if (Platform.isIOS) {
-        if (bottomRefPincode?.current) {
-          bottomRefPincode.current?.scrollIntoView({
-            behavior: 'smooth',
-            block: 'end',
-          })
-        }
-      } else {
+      if (!Platform.isIOS) {
         setTimeout(() => {
           if (bottomRefPincode?.current) {
             bottomRefPincode.current?.scrollIntoView({
@@ -506,14 +499,7 @@ const AddDress = () => {
 
   const scrollToBottomPrice = () => {
     requestAnimationFrame(() => {
-      if (Platform.isIOS) {
-        if (bottomRefPrice?.current) {
-          bottomRefPrice.current?.scrollIntoView({
-            behavior: 'smooth',
-            block: 'end',
-          })
-        }
-      } else {
+      if (!Platform.isIOS) {
         setTimeout(() => {
           if (bottomRefPrice?.current) {
             bottomRefPrice.current?.scrollIntoView({
@@ -528,13 +514,7 @@ const AddDress = () => {
 
   const scrollToBottom = () => {
     requestAnimationFrame(() => {
-      if (Platform.isIOS) {
-        if (bottomRef?.current) {
-          bottomRef.current?.scrollIntoView({
-            behavior: 'smooth',
-          })
-        }
-      } else {
+      if (!Platform.isIOS) {
         setTimeout(() => {
           if (bottomRef?.current) {
             bottomRef.current?.scrollIntoView({
@@ -545,32 +525,6 @@ const AddDress = () => {
       }
     })
   }
-
-  // useEffect(() => {
-  //   let prevHeight = window.innerHeight
-  //   const handleResize = () => {
-  //     const currentHeight = window.innerHeight
-  //     if (
-  //       currentHeight < prevHeight &&
-  //       document.activeElement.id === 'sellPriceId'
-  //     ) {
-  //       scrollToBottom()
-  //     } else if (
-  //       currentHeight < prevHeight &&
-  //       document.activeElement.id === 'pincodeId'
-  //     ) {
-  //       scrollToBottomPrice()
-  //     } else if (
-  //       currentHeight < prevHeight &&
-  //       document.activeElement.id === 'descId'
-  //     ) {
-  //       scrollToBottomPincode()
-  //     }
-  //     prevHeight = currentHeight
-  //   }
-  //   window.addEventListener('resize', handleResize)
-  //   return () => window.removeEventListener('resize', handleResize)
-  // }, [])
 
   const [popOpen, setPopOpen] = useState(false)
 

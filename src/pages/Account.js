@@ -67,8 +67,6 @@ const Account = () => {
   const bottomRefDesc = useRef(null)
   const bottomRefName = useRef(null)
 
-  const bottomRef = useRef(null)
-
   const {
     accountInitialLoad,
     setAccountInitialLoad,
@@ -220,14 +218,7 @@ const Account = () => {
   }
   const scrollToBottomDesc = () => {
     requestAnimationFrame(() => {
-      if (Platform.isIOS) {
-        if (bottomRefDesc?.current) {
-          bottomRefDesc.current?.scrollIntoView({
-            behavior: 'smooth',
-            block: 'end',
-          })
-        }
-      } else {
+      if (!Platform.isIOS) {
         setTimeout(() => {
           if (bottomRefDesc?.current) {
             bottomRefDesc.current?.scrollIntoView({
@@ -242,14 +233,7 @@ const Account = () => {
 
   const scrollToBottomName = () => {
     requestAnimationFrame(() => {
-      if (Platform.isIOS) {
-        if (bottomRefName?.current) {
-          bottomRefName.current?.scrollIntoView({
-            behavior: 'smooth',
-            block: 'end',
-          })
-        }
-      } else {
+      if (!Platform.isIOS) {
         setTimeout(() => {
           if (bottomRefName?.current) {
             bottomRefName.current?.scrollIntoView({
@@ -261,47 +245,6 @@ const Account = () => {
       }
     })
   }
-
-  const scrollToBottom = () => {
-    requestAnimationFrame(() => {
-      if (Platform.isIOS) {
-        setTimeout(() => {
-          if (bottomRef?.current) {
-            bottomRef.current?.scrollIntoView({
-              behavior: 'smooth',
-              block: 'end',
-            })
-          }
-        }, 0)
-      } else {
-        setTimeout(() => {
-          if (bottomRef.current) {
-            bottomRef.current?.scrollIntoView({
-              behavior: 'smooth',
-              block: 'end',
-            })
-          }
-        }, 300)
-      }
-    })
-  }
-
-  // useEffect(() => {
-  //   let prevHeight = window.innerHeight
-  //   const handleResize = () => {
-  //     const currentHeight = window.innerHeight
-  //     if (
-  //       currentHeight < prevHeight &&
-  //       (document.activeElement.id === 'accountDescId' ||
-  //         document.activeElement.id === 'accountNameId')
-  //     ) {
-  //       scrollToBottom()
-  //     }
-  //     prevHeight = currentHeight
-  //   }
-  //   window.addEventListener('resize', handleResize)
-  //   return () => window.removeEventListener('resize', handleResize)
-  // }, [])
 
   useEffect(() => {
     setForm({
@@ -708,8 +651,7 @@ const Account = () => {
                   }}
                   placeholder="Name"
                   onClick={() => {
-                    // scrollToBottomName()
-                    scrollToBottom()
+                    scrollToBottomName()
                   }}
                   id={'accountNameId'}
                   value={form.name}
@@ -731,8 +673,7 @@ const Account = () => {
                   }}
                   autoSize={{ minRows: 8, maxRows: 8 }}
                   onClick={() => {
-                    // scrollToBottomDesc()
-                    scrollToBottom()
+                    scrollToBottomDesc()
                   }}
                   placeholder="Description"
                   id={'accountDescId'}
@@ -740,10 +681,6 @@ const Account = () => {
                   value={form.description}
                 />
               </Space.Compact>
-              <div
-                ref={bottomRef}
-                style={{ display: 'block', height: 0 }}
-              ></div>
               <Space.Compact
                 size="large"
                 style={{

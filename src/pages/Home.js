@@ -189,14 +189,7 @@ const Home = () => {
 
   const scrollToBottomPrice = () => {
     requestAnimationFrame(() => {
-      if (Platform.isIOS) {
-        if (bottomRefPrice?.current) {
-          bottomRefPrice.current?.scrollIntoView({
-            behavior: 'smooth',
-            block: 'end',
-          })
-        }
-      } else {
+      if (!Platform.isIOS) {
         setTimeout(() => {
           if (bottomRefPrice?.current) {
             bottomRefPrice.current?.scrollIntoView({
@@ -211,11 +204,7 @@ const Home = () => {
 
   const scrollToBottom = () => {
     requestAnimationFrame(() => {
-      if (Platform.isIOS) {
-        if (bottomRef?.current) {
-          bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
-        }
-      } else {
+      if (!Platform.isIOS) {
         setTimeout(() => {
           if (bottomRef?.current) {
             bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
