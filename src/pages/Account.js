@@ -219,12 +219,14 @@ const Account = () => {
   const scrollToBottom = () => {
     requestAnimationFrame(() => {
       if (!Platform.isIOS) {
-        if (bottomRef?.current) {
-          bottomRef.current?.scrollIntoView({
-            behavior: 'smooth',
-            block: 'end',
-          })
-        }
+        setTimeout(() => {
+          if (bottomRef?.current) {
+            bottomRef.current?.scrollIntoView({
+              behavior: 'smooth',
+              block: 'end',
+            })
+          }
+        }, 300)
       }
     })
   }
