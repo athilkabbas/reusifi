@@ -222,7 +222,7 @@ const Account = () => {
         if (bottomRefDesc?.current) {
           bottomRefDesc.current?.scrollIntoView({
             behavior: 'smooth',
-            // block: 'end',
+            block: 'end',
           })
         }
       } else {
@@ -244,7 +244,7 @@ const Account = () => {
         if (bottomRefName?.current) {
           bottomRefName.current?.scrollIntoView({
             behavior: 'smooth',
-            // block: 'end',
+            block: 'end',
           })
         }
       } else {
