@@ -28,6 +28,10 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import logo from '../assets/reusifi_favicon.png'
+import electronics from '../assets/electronics.png'
+import furniture from '../assets/furniture.png'
+import fashion from '../assets/fashion.png'
+import vehicles from '../assets/vehicles.png'
 
 const { Header, Content, Footer } = Layout
 const { Title, Paragraph, Text } = Typography
@@ -347,8 +351,12 @@ const ReusifiLanding = () => {
           <Row gutter={[32, 32]} justify="center">
             <Col xs={24} md={8}>
               <Card
-                hoverable
-                style={{ textAlign: 'center', height: '100%' }}
+                style={{
+                  textAlign: 'center',
+                  height: '100%',
+                  boxShadow:
+                    '0 1px 2px 0 rgba(0, 0, 0, 0.05),  0 5px 15px rgba(0, 0, 0, 0.1)',
+                }}
                 styles={{ body: { padding: '32px 24px' } }}
               >
                 <div
@@ -375,8 +383,12 @@ const ReusifiLanding = () => {
 
             <Col xs={24} md={8}>
               <Card
-                hoverable
-                style={{ textAlign: 'center', height: '100%' }}
+                style={{
+                  textAlign: 'center',
+                  height: '100%',
+                  boxShadow:
+                    '0 1px 2px 0 rgba(0, 0, 0, 0.05),  0 5px 15px rgba(0, 0, 0, 0.1)',
+                }}
                 styles={{ body: { padding: '32px 24px' } }}
               >
                 <div
@@ -405,8 +417,12 @@ const ReusifiLanding = () => {
 
             <Col xs={24} md={8}>
               <Card
-                hoverable
-                style={{ textAlign: 'center', height: '100%' }}
+                style={{
+                  textAlign: 'center',
+                  height: '100%',
+                  boxShadow:
+                    '0 1px 2px 0 rgba(0, 0, 0, 0.05),  0 5px 15px rgba(0, 0, 0, 0.1)',
+                }}
                 styles={{ body: { padding: '32px 24px' } }}
               >
                 <div
@@ -571,16 +587,19 @@ const ReusifiLanding = () => {
           <Row gutter={[24, 24]}>
             <Col xs={24} sm={12} lg={6}>
               <Card
-                hoverable
+                style={{
+                  boxShadow:
+                    '0 1px 2px 0 rgba(0, 0, 0, 0.05),  0 5px 15px rgba(0, 0, 0, 0.1)',
+                }}
                 className="category-card"
-                // cover={
-                //   <Image
-                //     src="/images/electronics-category.png"
-                //     alt="Electronics"
-                //     style={{ height: "200px", objectFit: "cover" }}
-                //     preview={false}
-                //   />
-                // }
+                cover={
+                  <Image
+                    src={electronics}
+                    alt="Electronics"
+                    style={{ height: '200px', objectFit: 'cover' }}
+                    preview={false}
+                  />
+                }
               >
                 <Meta
                   title="Electronics"
@@ -591,16 +610,19 @@ const ReusifiLanding = () => {
 
             <Col xs={24} sm={12} lg={6}>
               <Card
-                hoverable
+                style={{
+                  boxShadow:
+                    '0 1px 2px 0 rgba(0, 0, 0, 0.05),  0 5px 15px rgba(0, 0, 0, 0.1)',
+                }}
                 className="category-card"
-                // cover={
-                //   <Image
-                //     src="/images/furniture-category.png"
-                //     alt="Furniture"
-                //     style={{ height: "200px", objectFit: "cover" }}
-                //     preview={false}
-                //   />
-                // }
+                cover={
+                  <Image
+                    src={furniture}
+                    alt="Furniture"
+                    style={{ height: '200px', objectFit: 'cover' }}
+                    preview={false}
+                  />
+                }
               >
                 <Meta
                   title="Furniture"
@@ -611,16 +633,19 @@ const ReusifiLanding = () => {
 
             <Col xs={24} sm={12} lg={6}>
               <Card
-                hoverable
+                style={{
+                  boxShadow:
+                    '0 1px 2px 0 rgba(0, 0, 0, 0.05),  0 5px 15px rgba(0, 0, 0, 0.1)',
+                }}
                 className="category-card"
-                // cover={
-                //   <Image
-                //     src="/images/fashion-category.png"
-                //     alt="Fashion"
-                //     style={{ height: "200px", objectFit: "cover" }}
-                //     preview={false}
-                //   />
-                // }
+                cover={
+                  <Image
+                    src={fashion}
+                    alt="Fashion"
+                    style={{ height: '200px', objectFit: 'cover' }}
+                    preview={false}
+                  />
+                }
               >
                 <Meta
                   title="Fashion"
@@ -631,16 +656,19 @@ const ReusifiLanding = () => {
 
             <Col xs={24} sm={12} lg={6}>
               <Card
-                hoverable
+                style={{
+                  boxShadow:
+                    '0 1px 2px 0 rgba(0, 0, 0, 0.05),  0 5px 15px rgba(0, 0, 0, 0.1)',
+                }}
                 className="category-card"
-                // cover={
-                //   <Image
-                //     src="/images/sports-category.png"
-                //     alt="Sports"
-                //     style={{ height: "200px", objectFit: "cover" }}
-                //     preview={false}
-                //   />
-                // }
+                cover={
+                  <Image
+                    src={vehicles}
+                    alt="Vehicles"
+                    style={{ height: '200px', objectFit: 'cover' }}
+                    preview={false}
+                  />
+                }
               >
                 <Meta
                   title="Vehicles"
