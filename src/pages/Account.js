@@ -219,14 +219,12 @@ const Account = () => {
   const scrollToBottomDesc = () => {
     requestAnimationFrame(() => {
       if (!Platform.isIOS) {
-        setTimeout(() => {
-          if (bottomRefDesc?.current) {
-            bottomRefDesc.current?.scrollIntoView({
-              behavior: 'smooth',
-              block: 'end',
-            })
-          }
-        }, 300)
+        if (bottomRefDesc?.current) {
+          bottomRefDesc.current?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'end',
+          })
+        }
       }
     })
   }
@@ -234,14 +232,12 @@ const Account = () => {
   const scrollToBottomName = () => {
     requestAnimationFrame(() => {
       if (!Platform.isIOS) {
-        setTimeout(() => {
-          if (bottomRefName?.current) {
-            bottomRefName.current?.scrollIntoView({
-              behavior: 'smooth',
-              block: 'end',
-            })
-          }
-        }, 300)
+        if (bottomRefName?.current) {
+          bottomRefName.current?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'end',
+          })
+        }
       }
     })
   }
@@ -651,7 +647,7 @@ const Account = () => {
                   }}
                   placeholder="Name"
                   onClick={() => {
-                    // scrollToBottomName()
+                    scrollToBottomName()
                   }}
                   id={'accountNameId'}
                   value={form.name}
@@ -673,7 +669,7 @@ const Account = () => {
                   }}
                   autoSize={{ minRows: 8, maxRows: 8 }}
                   onClick={() => {
-                    // scrollToBottomDesc()
+                    scrollToBottomDesc()
                   }}
                   placeholder="Description"
                   id={'accountDescId'}
