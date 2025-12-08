@@ -67,6 +67,8 @@ const Account = () => {
   const bottomRefDesc = useRef(null)
   const bottomRefName = useRef(null)
 
+  const bottomRef = useRef(null)
+
   const {
     accountInitialLoad,
     setAccountInitialLoad,
@@ -251,6 +253,30 @@ const Account = () => {
         setTimeout(() => {
           if (bottomRefName?.current) {
             bottomRefName.current?.scrollIntoView({
+              behavior: 'smooth',
+              block: 'end',
+            })
+          }
+        }, 300)
+      }
+    })
+  }
+
+  const scrollToBottom = () => {
+    requestAnimationFrame(() => {
+      if (Platform.isIOS) {
+        setTimeout(() => {
+          if (bottomRef?.current) {
+            bottomRef.current?.scrollIntoView({
+              behavior: 'smooth',
+              block: 'end',
+            })
+          }
+        }, 500)
+      } else {
+        setTimeout(() => {
+          if (bottomRef.current) {
+            bottomRef.current?.scrollIntoView({
               behavior: 'smooth',
               block: 'end',
             })
@@ -682,7 +708,8 @@ const Account = () => {
                   }}
                   placeholder="Name"
                   onClick={() => {
-                    scrollToBottomName()
+                    // scrollToBottomName()
+                    scrollToBottom()
                   }}
                   id={'accountNameId'}
                   value={form.name}
@@ -704,7 +731,8 @@ const Account = () => {
                   }}
                   autoSize={{ minRows: 8, maxRows: 8 }}
                   onClick={() => {
-                    scrollToBottomDesc()
+                    // scrollToBottomDesc()
+                    scrollToBottom()
                   }}
                   placeholder="Description"
                   id={'accountDescId'}
@@ -712,6 +740,10 @@ const Account = () => {
                   value={form.description}
                 />
               </Space.Compact>
+              <div
+                ref={bottomRef}
+                style={{ display: 'block', height: 0 }}
+              ></div>
               <Space.Compact
                 size="large"
                 style={{
