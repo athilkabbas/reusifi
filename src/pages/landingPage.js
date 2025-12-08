@@ -60,7 +60,13 @@ const ReusifiLanding = () => {
   ]
 
   return (
-    <Layout>
+    <Layout
+      style={{
+        height: '100dvh',
+        overflow: 'hidden',
+        background: '#F9FAFB',
+      }}
+    >
       {/* Header */}
       <Header
         style={{
@@ -156,7 +162,13 @@ const ReusifiLanding = () => {
         </Drawer> */}
       </Header>
 
-      <Content>
+      <Content
+        style={{
+          overflowY: 'scroll',
+          overflowX: 'hidden',
+          scrollbarWidth: 'none',
+        }}
+      >
         {/* Hero Section */}
         <div className="hero-section">
           <div style={{ padding: screens.md ? '80px 50px' : '40px 20px' }}>
@@ -876,14 +888,14 @@ const ReusifiLanding = () => {
         }}
       >
         <Row justify="space-between" align="middle" gutter={[16, 16]}>
-          <Col xs={24} sm={12}>
+          <Col xs={24} sm={24}>
             <Space align="center">
               {/* <Recycling style={{ fontSize: '24px', color: '#52c41a' }} /> */}
               <Image src={logo} width={64} />
-              <Text strong>Reusifi</Text>
-              <Text type="secondary" style={{ marginLeft: '16px' }}>
-                © 2025 Reusifi. All rights reserved.
+              <Text style={{ whiteSpace: 'nowrap' }} strong>
+                Reusifi
               </Text>
+              <Text type="secondary">© 2025 Reusifi. All rights reserved.</Text>
             </Space>
           </Col>
           {/* <Col xs={24} sm={12}>

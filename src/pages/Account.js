@@ -64,8 +64,7 @@ const Account = () => {
     },
   }
   const [loading, setLoading] = useState(false)
-  const bottomRefDesc = useRef(null)
-  const bottomRefName = useRef(null)
+  const bottomRef = useRef(null)
 
   const {
     accountInitialLoad,
@@ -216,24 +215,12 @@ const Account = () => {
       return
     }
   }
-  const scrollToBottomDesc = () => {
-    requestAnimationFrame(() => {
-      if (!Platform.isIOS) {
-        if (bottomRefDesc?.current) {
-          bottomRefDesc.current?.scrollIntoView({
-            behavior: 'smooth',
-            block: 'end',
-          })
-        }
-      }
-    })
-  }
 
-  const scrollToBottomName = () => {
+  const scrollToBottom = () => {
     requestAnimationFrame(() => {
       if (!Platform.isIOS) {
-        if (bottomRefName?.current) {
-          bottomRefName.current?.scrollIntoView({
+        if (bottomRef?.current) {
+          bottomRef.current?.scrollIntoView({
             behavior: 'smooth',
             block: 'end',
           })
@@ -647,7 +634,7 @@ const Account = () => {
                   }}
                   placeholder="Name"
                   onClick={() => {
-                    scrollToBottomName()
+                    scrollToBottom()
                   }}
                   id={'accountNameId'}
                   value={form.name}
@@ -669,7 +656,7 @@ const Account = () => {
                   }}
                   autoSize={{ minRows: 8, maxRows: 8 }}
                   onClick={() => {
-                    scrollToBottomDesc()
+                    scrollToBottom()
                   }}
                   placeholder="Description"
                   id={'accountDescId'}
@@ -749,15 +736,11 @@ const Account = () => {
                 </Space.Compact>
               </Space>
               <div
-                ref={bottomRefName}
+                ref={bottomRef}
                 style={{ display: 'block', height: 0 }}
               ></div>
               <br />
               <br />
-              <div
-                ref={bottomRefDesc}
-                style={{ display: 'block', height: 0 }}
-              ></div>
               <Space.Compact size="large">
                 <Popconfirm
                   title="Do you want to delete the Account?"
