@@ -32,6 +32,7 @@ import {
   LoadingOutlined,
   UploadOutlined,
 } from '@ant-design/icons'
+import { Platform } from '../helpers/config'
 import { Input } from 'antd'
 const { Content } = Layout
 const { TextArea } = Input
@@ -217,27 +218,45 @@ const Account = () => {
   }
   const scrollToBottomDesc = () => {
     requestAnimationFrame(() => {
-      setTimeout(() => {
+      if (Platform.isIOS) {
         if (bottomRefDesc?.current) {
           bottomRefDesc.current?.scrollIntoView({
             behavior: 'smooth',
             block: 'end',
           })
         }
-      }, 300)
+      } else {
+        setTimeout(() => {
+          if (bottomRefDesc?.current) {
+            bottomRefDesc.current?.scrollIntoView({
+              behavior: 'smooth',
+              block: 'end',
+            })
+          }
+        }, 300)
+      }
     })
   }
 
   const scrollToBottomName = () => {
     requestAnimationFrame(() => {
-      setTimeout(() => {
+      if (Platform.isIOS) {
         if (bottomRefName?.current) {
           bottomRefName.current?.scrollIntoView({
             behavior: 'smooth',
             block: 'end',
           })
         }
-      }, 300)
+      } else {
+        setTimeout(() => {
+          if (bottomRefName?.current) {
+            bottomRefName.current?.scrollIntoView({
+              behavior: 'smooth',
+              block: 'end',
+            })
+          }
+        }, 300)
+      }
     })
   }
 
