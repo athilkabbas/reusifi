@@ -216,25 +216,38 @@ const Account = () => {
     }
   }
 
+  // const scrollToBottom = () => {
+  //   requestAnimationFrame(() => {
+  //     if (Platform.isIOS) {
+  //       if (bottomRef?.current) {
+  //         bottomRef.current?.scrollIntoView({
+  //           behavior: 'smooth',
+  //           block: 'end',
+  //         })
+  //       }
+  //     } else {
+  //       setTimeout(() => {
+  //         if (bottomRef?.current) {
+  //           bottomRef.current?.scrollIntoView({
+  //             behavior: 'smooth',
+  //             block: 'end',
+  //           })
+  //         }
+  //       }, 300)
+  //     }
+  //   })
+  // }
+
   const scrollToBottom = () => {
     requestAnimationFrame(() => {
-      if (Platform.isIOS) {
+      setTimeout(() => {
         if (bottomRef?.current) {
           bottomRef.current?.scrollIntoView({
             behavior: 'smooth',
             block: 'end',
           })
         }
-      } else {
-        setTimeout(() => {
-          if (bottomRef?.current) {
-            bottomRef.current?.scrollIntoView({
-              behavior: 'smooth',
-              block: 'end',
-            })
-          }
-        }, 300)
-      }
+      }, 300)
     })
   }
 
