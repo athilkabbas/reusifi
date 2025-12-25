@@ -642,6 +642,7 @@ const Home = () => {
         onClose={onClose}
         open={drawerOpen}
         width={isMobile ? '100%' : '60dvw'}
+        style={{ background: '#F9FAFB' }}
       >
         <Space
           size="middle"

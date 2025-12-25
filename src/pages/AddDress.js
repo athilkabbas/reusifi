@@ -1,17 +1,31 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import styles from './AddDress.module.css'
-import { Col, Popover, Select, Skeleton, Space, Spin } from 'antd'
+import { Badge, Col, Popover, Select, Skeleton, Space, Spin } from 'antd'
 import { Input, notification } from 'antd'
 import { useNavigate } from 'react-router-dom'
-import { Layout, Modal } from 'antd'
-import { InfoCircleOutlined, UploadOutlined } from '@ant-design/icons'
+import { Layout, Modal, Typography } from 'antd'
+import {
+  ClockCircleOutlined,
+  FileZipOutlined,
+  HistoryOutlined,
+  InfoCircleOutlined,
+  UploadOutlined,
+} from '@ant-design/icons'
 import { LocateFixed } from 'lucide-react'
-import { Image, Upload, message } from 'antd'
+import { Image, Upload, message, Divider } from 'antd'
 import { Button, Row } from 'antd'
 import axios from 'axios'
 import { signInWithRedirect } from '@aws-amplify/auth'
 import imageCompression from 'browser-image-compression'
-import { LoadingOutlined } from '@ant-design/icons'
+import { Hand } from 'lucide-react'
+import {
+  LoadingOutlined,
+  SafetyCertificateFilled,
+  BulbOutlined,
+  AudioOutlined,
+  ArrowsAltOutlined,
+  SelectOutlined,
+} from '@ant-design/icons'
 import { Context } from '../context/provider'
 import { useIsMobile } from '../hooks/windowSize'
 import { callApi } from '../helpers/api'
@@ -24,6 +38,7 @@ import { useIndexedDBImages } from '../hooks/indexedDB'
 import { Platform } from '../helpers/config'
 const { TextArea } = Input
 const { Content } = Layout
+const { Title, Paragraph, Text } = Typography
 const getBase64 = (file) =>
   new Promise((resolve, reject) => {
     const reader = new FileReader()
@@ -175,6 +190,8 @@ const AddDress = () => {
   const navigate = useNavigate()
   const [previewOpen, setPreviewOpen] = useState(false)
   const [previewImage, setPreviewImage] = useState('')
+  const [previewVideo, setPreviewVideo] = useState('')
+  const [previewVideoOpen, setPreviewVideoOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [submitLoading, setSubmitLoading] = useState(false)
   const [chatLoading, setChatLoading] = useState(false)
@@ -184,6 +201,56 @@ const AddDress = () => {
     }
     setPreviewImage(file.url || file.preview)
     setPreviewOpen(true)
+  }
+
+  const handlePreviewVideo = async (file) => {
+    let previewUrl = file.url || file.preview
+    if (!previewUrl && file.originFileObj) {
+      previewUrl = URL.createObjectURL(file.originFileObj)
+    }
+
+    setPreviewVideo(previewUrl)
+    setPreviewVideoOpen(true)
+  }
+
+  const handleBeforeUploadVideo = (file) => {
+    return new Promise((resolve, reject) => {
+      const isLt50M = file.size / 1024 / 1024 < 50
+      if (!isLt50M) {
+        message.error('Video must be smaller than 50MB!')
+        resolve(Upload.LIST_IGNORE)
+      }
+
+      const url = URL.createObjectURL(file)
+      const video = document.createElement('video')
+      video.preload = 'metadata'
+
+      video.onloadedmetadata = () => {
+        URL.revokeObjectURL(url)
+
+        const duration = video.duration
+        const maxSeconds = 20
+
+        if (duration > maxSeconds) {
+          message.error(
+            `Video is too long (${Math.round(
+              duration
+            )}s). Maximum allowed is ${maxSeconds} seconds.`
+          )
+          resolve(Upload.LIST_IGNORE)
+        } else {
+          resolve(false)
+        }
+      }
+
+      video.onerror = () => {
+        URL.revokeObjectURL(url)
+        message.error('Invalid video file.')
+        resolve(Upload.LIST_IGNORE)
+      }
+
+      video.src = url
+    })
   }
 
   const handleBeforeUpload = async (file) => {
@@ -214,6 +281,12 @@ const AddDress = () => {
       style: {
         whiteSpace: 'pre-wrap',
       },
+    })
+  }
+
+  const handleVideoChange = async ({ fileList }) => {
+    setForm((prevValue) => {
+      return { ...prevValue, videos: [...fileList] }
     })
   }
 
@@ -902,6 +975,12 @@ const AddDress = () => {
                       Upload (Max: 6)
                     </Button>
                   </Upload>
+                  <Space>
+                    <FileZipOutlined style={{ color: '#8c8c8c' }} />
+                    <Text type="secondary">
+                      Max Size: <Text strong>30MB per image</Text>
+                    </Text>
+                  </Space>
                   {previewImage && (
                     <Image
                       loading="lazy"
@@ -918,6 +997,205 @@ const AddDress = () => {
                       src={previewImage}
                     />
                   )}
+                </Space>
+              </Space.Compact>
+              <Space.Compact size="large">
+                <Space
+                  size="large"
+                  direction="vertical"
+                  style={{
+                    width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
+                  }}
+                >
+                  <div style={{ padding: '24px' }}>
+                    {/* Header Section */}
+                    <Space direction="vertical" size="small">
+                      <Title level={3}>
+                        <SafetyCertificateFilled
+                          style={{ color: '#52c41a', marginRight: 8 }}
+                        />
+                        Forensic Verification
+                      </Title>
+                      <Paragraph type="secondary" style={{ fontSize: '16px' }}>
+                        To keep our marketplace safe, our AI performs a
+                        <Text strong> Forensic Scan</Text> by analysing your
+                        video to prove the item is physically in your
+                        possession.
+                      </Paragraph>
+                    </Space>
+
+                    <Divider />
+
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '20px',
+                      }}
+                    >
+                      <Space size="middle">
+                        <Space>
+                          <ClockCircleOutlined style={{ color: '#8c8c8c' }} />
+                          <Text type="secondary">
+                            Duration: <Text strong>20s</Text>
+                          </Text>
+                        </Space>
+                        <Divider type="vertical" />
+                        <Space>
+                          <FileZipOutlined style={{ color: '#8c8c8c' }} />
+                          <Text type="secondary">
+                            Max Size: <Text strong>50MB</Text>
+                          </Text>
+                        </Space>
+                      </Space>
+                      <Space align="start">
+                        <BulbOutlined
+                          style={{
+                            fontSize: '20px',
+                            marginTop: 4,
+                            color: '#faad14',
+                          }}
+                        />
+                        <div>
+                          <Text strong block>
+                            Find Bright Light :
+                          </Text>
+                          <Text type="secondary">
+                            {' '}
+                            Ensure the item is in a well-lit room.
+                          </Text>
+                        </div>
+                      </Space>
+
+                      <Space align="start">
+                        <AudioOutlined
+                          style={{
+                            fontSize: '20px',
+                            marginTop: 4,
+                            color: '#1890ff',
+                          }}
+                        />
+                        <div>
+                          <Text strong block>
+                            Speak the Code :
+                          </Text>
+                          <Text type="secondary">
+                            {' '}
+                            You will need to say the generated code clearly.
+                          </Text>
+                          <div style={{ marginTop: 4 }}>
+                            <Badge
+                              status="warning"
+                              text={
+                                <Text type="warning" size="small" strong italic>
+                                  <HistoryOutlined /> Code is valid only for 10
+                                  minutes
+                                </Text>
+                              }
+                            />
+                          </div>
+                        </div>
+                      </Space>
+
+                      <Space align="start">
+                        <ArrowsAltOutlined
+                          style={{
+                            fontSize: '20px',
+                            marginTop: 4,
+                            color: '#722ed1',
+                          }}
+                        />
+                        <div>
+                          <Text strong block>
+                            Move the Camera :
+                          </Text>
+                          <Text type="secondary">
+                            {' '}
+                            Don’t stay still! You’ll need to move around the
+                            item.
+                          </Text>
+                        </div>
+                      </Space>
+
+                      <Space align="start">
+                        <Hand
+                          style={{
+                            fontSize: '20px',
+                            marginTop: 4,
+                            color: '#eb2f96',
+                          }}
+                        />
+                        <div>
+                          <Text strong block>
+                            Touch the Item :
+                          </Text>
+                          <Text type="secondary">
+                            {' '}
+                            Briefly place your hand on the item during the
+                            video.
+                          </Text>
+                        </div>
+                      </Space>
+                    </div>
+                  </div>
+                  <Button
+                    style={{
+                      background: '#52c41a',
+                      fontSize: '13px',
+                      fontWeight: '300',
+                    }}
+                    type="primary"
+                  >
+                    Generate Code
+                  </Button>
+
+                  <Upload
+                    accept="video/*"
+                    listType="picture"
+                    fileList={form.videos}
+                    onPreview={handlePreviewVideo}
+                    beforeUpload={handleBeforeUploadVideo}
+                    onChange={handleVideoChange}
+                    maxCount={1}
+                  >
+                    <Button
+                      className={
+                        isSubmitted
+                          ? form.videos.length > 0
+                            ? ''
+                            : 'my-red-border'
+                          : ''
+                      }
+                      style={{
+                        color: 'black',
+                        fontSize: '13px',
+                        fontWeight: '300',
+                        width: '100%',
+                      }}
+                      icon={<UploadOutlined />}
+                    >
+                      Upload (Max: 1)
+                    </Button>
+                  </Upload>
+                  <Modal
+                    open={previewVideoOpen}
+                    footer={null}
+                    closable={false}
+                    onCancel={() => setPreviewVideoOpen(false)}
+                    destroyOnHidden
+                    width={800}
+                  >
+                    {previewVideo && (
+                      <video
+                        controls
+                        autoPlay
+                        style={{ width: '100%', borderRadius: '8px' }}
+                      >
+                        <source src={previewVideo} />
+                        Your browser does not support the video tag.
+                      </video>
+                    )}
+                  </Modal>
                 </Space>
               </Space.Compact>
               <div

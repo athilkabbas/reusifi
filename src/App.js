@@ -129,7 +129,7 @@ function AppWithSession() {
                 setBuyingChatLastEvaluatedKey(null)
                 setBuyingChatInitialLoad(true)
               } else {
-                message.info('There is a new message')
+                message.info('You have a new message. Please refresh to view.')
               }
               setUnreadChatCount(1)
             } catch (e) {}
