@@ -20,7 +20,6 @@ import imageCompression from 'browser-image-compression'
 import { Hand } from 'lucide-react'
 import {
   DndContext,
-  PointerSensor,
   useSensor,
   useSensors,
   PointerSensor,
