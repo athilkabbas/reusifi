@@ -77,7 +77,10 @@ const DraggableUploadListItem = ({ originNode, file }) => {
   const style = {
     transform: CSS.Translate.toString(transform),
     transition,
-    cursor: 'move',
+    cursor: isDragging ? 'grabbing' : 'move',
+    touchAction: 'none',
+    userSelect: 'none',
+    WebkitUserSelect: 'none',
   }
 
   return (
