@@ -18,7 +18,14 @@ import axios from 'axios'
 import { signInWithRedirect } from '@aws-amplify/auth'
 import imageCompression from 'browser-image-compression'
 import { Hand } from 'lucide-react'
-import { DndContext, PointerSensor, useSensor } from '@dnd-kit/core'
+import {
+  DndContext,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  PointerSensor,
+  TouchSensor,
+} from '@dnd-kit/core'
 import {
   arrayMove,
   SortableContext,
@@ -116,9 +123,19 @@ const AddDress = () => {
 
   useLocationComponent()
 
-  const sensor = useSensor(PointerSensor, {
-    activationConstraint: { distance: 10 },
-  })
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 10,
+      },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 250,
+        tolerance: 5,
+      },
+    })
+  )
 
   const onDragEnd = ({ active, over }) => {
     if (active.id !== over?.id) {
@@ -1042,7 +1059,7 @@ const AddDress = () => {
                     width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
                   }}
                 >
-                  <DndContext sensors={[sensor]} onDragEnd={onDragEnd}>
+                  <DndContext sensors={sensors} onDragEnd={onDragEnd}>
                     <SortableContext
                       items={form.images?.map((i) => i.uid)}
                       strategy={verticalListSortingStrategy}
@@ -1284,7 +1301,7 @@ const AddDress = () => {
                   </div>
                   <ForensicCodeGenerator />
 
-                  <DndContext sensors={[sensor]} onDragEnd={onDragEnd}>
+                  <DndContext sensors={sensors} onDragEnd={onDragEnd}>
                     <SortableContext
                       items={form.videos?.map((i) => i.uid)}
                       strategy={verticalListSortingStrategy}
