@@ -291,15 +291,27 @@ const AddDress = () => {
 
   const handleBeforeUploadVideo = (file) => {
     return new Promise((resolve, reject) => {
-      const isLt50M = file.size / 1024 / 1024 < 50
-      if (!isLt50M) {
-        message.error('Video must be smaller than 50MB!')
-        resolve(Upload.LIST_IGNORE)
+      const isVideoType = file.type.startsWith('video/')
+      if (!isVideoType) {
+        message.error('Selected file is not a valid video format.')
+        return resolve(Upload.LIST_IGNORE)
+      }
+
+      const isLt150M = file.size / 1024 / 1024 < 150
+      if (!isLt150M) {
+        message.error('Video must be smaller than 150MB!')
+        return resolve(Upload.LIST_IGNORE)
       }
 
       const url = URL.createObjectURL(file)
       const video = document.createElement('video')
       video.preload = 'metadata'
+
+      video.onerror = () => {
+        URL.revokeObjectURL(url)
+        message.error('The file is corrupt or not a real video.')
+        resolve(Upload.LIST_IGNORE)
+      }
 
       video.onloadedmetadata = () => {
         URL.revokeObjectURL(url)
@@ -307,22 +319,19 @@ const AddDress = () => {
         const duration = video.duration
         const maxSeconds = 20
 
-        if (duration > maxSeconds) {
+        if (isNaN(duration) || duration === Infinity) {
+          message.error('Could not determine video length.')
+          resolve(Upload.LIST_IGNORE)
+        } else if (duration > maxSeconds) {
           message.error(
             `Video is too long (${Math.round(
               duration
-            )}s). Maximum allowed is ${maxSeconds} seconds.`
+            )}s). Max allowed is ${maxSeconds}s.`
           )
           resolve(Upload.LIST_IGNORE)
         } else {
           resolve(false)
         }
-      }
-
-      video.onerror = () => {
-        URL.revokeObjectURL(url)
-        message.error('Invalid video file.')
-        resolve(Upload.LIST_IGNORE)
       }
 
       video.src = url
@@ -1100,35 +1109,6 @@ const AddDress = () => {
                       </Upload>
                     </SortableContext>
                   </DndContext>
-                  {/* <Upload
-                    accept="image/png,image/jpeg"
-                    listType="picture"
-                    fileList={form.images}
-                    onPreview={handlePreview}
-                    beforeUpload={handleBeforeUpload}
-                    onChange={handleChangeImage}
-                    maxCount={6}
-                    multiple
-                  >
-                    <Button
-                      className={
-                        isSubmitted
-                          ? form.images.length > 0
-                            ? ''
-                            : 'my-red-border'
-                          : ''
-                      }
-                      style={{
-                        color: 'black',
-                        fontSize: '13px',
-                        fontWeight: '300',
-                        width: '100%',
-                      }}
-                      icon={<UploadOutlined />}
-                    >
-                      Upload (Max: 6)
-                    </Button>
-                  </Upload> */}
                   <Space>
                     <FileZipOutlined style={{ color: '#8c8c8c' }} />
                     <Text type="secondary">
@@ -1204,7 +1184,7 @@ const AddDress = () => {
                         <Space>
                           <FileZipOutlined style={{ color: '#8c8c8c' }} />
                           <Text type="secondary">
-                            Max Size: <Text strong>50MB</Text>
+                            Max Size: <Text strong>150MB</Text>
                           </Text>
                         </Space>
                       </Space>
