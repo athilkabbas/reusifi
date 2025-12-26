@@ -70,6 +70,7 @@ const Provider = ({ children }) => {
   const [queryInitialLoad, setQueryInitialLoad] = useState(true)
   const [boostInitialLoad, setBoostInitialLoad] = useState(true)
   const [account, setAccount] = useState({})
+  const [code, setCode] = useState(null)
   const [form, setForm] = useState({
     title: '',
     description: '',
@@ -124,6 +125,8 @@ const Provider = ({ children }) => {
   return (
     <Context.Provider
       value={{
+        code,
+        setCode,
         boostForm,
         setBoostForm,
         form,

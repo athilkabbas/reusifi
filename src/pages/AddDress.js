@@ -18,6 +18,14 @@ import axios from 'axios'
 import { signInWithRedirect } from '@aws-amplify/auth'
 import imageCompression from 'browser-image-compression'
 import { Hand } from 'lucide-react'
+import { DndContext, PointerSensor, useSensor } from '@dnd-kit/core'
+import {
+  arrayMove,
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 import {
   LoadingOutlined,
   SafetyCertificateFilled,
@@ -36,6 +44,7 @@ import { options } from '../helpers/categories'
 import useLocationComponent from '../hooks/location'
 import { useIndexedDBImages } from '../hooks/indexedDB'
 import { Platform } from '../helpers/config'
+import ForensicCodeGenerator from '../component/codeGenerator'
 const { TextArea } = Input
 const { Content } = Layout
 const { Title, Paragraph, Text } = Typography
@@ -46,6 +55,39 @@ const getBase64 = (file) =>
     reader.onload = () => resolve(reader.result)
     reader.onerror = (error) => reject(error)
   })
+
+const DraggableUploadListItem = ({ originNode, file }) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: file.uid,
+  })
+
+  const style = {
+    transform: CSS.Translate.toString(transform),
+    transition,
+    cursor: 'move',
+  }
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={isDragging ? 'is-dragging' : ''}
+      {...attributes}
+      {...listeners}
+    >
+      {file.status === 'error' && isDragging
+        ? originNode.props.children
+        : originNode}
+    </div>
+  )
+}
 
 const AddDress = () => {
   const {
@@ -67,11 +109,29 @@ const AddDress = () => {
     setCurrLocRemoved,
     form,
     setForm,
+    code,
   } = useContext(Context)
 
   const [api, contextHolder] = notification.useNotification()
 
   useLocationComponent()
+
+  const sensor = useSensor(PointerSensor, {
+    activationConstraint: { distance: 10 },
+  })
+
+  const onDragEnd = ({ active, over }) => {
+    if (active.id !== over?.id) {
+      setForm((prev) => {
+        const activeIndex = prev.images.findIndex((i) => i.uid === active.id)
+        const overIndex = prev.images.findIndex((i) => i.uid === over?.id)
+        return {
+          ...prev,
+          images: arrayMove(prev.images, activeIndex, overIndex),
+        }
+      })
+    }
+  }
 
   const [subCategoryOptions, setSubCategoryOptions] = useState([])
 
@@ -354,6 +414,34 @@ const AddDress = () => {
     return true
   }
 
+  const uploadVideos = async (videos) => {
+    const urlRes = await callApi(
+      `https://api.reusifi.com/prod/getUrlNew?email=${encodeURIComponent(
+        user.userId
+      )}&contentType=${encodeURIComponent(videos[0].type)}&count=${
+        videos.length
+      }`,
+      'GET'
+    )
+    const uploadURLs = urlRes.data.uploadURLs
+    const s3Keys = urlRes.data.s3Keys
+
+    await Promise.all(
+      videos.map((video, idx) =>
+        axios.put(uploadURLs[idx], video, {
+          headers: {
+            'Content-Type': video.type,
+            'Cache-Control': 'public, max-age=2592000',
+          },
+        })
+      )
+    )
+    const videoKey = [s3Keys[0]]
+    return {
+      videoKey,
+    }
+  }
+
   const uploadImages = async (fileList, imageType) => {
     const thumbnailOptions = {
       maxSizeMB: 0.15,
@@ -417,10 +505,16 @@ const AddDress = () => {
 
   const handleSubmit = async (submit, paid) => {
     try {
-      const { thumbnailS3Keys, viewingS3Keys } = await uploadImages(
-        form.images,
-        'image/jpeg'
-      )
+      // const { thumbnailS3Keys, viewingS3Keys } = await uploadImages(
+      //   form.images,
+      //   'image/jpeg'
+      // )
+      // const { videoKey } = await uploadVideos(form.videos)
+      const [{ thumbnailS3Keys, viewingS3Keys }, { videoKey }] =
+        await Promise.all([
+          uploadImages(form.images, 'image/jpeg'),
+          uploadVideos(form.videos),
+        ])
       let files = form.images.map((file, index) => {
         const { preview, originFileObj, ...fileRest } = file
         return { ...fileRest, s3Key: viewingS3Keys[index] }
@@ -441,6 +535,8 @@ const AddDress = () => {
         files,
         keywords: form.keywords,
         paid,
+        videoKey,
+        code,
       }
       await callApi(
         'https://api.reusifi.com/prod/addProduct',
@@ -946,7 +1042,49 @@ const AddDress = () => {
                     width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
                   }}
                 >
-                  <Upload
+                  <DndContext sensors={[sensor]} onDragEnd={onDragEnd}>
+                    <SortableContext
+                      items={form.images?.map((i) => i.uid)}
+                      strategy={verticalListSortingStrategy}
+                    >
+                      <Upload
+                        accept="image/png,image/jpeg"
+                        listType="picture"
+                        fileList={form.images}
+                        onPreview={handlePreview}
+                        beforeUpload={handleBeforeUpload}
+                        onChange={handleChangeImage}
+                        maxCount={6}
+                        multiple
+                        itemRender={(originNode, file) => (
+                          <DraggableUploadListItem
+                            originNode={originNode}
+                            file={file}
+                          />
+                        )}
+                      >
+                        <Button
+                          className={
+                            isSubmitted
+                              ? form.images.length > 0
+                                ? ''
+                                : 'my-red-border'
+                              : ''
+                          }
+                          style={{
+                            color: 'black',
+                            fontSize: '13px',
+                            fontWeight: '300',
+                            width: '100%',
+                          }}
+                          icon={<UploadOutlined />}
+                        >
+                          Upload (Max: 6)
+                        </Button>
+                      </Upload>
+                    </SortableContext>
+                  </DndContext>
+                  {/* <Upload
                     accept="image/png,image/jpeg"
                     listType="picture"
                     fileList={form.images}
@@ -974,7 +1112,7 @@ const AddDress = () => {
                     >
                       Upload (Max: 6)
                     </Button>
-                  </Upload>
+                  </Upload> */}
                   <Space>
                     <FileZipOutlined style={{ color: '#8c8c8c' }} />
                     <Text type="secondary">
@@ -1021,6 +1159,12 @@ const AddDress = () => {
                         <Text strong> Forensic Scan</Text> by analysing your
                         video to prove the item is physically in your
                         possession.
+                        <br />
+                        <Text strong>
+                          {' '}
+                          Please note: the first image will be used for
+                          verification.
+                        </Text>
                       </Paragraph>
                     </Space>
 
@@ -1138,48 +1282,61 @@ const AddDress = () => {
                       </Space>
                     </div>
                   </div>
-                  <Button
-                    style={{
-                      background: '#52c41a',
-                      fontSize: '13px',
-                      fontWeight: '300',
-                    }}
-                    type="primary"
-                  >
-                    Generate Code
-                  </Button>
+                  <ForensicCodeGenerator />
 
-                  <Upload
-                    accept="video/*"
-                    listType="picture"
-                    fileList={form.videos}
-                    onPreview={handlePreviewVideo}
-                    beforeUpload={handleBeforeUploadVideo}
-                    onChange={handleVideoChange}
-                    maxCount={1}
-                  >
-                    <Button
-                      className={
-                        isSubmitted
-                          ? form.videos.length > 0
-                            ? ''
-                            : 'my-red-border'
-                          : ''
-                      }
-                      style={{
-                        color: 'black',
-                        fontSize: '13px',
-                        fontWeight: '300',
-                        width: '100%',
-                      }}
-                      icon={<UploadOutlined />}
+                  <DndContext sensors={[sensor]} onDragEnd={onDragEnd}>
+                    <SortableContext
+                      items={form.videos?.map((i) => i.uid)}
+                      strategy={verticalListSortingStrategy}
                     >
-                      Upload (Max: 1)
-                    </Button>
-                  </Upload>
+                      <Upload
+                        accept="video/*"
+                        listType="picture"
+                        fileList={form.videos}
+                        onPreview={handlePreviewVideo}
+                        beforeUpload={handleBeforeUploadVideo}
+                        onChange={handleVideoChange}
+                        maxCount={1}
+                        itemRender={(originNode, file) => (
+                          <DraggableUploadListItem
+                            originNode={originNode}
+                            file={file}
+                          />
+                        )}
+                      >
+                        <Button
+                          className={
+                            isSubmitted
+                              ? form.videos.length > 0
+                                ? ''
+                                : 'my-red-border'
+                              : ''
+                          }
+                          style={{
+                            color: 'black',
+                            fontSize: '13px',
+                            fontWeight: '300',
+                            width: '100%',
+                          }}
+                          icon={<UploadOutlined />}
+                        >
+                          Upload (Max: 1)
+                        </Button>
+                      </Upload>
+                    </SortableContext>
+                  </DndContext>
                   <Modal
                     open={previewVideoOpen}
-                    footer={null}
+                    footer={[
+                      <Button
+                        danger
+                        key="close"
+                        type="primary"
+                        onClick={() => setPreviewVideoOpen(false)}
+                      >
+                        Close
+                      </Button>,
+                    ]}
                     closable={false}
                     onCancel={() => setPreviewVideoOpen(false)}
                     destroyOnHidden
@@ -1227,7 +1384,7 @@ const AddDress = () => {
                       return
                     }
                     setSubmitLoading(true)
-                    if (count < 3) {
+                    if (count < 50) {
                       await handleSubmit(true, false)
                     } else {
                       const isValid = await handleSubmit(false, true)
