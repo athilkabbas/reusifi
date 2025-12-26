@@ -7,7 +7,11 @@ import { Layout, message, Modal, Popconfirm } from 'antd'
 import { Image, Space } from 'antd'
 import { Button, Typography, Row } from 'antd'
 import { Carousel } from 'antd'
-import { LoadingOutlined } from '@ant-design/icons'
+import {
+  LoadingOutlined,
+  PoweroffOutlined,
+  RocketOutlined,
+} from '@ant-design/icons'
 import { signInWithRedirect } from '@aws-amplify/auth'
 import { Context } from '../context/provider'
 import { useIsMobile } from '../hooks/windowSize'
@@ -504,6 +508,7 @@ const Details = () => {
                           ad ? (
                             detailData[0]['item']['deactivated'] === true ? (
                               <Button
+                                icon={<PoweroffOutlined />}
                                 onClick={() => {
                                   setBoostForm((prevValue) => {
                                     return {
@@ -528,6 +533,7 @@ const Details = () => {
                               <>
                                 {' '}
                                 <Button
+                                  icon={<RocketOutlined />}
                                   onClick={() => {
                                     navigate('/boost', {
                                       state: {
@@ -560,6 +566,17 @@ const Details = () => {
                             <></>
                           )
                         }
+                        labelStyle={{
+                          backgroundColor: '#ffffff',
+                          color: '#389e0d',
+                          fontWeight: '600',
+                          padding: '12px 16px',
+                        }}
+                        contentStyle={{
+                          backgroundColor: '#ffffff',
+                          padding: '12px 16px',
+                          fontSize: '14px',
+                        }}
                         style={{
                           borderRadius: '12px',
                           padding: isMobile ? '12px' : '20px',
