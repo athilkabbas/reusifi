@@ -456,7 +456,7 @@ const AddDress = () => {
 
     await Promise.all(
       videos.map((video, idx) =>
-        axios.put(uploadURLs[idx], video, {
+        axios.put(uploadURLs[idx], video.originFileObj, {
           headers: {
             'Content-Type': video.type,
             'Cache-Control': 'public, max-age=2592000',
