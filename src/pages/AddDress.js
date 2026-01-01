@@ -544,8 +544,8 @@ const AddDress = () => {
           uploadVideos(form.videos),
         ])
       let files = form.images.map((file, index) => {
-        const { preview, originFileObj, ...fileRest } = file
-        return { ...fileRest, s3Key: viewingS3Keys[index] }
+        const { name, uid } = file
+        return { name, uid, s3Key: viewingS3Keys[index] }
       })
       // Prepare form data with separate keys for thumbnails and viewings
       const data = {
@@ -567,7 +567,7 @@ const AddDress = () => {
         code,
       }
       await callApi(
-        'https://api.reusifi.com/prod/addProduct',
+        'https://api.reusifi.com/prod/addProductP',
         'POST',
         false,
         data
