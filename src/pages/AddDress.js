@@ -11,7 +11,7 @@ import {
   InfoCircleOutlined,
   UploadOutlined,
 } from '@ant-design/icons'
-import { LocateFixed } from 'lucide-react'
+import { GripVertical, LocateFixed } from 'lucide-react'
 import { Image, Upload, message, Divider } from 'antd'
 import { Button, Row } from 'antd'
 import axios from 'axios'
@@ -39,6 +39,7 @@ import {
   AudioOutlined,
   ArrowsAltOutlined,
   SelectOutlined,
+  MenuOutlined,
 } from '@ant-design/icons'
 import { Context } from '../context/provider'
 import { useIsMobile } from '../hooks/windowSize'
@@ -77,10 +78,21 @@ const DraggableUploadListItem = ({ originNode, file }) => {
   const style = {
     transform: CSS.Translate.toString(transform),
     transition,
-    cursor: isDragging ? 'grabbing' : 'move',
-    touchAction: 'none',
-    userSelect: 'none',
-    WebkitUserSelect: 'none',
+    // The main container no longer blocks scrolling
+    touchAction: 'pan-y',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+    opacity: isDragging ? 0.5 : 1,
+  }
+
+  const handleStyle = {
+    cursor: isDragging ? 'grabbing' : 'grab',
+    touchAction: 'none', // Only the handle blocks scrolling
+    display: 'flex',
+    alignItems: 'center',
+    padding: '8px',
+    color: '#999',
   }
 
   return (
@@ -88,12 +100,18 @@ const DraggableUploadListItem = ({ originNode, file }) => {
       ref={setNodeRef}
       style={style}
       className={isDragging ? 'is-dragging' : ''}
-      {...attributes}
-      {...listeners}
     >
-      {file.status === 'error' && isDragging
-        ? originNode.props.children
-        : originNode}
+      {/* 1. The Drag Handle */}
+      <div {...attributes} {...listeners} style={handleStyle}>
+        <GripVertical />
+      </div>
+
+      {/* 2. The Original Content (Image/File info) */}
+      <div style={{ flex: 1 }}>
+        {file.status === 'error' && isDragging
+          ? originNode.props.children
+          : originNode}
+      </div>
     </div>
   )
 }
@@ -126,15 +144,11 @@ const AddDress = () => {
   useLocationComponent()
 
   const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 10,
-      },
-    }),
+    useSensor(PointerSensor),
     useSensor(TouchSensor, {
       activationConstraint: {
-        delay: 250,
-        tolerance: 15,
+        delay: 0,
+        tolerance: 5,
       },
     })
   )
