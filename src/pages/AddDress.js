@@ -596,6 +596,7 @@ const AddDress = () => {
         price: null,
         location: '',
         locationLabel: '',
+        videos: [],
       })
       message.success('Your ad is now live on Reusifi.')
       navigate('/ads')
