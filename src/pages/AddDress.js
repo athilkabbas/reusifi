@@ -1159,12 +1159,6 @@ const AddDress = () => {
                         <Text strong> Forensic Scan</Text> by analysing your
                         video to prove the item is physically in your
                         possession.
-                        <br />
-                        <Text strong>
-                          {' '}
-                          Please note: the first image will be used for
-                          verification.
-                        </Text>
                       </Paragraph>
                     </Space>
 
@@ -1275,8 +1269,8 @@ const AddDress = () => {
                           </Text>
                           <Text type="secondary">
                             {' '}
-                            Briefly place your hand on the item during the
-                            video.
+                            Briefly touch the item during the video while saying
+                            the generated code.
                           </Text>
                         </div>
                       </Space>
