@@ -24,6 +24,7 @@ import {
   CloseCircleOutlined,
   UserOutlined,
   InfoCircleOutlined,
+  CloseCircleFilled,
 } from '@ant-design/icons'
 import { LocateFixed } from 'lucide-react'
 import { Input, Space, Empty } from 'antd'
@@ -807,14 +808,22 @@ const Home = () => {
               }}
             >
               <Input
-                onChange={(e) => {
-                  if (!e.target.value) {
-                    setCurrentLocationLabel('')
-                    setCurrentLocation('')
-                    setApplied(false)
-                    setCurrLocRemoved(true)
-                  }
-                }}
+                readOnly
+                suffix={
+                  <CloseCircleFilled
+                    style={{
+                      color: 'rgba(0,0,0,.25)',
+                      cursor: 'pointer',
+                      transform: 'scale(0.7)',
+                    }}
+                    onClick={(e) => {
+                      setCurrentLocationLabel('')
+                      setCurrentLocation('')
+                      setApplied(false)
+                      setCurrLocRemoved(true)
+                    }}
+                  />
+                }
                 style={{
                   width: !isMobile ? '50dvw' : 'calc(100dvw - 50px)',
                 }}

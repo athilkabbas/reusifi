@@ -1092,6 +1092,10 @@ const AddDress = () => {
                   }}
                 />
               </Space.Compact>
+              <div
+                ref={bottomRef}
+                style={{ display: 'block', height: 0 }}
+              ></div>
               <Space.Compact size="large">
                 <Space
                   size="large"
@@ -1417,10 +1421,6 @@ const AddDress = () => {
                   Submit
                 </Button>
               </Space.Compact>
-              <div
-                ref={bottomRef}
-                style={{ display: 'block', height: 0 }}
-              ></div>
             </Space>
           </>
         )}
