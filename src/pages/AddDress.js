@@ -690,7 +690,7 @@ const AddDress = () => {
       handleChange('', 'locationLabel')
     }
   }
-  const bottomRef = useRef(null)
+  const bottomRefPrice = useRef(null)
   const bottomRefDesc = useRef(null)
 
   const bottomRefPincode = useRef(null)
@@ -729,8 +729,8 @@ const AddDress = () => {
     requestAnimationFrame(() => {
       if (!Platform.isIOS) {
         setTimeout(() => {
-          if (bottomRef?.current) {
-            bottomRef.current?.scrollIntoView({
+          if (bottomRefPrice?.current) {
+            bottomRefPrice.current?.scrollIntoView({
               behavior: 'smooth',
             })
           }
@@ -1093,7 +1093,7 @@ const AddDress = () => {
                 />
               </Space.Compact>
               <div
-                ref={bottomRef}
+                ref={bottomRefPrice}
                 style={{ display: 'block', height: 0 }}
               ></div>
               <Space.Compact size="large">
