@@ -208,7 +208,10 @@ const Home = () => {
       if (!Platform.isIOS) {
         setTimeout(() => {
           if (bottomRef?.current) {
-            bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+            bottomRef.current?.scrollIntoView({
+              behavior: 'smooth',
+              block: 'end',
+            })
           }
         }, 300)
       }
@@ -944,6 +947,10 @@ const Home = () => {
                     maxLength={15}
                   ></Input>
                 </Space.Compact>
+                <div
+                  ref={bottomRef}
+                  style={{ display: 'block', height: 0 }}
+                ></div>
               </Space>
             </Space.Compact>
           </Space>
@@ -1027,7 +1034,6 @@ const Home = () => {
               </Button>
             </Space.Compact>
           </Space>
-          <div ref={bottomRef} style={{ display: 'block', height: 0 }}></div>
         </Space>
       </Drawer>
       <Space

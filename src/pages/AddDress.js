@@ -732,6 +732,7 @@ const AddDress = () => {
           if (bottomRefPrice?.current) {
             bottomRefPrice.current?.scrollIntoView({
               behavior: 'smooth',
+              block: 'end',
             })
           }
         }, 300)
