@@ -185,14 +185,14 @@ const Home = () => {
 
   const bottomRef = useRef(null)
 
-  const bottomRefPrice = useRef(null)
+  const bottomRefLocation = useRef(null)
 
   const scrollToBottomPrice = () => {
     requestAnimationFrame(() => {
       if (!Platform.isIOS) {
         setTimeout(() => {
-          if (bottomRefPrice?.current) {
-            bottomRefPrice.current?.scrollIntoView({
+          if (bottomRefLocation?.current) {
+            bottomRefLocation.current?.scrollIntoView({
               behavior: 'smooth',
               block: 'end',
             })
@@ -766,6 +766,10 @@ const Home = () => {
                 }))}
               ></Select>
             </Space.Compact>
+            <div
+              ref={bottomRefLocation}
+              style={{ display: 'block', height: 0 }}
+            ></div>
             &nbsp;&nbsp;or
             <Space.Compact size="large">
               <Button
@@ -933,10 +937,6 @@ const Home = () => {
                 </Space.Compact>
               </Space>
             </Space.Compact>
-            <div
-              ref={bottomRefPrice}
-              style={{ display: 'block', height: 0 }}
-            ></div>
           </Space>
           <br />
           <Space

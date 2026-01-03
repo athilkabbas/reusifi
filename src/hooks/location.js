@@ -1,6 +1,9 @@
-import { useEffect, useState, useContext } from 'react'
+import { useEffect, useState, useContext, useRef } from 'react'
 import { Context } from '../context/provider'
 import { callApi } from '../helpers/api'
+import { Modal } from 'antd'
+import { useIndexedDBImages } from './indexedDB'
+import { signInWithRedirect } from 'aws-amplify/auth'
 
 const useLocationComponent = () => {
   const {
@@ -11,7 +14,33 @@ const useLocationComponent = () => {
     currentLocationLabel,
     currLocRemoved,
   } = useContext(Context)
+  const isModalVisibleRef = useRef(false)
   const [error, setError] = useState(null)
+  const { clearAllIds } = useIndexedDBImages()
+
+  const errorSessionConfig = {
+    title: 'Session has expired.',
+    content: 'Please login again.',
+    closable: false,
+    maskClosable: false,
+    okText: 'Login',
+    onOk: async () => {
+      isModalVisibleRef.current = false
+      await clearAllIds()
+      signInWithRedirect()
+    },
+  }
+  const errorConfig = {
+    title: 'An error has occurred.',
+    content: 'Please reload.',
+    closable: false,
+    maskClosable: false,
+    okText: 'Reload',
+    onOk: () => {
+      isModalVisibleRef.current = false
+      window.location.reload()
+    },
+  }
 
   useEffect(() => {
     if (!navigator.geolocation || currLocRemoved || currentLocationLabel) {
@@ -40,7 +69,15 @@ const useLocationComponent = () => {
           setLocationAccessLoading(false)
         } catch (err) {
           setLocationAccessLoading(false)
-          // message.info("Pincode not found");
+          if (isModalVisibleRef.current) {
+            return
+          }
+          isModalVisibleRef.current = true
+          if (err?.status === 401) {
+            Modal.error(errorSessionConfig)
+          } else {
+            Modal.error(errorConfig)
+          }
         }
       },
       (err) => {

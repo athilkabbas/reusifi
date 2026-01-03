@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { Layout, Modal, Typography } from 'antd'
 import {
   ClockCircleOutlined,
+  CloseCircleFilled,
   FileZipOutlined,
   HistoryOutlined,
   InfoCircleOutlined,
@@ -690,16 +691,16 @@ const AddDress = () => {
     }
   }
   const bottomRef = useRef(null)
-  const bottomRefPincode = useRef(null)
+  const bottomRefDesc = useRef(null)
 
-  const bottomRefPrice = useRef(null)
+  const bottomRefPincode = useRef(null)
 
   const scrollToBottomPincode = () => {
     requestAnimationFrame(() => {
       if (!Platform.isIOS) {
         setTimeout(() => {
-          if (bottomRefPincode?.current) {
-            bottomRefPincode.current?.scrollIntoView({
+          if (bottomRefDesc?.current) {
+            bottomRefDesc.current?.scrollIntoView({
               behavior: 'smooth',
               block: 'end',
             })
@@ -713,8 +714,8 @@ const AddDress = () => {
     requestAnimationFrame(() => {
       if (!Platform.isIOS) {
         setTimeout(() => {
-          if (bottomRefPrice?.current) {
-            bottomRefPrice.current?.scrollIntoView({
+          if (bottomRefPincode?.current) {
+            bottomRefPincode.current?.scrollIntoView({
               behavior: 'smooth',
               block: 'end',
             })
@@ -856,6 +857,10 @@ const AddDress = () => {
                   </Popover>
                 </div>
               </Space.Compact>
+              <div
+                ref={bottomRefDesc}
+                style={{ display: 'block', height: 0 }}
+              ></div>
               <Space.Compact
                 size="large"
                 style={{
@@ -989,11 +994,11 @@ const AddDress = () => {
                   Check Pincode
                 </Button>
               </Space.Compact>
-              &nbsp;&nbsp;or
               <div
                 ref={bottomRefPincode}
                 style={{ display: 'block', height: 0 }}
               ></div>
+              &nbsp;&nbsp;or
               <Space.Compact size="large">
                 <Button
                   className={
@@ -1031,19 +1036,29 @@ const AddDress = () => {
               {form.locationLabel && (
                 <Space.Compact size="large">
                   <Input
-                    onChange={(e) => {
-                      setForm((prevValue) => {
-                        return {
-                          ...prevValue,
-                          location: '',
-                          locationLabel: '',
-                        }
-                      })
-                      setCurrentLocationLabel('')
-                      setCurrentLocation('')
-                      setCurrLocRemoved(true)
-                      handlePincode(e)
-                    }}
+                    readOnly
+                    suffix={
+                      <CloseCircleFilled
+                        style={{
+                          color: 'rgba(0,0,0,.25)',
+                          cursor: 'pointer',
+                          transform: 'scale(0.7)',
+                        }}
+                        onClick={(e) => {
+                          setForm((prevValue) => {
+                            return {
+                              ...prevValue,
+                              location: '',
+                              locationLabel: '',
+                            }
+                          })
+                          setCurrentLocationLabel('')
+                          setCurrentLocation('')
+                          setCurrLocRemoved(true)
+                          handlePincode(e)
+                        }}
+                      />
+                    }
                     allowClear
                     style={{
                       width: !isMobile ? '50dvw' : 'calc(100dvw - 30px)',
@@ -1363,10 +1378,6 @@ const AddDress = () => {
                   </Modal>
                 </Space>
               </Space.Compact>
-              <div
-                ref={bottomRefPrice}
-                style={{ display: 'block', height: 0 }}
-              ></div>
               <Space.Compact size="large">
                 <span style={{ fontSize: '13px', fontWeight: '300' }}>
                   The ad will be deactivated automatically after 30 days

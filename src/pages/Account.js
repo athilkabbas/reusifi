@@ -659,6 +659,10 @@ const Account = () => {
                   maxLength={100}
                 />
               </Space.Compact>
+              <div
+                ref={bottomRefName}
+                style={{ display: 'block', height: 0 }}
+              ></div>
               <Space.Compact size="large">
                 <TextArea
                   allowClear
@@ -682,6 +686,10 @@ const Account = () => {
                   value={form.description}
                 />
               </Space.Compact>
+              <div
+                ref={bottomRefDesc}
+                style={{ display: 'block', height: 0 }}
+              ></div>
               <Space.Compact
                 size="large"
                 style={{
@@ -753,16 +761,8 @@ const Account = () => {
                   </Button>
                 </Space.Compact>
               </Space>
-              <div
-                ref={bottomRefName}
-                style={{ display: 'block', height: 0 }}
-              ></div>
               <br />
               <br />
-              <div
-                ref={bottomRefDesc}
-                style={{ display: 'block', height: 0 }}
-              ></div>
               <Space.Compact size="large">
                 <Popconfirm
                   title="Do you want to delete the Account?"
