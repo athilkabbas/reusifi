@@ -10,6 +10,7 @@ import {
   FileZipOutlined,
   HistoryOutlined,
   InfoCircleOutlined,
+  SafetyOutlined,
   UploadOutlined,
 } from '@ant-design/icons'
 import { GripVertical, LocateFixed } from 'lucide-react'
@@ -1253,8 +1254,18 @@ const AddDress = () => {
                           </Text>
                           <Text type="secondary">
                             {' '}
-                            You will need to say the generated code clearly.
+                            You will need to say the generated code clearly and
+                            slowly.
                           </Text>
+                          <div style={{ marginTop: 2 }}>
+                            <Text
+                              type="secondary"
+                              style={{ fontSize: '12px', fontStyle: 'italic' }}
+                            >
+                              Tip: Pause briefly between numbers and avoid
+                              background noise.
+                            </Text>
+                          </div>
                           <div style={{ marginTop: 4 }}>
                             <Badge
                               status="warning"
@@ -1299,12 +1310,42 @@ const AddDress = () => {
                         />
                         <div>
                           <Text strong block>
-                            Touch the Item :
+                            Hand Wave :
                           </Text>
                           <Text type="secondary">
                             {' '}
-                            Briefly touch the item during the video while saying
-                            the generated code.
+                            Briefly wave your hand over the item at the same
+                            time you are speaking the code.
+                          </Text>
+                          <div style={{ marginTop: 2 }}>
+                            <Text
+                              type="secondary"
+                              style={{ fontSize: '12px', fontStyle: 'italic' }}
+                            >
+                              Tip: A slow, clear wave works best for the scan.
+                            </Text>
+                          </div>
+                        </div>
+                      </Space>
+                      <Space align="start">
+                        <SafetyOutlined
+                          style={{
+                            fontSize: '20px',
+                            marginTop: 4,
+                            color: '#52c41a',
+                          }}
+                        />
+                        <div>
+                          <Text strong block>
+                            Use Original Video:
+                          </Text>
+                          <Text type="secondary">
+                            Upload the original, unedited video.
+                            <Text type="danger">
+                              {' '}
+                              Using editing apps or filters will cause the
+                              verification to fail.
+                            </Text>
                           </Text>
                         </div>
                       </Space>
