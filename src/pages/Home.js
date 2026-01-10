@@ -1198,6 +1198,8 @@ const Home = () => {
                                   style={{
                                     height: '220px',
                                     objectFit: 'cover',
+                                    borderTopLeftRadius: '8px',
+                                    borderTopRightRadius: '8px',
                                   }}
                                   placeholder={
                                     <div
