@@ -5,6 +5,7 @@ import { Input, notification } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import { Layout, Modal, Typography } from 'antd'
 import {
+  AppstoreAddOutlined,
   ClockCircleOutlined,
   CloseCircleFilled,
   FileZipOutlined,
@@ -1340,13 +1341,45 @@ const AddDress = () => {
                             Use Original Video:
                           </Text>
                           <Text type="secondary">
+                            {' '}
                             Upload the original, unedited video.
-                            <Text type="danger">
-                              {' '}
+                          </Text>
+                          <div style={{ marginTop: 2 }}>
+                            <Text
+                              type="secondary"
+                              style={{ fontSize: '12px', fontStyle: 'italic' }}
+                            >
                               Using editing apps or filters will cause the
                               verification to fail.
                             </Text>
+                          </div>
+                        </div>
+                      </Space>
+                      <Space align="start">
+                        <AppstoreAddOutlined
+                          style={{
+                            fontSize: '20px',
+                            marginTop: 4,
+                            color: '#fa541c', // Deep orange for visibility
+                          }}
+                        />
+                        <div>
+                          <Text strong block>
+                            Include All Items:
                           </Text>
+                          <Text type="secondary">
+                            {' '}
+                            Your video must include every item you photographed.
+                          </Text>
+                          <div style={{ marginTop: 2 }}>
+                            <Text
+                              type="secondary"
+                              style={{ fontSize: '12px', fontStyle: 'italic' }}
+                            >
+                              The scan will fail if the AI cannot
+                              cross-reference the items in your photos.
+                            </Text>
+                          </div>
                         </div>
                       </Space>
                     </div>
