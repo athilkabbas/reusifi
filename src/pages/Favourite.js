@@ -395,8 +395,8 @@ const Favourites = () => {
                                   style={{
                                     height: '220px',
                                     objectFit: 'cover',
-                                    borderTopLeftRadius: '8px',
-                                    borderTopRightRadius: '8px',
+                                    borderTopLeftRadius: '11px',
+                                    borderTopRightRadius: '11px',
                                   }}
                                   placeholder={
                                     <div
