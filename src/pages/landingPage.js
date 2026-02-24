@@ -23,6 +23,7 @@ import {
   Camera,
   MessageCircle,
   Users,
+  ScanFace,
 } from 'lucide-react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -245,10 +246,16 @@ const ReusifiLanding = () => {
                         <Text type="secondary">Free to list</Text>
                       </Space>
                     </Col>
-                    <Col xs={24} sm={8}>
+                    {/* <Col xs={24} sm={8}>
                       <Space>
                         <CheckCircle style={{ color: '#52c41a' }} />
                         <Text type="secondary">Secure payments</Text>
+                      </Space>
+                    </Col> */}
+                    <Col xs={24} sm={8}>
+                      <Space>
+                        <CheckCircle style={{ color: '#52c41a' }} />
+                        <Text type="secondary">AI fraud protection</Text>
                       </Space>
                     </Col>
                   </Row>
@@ -455,8 +462,8 @@ const ReusifiLanding = () => {
                 </div>
                 <Title level={4}>3. Get Paid</Title>
                 <Paragraph style={{ color: '#595959' }}>
-                  Complete the sale with secure payment options and earn money
-                  from items you no longer need.
+                  Complete the sale and earn money from items you no longer
+                  need.
                 </Paragraph>
               </Card>
             </Col>
@@ -464,120 +471,66 @@ const ReusifiLanding = () => {
         </div>
 
         {/* Features Section */}
-        {/* <div style={{ padding: screens.md ? '80px 50px' : '40px 20px' }}>
-          <Row gutter={[48, 48]} align="middle">
-            <Col xs={24} lg={14}>
-              <Space
-                direction="vertical"
-                size="large"
-                style={{ width: '100%' }}
+        <div
+          className="features-section"
+          style={{ padding: screens.md ? '80px 50px' : '40px 20px' }}
+        >
+          <div style={{ textAlign: 'center', marginBottom: '60px' }}>
+            <Title
+              level={2}
+              style={{ fontSize: screens.md ? '2.5rem' : '2rem' }}
+            >
+              Why Choose Reusifi?
+            </Title>
+            <Paragraph
+              style={{
+                fontSize: '1.1rem',
+                color: '#595959',
+                maxWidth: '800px',
+                margin: '0 auto',
+              }}
+            >
+              Built with AI to keep scams out.
+            </Paragraph>
+          </div>
+
+          <Row gutter={[32, 32]} justify="center">
+            <Col xs={24} md={8}>
+              <Card
+                style={{
+                  textAlign: 'center',
+                  height: '100%',
+                  boxShadow:
+                    '0 1px 2px 0 rgba(0, 0, 0, 0.05),  0 5px 15px rgba(0, 0, 0, 0.1)',
+                }}
+                styles={{ body: { padding: '32px 24px' } }}
               >
-                <div>
-                  <Title
-                    level={2}
-                    style={{ fontSize: screens.md ? '2.5rem' : '2rem' }}
-                  >
-                    Why Choose Reusifi?
-                  </Title>
-                  <Paragraph
-                    style={{
-                      fontSize: '1.1rem',
-                      color: '#595959',
-                      maxWidth: '600px',
-                    }}
-                  >
-                    We've built the most trusted platform for buying and selling
-                    used items locally.
-                  </Paragraph>
-                </div>
-
-                <Space
-                  direction="vertical"
-                  size="large"
-                  style={{ width: '100%' }}
-                >
-                  <Row gutter={[16, 16]} align="top">
-                    <Col flex="none">
-                      <ShieldCheck
-                        style={{
-                          fontSize: '24px',
-                          color: '#52c41a',
-                          marginTop: '4px',
-                        }}
-                      />
-                    </Col>
-                    <Col flex="auto">
-                      <Title level={4} style={{ marginBottom: '8px' }}>
-                        Secure & Safe
-                      </Title>
-                      <Paragraph style={{ color: '#595959', marginBottom: 0 }}>
-                        Verified profiles, secure messaging, and buyer
-                        protection for peace of mind.
-                      </Paragraph>
-                    </Col>
-                  </Row>
-
-                  <Row gutter={[16, 16]} align="top">
-                    <Col flex="none">
-                      <Smartphone
-                        style={{
-                          fontSize: '24px',
-                          color: '#52c41a',
-                          marginTop: '4px',
-                        }}
-                      />
-                    </Col>
-                    <Col flex="auto">
-                      <Title level={4} style={{ marginBottom: '8px' }}>
-                        Mobile-First
-                      </Title>
-                      <Paragraph style={{ color: '#595959', marginBottom: 0 }}>
-                        Easy-to-use mobile app for listing, browsing, and
-                        managing your sales on the go.
-                      </Paragraph>
-                    </Col>
-                  </Row>
-
-                  <Row gutter={[16, 16]} align="top">
-                    <Col flex="none">
-                      <Users
-                        style={{
-                          fontSize: '24px',
-                          color: '#52c41a',
-                          marginTop: '4px',
-                        }}
-                      />
-                    </Col>
-                    <Col flex="auto">
-                      <Title level={4} style={{ marginBottom: '8px' }}>
-                        Local Community
-                      </Title>
-                      <Paragraph style={{ color: '#595959', marginBottom: 0 }}>
-                        Connect with buyers and sellers in your neighborhood for
-                        easy pickup and delivery.
-                      </Paragraph>
-                    </Col>
-                  </Row>
-                </Space>
-              </Space>
-            </Col>
-
-            <Col xs={24} lg={10}>
-              <div style={{ textAlign: "center" }}>
-                <Image
-                  src="/images/mobile-app-features.png"
-                  alt="Reusifi mobile app features"
+                <div
                   style={{
-                    borderRadius: "12px",
-                    maxWidth: "100%",
-                    height: "auto",
+                    width: '80px',
+                    height: '80px',
+                    backgroundColor: '#f6ffed',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    margin: '0 auto 24px',
                   }}
-                  preview={false}
-                />
-              </div>
+                >
+                  <ShieldCheck style={{ fontSize: '32px', color: '#52c41a' }} />
+                </div>
+                <Title level={4} style={{ marginBottom: '8px' }}>
+                  AI Verified Authenticity
+                </Title>
+                <Paragraph style={{ color: '#595959', marginBottom: 0 }}>
+                  Our advanced AI screens every listing, verifying that items
+                  are real and physically present with the seller to prevent
+                  scams.
+                </Paragraph>
+              </Card>
             </Col>
           </Row>
-        </div> */}
+        </div>
 
         {/* Categories Section */}
         <div

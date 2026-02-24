@@ -4,6 +4,7 @@ import { Badge, Col, Popover, Select, Skeleton, Space, Spin } from 'antd'
 import { Input, notification } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import { Layout, Modal, Typography } from 'antd'
+import { FaHandBackFist } from 'react-icons/fa6'
 import {
   AppstoreAddOutlined,
   ClockCircleOutlined,
@@ -1189,7 +1190,7 @@ const AddDress = () => {
                         <SafetyCertificateFilled
                           style={{ color: '#52c41a', marginRight: 8 }}
                         />
-                        Forensic Verification
+                        AI Verification
                       </Title>
                       <Paragraph type="secondary" style={{ fontSize: '16px' }}>
                         To keep our marketplace safe, our AI performs a
@@ -1271,7 +1272,7 @@ const AddDress = () => {
                       </Space>
 
                       <Space align="start">
-                        <HandFist
+                        <FaHandBackFist
                           style={{
                             fontSize: '20px',
                             marginTop: 4,
@@ -1280,21 +1281,25 @@ const AddDress = () => {
                         />
                         <div>
                           <Text strong block>
-                            Make a Fist :
+                            The Security Gesture :
                           </Text>
                           <Text type="secondary">
                             {' '}
                             <Text strong>After</Text> the clean shot, hold your
-                            fist over the item and move it slightly. Make sure
-                            the front of your fist (your curled fingers) is
-                            facing the camera.
+                            fist over the item and move it slightly for 3 to 5
+                            seconds. Make sure the{' '}
+                            <Text strong>
+                              back of your hand and your knuckles
+                            </Text>{' '}
+                            are facing the camera.
                           </Text>
                           <div style={{ marginTop: 2 }}>
                             <Text
                               type="secondary"
                               style={{ fontSize: '12px', fontStyle: 'italic' }}
                             >
-                              Tip: The AI needs to clearly see your knuckles.
+                              Tip: The AI needs to clearly see the flat back of
+                              your hand and your knuckles.
                             </Text>
                           </div>
                         </div>
