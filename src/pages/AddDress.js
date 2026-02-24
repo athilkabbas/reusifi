@@ -12,6 +12,7 @@ import {
   HistoryOutlined,
   InfoCircleOutlined,
   SafetyOutlined,
+  ScanOutlined,
   UploadOutlined,
 } from '@ant-design/icons'
 import { GripVertical, HandFist, LocateFixed } from 'lucide-react'
@@ -1240,6 +1241,34 @@ const AddDress = () => {
                           </Text>
                         </div>
                       </Space>
+                      <Space align="start">
+                        <ScanOutlined
+                          style={{
+                            fontSize: '20px',
+                            marginTop: 4,
+                            color: '#13c2c2', // A clean teal color to stand out
+                          }}
+                        />
+                        <div>
+                          <Text strong block>
+                            The Clean Shot :
+                          </Text>
+                          <Text type="secondary">
+                            {' '}
+                            Start your video by showing the full item with{' '}
+                            <Text strong>nothing</Text> blocking it.
+                          </Text>
+                          <div style={{ marginTop: 2 }}>
+                            <Text
+                              type="secondary"
+                              style={{ fontSize: '12px', fontStyle: 'italic' }}
+                            >
+                              Tip: Keep your hands completely out of the frame
+                              at the beginning.
+                            </Text>
+                          </div>
+                        </div>
+                      </Space>
 
                       <Space align="start">
                         <HandFist
@@ -1255,9 +1284,10 @@ const AddDress = () => {
                           </Text>
                           <Text type="secondary">
                             {' '}
-                            Hold your fist over the item and move it slightly.
-                            Make sure the front of your fist (your curled
-                            fingers) is facing the camera.
+                            <Text strong>After</Text> the clean shot, hold your
+                            fist over the item and move it slightly. Make sure
+                            the front of your fist (your curled fingers) is
+                            facing the camera.
                           </Text>
                           <div style={{ marginTop: 2 }}>
                             <Text
