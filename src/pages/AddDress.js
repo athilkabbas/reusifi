@@ -16,7 +16,7 @@ import {
   ScanOutlined,
   UploadOutlined,
 } from '@ant-design/icons'
-import { GripVertical, HandFist, LocateFixed } from 'lucide-react'
+import { GripVertical, HandFist, LocateFixed, ThumbsUp } from 'lucide-react'
 import { Image, Upload, message, Divider } from 'antd'
 import { Button, Row } from 'antd'
 import axios from 'axios'
@@ -1272,7 +1272,7 @@ const AddDress = () => {
                       </Space>
 
                       <Space align="start">
-                        <FaHandBackFist
+                        <ThumbsUp
                           style={{
                             fontSize: '20px',
                             marginTop: 4,
@@ -1281,27 +1281,14 @@ const AddDress = () => {
                         />
                         <div>
                           <Text strong block>
-                            The Security Gesture :
+                            Thumbs up :
                           </Text>
                           <Text type="secondary">
                             {' '}
-                            <Text strong>After</Text> the clean shot, hold your
-                            fist over the item and move it slightly for 3 to 5
-                            seconds. Make sure the{' '}
-                            <Text strong>
-                              back of your hand and your knuckles
-                            </Text>{' '}
-                            are facing the camera.
+                            <Text strong>After</Text> the clean shot, hold a
+                            thumbs up over the item and move it slightly for 3
+                            to 5 seconds.
                           </Text>
-                          <div style={{ marginTop: 2 }}>
-                            <Text
-                              type="secondary"
-                              style={{ fontSize: '12px', fontStyle: 'italic' }}
-                            >
-                              Tip: The AI needs to clearly see the flat back of
-                              your hand and your knuckles.
-                            </Text>
-                          </div>
                         </div>
                       </Space>
 
