@@ -14,7 +14,7 @@ import {
   SafetyOutlined,
   UploadOutlined,
 } from '@ant-design/icons'
-import { GripVertical, LocateFixed } from 'lucide-react'
+import { GripVertical, HandFist, LocateFixed } from 'lucide-react'
 import { Image, Upload, message, Divider } from 'antd'
 import { Button, Row } from 'antd'
 import axios from 'axios'
@@ -1242,6 +1242,35 @@ const AddDress = () => {
                       </Space>
 
                       <Space align="start">
+                        <HandFist
+                          style={{
+                            fontSize: '20px',
+                            marginTop: 4,
+                            color: '#eb2f96',
+                          }}
+                        />
+                        <div>
+                          <Text strong block>
+                            Make a Fist :
+                          </Text>
+                          <Text type="secondary">
+                            {' '}
+                            Hold your fist over the item and move it slightly.
+                            Make sure the front of your fist (your curled
+                            fingers) is facing the camera.
+                          </Text>
+                          <div style={{ marginTop: 2 }}>
+                            <Text
+                              type="secondary"
+                              style={{ fontSize: '12px', fontStyle: 'italic' }}
+                            >
+                              Tip: The AI needs to clearly see your knuckles.
+                            </Text>
+                          </div>
+                        </div>
+                      </Space>
+
+                      <Space align="start">
                         <AudioOutlined
                           style={{
                             fontSize: '20px',
@@ -1255,16 +1284,16 @@ const AddDress = () => {
                           </Text>
                           <Text type="secondary">
                             {' '}
-                            You will need to say the generated code clearly and
-                            slowly.
+                            You must say the generated code out loud{' '}
+                            <Text strong>while</Text> your fist is over the
+                            item.
                           </Text>
                           <div style={{ marginTop: 2 }}>
                             <Text
                               type="secondary"
                               style={{ fontSize: '12px', fontStyle: 'italic' }}
                             >
-                              Tip: Pause briefly between numbers and avoid
-                              background noise.
+                              Tip: Avoid background noise.
                             </Text>
                           </div>
                           <div style={{ marginTop: 4 }}>
@@ -1298,34 +1327,6 @@ const AddDress = () => {
                             Don’t stay still! You’ll need to move around the
                             item.
                           </Text>
-                        </div>
-                      </Space>
-
-                      <Space align="start">
-                        <Hand
-                          style={{
-                            fontSize: '20px',
-                            marginTop: 4,
-                            color: '#eb2f96',
-                          }}
-                        />
-                        <div>
-                          <Text strong block>
-                            Hand Wave :
-                          </Text>
-                          <Text type="secondary">
-                            {' '}
-                            Briefly wave your hand over the item at the same
-                            time you are speaking the code.
-                          </Text>
-                          <div style={{ marginTop: 2 }}>
-                            <Text
-                              type="secondary"
-                              style={{ fontSize: '12px', fontStyle: 'italic' }}
-                            >
-                              Tip: A slow, clear wave works best for the scan.
-                            </Text>
-                          </div>
                         </div>
                       </Space>
                       <Space align="start">
