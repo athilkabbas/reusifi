@@ -647,7 +647,7 @@ const Account = () => {
                   className={badLanguage.name ? 'my-red-border' : ''}
                   onChange={(e) => {
                     const text = e.target.value
-                    const sanitized = text.replace(/[^a-zA-Z0-9 ]/g, '')
+                    const sanitized = text.replace(/[^a-zA-Z0-9 \n\r]/g, '')
                     handleChange(sanitized, 'name')
                   }}
                   placeholder="Name"
@@ -673,7 +673,7 @@ const Account = () => {
                   className={badLanguage.description ? 'my-red-border' : ''}
                   onChange={(e) => {
                     const text = e.target.value
-                    const sanitized = text.replace(/[^a-zA-Z0-9 ]/g, '')
+                    const sanitized = text.replace(/[^a-zA-Z0-9 \n\r]/g, '')
                     handleChange(sanitized, 'description')
                   }}
                   autoSize={{ minRows: 8, maxRows: 8 }}

@@ -803,7 +803,7 @@ const AddDress = () => {
                   }}
                   onChange={(e) => {
                     const text = e.target.value
-                    const sanitized = text.replace(/[^a-zA-Z0-9 ]/g, '')
+                    const sanitized = text.replace(/[^a-zA-Z0-9 \n\r]/g, '')
                     handleChange(sanitized, 'title')
                   }}
                   placeholder="Title"
@@ -831,7 +831,7 @@ const AddDress = () => {
                     }}
                     onChange={(e) => {
                       const text = e.target.value
-                      const sanitized = text.replace(/[^a-zA-Z0-9 ]/g, '')
+                      const sanitized = text.replace(/[^a-zA-Z0-9 \n\r]/g, '')
                       handleChange(sanitized, 'description')
                     }}
                     autoSize={{ minRows: 8, maxRows: 8 }}
