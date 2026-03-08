@@ -617,7 +617,9 @@ const AddDress = () => {
         locationLabel: '',
         videos: [],
       })
-      message.success('Your ad is now live on Reusifi.')
+      message.success(
+        'Ad submitted! We are verifying your item and will email you as soon as it goes live.'
+      )
       navigate('/ads')
       return true
     } catch (err) {
