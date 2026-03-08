@@ -76,7 +76,6 @@ const Provider = ({ children }) => {
     description: '',
     category: '',
     subCategory: '',
-    keywords: [],
     email: '',
     images: [],
     price: null,

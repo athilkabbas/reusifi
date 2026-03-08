@@ -361,10 +361,6 @@ const AddDress = () => {
   }
 
   const handleBeforeUpload = async (file) => {
-    if (form.keywords.length === 0) {
-      message.info('Please select Subcategory')
-      return Upload.LIST_IGNORE
-    }
     const value = await getActualMimeType(file)
     if (!value) {
       openNotificationWithIcon(
@@ -580,7 +576,6 @@ const AddDress = () => {
         viewingS3Keys,
         submit,
         files,
-        keywords: form.keywords,
         paid,
         videoKey,
         code: 449231,
@@ -609,7 +604,6 @@ const AddDress = () => {
         description: '',
         category: '',
         subCategory: '',
-        keywords: [],
         email: '',
         images: [],
         price: null,
@@ -951,10 +945,8 @@ const AddDress = () => {
                       onChange={(value, option) => {
                         if (!value) {
                           handleChange('', 'subCategory')
-                          handleChange([], 'keywords')
                         } else {
                           handleChange(value, 'subCategory')
-                          handleChange(option.keywords, 'keywords')
                         }
                       }}
                       placeholder="Subcategory"
