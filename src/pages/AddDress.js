@@ -112,7 +112,7 @@ const DraggableUploadListItem = ({ originNode, file }) => {
       </div>
 
       {/* 2. The Original Content (Image/File info) */}
-      <div style={{ flex: 1 }}>
+      <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
         {file.status === 'error' && isDragging
           ? originNode.props.children
           : originNode}
