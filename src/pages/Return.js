@@ -325,7 +325,6 @@ const Return = () => {
         viewingS3Keys,
         sessionId,
         files,
-        keywords: form.keywords,
         submit,
         paid,
       }
@@ -349,7 +348,6 @@ const Return = () => {
         description: '',
         category: '',
         subCategory: '',
-        keywords: [],
         email: '',
         images: [],
         price: null,
